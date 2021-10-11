@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * English plugin strings are defined here.
+ * German plugin strings are defined here.
  *
  * @package     local_wunderbyte_table
  * @category    string
