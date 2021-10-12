@@ -28,4 +28,4 @@ $plugin->component = 'local_wunderbyte_table';
 $plugin->release = '0.1.0';
 $plugin->version = 2021101100;
 $plugin->requires = 2020110900;
-$plugin->maturity = MATURIY_ALPHA;
+$plugin->maturity = MATURITY_ALPHA;
