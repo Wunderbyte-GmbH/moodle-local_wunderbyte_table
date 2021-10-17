@@ -27,6 +27,8 @@ namespace local_wunderbyte_table;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once("$CFG->libdir/tablelib.php");
+
 use gradereport_singleview\local\ui\empty_element;
 use moodle_exception;
 use table_sql;
@@ -38,29 +40,51 @@ use moodle_url;
 class wunderbyte_table extends table_sql
 {
     /**
-     * Constructor
-     * @param int $uniqueid all tables have to have a unique id, this is used
-     *      as a key when storing table properties like sort order in the session.
-     * @param array $sqldata An associative array with keys ['fields', 'from', 'where', 'params']
-     *      to generate the SQL. 'params' is an array itself too.
-     * @throws moodle_exception
+     * @var string Id of this table.
      */
-    function __construct($uniqueid, array $sqldata = []) {
+    public $idstring = '';
+
+    public function __construct($uniqueid) {
         parent::__construct($uniqueid);
+        // some sensible defaults
+        $this->idstring = md5($uniqueid);
+    }
 
-        global $CFG;
+    public function outwithajax($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
-        $this->is_downloading(false); // This is necessary for the download button to be shown.
-        $this->set_sql($sqldata['fields'], $sqldata['from'], $sqldata['where'], $sqldata['params']);
+        global $PAGE, $CFG;
 
-        if (!empty($sqldata)) {
-            $urlparams = [];
-            foreach ($sqldata['params'] as $key => $value) {
-                $urlparams["$key"] = $value;
-            }
-            $baseurl = new moodle_url("$CFG->wwwroot/local/wunderbyte_table/wunderbyte_table_base.php", $urlparams);
+        $encodedtablelib = json_encode($this);
+        $base64encodedtablelib = base64_encode($encodedtablelib);
 
-            $this->define_baseurl($baseurl);
-        }
+        echo "<div id='$this->idstring' data-encodedtable='$base64encodedtablelib'>";
+        // $this->out($pagesize, $useinitialsbar, $downloadhelpbutton);
+
+        // echo $encodedtablelib;
+
+        // $newtable = new table_sql($this->idstring);
+
+        // $oldtable = json_decode($encodedtablelib);
+
+        // $newtable->uniqueid = 'copy';
+
+        // $newtable->countsql = $oldtable->countsql;
+        // $newtable->countparams = $oldtable->countparams;
+        // $newtable->set_sql($oldtable->sql->fields, $oldtable->sql->from, $oldtable->sql->where, $oldtable->sql->params);
+        // $newtable->is_sortable($oldtable->is_sortable);
+        // $newtable->is_collapsible = $oldtable->is_collapsible;
+
+        // $newtable->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/index.php");
+
+        // echo "<br><br>";
+        // echo json_encode($newtable);
+
+        // $this->out($pagesize, $useinitialsbar, $downloadhelpbutton);
+
+        echo "</div>";
+
+        // Include Javascript to enable AJAX calls.
+        $PAGE->requires->js_call_amd('local_wunderbyte_table/init', 'init', [$this->idstring]);
+
     }
 }

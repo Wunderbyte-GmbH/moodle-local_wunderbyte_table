@@ -44,5 +44,5 @@ $sqldata = block_booking::search_booking_options_manager_get_sqldata($params);
 */
 
 $table->is_downloading($download, 'export');
-//$table->set_sql($sqldata['fields'], $sqldata['from'], $sqldata['where'], $sqldata['params']);
-//$table->out(40, true);
+// $table->set_sql($sqldata['fields'], $sqldata['from'], $sqldata['where'], $sqldata['params']);
+// $table->out(40, true);

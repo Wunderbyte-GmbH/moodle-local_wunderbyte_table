@@ -15,17 +15,25 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Webservice to reload table.
  *
  * @package     local_wunderbyte_table
+ * @category    upgrade
  * @copyright   2021 Wunderbyte GmbH <info@wunderbyte.at>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_wunderbyte_table';
-$plugin->release = '0.1.0';
-$plugin->version = 2021101104;
-$plugin->requires = 2020110900;
-$plugin->maturity = MATURITY_ALPHA;
+$functions = array(
+        'local_wunderbyte_table_load_data' => array(
+                'classname' => 'local_wunderbyte_table_external',
+                'methodname' => 'load_data',
+                'classpath' => 'local/wunderbyte_table/classes/externallib.php',
+                'description' => 'Ajax load list of finishedgames',
+                'type' => 'read',
+                'capabilities' => '',
+                'ajax' => true,
+                'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE)
+        )
+);
