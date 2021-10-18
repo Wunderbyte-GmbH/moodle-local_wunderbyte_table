@@ -50,11 +50,11 @@ if (!$table->is_downloading()) {
 }
 
 // Work out the sql for the table.
-$table->set_sql('*', "{user}", 'id<20');
+$table->set_sql('*', "{mooduell_games}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
 echo '<div class="test">';
-$table->outwithajax(6, false);
+$table->out(106, false);
 echo '</div>';
 $table->baseurl = "$CFG->wwwroot/download.php";
 /*$table2 = new wunderbyte_table('uniqueid1123');

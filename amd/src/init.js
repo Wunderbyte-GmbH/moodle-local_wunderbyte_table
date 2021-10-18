@@ -19,14 +19,26 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-// import * as Str from 'core/str';
 import Ajax from 'core/ajax';
 
+/**
+ * Gets called from mustache template.
+ * @param {string} idstring
+ */
 export const init = (idstring) => {
     callLoadData(idstring);
 };
 
+/**
+ * Reloads the rendered table and sets it to the div with the right identifier.
+ * @param {string} idstring
+ * @param {null|int} page
+ * @param {null|string} tsort
+ * @param {null|string} thide
+ * @param {null|string} tshow
+ * @param {null|int} tdir
+ * @param {null|int} treset
+ */
 export const callLoadData = (
     idstring,
     page = null,
@@ -86,6 +98,12 @@ export const callLoadData = (
     }]);
 };
 
+/**
+ * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
+ * @param {string} idstring
+ * @param {DocumentFragment} frag
+ * @param {int} page
+ */
 export const replaceSortColumnLinks = (idstring, frag, page) => {
 
     var arrayOfItems = frag.querySelectorAll("th.header a");
@@ -103,6 +121,12 @@ export const replaceSortColumnLinks = (idstring, frag, page) => {
     });
 };
 
+/**
+ * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
+ * @param {string} idstring
+ * @param {DocumentFragment} frag
+ * @param {int} page
+ */
 export const replaceResetTableLink = (idstring, frag, page) => {
     var arrayOfItems = frag.querySelectorAll("div.resettable");
 
@@ -123,6 +147,11 @@ export const replaceResetTableLink = (idstring, frag, page) => {
     });
 };
 
+/**
+ * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
+ * @param {string} idstring
+ * @param {DocumentFragment} frag
+ */
 export const replacePaginationLinks = (idstring, frag) => {
     var arrayOfPageItems = frag.querySelectorAll(".page-item");
 
@@ -150,17 +179,21 @@ export const replacePaginationLinks = (idstring, frag) => {
     });
 };
 
+/**
+ * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
+ * @param {string} idstring
+ * @param {DocumentFragment} frag
+ */
 export const replaceDownloadLink = (idstring, frag) => {
 
     let table = document.getElementById('a' + idstring);
     let encodedtable = table.getAttribute('data-encodedtable');
 
-    encodedtable = encodeURIComponent(encodedtable);
-
     var arrayOfItems = frag.querySelectorAll("form");
 
     arrayOfItems.forEach(item => {
         if (item.tagName == 'FORM') {
+            item.setAttribute('method', 'POST');
             let newnode = document.createElement('input');
             newnode.setAttribute('type','hidden');
             newnode.setAttribute('name', 'encodedtable');
