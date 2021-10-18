@@ -54,22 +54,22 @@ export const callLoadData = (
             'tdir': tdir,
             'treset': treset
         },
-        done: function (res) {
+        done: function(res) {
 
             let frag = document.createRange().createContextualFragment(res.content);
 
-            // eslint-disable-next-line no-alert
-            // JSON.stringify(frag));
+            if (!page) {
+                const activepage = frag.querySelector('li.page-item active');
+                if (activepage) {
+                    page = activepage.getAttribute('data-page-number');
+                }
+            }
 
             replaceDownloadLink(idstring, frag);
-            replaceResetTableLink(idstring, frag);
+            replaceResetTableLink(idstring, frag, page);
             replacePaginationLinks(idstring, frag);
-            replaceSortColumnLinks(idstring, frag);
+            replaceSortColumnLinks(idstring, frag, page);
 
-            // Template for appending Text to element.
-            // var node = document.createElement("DIV");
-            // var textnode = document.createTextNode("This is my text");
-            // node.appendChild(textnode);
             let table = document.getElementById('a' + idstring);
 
             while (table.firstChild) {
@@ -79,15 +79,14 @@ export const callLoadData = (
             spinner.classList.toggle('hidden');
             table.classList.toggle('hidden');
         },
-        fail: function () {
-            alert('fail');
-            // spinner.addClass('hidden');
-            //table.removeClass('hidden');
+        fail: function() {
+            spinner.classList.toggle('hidden');
+            table.classList.toggle('hidden');
         }
     }]);
 };
 
-export const replaceSortColumnLinks = (idstring, frag) => {
+export const replaceSortColumnLinks = (idstring, frag, page) => {
 
     var arrayOfItems = frag.querySelectorAll("th.header a");
 
@@ -99,12 +98,12 @@ export const replaceSortColumnLinks = (idstring, frag) => {
 
         item.setAttribute('href', '#');
         item.addEventListener('click', () => {
-            callLoadData(idstring, null, sortid, thide, tshow, sortorder);
+            callLoadData(idstring, page, sortid, thide, tshow, sortorder);
         });
     });
 };
 
-export const replaceResetTableLink = (idstring, frag) => {
+export const replaceResetTableLink = (idstring, frag, page) => {
     var arrayOfItems = frag.querySelectorAll("div.resettable");
 
     if (!arrayOfItems || arrayOfItems.length == 0) {
@@ -117,7 +116,7 @@ export const replaceResetTableLink = (idstring, frag) => {
             listOfChildren.forEach(subitem => {
                 subitem.setAttribute('href', '#');
                 subitem.addEventListener('click', () => {
-                    callLoadData(idstring, null, null, null, null, null, 1);
+                    callLoadData(idstring, page, null, null, null, null, 1);
                 });
             });
         }
@@ -132,6 +131,9 @@ export const replacePaginationLinks = (idstring, frag) => {
     }
     arrayOfPageItems.forEach(item => {
         var element = item.querySelector('a');
+        if (!element) {
+            return;
+        }
         var url = element.getAttribute("href");
         var pageNumber;
         if (url != undefined && url != '#') {
