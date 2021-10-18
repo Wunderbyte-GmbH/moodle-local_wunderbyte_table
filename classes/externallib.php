@@ -98,9 +98,8 @@ class local_wunderbyte_table_external extends external_api {
         }
 
         ob_start();
-
-        $table->out(40, true);
-
+        $table->out($table->pagesize, true);
+         
         $result['content'] = ob_get_clean();
 
         return $result;

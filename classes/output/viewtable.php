@@ -32,11 +32,11 @@ use templatable;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * viewpage class to display view.php
+ * viewtable class to display view.php
  * @package local_wunderbyte_table
  *
  */
-class viewpage implements renderable, templatable {
+class viewtable implements renderable, templatable {
 
     /**
      * An idstring for the table & spinner.

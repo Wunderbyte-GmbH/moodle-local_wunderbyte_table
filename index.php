@@ -50,11 +50,65 @@ if (!$table->is_downloading()) {
 }
 
 // Work out the sql for the table.
-$table->set_sql('*', "{user}", '1=1');
+$table->set_sql('*', "{tool_customlang}", 'id<20');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
+echo '<div class="test">';
+$table->outwithajax(2, true);
+echo '</div>';
+$table->baseurl = "$CFG->wwwroot/download.php";
+/*$table2 = new wunderbyte_table('uniqueid1123');
 
-$table->outwithajax(40, true);
+$table2->is_downloading($download, 'test', 'testing123');
+
+
+// Work out the sql for the table.
+$table2->set_sql('*', "{user}", '1=1');
+
+$table2->define_baseurl("$CFG->wwwroot/test1.php");
+
+$table2->outwithajax(20, true);
+
+
+$table3 = new wunderbyte_table('uniqueid1adsaasd123');
+
+$table3->is_downloading($download, 'test12', 'testing12312');
+
+
+// Work out the sql for the table.
+$table3->set_sql('*', "{user}", '1=1');
+
+$table3->define_baseurl("$CFG->wwwroot/test2.php");
+
+
+echo '
+<div class="mt-4">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">';
+      $table3->outwithajax(3, true);
+echo '      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+'; */
 
 if (!$table->is_downloading()) {
     echo $OUTPUT->footer();

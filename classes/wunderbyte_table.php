@@ -33,6 +33,7 @@ use gradereport_singleview\local\ui\empty_element;
 use moodle_exception;
 use table_sql;
 use moodle_url;
+use local_wunderbyte_table\output\viewtable;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -43,27 +44,46 @@ class wunderbyte_table extends table_sql
      * @var string Id of this table.
      */
     public $idstring = '';
+    /**
+     * @var string classname of possible subclass.
+     */
+    public $classname = '';
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
 
         $this->idstring = md5($uniqueid);
+        $this->classname = get_class($this);
     }
 
     public function outwithajax($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
         global $PAGE, $CFG;
-
+        $this->pagesize = $pagesize;
         $encodedtablelib = json_encode($this);
 
         $base64encodedtablelib = base64_encode($encodedtablelib);
-
+        $this->base64encodedtablelib = $base64encodedtablelib;
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         $viewtable = new viewtable($this->idstring, $base64encodedtablelib);
-        $out .= $output->render_viewtable($viewtable);
+        echo $output->render_viewtable($viewtable);
 
         // Include Javascript to enable AJAX calls.
-        $PAGE->requires->js_call_amd('local_wunderbyte_table/init', 'init', [$this->idstring]);
+       // $PAGE->requires->js_call_amd('local_wunderbyte_table/init', 'init', [$this->idstring]);
 
+    }
+
+    public function download_buttons() {
+        global $OUTPUT,$CFG;
+        $encodedtablelib = json_encode($this);
+        $base64encodedtablelib = base64_encode($encodedtablelib);
+
+        if ($this->is_downloadable() && !$this->is_downloading()) {
+            echo '<input type="hidden" name="sesskey" value="'.$this->base64encodedtablelib.'">';
+            return $OUTPUT->download_dataformat_selector(get_string('downloadas', 'table'),
+            "$CFG->wwwroot/local/wunderbyte_table/download.php", 'download', $this->baseurl->params());
+        } else {
+            return '';
+        }
     }
 }

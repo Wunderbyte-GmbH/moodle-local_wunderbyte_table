@@ -28,8 +28,9 @@ export const init = (idstring) => {
     // alert('hello' + idstring);
 
     // let table = document.getElementById(idstring);
-
+    checkElement('#a' + idstring).then(() => {
     callLoadData(idstring);
+    });
 };
 
 export const callLoadData = (
@@ -40,12 +41,12 @@ export const callLoadData = (
     tshow = null,
     tdir = null,
     treset = null) => {
-    // $('#spinner div').removeClass('hidden');
-    // $('#opengamestable').addClass('hidden');
-    // $('#spinner div').removeClass('hidden');
+ 
+    let table = document.getElementById('a' + idstring);
+    let spinner = document.querySelector('#a'+ idstring + 'spinner .spinner-border' );
+    spinner.classList.toggle('hidden');
+    table.classList.toggle('hidden');
 
-    let table = document.getElementById(idstring);
-    let spinner = document.getElementById(idstring + spinner);
     let encodedtable = table.getAttribute('data-encodedtable');
 
     Ajax.call([{
@@ -75,17 +76,19 @@ export const callLoadData = (
             // var node = document.createElement("DIV");
             // var textnode = document.createTextNode("This is my text");
             // node.appendChild(textnode);
-            let table = document.getElementById(idstring);
+            let table = document.getElementById('a' + idstring);
 
             while (table.firstChild) {
                 table.removeChild(table.lastChild);
             }
             table.appendChild(frag);
+            spinner.classList.toggle('hidden');
+            table.classList.toggle('hidden');
         },
         fail: function() {
-            // Debug: alert('fail');
+            alert('fail');
             // spinner.addClass('hidden');
-            table.removeClass('hidden');
+            //table.removeClass('hidden');
         }
     }]);
 };
@@ -150,3 +153,38 @@ export const replacePaginationLinks = (idstring, frag) => {
         }
     });
 };
+
+
+export const replacePaginationLinks = (idstring, frag) => {
+    var arrayOfPageItems = frag.querySelectorAll(".page-item");
+
+    if (!arrayOfPageItems || arrayOfPageItems.length == 0) {
+        return;
+    }
+    arrayOfPageItems.forEach(item => {
+        var element = item.querySelector('a');
+        var url = element.getAttribute("href");
+        var pageNumber;
+        if (url != undefined && url != '#') {
+            let newurl = new URL(url);
+            var urlParams = new URLSearchParams(newurl.search);
+            pageNumber = urlParams.get('page');
+        }
+        element.setAttribute('href', '#');
+        if (pageNumber) {
+            element.addEventListener('click', () => {
+                callLoadData(idstring, pageNumber);
+            });
+        }
+    });
+};
+
+
+
+const checkElement = async selector => {
+    while ( document.querySelector(selector) === null) {
+      await new Promise( resolve =>  requestAnimationFrame(resolve) )
+    }
+    return document.querySelector(selector); 
+};
+
