@@ -50,11 +50,11 @@ if (!$table->is_downloading()) {
 }
 
 // Work out the sql for the table.
-$table->set_sql('*', "{tool_customlang}", 'id<20');
+$table->set_sql('*', "{user}", 'id<20');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
 echo '<div class="test">';
-$table->outwithajax(2, true);
+$table->outwithajax(6, false);
 echo '</div>';
 $table->baseurl = "$CFG->wwwroot/download.php";
 /*$table2 = new wunderbyte_table('uniqueid1123');
@@ -99,7 +99,7 @@ echo '
       </div>
       <div class="modal-body">';
       $table3->outwithajax(3, true);
-echo '      
+echo '
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

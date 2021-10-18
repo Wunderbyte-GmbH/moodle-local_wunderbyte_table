@@ -60,30 +60,19 @@ class wunderbyte_table extends table_sql
 
         global $PAGE, $CFG;
         $this->pagesize = $pagesize;
+        $this->useinitialsbar = $useinitialsbar;
+        $this->downloadhelpbutton = $downloadhelpbutton;
+
         $encodedtablelib = json_encode($this);
 
         $base64encodedtablelib = base64_encode($encodedtablelib);
+
+        // We need to urlencode everything to make it proof.
+        $base64encodedtablelib = urlencode($base64encodedtablelib);
+
         $this->base64encodedtablelib = $base64encodedtablelib;
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         $viewtable = new viewtable($this->idstring, $base64encodedtablelib);
         echo $output->render_viewtable($viewtable);
-
-        // Include Javascript to enable AJAX calls.
-       // $PAGE->requires->js_call_amd('local_wunderbyte_table/init', 'init', [$this->idstring]);
-
-    }
-
-    public function download_buttons() {
-        global $OUTPUT,$CFG;
-        $encodedtablelib = json_encode($this);
-        $base64encodedtablelib = base64_encode($encodedtablelib);
-
-        if ($this->is_downloadable() && !$this->is_downloading()) {
-            echo '<input type="hidden" name="sesskey" value="'.$this->base64encodedtablelib.'">';
-            return $OUTPUT->download_dataformat_selector(get_string('downloadas', 'table'),
-            "$CFG->wwwroot/local/wunderbyte_table/download.php", 'download', $this->baseurl->params());
-        } else {
-            return '';
-        }
     }
 }

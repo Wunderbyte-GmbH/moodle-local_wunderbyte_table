@@ -24,13 +24,7 @@
 import Ajax from 'core/ajax';
 
 export const init = (idstring) => {
-    // eslint-disable-next-line no-alert
-    // alert('hello' + idstring);
-
-    // let table = document.getElementById(idstring);
-    checkElement('#a' + idstring).then(() => {
     callLoadData(idstring);
-    });
 };
 
 export const callLoadData = (
@@ -41,9 +35,9 @@ export const callLoadData = (
     tshow = null,
     tdir = null,
     treset = null) => {
- 
+
     let table = document.getElementById('a' + idstring);
-    let spinner = document.querySelector('#a'+ idstring + 'spinner .spinner-border' );
+    let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
     spinner.classList.toggle('hidden');
     table.classList.toggle('hidden');
 
@@ -60,14 +54,14 @@ export const callLoadData = (
             'tdir': tdir,
             'treset': treset
         },
-        done: function(res) {
+        done: function (res) {
 
             let frag = document.createRange().createContextualFragment(res.content);
 
             // eslint-disable-next-line no-alert
             // JSON.stringify(frag));
 
-            // replaceDownloadLink(idstring, frag);
+            replaceDownloadLink(idstring, frag);
             replaceResetTableLink(idstring, frag);
             replacePaginationLinks(idstring, frag);
             replaceSortColumnLinks(idstring, frag);
@@ -85,7 +79,7 @@ export const callLoadData = (
             spinner.classList.toggle('hidden');
             table.classList.toggle('hidden');
         },
-        fail: function() {
+        fail: function () {
             alert('fail');
             // spinner.addClass('hidden');
             //table.removeClass('hidden');
@@ -154,37 +148,22 @@ export const replacePaginationLinks = (idstring, frag) => {
     });
 };
 
+export const replaceDownloadLink = (idstring, frag) => {
 
-export const replacePaginationLinks = (idstring, frag) => {
-    var arrayOfPageItems = frag.querySelectorAll(".page-item");
+    let table = document.getElementById('a' + idstring);
+    let encodedtable = table.getAttribute('data-encodedtable');
 
-    if (!arrayOfPageItems || arrayOfPageItems.length == 0) {
-        return;
-    }
-    arrayOfPageItems.forEach(item => {
-        var element = item.querySelector('a');
-        var url = element.getAttribute("href");
-        var pageNumber;
-        if (url != undefined && url != '#') {
-            let newurl = new URL(url);
-            var urlParams = new URLSearchParams(newurl.search);
-            pageNumber = urlParams.get('page');
-        }
-        element.setAttribute('href', '#');
-        if (pageNumber) {
-            element.addEventListener('click', () => {
-                callLoadData(idstring, pageNumber);
-            });
+    encodedtable = encodeURIComponent(encodedtable);
+
+    var arrayOfItems = frag.querySelectorAll("form");
+
+    arrayOfItems.forEach(item => {
+        if (item.tagName == 'FORM') {
+            let newnode = document.createElement('input');
+            newnode.setAttribute('type','hidden');
+            newnode.setAttribute('name', 'encodedtable');
+            newnode.setAttribute('value', encodedtable);
+            item.appendChild(newnode);
         }
     });
 };
-
-
-
-const checkElement = async selector => {
-    while ( document.querySelector(selector) === null) {
-      await new Promise( resolve =>  requestAnimationFrame(resolve) )
-    }
-    return document.querySelector(selector); 
-};
-

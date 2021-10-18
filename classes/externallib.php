@@ -71,7 +71,9 @@ class local_wunderbyte_table_external extends external_api {
 
         $params = self::validate_parameters(self::load_data_parameters(), $params);
 
-        if (!$decodedlib = base64_decode($params['encodedtable'])) {
+        $decodedlib = urldecode($params['encodedtable']);
+
+        if (!$decodedlib = base64_decode($decodedlib)) {
             throw new moodle_exception('novalidbase64', 'local_wunderbyte_table', null, null,
                     'Invalid base64 string');
         }
@@ -80,7 +82,7 @@ class local_wunderbyte_table_external extends external_api {
                     'Invalid json string');
         }
 
-        $table = new wunderbyte_table($lib->uniqid);
+        $table = new $lib->classname($lib->uniqid);
 
         $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/index.php");
 
@@ -98,8 +100,8 @@ class local_wunderbyte_table_external extends external_api {
         }
 
         ob_start();
-        $table->out($table->pagesize, true);
-         
+        $table->out($table->pagesize, $table->useinitialsbar, $table->downloadhelpbutton);
+
         $result['content'] = ob_get_clean();
 
         return $result;
