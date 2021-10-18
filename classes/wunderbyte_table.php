@@ -56,7 +56,7 @@ class wunderbyte_table extends table_sql
         $this->classname = get_class($this);
     }
 
-    public function outwithajax($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
         global $PAGE, $CFG;
         $this->pagesize = $pagesize;
@@ -75,4 +75,63 @@ class wunderbyte_table extends table_sql
         $viewtable = new viewtable($this->idstring, $base64encodedtablelib);
         echo $output->render_viewtable($viewtable);
     }
+
+    /**
+     * This is a copy of the old out function.
+     * We need it to really print the table, when we override the new out with ajax-functions.
+     *
+     * @param [type] $pagesize
+     * @param [type] $useinitialsbar
+     * @param string $downloadhelpbutton
+     * @return void
+     */
+    public function printtable($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+        global $DB;
+        if (!$this->columns) {
+            $onerow = $DB->get_record_sql("SELECT {$this->sql->fields} FROM {$this->sql->from} WHERE {$this->sql->where}",
+                $this->sql->params, IGNORE_MULTIPLE);
+            // If columns is not set then define columns as the keys of the rows returned.
+            // From the db.
+            $this->define_columns(array_keys((array)$onerow));
+            $this->define_headers(array_keys((array)$onerow));
+        }
+        $this->pagesize = $pagesize;
+        $this->setup();
+        $this->query_db($pagesize, $useinitialsbar);
+        $this->build_table();
+        $this->close_recordset();
+        $this->finish_output();
+    }
+
+
+    public function update_from_json($lib) {
+        // We have to make sure some fields are properly typed.
+        $lib->sql->params = (array)$lib->sql->params;
+
+        // Pass all the variables to new table.
+        foreach ($lib as $key => $value) {
+            if (in_array($key, ['request', 'attributes', 'headers', 'columns',
+                'column_style', 'column_class', 'column_suppress'])) {
+                $this->{$key} = (array)$value;
+            } else if (!in_array($key, ['baseurl'])) {
+                $this->{$key} = $value;
+            }
+        }
+    }
+
+    public static function decode_table_settings($encodedtable):object {
+        // echo $encodedtable;
+        $decodedlib = urldecode($encodedtable);
+
+        if (!$decodedlib = base64_decode($decodedlib)) {
+            throw new moodle_exception('novalidbase64', 'local_wunderbyte_table', null, null,
+                    'Invalid base64 string');
+        }
+        if (!$lib = json_decode($decodedlib)) {
+            throw new moodle_exception('novalidjson', 'local_wunderbyte_table', null, null,
+                    'Invalid json string');
+        }
+        return $lib;
+    }
+
 }

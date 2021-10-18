@@ -71,36 +71,20 @@ class local_wunderbyte_table_external extends external_api {
 
         $params = self::validate_parameters(self::load_data_parameters(), $params);
 
-        $decodedlib = urldecode($params['encodedtable']);
-
-        if (!$decodedlib = base64_decode($decodedlib)) {
-            throw new moodle_exception('novalidbase64', 'local_wunderbyte_table', null, null,
-                    'Invalid base64 string');
-        }
-        if (!$lib = json_decode($decodedlib)) {
-            throw new moodle_exception('novalidjson', 'local_wunderbyte_table', null, null,
-                    'Invalid json string');
-        }
+        $lib = wunderbyte_table::decode_table_settings($params['encodedtable']);
 
         $table = new $lib->classname($lib->uniqid);
 
-        $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/index.php");
+        $table->update_from_json($lib);
 
-        // Pass all the variables to new table.
-        foreach ($lib as $key => $value) {
-            if (in_array($key, ['request', 'attributes'])) {
-                $table->{$key} = (array)$value;
-            } else if (!in_array($key, ['baseurl'])) {
-                $table->{$key} = $value;
-            }
-        }
+        $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/download.php");
 
         foreach ($params as $key => $value) {
             $_POST[$key] = $value;
         }
 
         ob_start();
-        $table->out($table->pagesize, $table->useinitialsbar, $table->downloadhelpbutton);
+        $table->printtable($table->pagesize, $table->useinitialsbar, $table->downloadhelpbutton);
 
         $result['content'] = ob_get_clean();
 
