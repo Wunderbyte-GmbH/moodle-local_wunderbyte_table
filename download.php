@@ -38,31 +38,15 @@ $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url('/download.php');
 
-$decodedlib = urldecode($encodedtable);
-
-if (!$decodedlib = base64_decode($decodedlib)) {
-    throw new moodle_exception('novalidbase64', 'local_wunderbyte_table', null, null,
-          'Invalid base64 string');
-}
-if (!$lib = json_decode($decodedlib)) {
-    throw new moodle_exception('novalidjson', 'local_wunderbyte_table', null, null,
-          'Invalid json string');
-}
+$lib = wunderbyte_table::decode_table_settings($params['encodedtable']);
 
 $table = new $lib->classname($lib->uniqid);
 
-// Pass all the variables to new table.
-foreach ($lib as $key => $value) {
-    if (in_array($key, ['request', 'attributes'])) {
-        $table->{$key} = (array)$value;
-    } else if (!in_array($key, ['baseurl'])) {
-        $table->{$key} = $value;
-    }
-}
+$table->update_from_json($lib);
 
 foreach ($params as $key => $value) {
     $_POST[$key] = $value;
 }
 
 $table->is_downloading($download, 'download', 'download');
-$table->out($table->pagesize, true);
+$table->printtable($table->pagesize, true);
