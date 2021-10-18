@@ -59,7 +59,7 @@ export const callLoadData = (
             'tdir': tdir,
             'treset': treset
         },
-        done: function (res) {
+        done: function(res) {
 
             let frag = document.createRange().createContextualFragment(res.content);
 
@@ -82,7 +82,7 @@ export const callLoadData = (
             }
             table.appendChild(frag);
         },
-        fail: function () {
+        fail: function() {
             // Debug: alert('fail');
             // spinner.addClass('hidden');
             table.removeClass('hidden');
@@ -141,9 +141,6 @@ export const replacePaginationLinks = (idstring, frag) => {
             let newurl = new URL(url);
             var urlParams = new URLSearchParams(newurl.search);
             pageNumber = urlParams.get('page');
-        } else {
-            // pageNumber = +element.text();
-            // --pageNumber;
         }
         element.setAttribute('href', '#');
         if (pageNumber) {

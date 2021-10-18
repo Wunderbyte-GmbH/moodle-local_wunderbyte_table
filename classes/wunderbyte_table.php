@@ -46,7 +46,7 @@ class wunderbyte_table extends table_sql
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
-        // some sensible defaults
+
         $this->idstring = md5($uniqueid);
     }
 
@@ -55,33 +55,12 @@ class wunderbyte_table extends table_sql
         global $PAGE, $CFG;
 
         $encodedtablelib = json_encode($this);
+
         $base64encodedtablelib = base64_encode($encodedtablelib);
 
-        echo "<div id='$this->idstring' data-encodedtable='$base64encodedtablelib'>";
-        // $this->out($pagesize, $useinitialsbar, $downloadhelpbutton);
-
-        // echo $encodedtablelib;
-
-        // $newtable = new table_sql($this->idstring);
-
-        // $oldtable = json_decode($encodedtablelib);
-
-        // $newtable->uniqueid = 'copy';
-
-        // $newtable->countsql = $oldtable->countsql;
-        // $newtable->countparams = $oldtable->countparams;
-        // $newtable->set_sql($oldtable->sql->fields, $oldtable->sql->from, $oldtable->sql->where, $oldtable->sql->params);
-        // $newtable->is_sortable($oldtable->is_sortable);
-        // $newtable->is_collapsible = $oldtable->is_collapsible;
-
-        // $newtable->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/index.php");
-
-        // echo "<br><br>";
-        // echo json_encode($newtable);
-
-        // $this->out($pagesize, $useinitialsbar, $downloadhelpbutton);
-
-        echo "</div>";
+        $output = $PAGE->get_renderer('local_wunderbyte_table');
+        $viewtable = new viewtable($this->idstring, $base64encodedtablelib);
+        $out .= $output->render_viewtable($viewtable);
 
         // Include Javascript to enable AJAX calls.
         $PAGE->requires->js_call_amd('local_wunderbyte_table/init', 'init', [$this->idstring]);

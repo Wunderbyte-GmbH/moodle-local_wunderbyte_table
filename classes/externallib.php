@@ -97,7 +97,6 @@ class local_wunderbyte_table_external extends external_api {
             $_POST[$key] = $value;
         }
 
-
         ob_start();
 
         $table->out(40, true);
