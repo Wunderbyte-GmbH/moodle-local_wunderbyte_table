@@ -32,13 +32,13 @@ require_login();
 require_once($CFG->dirroot . '/local/wunderbyte_table/classes/wunderbyte_table.php');
 
 $download = optional_param('download', '', PARAM_ALPHA);
-$encodedtable = optional_param('encodedtable', '', PARAM_ALPHA);
+$encodedtable = optional_param('encodedtable', '', PARAM_BASE64);
 
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url('/download.php');
 
-$lib = wunderbyte_table::decode_table_settings($params['encodedtable']);
+$lib = wunderbyte_table::decode_table_settings($encodedtable);
 
 $table = new $lib->classname($lib->uniqid);
 

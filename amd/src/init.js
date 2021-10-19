@@ -161,6 +161,7 @@ export const replaceDownloadLink = (idstring, frag) => {
 
     arrayOfItems.forEach(item => {
         if (item.tagName == 'FORM') {
+            item.setAttribute('method', 'POST');
             let newnode = document.createElement('input');
             newnode.setAttribute('type','hidden');
             newnode.setAttribute('name', 'encodedtable');

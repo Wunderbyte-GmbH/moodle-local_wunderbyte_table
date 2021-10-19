@@ -97,7 +97,7 @@ class local_wunderbyte_table_external extends external_api {
      */
     public static function load_data_parameters() {
         return new external_function_parameters(array(
-                        'encodedtable'  => new external_value(PARAM_RAW, 'tableid', VALUE_DEFAULT, ''),
+                        'encodedtable'  => new external_value(PARAM_RAW, 'eoncodedtable', VALUE_DEFAULT, ''),
                         'page'  => new external_value(PARAM_INT, 'page', VALUE_OPTIONAL),
                         'tsort'   => new external_value(PARAM_RAW, 'sort value', VALUE_OPTIONAL),
                         'thide'   => new external_value(PARAM_RAW, 'hide value', VALUE_OPTIONAL),
