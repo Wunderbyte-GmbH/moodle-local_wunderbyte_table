@@ -15,8 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The Wunderbyte table class is an extension of the tablelib table_sql class
- * and adds wonderful new functionalities.
+ * The Wunderbyte table class is an extension of the tablelib table_sql class.
  *
  * @package local_wunderbyte_table
  * @copyright 2021 onwards Wunderbyte Gmbh <info@wunderbyte.at>
@@ -49,6 +48,11 @@ class wunderbyte_table extends table_sql
      */
     public $classname = '';
 
+    /**
+     * Constructor. Does store uniqueid as hashed value and the actual classname.
+     *
+     * @param string $uniqueid
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
 

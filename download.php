@@ -15,13 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Simple file test.php to drop into root of Moodle installation.
- * This is the skeleton code to print a downloadable, paged, sorted table of
- * data from a sql query.
+ * Baseurl of wunderbyte_table will always point to this file for download.
+ * @copyright 2021 Wunderbyte Gmbh <info@wunderbyte.at>
+ * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use local_wunderbyte_table\wunderbyte_table;
-// use table_sql;
 
 require_once("../../config.php");
 

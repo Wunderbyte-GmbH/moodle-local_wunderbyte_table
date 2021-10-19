@@ -39,7 +39,7 @@ class renderer extends plugin_renderer_base {
     /**
      * Render a wunderbyte_table.
      *
-     * @param templatable $viewpage
+     * @param templatable $viewtable
      * @return string|boolean
      */
     public function render_viewtable(templatable $viewtable) {

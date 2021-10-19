@@ -1,8 +1,14 @@
 # Wunderbyte Table #
 
-TODO Describe the plugin shortly here.
+Wunderbyte Table can be used instead of the table_sql class and then supports all the actions via Ajax.
 
-TODO Provide more detailed description here.
+This local plugin was developed to allow the use of the table_sql class within modals and tabs.
+There is no special configuration required. After the installation of the local_wunderbyte_table, you can create an
+extended class to wunderbyte_table (instead of table_sql).
+
+    class booking_table extends wunderbyte_table {}
+
+That's all it takes. Switching pages, sorting, hiding columns and downloading will now run via ajax.
 
 ## Installing via uploaded ZIP file ##
 
@@ -16,7 +22,7 @@ TODO Provide more detailed description here.
 
 The plugin can be also installed by putting the contents of this directory to
 
-    {your/moodle/dirroot}/local/wunderbyte_table
+    {your/moodle/dirroot}/local/wunderbyte_table}
 
 Afterwards, log in to your Moodle site as an admin and go to _Site administration >
 Notifications_ to complete the installation.

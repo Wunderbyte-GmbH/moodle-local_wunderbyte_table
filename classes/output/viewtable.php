@@ -54,7 +54,9 @@ class viewtable implements renderable, templatable {
 
     /**
      * Constructor.
-     * @param array $data
+     *
+     * @param string $idstring
+     * @param string $encodedtable
      */
     public function __construct(string $idstring, string $encodedtable) {
         $this->idstring = $idstring;
