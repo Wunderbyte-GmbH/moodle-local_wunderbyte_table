@@ -90,8 +90,16 @@ export const callLoadData = (
             table.appendChild(frag);
             spinner.classList.toggle('hidden');
             table.classList.toggle('hidden');
+            return true;
         },
         fail: function() {
+            // eslint-disable-next-line no-alert
+
+            // If we have an error, resetting the table might be enough. we do that.
+            // To avoid a loop, we only do this in special cases.
+            if ((treset != 1)) {
+                callLoadData(idstring, page, null, null, null, null, 1);
+            }
             spinner.classList.toggle('hidden');
             table.classList.toggle('hidden');
         }
