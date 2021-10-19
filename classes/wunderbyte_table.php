@@ -56,6 +56,15 @@ class wunderbyte_table extends table_sql
         $this->classname = get_class($this);
     }
 
+    /**
+     * New out function just stores the settings as jason in base64 format and creates a table.
+     * It also attaches the necessary javascript to fetch the actual table via ajax afterwards.
+     *
+     * @param int $pagesize
+     * @param bool $useinitialsbar
+     * @param string $downloadhelpbutton
+     * @return void
+     */
     public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
         global $PAGE, $CFG;
@@ -77,7 +86,7 @@ class wunderbyte_table extends table_sql
     }
 
     /**
-     * This is a copy of the old out function.
+     * This is a copy of the old ->out method.
      * We need it to really print the table, when we override the new out with ajax-functions.
      *
      * @param [type] $pagesize
@@ -104,6 +113,13 @@ class wunderbyte_table extends table_sql
     }
 
 
+    /**
+     * The function to update settings from the json. During encoding, arrays & stds get mixed up sometimes.
+     * There, this does the cleaning and attribution.
+     *
+     * @param [type] $lib
+     * @return void
+     */
     public function update_from_json($lib) {
         // We have to make sure some fields are properly typed.
         $lib->sql->params = (array)$lib->sql->params;
@@ -119,11 +135,17 @@ class wunderbyte_table extends table_sql
         }
     }
 
-    public static function decode_table_settings($encodedtable):object {
-        // echo $encodedtable;
-        $decodedlib = urldecode($encodedtable);
+    /**
+     * Function to treat decoding of the encoded talbe we receive via ajax or post.
+     *
+     * @param string $encodedtable
+     * @return object
+     */
+    public static function decode_table_settings(string $encodedtable):object {
 
-        if (!$decodedlib = base64_decode($decodedlib)) {
+        $urldecodedtable = urldecode($encodedtable);
+
+        if (!$decodedlib = base64_decode($urldecodedtable)) {
             throw new moodle_exception('novalidbase64', 'local_wunderbyte_table', null, null,
                     'Invalid base64 string');
         }

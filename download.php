@@ -40,13 +40,9 @@ $PAGE->set_url('/download.php');
 
 $lib = wunderbyte_table::decode_table_settings($encodedtable);
 
-$table = new $lib->classname($lib->uniqid);
+$table = new $lib->classname($lib->uniqueid);
 
 $table->update_from_json($lib);
-
-foreach ($params as $key => $value) {
-    $_POST[$key] = $value;
-}
 
 $table->is_downloading($download, 'download', 'download');
 $table->printtable($table->pagesize, true);

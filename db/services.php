@@ -33,7 +33,6 @@ $functions = array(
                 'description' => 'Ajax load list of finishedgames',
                 'type' => 'read',
                 'capabilities' => '',
-                'ajax' => true,
-                'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE)
+                'ajax' => true
         )
 );

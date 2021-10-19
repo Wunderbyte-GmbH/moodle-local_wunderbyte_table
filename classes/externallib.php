@@ -73,7 +73,7 @@ class local_wunderbyte_table_external extends external_api {
 
         $lib = wunderbyte_table::decode_table_settings($params['encodedtable']);
 
-        $table = new $lib->classname($lib->uniqid);
+        $table = new $lib->classname($lib->uniqueid);
 
         $table->update_from_json($lib);
 
