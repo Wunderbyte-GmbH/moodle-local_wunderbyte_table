@@ -33,6 +33,7 @@ use moodle_exception;
 use table_sql;
 use moodle_url;
 use local_wunderbyte_table\output\viewtable;
+use stdClass;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -76,7 +77,12 @@ class wunderbyte_table extends table_sql
         $this->useinitialsbar = $useinitialsbar;
         $this->downloadhelpbutton = $downloadhelpbutton;
 
+        // We have to do a few steps here to make sure we can recreate afterwards.
         $encodedtablelib = json_encode($this);
+
+        $jsonobject = json_decode($encodedtablelib);
+        $this->add_classnames_to_classes($jsonobject);
+        $encodedtablelib = json_encode($jsonobject);
 
         $base64encodedtablelib = base64_encode($encodedtablelib);
 
@@ -133,7 +139,20 @@ class wunderbyte_table extends table_sql
             if (in_array($key, ['request', 'attributes', 'headers', 'columns',
                 'column_style', 'column_class', 'column_suppress'])) {
                 $this->{$key} = (array)$value;
-            } else if (!in_array($key, ['baseurl'])) {
+            } else if ($value instanceof stdClass) {
+                // We check if this is a coursemodule.
+                if (isset($value->cm)
+                    && isset($value->cm->id)
+                    && isset($value->wbtclassname)
+                    && class_exists($value->wbtclassname)) {
+                    if ($cm = new $value->wbtclassname($value->cm->id)) {
+                        $this->{$key} = $cm;
+                    } else {
+                        // If we couldn't create an instance, we stick to the stdclass.
+                        $this->{$key} = $value;
+                    }
+                }
+            } else {
                 $this->{$key} = $value;
             }
         }
@@ -158,6 +177,28 @@ class wunderbyte_table extends table_sql
                     'Invalid json string');
         }
         return $lib;
+    }
+
+    /**
+     * This function is necessary to add the classname including the path to the json object.
+     * With this information we can reinstantiate the class afterwards.
+     *
+     * @param [type] $jsonobject
+     * @return void
+     */
+    private function add_classnames_to_classes(&$jsonobject) {
+        // Pass all the variables to new table.
+        foreach ($jsonobject as $key => $value) {
+            if ($value instanceof stdClass) {
+                // We check if this is a coursemodule.
+                if (isset($value->cm)
+                    && isset($value->cm->id)) {
+                        // if so, we need to add the classname to make sure we can instantiate it afterwards.
+                        $classname = get_class($this->{$key});
+                        $value->wbtclassname = $classname;
+                }
+            }
+        }
     }
 
 }
