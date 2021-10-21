@@ -88,20 +88,23 @@ export const callLoadData = (
                 table.removeChild(table.lastChild);
             }
             table.appendChild(frag);
-            spinner.classList.toggle('hidden');
-            table.classList.toggle('hidden');
+            spinner.classList.add('hidden');
+            table.classList.remove('hidden');
             return true;
         },
-        fail: function() {
-            // eslint-disable-next-line no-alert
-
+        fail: function(err) {
             // If we have an error, resetting the table might be enough. we do that.
             // To avoid a loop, we only do this in special cases.
             if ((treset != 1)) {
                 callLoadData(idstring, page, null, null, null, null, 1);
+            } else {
+                let node = document.createElement('DIV');
+                let textnode = document.createTextNode(err.message);
+                node.appendChild(textnode);
+                table.appendChild(node);
+                spinner.classList.add('hidden');
+                table.classList.remove('hidden');
             }
-            spinner.classList.toggle('hidden');
-            table.classList.toggle('hidden');
         }
     }]);
 };
