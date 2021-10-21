@@ -8,6 +8,8 @@ extended class to wunderbyte_table (instead of table_sql).
 
     class booking_table extends wunderbyte_table {}
 
+If your extended table lass contains another class (eg myplugin_class), make sure you can instantiate it with only the cmid. Errors will be thrown if this is not possible.
+
 That's all it takes. Switching pages, sorting, hiding columns and downloading will now run via ajax.
 
 ## Installing via uploaded ZIP file ##

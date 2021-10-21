@@ -151,6 +151,8 @@ class wunderbyte_table extends table_sql
                         // If we couldn't create an instance, we stick to the stdclass.
                         $this->{$key} = $value;
                     }
+                } else {
+                    $this->{$key} = $value;
                 }
             } else {
                 $this->{$key} = $value;
@@ -183,7 +185,7 @@ class wunderbyte_table extends table_sql
      * This function is necessary to add the classname including the path to the json object.
      * With this information we can reinstantiate the class afterwards.
      *
-     * @param [type] $jsonobject
+     * @param object $jsonobject
      * @return void
      */
     private function add_classnames_to_classes(&$jsonobject) {
