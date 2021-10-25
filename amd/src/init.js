@@ -25,9 +25,47 @@ import Ajax from 'core/ajax';
  * Gets called from mustache template.
  * @param {string} idstring
  */
-export const init = (idstring) => {
-    callLoadData(idstring);
+export const init = (idstring, encodedtable) => {
+    window.addEventListener('load', () => {
+         respondToVisibility(idstring, encodedtable, callLoadData);
+    });
 };
+
+/**
+ * React on visibility change.
+ * @param {string} idstring
+ * @param {function} callback
+ */
+function respondToVisibility(idstring, encodedtable, callback) {
+    let element = document.getElementById('a' + idstring);
+    var observer = new MutationObserver(function() {
+        if (!isHidden(element)) {
+            this.disconnect();
+            callback(idstring, encodedtable);
+        }
+    });
+
+    // We look if we find a hidden parent. If not, we load right away.
+    while (element !== null) {
+        if (!isHidden(element)) {
+            element = element.parentElement;
+        } else {
+            observer.observe(element, {attributes: true});
+            return;
+        }
+    }
+    callback(idstring, encodedtable);
+}
+
+/**
+ * Function to check visibility of element.
+ * @param {*} el
+ * @returns {boolean}
+ */
+function isHidden(el) {
+    var style = window.getComputedStyle(el);
+    return ((style.display === 'none') || (style.visibility === 'hidden'));
+}
 
 /**
  * Reloads the rendered table and sets it to the div with the right identifier.
@@ -41,19 +79,17 @@ export const init = (idstring) => {
  */
 export const callLoadData = (
     idstring,
+    encodedtable,
     page = null,
     tsort = null,
     thide = null,
     tshow = null,
     tdir = null,
     treset = null) => {
-
     let table = document.getElementById('a' + idstring);
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
     spinner.classList.toggle('hidden');
     table.classList.toggle('hidden');
-
-    let encodedtable = table.getAttribute('data-encodedtable');
 
     Ajax.call([{
         methodname: "local_wunderbyte_table_load_data",
@@ -77,7 +113,7 @@ export const callLoadData = (
                 }
             }
 
-            replaceDownloadLink(idstring, frag);
+            replaceDownloadLink(idstring, encodedtable, frag);
             replaceResetTableLink(idstring, frag, page);
             replacePaginationLinks(idstring, frag);
             replaceSortColumnLinks(idstring, frag, page);
@@ -96,7 +132,7 @@ export const callLoadData = (
             // If we have an error, resetting the table might be enough. we do that.
             // To avoid a loop, we only do this in special cases.
             if ((treset != 1)) {
-                callLoadData(idstring, page, null, null, null, null, 1);
+                callLoadData(idstring, encodedtable, page, null, null, null, null, 1);
             } else {
                 let node = document.createElement('DIV');
                 let textnode = document.createTextNode(err.message);
@@ -195,10 +231,7 @@ export const replacePaginationLinks = (idstring, frag) => {
  * @param {string} idstring
  * @param {DocumentFragment} frag
  */
-export const replaceDownloadLink = (idstring, frag) => {
-
-    let table = document.getElementById('a' + idstring);
-    let encodedtable = table.getAttribute('data-encodedtable');
+export const replaceDownloadLink = (idstring, encodedtable, frag) => {
 
     var arrayOfItems = frag.querySelectorAll("form");
 
