@@ -62,7 +62,7 @@ class wunderbyte_table extends table_sql
     }
 
     /**
-     * New out function just stores the settings as jason in base64 format and creates a table.
+     * New out function just stores the settings as json in base64 format and creates a table.
      * It also attaches the necessary javascript to fetch the actual table via ajax afterwards.
      *
      * @param int $pagesize
@@ -71,6 +71,21 @@ class wunderbyte_table extends table_sql
      * @return void
      */
     public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+
+        list($idnumber, $encodedtable, $html) = $this->outhtml($pagesize, $useinitialsbar, $downloadhelpbutton);
+
+        echo $html;
+    }
+
+    /**
+     * A version of the out function which does not actually echo but just returns the html plus the idnumber.
+     *
+     * @param int $pagesize
+     * @param bool $useinitialsbar
+     * @param string $downloadhelpbutton
+     * @return array
+     */
+    public function outhtml($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
         global $PAGE, $CFG;
         $this->pagesize = $pagesize;
@@ -92,7 +107,7 @@ class wunderbyte_table extends table_sql
         $this->base64encodedtablelib = $base64encodedtablelib;
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         $viewtable = new viewtable($this->idstring, $base64encodedtablelib);
-        echo $output->render_viewtable($viewtable);
+        return [$this->idstring, $base64encodedtablelib, $output->render_viewtable($viewtable)];
     }
 
     /**
@@ -195,7 +210,7 @@ class wunderbyte_table extends table_sql
                 // We check if this is a coursemodule.
                 if (isset($value->cm)
                     && isset($value->cm->id)) {
-                        // if so, we need to add the classname to make sure we can instantiate it afterwards.
+                        // If so, we need to add the classname to make sure we can instantiate it afterwards.
                         $classname = get_class($this->{$key});
                         $value->wbtclassname = $classname;
                 }

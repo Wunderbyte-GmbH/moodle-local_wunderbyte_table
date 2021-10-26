@@ -24,17 +24,18 @@ import Ajax from 'core/ajax';
 /**
  * Gets called from mustache template.
  * @param {string} idstring
+ * @param {string} encodedtable
  */
 export const init = (idstring, encodedtable) => {
-    window.addEventListener('load', () => {
-         respondToVisibility(idstring, encodedtable, callLoadData);
-    });
+    respondToVisibility(idstring, encodedtable, callLoadData);
 };
 
 /**
  * React on visibility change.
  * @param {string} idstring
+ * @param {string} encodedtable
  * @param {function} callback
+ * @returns
  */
 function respondToVisibility(idstring, encodedtable, callback) {
     let element = document.getElementById('a' + idstring);
@@ -229,6 +230,7 @@ export const replacePaginationLinks = (idstring, frag) => {
 /**
  * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
  * @param {string} idstring
+ * @param {string} encodedtable
  * @param {DocumentFragment} frag
  */
 export const replaceDownloadLink = (idstring, encodedtable, frag) => {
