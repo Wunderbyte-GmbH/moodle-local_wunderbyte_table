@@ -38,7 +38,7 @@ $table->is_downloading($download, 'test', 'testing123');
 
 if (!$table->is_downloading()) {
     // Only print headers if not asked to download data
-    // Print the page header
+    // Print the page header.
     $PAGE->set_title('Testing');
     $PAGE->set_heading('Testing table class');
     $PAGE->navbar->add('Testing table class', new moodle_url('/test.php'));
