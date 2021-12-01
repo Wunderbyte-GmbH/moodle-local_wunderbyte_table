@@ -1,0 +1,102 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_wunderbyte_table/table
+    Template which defines a mooduell view page.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+    Context variables required for this template:
+    * statistics - array: An array with values.
+    * opengames - array: empty array, will be filled with JS.
+    * finishedgames - array: empty array, will be filled with JS.
+    * highscores - array: empty array, will be filled with JS.
+
+    Example context (json):
+    {
+       "idstring": "sdkjafjlsadjflasjdklf",
+       "encodedtable": "fdaskjfdjalsdjfkldsjflsajflksdjfklasdjflkdasjljkdfsalkjfoweijfoeisjgdklyjglky"
+    }
+
+}}
+
+{{#table}}
+<div class="container-fluid">
+
+    {{#header}}
+    <div class="{{listheaderclass}}">
+        <div class="card-header row">
+            {{#cardbody}}
+                <div class="{{#columnclass}}{{.}} {{/columnclass}}">
+                    {{key}}
+                </div>
+            {{/cardbody}}
+        </div>
+    </div>
+   {{/header}}
+
+   {{#rows}}
+
+   <div class="card">
+      <div class="{{cardheaderclass}}">
+          {{#cardheader}}
+               {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
+                  {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
+                    {{key}}:
+                  {{#columnkeyclass}}</span>{{/columnkeyclass}}
+                  {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
+                    {{value}}
+                  {{#columnvalueclass}}</span>{{/columnvalueclass}}
+               {{#columnclass}}</div>{{/columnclass}}
+          {{/cardheader}}
+      </div>
+      <div class="{{cardbodyclass}}">
+                {{#cardbody}}
+               {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
+                  {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
+                    {{key}}:
+                  {{#columnkeyclass}}</span>{{/columnkeyclass}}
+                  {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
+                    {{value}}
+                  {{#columnvalueclass}}</span>{{/columnvalueclass}}
+               {{#columnclass}}</div>{{/columnclass}}
+               {{/cardbody}}
+      </div>
+      <div class="{{cardfooterclass}}">
+         {{#cardfooter}}
+               {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
+                  {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
+                    {{key}}:
+                  {{#columnkeyclass}}</span>{{/columnkeyclass}}
+                  {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
+                    {{value}}
+                  {{#columnvalueclass}}</span>{{/columnvalueclass}}
+               {{#columnclass}}</div>{{/columnclass}}
+          {{/cardfooter}}
+      </div>
+   </div>
+
+    {{/rows}}
+
+</div>
+
+{{/table}}
+
+
+{{#js}}
+    require(['local_wunderbyte_table/init'], function(init) {
+    init.init('{{idstring}}', '{{encodedtable}}');
+    });
+{{/js}}

@@ -46,9 +46,36 @@ if (!$table->is_downloading()) {
 }
 
 // Work out the sql for the table.
-$table->set_sql('*', "{user}", '1=1');
+$table->set_sql('*', "{booking_options}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
+
+$columns = ['id', 'maxanswers', 'text', 'pollurl'];
+$table->define_columns($columns);
+$table->define_headers($columns);
+
+
+$table->addsubcolumns('cardheader', ['text']);
+$table->addsubcolumns('cardfooter', ['pollurl']);
+$table->addsubcolumns('cardbody', ['id', 'maxanswers', 'text', 'pollurl']);
+
+// This adds the width to all normal columns.
+$table->addclassestosubcolumns('cardbody', ['columnclass' => 'col-sm']);
+// This avoids showing all keys in list view.
+$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
+// To hide key in cardheader, set only for special columns.
+$table->addclassestosubcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['text']);
+$table->addclassestosubcolumns('cardfooter', ['columnkeyclass' => 'hidden'], ['pollurl']);
+// To hide value in card body (because this value is shown in header already).
+$table->addclassestosubcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['text']);
+$table->addclassestosubcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['pollurl']);
+// Set Classes not linked to the individual records or columns but for the container.
+$table->settableclass('listheaderclass', 'card d-none d-md-block');
+$table->settableclass('cardheaderclass', 'card-header d-md-none bg-warning');
+$table->settableclass('cardbodyclass', 'card-body row');
+$table->settableclass('cardfooterclass', 'card-footer d-md-none bg-success');
+
+// From here on it's standard table_sql again.
 
 $table->out(40, true);
 

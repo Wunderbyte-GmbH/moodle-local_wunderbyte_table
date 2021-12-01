@@ -46,4 +46,9 @@ class renderer extends plugin_renderer_base {
         $data = $viewtable->export_for_template($this);
         return $this->render_from_template('local_wunderbyte_table/viewtable', $data);
     }
+
+    public function render_table(templatable $table) {
+        $data = $table->export_for_template($this);
+        return $this->render_from_template('local_wunderbyte_table/table', $data);
+    }
 }

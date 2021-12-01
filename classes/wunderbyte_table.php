@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/tablelib.php");
 
 use gradereport_singleview\local\ui\empty_element;
+use local_wunderbyte_table\output\table;
 use moodle_exception;
 use table_sql;
 use moodle_url;
@@ -48,6 +49,38 @@ class wunderbyte_table extends table_sql
      * @var string classname of possible subclass.
      */
     public $classname = '';
+
+    /**
+     *
+     * @var array array of formated rows.
+     */
+    public $formatedrows = [];
+
+
+
+    /**
+     * @var array array of supplementary column information. Can be used like below.
+     * ['cardheader' => [
+     *                  column1 => [
+     *                              'classidentifier1' => 'classname1',
+     *                              'classidentifier2' => 'classname2']
+     *                  ],
+     * 'cardfooter' => [
+     *                  column1 => [
+     *                              'classidentifier1' => 'classname1',
+     *                              'classidentifier2' => 'classname2']
+     *                  ]
+     * ]
+     * In mustache template, use like {{classidentifer1}}
+     */
+    public $subcolumns = [];
+
+    /**
+     * array array of [classidentifier => classname] to use in mustache template on table level.
+     *
+     * @var array
+     */
+    public $tableclasses = [];
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
@@ -70,7 +103,7 @@ class wunderbyte_table extends table_sql
      * @param string $downloadhelpbutton
      * @return void
      */
-    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+    public function outnew($pagesize, $useinitialsbar, $downloadhelpbutton = '') { // function nmae is out.
 
         list($idnumber, $encodedtable, $html) = $this->outhtml($pagesize, $useinitialsbar, $downloadhelpbutton);
 
@@ -119,7 +152,7 @@ class wunderbyte_table extends table_sql
      * @param string $downloadhelpbutton
      * @return void
      */
-    public function printtable($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') { // function name is printtable.
         global $DB;
         if (!$this->columns) {
             $onerow = $DB->get_record_sql("SELECT {$this->sql->fields} FROM {$this->sql->from} WHERE {$this->sql->where}",
@@ -136,6 +169,33 @@ class wunderbyte_table extends table_sql
         $this->close_recordset();
         $this->finish_output();
     }
+
+
+    /**
+     * You should call this to finish outputting the table data after adding
+     * data to the table with add_data or add_data_keyed.
+     *
+     */
+    public function finish_output($closeexportclassdoc = true) {
+        if ($this->exportclass !== null) {
+            $this->exportclass->finish_table();
+            if ($closeexportclassdoc) {
+                $this->exportclass->finish_document();
+            }
+        } else {
+            $this->finish_html();
+        }
+    }
+
+    public function finish_html() {
+        global $PAGE;
+
+        $output = $PAGE->get_renderer('local_wunderbyte_table');
+        $table = new table($this);
+        echo $output->render_table($table);
+    }
+
+
 
 
     /**
@@ -218,4 +278,149 @@ class wunderbyte_table extends table_sql
         }
     }
 
+    /**
+     * @param array $columns an array of identifying names for columns. If
+     * columns are sorted then column names must correspond to a field in sql.
+     */
+    function define_columns($columns) {
+        $this->columns = array();
+        $this->column_style = array();
+        $this->column_class = array();
+        $colnum = 0;
+
+        foreach ($columns as $column) {
+            $this->columns[$column]             = $colnum++;
+            $this->column_style[$column]        = array();
+            $this->column_class[$column]        = '';
+            $this->cardbodycolumns[$column]    = ''; // This is specific to wunderbyte_table.
+            $this->column_suppress[$column]     = false;
+        }
+    }
+
+    /**
+     * Wunderbyte table function to better control output
+     *
+     * @param string $column
+     * @param string $classname
+     * @return void
+     */
+    public function columnkeyclass($column, $classname) {
+        if (!isset($this->cardbodycolumns[$column]['keyclass'])) {
+            $this->cardbodycolumns[$column]['keyclass'] = $classname; // This space needed so that classnames don't run together in the HTML
+        } else {
+            $this->cardbodycolumns[$column]['keyclass'] .= ' '.$classname;
+        }
+    }
+
+    /**
+     * Wunderbyte table function to better control output
+     *
+     * @param string $column
+     * @param string $classname
+     * @return void
+     */
+    public function columnvalueclass($column, $classname) {
+        if (!isset($this->cardbodycolumns[$column]['valueclass'])) {
+            $this->cardbodycolumns[$column]['valueclass'] = $classname; // This space needed so that classnames don't run together in the HTML
+        } else {
+            $this->cardbodycolumns[$column]['valuelass'] .= ' '.$classname;
+        }
+    }
+
+    /**
+     * Function to set same class to all columns.
+     * This will override all previous classes.
+     *
+     * @param string $classname
+     * @return void
+     */
+    public function column_class_all($classname) {
+        foreach (array_keys($this->columns) as $column) {
+            $this->column_class[$column] = $classname;
+        }
+    }
+
+
+
+    /**
+     * Add one or more columns to a certain subcolumnidentifier.
+     *
+     * @param string $subcolumnsidentifier
+     * @param array $subcolumns
+     * @return void
+     */
+    public function addsubcolumns(string $subcolumnsidentifier, array $subcolumns) {
+        if (strlen($subcolumnsidentifier) == 0) {
+            throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
+                    "You need to specify a columnidentifer like cardheader or cardfooter");
+        }
+        foreach ($subcolumns as $key => $value) {
+            $this->subcolumns[$subcolumnsidentifier][$value] = [];
+        }
+    }
+
+    /**
+     * Add one or more classes to some or all of the columns already specified in special subcolumnidentifier.
+     * If no subcolumns are specified, all of them are treated. Classes array nedds to have form of...
+     * ... ['classidentifier' => 'classname'] where {{classidentifier}} should be used in mustache template...
+     * ... and 'classname' should be something like 'bg-primary md-none' etc.
+     *
+     * @param string $subcolumnsidentifier
+     * @param array $classes
+     * @param array|null $subcolumns
+     * @param boolean $replace
+     * @return void
+     */
+    public function addclassestosubcolumns(string $subcolumnsidentifier, array $classes, array $subcolumns = null, $replace = false) {
+        if (strlen($subcolumnsidentifier) == 0) {
+            throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
+                    "You need to specify a columnidentifer like cardheader or cardfooter");
+        }
+        if (!$subcolumns) {
+            $subcolumnsarray = $this->subcolumns[$subcolumnsidentifier];
+        } else {
+            foreach ($subcolumns as $item) {
+                $subcolumnsarray[$item] = $item;
+            }
+        }
+        foreach ($subcolumnsarray as $columnkey => $columnkey) {
+            foreach ($classes as $key => $value) {
+                if (!isset($key) || !isset($value)) {
+                    throw new moodle_exception('nokeyvaluepairinclassarray', 'local_wunderbyte_table', null, null,
+                    "The classarray has to have the form classidentifier => classname, where {{classidentifier}}
+                        needs to be present in your mustache template.");
+                }
+                if ($replace || !isset($this->subcolumns[$subcolumnsidentifier][$columnkey][$key])) {
+                    $this->subcolumns[$subcolumnsidentifier][$columnkey][$key] = $value;
+                } else {
+                    $this->subcolumns[$subcolumnsidentifier][$columnkey][$key] .= ' ' . $value;
+                }
+
+            }
+        }
+    }
+
+    /**
+     * Add any classidentifier and classname to mustache template.
+     *
+     * @param string $class
+     * @param string $classname
+     * @return void
+     */
+    public function settableclass(string $classidentifier, string $classname) {
+        $this->tableclasses[$classidentifier] = $classname;
+    }
+
+    /**
+     * Do nothing. This is just to override original function.
+     *
+     * @param [type] $row
+     * @param string $classname
+     * @return void
+     */
+    public function build_table() {
+        foreach ($this->rawdata as $rawrow) {
+            $this->formatedrows[] = $this->format_row($rawrow);
+        }
+    }
 }
