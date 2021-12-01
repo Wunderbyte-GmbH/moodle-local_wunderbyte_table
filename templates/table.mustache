@@ -48,8 +48,12 @@
    {{/header}}
 
    {{#rows}}
-
-   <div class="card">
+   <div class="card mb-2">
+      <div class="{{cardimageclass}}">
+          {{#cardimage}}
+              {{{value}}}
+          {{/cardimage}}
+        </div>
       <div class="{{cardheaderclass}}">
           {{#cardheader}}
                {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
@@ -57,7 +61,7 @@
                     {{key}}:
                   {{#columnkeyclass}}</span>{{/columnkeyclass}}
                   {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
-                    {{value}}
+                    {{{value}}}
                   {{#columnvalueclass}}</span>{{/columnvalueclass}}
                {{#columnclass}}</div>{{/columnclass}}
           {{/cardheader}}
@@ -69,7 +73,7 @@
                     {{key}}:
                   {{#columnkeyclass}}</span>{{/columnkeyclass}}
                   {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
-                    {{value}}
+                    {{{value}}}
                   {{#columnvalueclass}}</span>{{/columnvalueclass}}
                {{#columnclass}}</div>{{/columnclass}}
                {{/cardbody}}
@@ -81,13 +85,12 @@
                     {{key}}:
                   {{#columnkeyclass}}</span>{{/columnkeyclass}}
                   {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
-                    {{value}}
+                    {{{value}}}
                   {{#columnvalueclass}}</span>{{/columnvalueclass}}
                {{#columnclass}}</div>{{/columnclass}}
           {{/cardfooter}}
       </div>
    </div>
-
     {{/rows}}
 
 </div>

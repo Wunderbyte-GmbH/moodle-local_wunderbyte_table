@@ -354,9 +354,16 @@ class wunderbyte_table extends table_sql
             throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
                     "You need to specify a columnidentifer like cardheader or cardfooter");
         }
+        foreach ($this->columns as $key => $value) {
+            $columns[] = $key;
+        }
         foreach ($subcolumns as $key => $value) {
             $this->subcolumns[$subcolumnsidentifier][$value] = [];
+            $columns[] = $value;
         }
+        // this is necessary to make sure we create the right content.
+        $this->define_columns($columns);
+
     }
 
     /**

@@ -50,22 +50,30 @@ $table->set_sql('*', "{booking_options}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
 
-$columns = ['id', 'maxanswers', 'text', 'pollurl'];
-$table->define_columns($columns);
-$table->define_headers($columns);
+// TODO: Override column headers.
 
-
+$table->addsubcolumns('cardbody', ['id', 'text', 'maxanswers', 'pollurl', 'maxoverbooking']);
 $table->addsubcolumns('cardheader', ['text']);
 $table->addsubcolumns('cardfooter', ['pollurl']);
-$table->addsubcolumns('cardbody', ['id', 'maxanswers', 'text', 'pollurl']);
+
+// Not in use right now, this is how an image is added to the card.
+// With the two lines below, image is shown only in card header.
+// The image value should be eg. <img src="..." class="card-img-top d-md-none">.
+// $table->addsubcolumns('cardimage', ['image']);
 
 // This adds the width to all normal columns.
 $table->addclassestosubcolumns('cardbody', ['columnclass' => 'col-sm']);
 // This avoids showing all keys in list view.
 $table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
+
 // To hide key in cardheader, set only for special columns.
 $table->addclassestosubcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['text']);
 $table->addclassestosubcolumns('cardfooter', ['columnkeyclass' => 'hidden'], ['pollurl']);
+
+$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['text']);
+$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['pollurl']);
+
+$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['maxoverbooking']);
 // To hide value in card body (because this value is shown in header already).
 $table->addclassestosubcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['text']);
 $table->addclassestosubcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['pollurl']);
