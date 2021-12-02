@@ -46,15 +46,15 @@ if (!$table->is_downloading()) {
 }
 
 // Work out the sql for the table.
-$table->set_sql('*', "{booking_options}", '1=1');
+$table->set_sql('*', "{course}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
 
 // TODO: Override column headers.
 
-$table->addsubcolumns('cardbody', ['id', 'text', 'maxanswers', 'pollurl', 'maxoverbooking']);
-$table->addsubcolumns('cardheader', ['text']);
-$table->addsubcolumns('cardfooter', ['pollurl']);
+$table->addsubcolumns('cardbody', ['id', 'fullname', 'shortname', 'idnumber', 'format']);
+$table->addsubcolumns('cardheader', ['fullname']);
+// $table->addsubcolumns('cardfooter', ['shortname']);
 
 // Not in use right now, this is how an image is added to the card.
 // With the two lines below, image is shown only in card header.
@@ -67,24 +67,22 @@ $table->addclassestosubcolumns('cardbody', ['columnclass' => 'col-sm']);
 $table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
 
 // Override naming for columns. one could use getstring for localisation here.
-$table->addclassestosubcolumns('cardbody', ['keystring' => 'the id'], ['id']);
+$table->addclassestosubcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
 
 // To hide key in cardheader, set only for special columns.
-$table->addclassestosubcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['text']);
-$table->addclassestosubcolumns('cardfooter', ['columnkeyclass' => 'hidden'], ['pollurl']);
+$table->addclassestosubcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['fullname']);
+// $table->addclassestosubcolumns('cardfooter', ['columnkeyclass' => 'hidden'], ['shortname']);
 
-$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['text']);
-$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['pollurl']);
-
-$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['maxoverbooking']);
+// Keys are already hidden by for lists, but here we also hide some keys for cards.
+$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['fullname']);
+$table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['shortname']);
 // To hide value in card body (because this value is shown in header already).
-$table->addclassestosubcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['text']);
-$table->addclassestosubcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['pollurl']);
+$table->addclassestosubcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['fullname']);
 // Set Classes not linked to the individual records or columns but for the container.
 $table->settableclass('listheaderclass', 'card d-none d-md-block');
 $table->settableclass('cardheaderclass', 'card-header d-md-none bg-warning');
 $table->settableclass('cardbodyclass', 'card-body row');
-$table->settableclass('cardfooterclass', 'card-footer d-md-none bg-success');
+// $table->settableclass('cardfooterclass', 'card-footer d-md-none bg-success');
 
 // From here on it's standard table_sql again.
 

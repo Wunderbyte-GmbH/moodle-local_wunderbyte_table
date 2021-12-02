@@ -103,7 +103,7 @@ class wunderbyte_table extends table_sql
      * @param string $downloadhelpbutton
      * @return void
      */
-    public function outnew($pagesize, $useinitialsbar, $downloadhelpbutton = '') { // function nmae is out.
+    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
         list($idnumber, $encodedtable, $html) = $this->outhtml($pagesize, $useinitialsbar, $downloadhelpbutton);
 
@@ -152,7 +152,7 @@ class wunderbyte_table extends table_sql
      * @param string $downloadhelpbutton
      * @return void
      */
-    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') { // function name is printtable.
+    public function printtable($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
         global $DB;
         if (!$this->columns) {
             $onerow = $DB->get_record_sql("SELECT {$this->sql->fields} FROM {$this->sql->from} WHERE {$this->sql->where}",
@@ -195,9 +195,6 @@ class wunderbyte_table extends table_sql
         echo $output->render_table($table);
     }
 
-
-
-
     /**
      * The function to update settings from the json. During encoding, arrays & stds get mixed up sometimes.
      * There, this does the cleaning and attribution.
@@ -206,29 +203,21 @@ class wunderbyte_table extends table_sql
      * @return void
      */
     public function update_from_json($lib) {
-        // We have to make sure some fields are properly typed.
-        $lib->sql->params = (array)$lib->sql->params;
-
         // Pass all the variables to new table.
         foreach ($lib as $key => $value) {
-            if (in_array($key, ['request', 'attributes', 'headers', 'columns',
-                'column_style', 'column_class', 'column_suppress'])) {
-                $this->{$key} = (array)$value;
-            } else if ($value instanceof stdClass) {
-                // We check if this is a coursemodule.
-                if (isset($value->cm)
-                    && isset($value->cm->id)
-                    && isset($value->wbtclassname)
-                    && class_exists($value->wbtclassname)) {
-                    if ($cm = new $value->wbtclassname($value->cm->id)) {
-                        $this->{$key} = $cm;
-                    } else {
-                        // If we couldn't create an instance, we stick to the stdclass.
-                        $this->{$key} = $value;
-                    }
+
+            if (isset($value['cm'])
+                    && isset($value['cm']['id'])
+                    && isset($value['wbtclassname'])
+                    && class_exists($value['wbtclassname'])) {
+                if ($cm = new $value->wbtclassname($value['cm']['id'])) {
+                    $this->{$key} = $cm;
                 } else {
+                    // If we couldn't create an instance, we stick to the stdclass.
                     $this->{$key} = $value;
                 }
+            } else if (in_array($key, ['sql'])) {
+                $this->{$key} = (object)$value;
             } else {
                 $this->{$key} = $value;
             }
@@ -241,7 +230,7 @@ class wunderbyte_table extends table_sql
      * @param string $encodedtable
      * @return object
      */
-    public static function decode_table_settings(string $encodedtable):object {
+    public static function decode_table_settings(string $encodedtable):array {
 
         $urldecodedtable = urldecode($encodedtable);
 
@@ -249,7 +238,7 @@ class wunderbyte_table extends table_sql
             throw new moodle_exception('novalidbase64', 'local_wunderbyte_table', null, null,
                     'Invalid base64 string');
         }
-        if (!$lib = json_decode($decodedlib)) {
+        if (!$lib = json_decode($decodedlib, true)) {
             throw new moodle_exception('novalidjson', 'local_wunderbyte_table', null, null,
                     'Invalid json string');
         }
@@ -275,25 +264,6 @@ class wunderbyte_table extends table_sql
                         $value->wbtclassname = $classname;
                 }
             }
-        }
-    }
-
-    /**
-     * @param array $columns an array of identifying names for columns. If
-     * columns are sorted then column names must correspond to a field in sql.
-     */
-    function define_columns($columns) {
-        $this->columns = array();
-        $this->column_style = array();
-        $this->column_class = array();
-        $colnum = 0;
-
-        foreach ($columns as $column) {
-            $this->columns[$column]             = $colnum++;
-            $this->column_style[$column]        = array();
-            $this->column_class[$column]        = '';
-            $this->cardbodycolumns[$column]    = ''; // This is specific to wunderbyte_table.
-            $this->column_suppress[$column]     = false;
         }
     }
 
@@ -429,5 +399,16 @@ class wunderbyte_table extends table_sql
         foreach ($this->rawdata as $rawrow) {
             $this->formatedrows[] = $this->format_row($rawrow);
         }
+    }
+
+    /**
+     * This overrides standardfunction in table_sql class which would output Name with link.
+     * We don't want this here.
+     *
+     * @param object $row
+     * @return string
+     */
+    public function col_fullname($row) {
+        return $row->fullname;
     }
 }
