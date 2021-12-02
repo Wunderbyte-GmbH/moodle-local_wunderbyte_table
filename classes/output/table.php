@@ -38,10 +38,16 @@ defined('MOODLE_INTERNAL') || die();
  */
 class table implements renderable, templatable {
 
-
+    /**
+     * Table is the array used for output.
+     *
+     * @var array
+     */
     private $table = [];
+
     /**
      * Constructor.
+     * @param [type] $table
      */
     public function __construct($table) {
 

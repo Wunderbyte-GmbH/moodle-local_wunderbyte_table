@@ -54,12 +54,12 @@ $table->define_baseurl("$CFG->wwwroot/test.php");
 
 $table->addsubcolumns('cardbody', ['id', 'fullname', 'shortname', 'idnumber', 'format']);
 $table->addsubcolumns('cardheader', ['fullname']);
-// $table->addsubcolumns('cardfooter', ['shortname']);
+// Here you can use addsubcolumns with 'cardfooter" to show content in cardfooter.
 
 // Not in use right now, this is how an image is added to the card.
 // With the two lines below, image is shown only in card header.
 // The image value should be eg. <img src="..." class="card-img-top d-md-none">.
-// $table->addsubcolumns('cardimage', ['image']);
+// Use addsubcolumns with 'cardimage" and image like shown above.
 
 // This adds the width to all normal columns.
 $table->addclassestosubcolumns('cardbody', ['columnclass' => 'col-sm']);
@@ -71,7 +71,6 @@ $table->addclassestosubcolumns('cardbody', ['keystring' => 'Moodle id'], ['id'])
 
 // To hide key in cardheader, set only for special columns.
 $table->addclassestosubcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['fullname']);
-// $table->addclassestosubcolumns('cardfooter', ['columnkeyclass' => 'hidden'], ['shortname']);
 
 // Keys are already hidden by for lists, but here we also hide some keys for cards.
 $table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['fullname']);
@@ -82,7 +81,6 @@ $table->addclassestosubcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-b
 $table->settableclass('listheaderclass', 'card d-none d-md-block');
 $table->settableclass('cardheaderclass', 'card-header d-md-none bg-warning');
 $table->settableclass('cardbodyclass', 'card-body row');
-// $table->settableclass('cardfooterclass', 'card-footer d-md-none bg-success');
 
 // From here on it's standard table_sql again.
 

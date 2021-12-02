@@ -174,7 +174,8 @@ class wunderbyte_table extends table_sql
     /**
      * You should call this to finish outputting the table data after adding
      * data to the table with add_data or add_data_keyed.
-     *
+     * @param boolean $closeexportclassdoc
+     * @return void
      */
     public function finish_output($closeexportclassdoc = true) {
         if ($this->exportclass !== null) {
@@ -187,6 +188,11 @@ class wunderbyte_table extends table_sql
         }
     }
 
+    /**
+     * Override table_sql function and use renderer.
+     *
+     * @return void
+     */
     public function finish_html() {
         global $PAGE;
 
@@ -210,7 +216,7 @@ class wunderbyte_table extends table_sql
                     && isset($value['cm']['id'])
                     && isset($value['wbtclassname'])
                     && class_exists($value['wbtclassname'])) {
-                if ($cm = new $value->wbtclassname($value['cm']['id'])) {
+                if ($cm = new $value['wbtclassname']($value['cm']['id'])) {
                     $this->{$key} = $cm;
                 } else {
                     // If we couldn't create an instance, we stick to the stdclass.
@@ -276,7 +282,7 @@ class wunderbyte_table extends table_sql
      */
     public function columnkeyclass($column, $classname) {
         if (!isset($this->cardbodycolumns[$column]['keyclass'])) {
-            $this->cardbodycolumns[$column]['keyclass'] = $classname; // This space needed so that classnames don't run together in the HTML
+            $this->cardbodycolumns[$column]['keyclass'] = $classname;
         } else {
             $this->cardbodycolumns[$column]['keyclass'] .= ' '.$classname;
         }
@@ -291,7 +297,7 @@ class wunderbyte_table extends table_sql
      */
     public function columnvalueclass($column, $classname) {
         if (!isset($this->cardbodycolumns[$column]['valueclass'])) {
-            $this->cardbodycolumns[$column]['valueclass'] = $classname; // This space needed so that classnames don't run together in the HTML
+            $this->cardbodycolumns[$column]['valueclass'] = $classname;
         } else {
             $this->cardbodycolumns[$column]['valuelass'] .= ' '.$classname;
         }
@@ -331,7 +337,7 @@ class wunderbyte_table extends table_sql
             $this->subcolumns[$subcolumnsidentifier][$value] = [];
             $columns[] = $value;
         }
-        // this is necessary to make sure we create the right content.
+        // This is necessary to make sure we create the right content.
         $this->define_columns($columns);
 
     }
@@ -348,7 +354,11 @@ class wunderbyte_table extends table_sql
      * @param boolean $replace
      * @return void
      */
-    public function addclassestosubcolumns(string $subcolumnsidentifier, array $classes, array $subcolumns = null, $replace = false) {
+    public function addclassestosubcolumns(
+                string $subcolumnsidentifier,
+                array $classes,
+                array $subcolumns = null,
+                $replace = false) {
         if (strlen($subcolumnsidentifier) == 0) {
             throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
                     "You need to specify a columnidentifer like cardheader or cardfooter");
@@ -379,8 +389,7 @@ class wunderbyte_table extends table_sql
 
     /**
      * Add any classidentifier and classname to mustache template.
-     *
-     * @param string $class
+     * @param string $classidentifier
      * @param string $classname
      * @return void
      */
@@ -389,10 +398,7 @@ class wunderbyte_table extends table_sql
     }
 
     /**
-     * Do nothing. This is just to override original function.
-     *
-     * @param [type] $row
-     * @param string $classname
+     * This is to override original function, but we still format rows.
      * @return void
      */
     public function build_table() {
