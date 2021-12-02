@@ -69,7 +69,8 @@ class table implements renderable, templatable {
             $this->table['rows'][] = $rowarray;
             // Only if it's not yet set, we set the header.
             if (!isset($this->table['header'])) {
-                $this->table['header'][] = $rowarray;
+
+                $this->table['header'] = $rowarray;
             }
         }
     }

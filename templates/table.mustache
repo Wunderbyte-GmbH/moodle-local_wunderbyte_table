@@ -40,7 +40,12 @@
         <div class="card-header row">
             {{#cardbody}}
                 <div class="{{#columnclass}}{{.}} {{/columnclass}}">
-                    {{key}}
+                  {{^keystring}}
+                   {{{key}}}
+                  {{/keystring}}
+                  {{#keystring}}
+                    {{.}}
+                  {{/keystring}}
                 </div>
             {{/cardbody}}
         </div>
@@ -58,7 +63,12 @@
           {{#cardheader}}
                {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
                   {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
-                    {{key}}:
+                    {{^keystring}}
+                   {{{key}}}
+                  {{/keystring}}
+                  {{#keystring}}
+                    {{.}}
+                  {{/keystring}}:
                   {{#columnkeyclass}}</span>{{/columnkeyclass}}
                   {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
                     {{{value}}}
@@ -70,7 +80,12 @@
                 {{#cardbody}}
                {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
                   {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
-                    {{key}}:
+                    {{^keystring}}
+                   {{{key}}}
+                  {{/keystring}}
+                  {{#keystring}}
+                    {{.}}
+                  {{/keystring}}:
                   {{#columnkeyclass}}</span>{{/columnkeyclass}}
                   {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
                     {{{value}}}
@@ -82,7 +97,12 @@
          {{#cardfooter}}
                {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
                   {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
-                    {{key}}:
+                    {{^keystring}}
+                   {{{key}}}
+                  {{/keystring}}
+                  {{#keystring}}
+                    {{.}}
+                  {{/keystring}}:
                   {{#columnkeyclass}}</span>{{/columnkeyclass}}
                   {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
                     {{{value}}}

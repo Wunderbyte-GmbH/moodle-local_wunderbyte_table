@@ -66,6 +66,9 @@ $table->addclassestosubcolumns('cardbody', ['columnclass' => 'col-sm']);
 // This avoids showing all keys in list view.
 $table->addclassestosubcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
 
+// Override naming for columns. one could use getstring for localisation here.
+$table->addclassestosubcolumns('cardbody', ['keystring' => 'the id'], ['id']);
+
 // To hide key in cardheader, set only for special columns.
 $table->addclassestosubcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['text']);
 $table->addclassestosubcolumns('cardfooter', ['columnkeyclass' => 'hidden'], ['pollurl']);
