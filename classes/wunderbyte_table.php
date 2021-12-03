@@ -274,36 +274,6 @@ class wunderbyte_table extends table_sql
     }
 
     /**
-     * Wunderbyte table function to better control output
-     *
-     * @param string $column
-     * @param string $classname
-     * @return void
-     */
-    public function columnkeyclass($column, $classname) {
-        if (!isset($this->cardbodycolumns[$column]['keyclass'])) {
-            $this->cardbodycolumns[$column]['keyclass'] = $classname;
-        } else {
-            $this->cardbodycolumns[$column]['keyclass'] .= ' '.$classname;
-        }
-    }
-
-    /**
-     * Wunderbyte table function to better control output
-     *
-     * @param string $column
-     * @param string $classname
-     * @return void
-     */
-    public function columnvalueclass($column, $classname) {
-        if (!isset($this->cardbodycolumns[$column]['valueclass'])) {
-            $this->cardbodycolumns[$column]['valueclass'] = $classname;
-        } else {
-            $this->cardbodycolumns[$column]['valuelass'] .= ' '.$classname;
-        }
-    }
-
-    /**
      * Function to set same class to all columns.
      * This will override all previous classes.
      *
@@ -325,7 +295,7 @@ class wunderbyte_table extends table_sql
      * @param array $subcolumns
      * @return void
      */
-    public function addsubcolumns(string $subcolumnsidentifier, array $subcolumns) {
+    public function add_subcolumns(string $subcolumnsidentifier, array $subcolumns) {
         if (strlen($subcolumnsidentifier) == 0) {
             throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
                     "You need to specify a columnidentifer like cardheader or cardfooter");
@@ -354,7 +324,7 @@ class wunderbyte_table extends table_sql
      * @param boolean $replace
      * @return void
      */
-    public function addclassestosubcolumns(
+    public function add_classes_to_subcolumns(
                 string $subcolumnsidentifier,
                 array $classes,
                 array $subcolumns = null,
@@ -393,7 +363,7 @@ class wunderbyte_table extends table_sql
      * @param string $classname
      * @return void
      */
-    public function settableclass(string $classidentifier, string $classname) {
+    public function set_tableclass(string $classidentifier, string $classname) {
         $this->tableclasses[$classidentifier] = $classname;
     }
 
