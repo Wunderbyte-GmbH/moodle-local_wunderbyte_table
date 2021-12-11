@@ -37,7 +37,8 @@
 
     {{#header}}
     <div class="{{listheaderclass}}">
-        <div class="card-header row">
+        <div class="card-header">
+            <div class="row">
             {{#cardbody}}
                 <div class="{{#columnclass}}{{.}} {{/columnclass}}">
                   {{^keystring}}
@@ -48,6 +49,7 @@
                   {{/keystring}}
                 </div>
             {{/cardbody}}
+            </div>
         </div>
     </div>
    {{/header}}
