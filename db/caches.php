@@ -15,17 +15,22 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * German plugin strings are defined here.
+ * Mobile cache definitions.
  *
- * @package     local_wunderbyte_table
- * @category    string
- * @copyright   2021 Wunderbyte GmbH <info@wunderbyte.at>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_wunderbyte_table
+ * @copyright  2021 Georg Maißer <info@wudnerbyte.at>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
-$string['pluginname'] = 'Wunderbyte Table';
-$string['loading'] = 'Laden...';
+$definitions = array(
+    'cachedrawdata' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 1,
+        'invalidationevents' => ['changesinwunderbytetable']
+    )
+);
 
-$string['cachedef_cachedrawdata'] = "Wunderbyte Standard Cache";

@@ -16,6 +16,23 @@ The included test.php is only meant to demonstrate the working of the table.
 
 That's all it takes. Switching pages, sorting, hiding columns and downloading will now run via ajax.
 
+## Caching
+One new feature is caching. Wunderbyte_table will automatically pass every sql call to the MODE_APPLICATION cache with the key being the hashed request.
+
+A request for page one will be cached with a different key than a request for page 2 etc.
+
+Invalidation of the cache is being done by
+
+    cache_helper::purge_by_event('changesinwunderbytetable');
+
+If you don't run this every time your table changes, you won't see the changes in your DB reflected in the
+output of wunderbyte table, unless you otherwise purge the cache.
+
+If you use more than one table in your plugin or if there is a possibility that more than one
+Plugin uses local_wunderbyte_table on your system, you should provide your own cache definitons
+in your plugin and override the function query_db_cached($pagesize, $useinitialsbar) in your extended class.
+This will allow you to introduce and call different purge events for different tables.
+
 ## Installing via uploaded ZIP file ##
 
 1. Log in to your Moodle site as an admin and go to _Site administration >

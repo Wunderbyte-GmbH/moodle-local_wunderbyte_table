@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/tablelib.php");
 
+use cache_helper;
 use gradereport_singleview\local\ui\empty_element;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
@@ -164,7 +165,7 @@ class wunderbyte_table extends table_sql
         }
         $this->pagesize = $pagesize;
         $this->setup();
-        $this->query_db($pagesize, $useinitialsbar);
+        $this->query_db_cached($pagesize, $useinitialsbar);
         $this->build_table();
         $this->close_recordset();
         $this->finish_output();
@@ -376,6 +377,51 @@ class wunderbyte_table extends table_sql
             $this->formatedrows[] = $this->format_row($rawrow);
         }
     }
+
+    /**
+     * This calls the parent query_db function, but only after checking for cached queries.
+     * This function can and should be overriden if your plugin needs different cache treatment.
+     *
+     * @param [type] $pagesize
+     * @param boolean $useinitialsbar
+     * @return void
+     */
+    public function query_db_cached($pagesize, $useinitialsbar=true) {
+
+        // First create hash of all relevant entries.
+        $sort = $this->get_sql_sort();
+        if ($sort) {
+            $sort = "ORDER BY $sort";
+        }
+        // Create the query string including params.
+        $sql = "SELECT
+                {$this->sql->fields}
+                FROM {$this->sql->from}
+                WHERE {$this->sql->where}
+                {$sort}"
+                . json_encode($this->sql->params)
+                . $pagesize
+                . $useinitialsbar
+                . $this->download;
+
+        // Now that we have the string, we hash it with a very fast method.
+        $cachekey = crc32($sql);
+
+        // And then we query our cache to see if we have it already.
+        $cache = \cache::make('local_wunderbyte_table', 'cachedrawdata');
+        $cachedrawdata = $cache->get($cachekey);
+        if ($cachedrawdata !== false) {
+            // If so, just return it.
+            $this->rawdata = (array)$cachedrawdata;
+        } else {
+            // If not, we query as usual.
+            parent::query_db($pagesize, $useinitialsbar);
+            // After the query, we set the result to the.
+            $cache->set($cachekey, $this->rawdata);
+        }
+    }
+
+
 
     /**
      * This overrides standardfunction in table_sql class which would output Name with link.
