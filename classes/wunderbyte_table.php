@@ -402,7 +402,8 @@ class wunderbyte_table extends table_sql
                 . json_encode($this->sql->params)
                 . $pagesize
                 . $useinitialsbar
-                . $this->download;
+                . $this->download
+                . $this->currpage;
 
         // Now that we have the string, we hash it with a very fast method.
         $cachekey = crc32($sql);
@@ -413,11 +414,24 @@ class wunderbyte_table extends table_sql
         if ($cachedrawdata !== false) {
             // If so, just return it.
             $this->rawdata = (array)$cachedrawdata;
+            $pagination = $cache->get($cachekey . '_pagination');
+            $this->pagesize = $pagination['pagesize'];
+            $this->totalrows = $pagination['totalrows'];
+            $this->currpage = $pagination['currpage'];
+            $this->use_pages = true;
         } else {
             // If not, we query as usual.
             parent::query_db($pagesize, $useinitialsbar);
             // After the query, we set the result to the.
             $cache->set($cachekey, $this->rawdata);
+            if (isset($this->use_pages)
+                        && isset($this->pagesize)
+                        && isset($this->totalrows)) {
+                $pagination['pagesize'] = $this->pagesize;
+                $pagination['totalrows'] = $this->totalrows;
+                $pagination['currpage'] = $this->currpage;
+                $cache->set($cachekey . '_pagination', $pagination);
+            }
         }
     }
 

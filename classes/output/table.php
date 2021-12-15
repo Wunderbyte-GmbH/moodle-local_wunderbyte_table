@@ -46,6 +46,13 @@ class table implements renderable, templatable {
     private $table = [];
 
     /**
+     * Pagination is the array used for output.
+     *
+     * @var array
+     */
+    private $pagination = [];
+
+    /**
      * Constructor.
      * @param [type] $table
      */
@@ -79,6 +86,49 @@ class table implements renderable, templatable {
                 $this->table['header'] = $rowarray;
             }
         }
+
+        // Create pagination data.
+        // We show ellipsis if there are more than the specified number of pages.
+        if ($table->use_pages) {
+            $pages = [];
+            $numberofpages = ceil($table->totalrows / $table->pagesize);
+            if ($numberofpages == 1) {
+                $this->pagination['nopages'] = 'nopages';
+                return;
+            }
+            $pagenumber = 0;
+            $currpage = $table->currpage + 1;
+            $shownumberofpages = 4;
+            while (++$pagenumber <= $numberofpages) {
+                $page = [];
+                if ($pagenumber <= $shownumberofpages
+                    || $pagenumber > ($numberofpages - $shownumberofpages)) {
+                    $page['pagenumber'] = $pagenumber;
+                    if ($pagenumber === $currpage) {
+                        $page['active'] = 'active';
+                    }
+                } else if ($pagenumber == ($shownumberofpages + 1)) {
+                    $page['ellipsis'] = 'ellipsis';
+                }
+                $pages[] = $page;
+            }
+
+            // If currentpage is the last one, next is disabled.
+            if ($currpage == $numberofpages) {
+                $this->pagination['disablenext'] = 'disabled';
+            } else {
+                $this->pagination['nextpage'] = $currpage + 1;
+            }
+            // If currentpage is the first one previous is disabled.
+            if ($currpage == 1) {
+                $this->pagination['disableprevious'] = 'disabled';
+            } else {
+                $this->pagination['previouspage'] = $currpage - 1;
+            }
+            $this->pagination['pages'] = $pages;
+
+        }
+
     }
 
     /**
@@ -89,7 +139,13 @@ class table implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         $data = [
-            'table' => $this->table
+            'table' => $this->table,
+            'pages' => $this->pagination['pages'],
+            'disableprevious' => $this->pagination['disableprevious'],
+            'disablenext' => $this->pagination['disablenext'],
+            'previouspage' => $this->pagination['previouspage'],
+            'nextpage' => $this->pagination['nextpage'],
+            'nopages' => $this->pagination['nopages']
         ];
 
         return $data;

@@ -1,0 +1,67 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_wunderbyte_table/pagination
+    Template which defines a mooduell view page.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+    Context variables required for this template:
+    * statistics - array: An array with values.
+    * opengames - array: empty array, will be filled with JS.
+    * finishedgames - array: empty array, will be filled with JS.
+    * highscores - array: empty array, will be filled with JS.
+
+    Example context (json):
+    {
+       "nopages" : "nopages",
+       "previouspage": "1",
+       "disableprevious": "disabled",
+       "nextpage": "3",
+       "disablenext": "disabled",
+       "pages" : [
+           "active" : "active",
+           "pagenumber" : "2",
+           "ellipsis" : "ellipsis"
+       ]
+    }
+
+}}
+
+{{^nopages}}
+    <nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item {{disableprevious}}" data-pagenumber="{{previouspage}}">
+            <a class="page-link" href="#" aria-label="{{#str}} previous, core {{/str}}">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">{{#str}} previous, core {{/str}}</span>
+            </a>
+        </li>
+        {{#pages}}
+            {{^ellipsis}}
+                <li class="page-item {{active}}" data-pagenumber="{{pagenumber}}"><a class="page-link" href="#">{{pagenumber}}</a></li>
+            {{/ellipsis}}
+            {{#ellipsis}}
+                <li class="page-item disabled"><a class="page-link" href="#">…</a></li>
+            {{/ellipsis}}
+        {{/pages}}
+        <li class="page-item {{disablenext}}" data-pagenumber="{{nextpage}}">
+            <a class="page-link" href="#" aria-label="{{#str}} next, core {{/str}}">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">{{#str}} next, core {{/str}}</span>
+            </a></li>
+    </ul>
+    </nav>
+{{/nopages}}

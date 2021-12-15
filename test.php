@@ -45,6 +45,8 @@ if (!$table->is_downloading()) {
     echo $OUTPUT->header();
 }
 
+cache_helper::purge_by_event('changesinwunderbytetable');
+
 // Work out the sql for the table.
 $table->set_sql('*', "{course}", '1=1');
 

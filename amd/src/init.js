@@ -219,20 +219,12 @@ function replacePaginationLinks(idstring, encodedtable, frag) {
         return;
     }
     arrayOfPageItems.forEach(item => {
-        var element = item.querySelector('a');
-        if (!element) {
-            return;
-        }
-        var url = element.getAttribute("href");
-        var pageNumber;
-        if (url != undefined && url != '#') {
-            let newurl = new URL(url);
-            var urlParams = new URLSearchParams(newurl.search);
-            pageNumber = urlParams.get('page');
-        }
-        element.setAttribute('href', '#');
+
+        let pageNumber = item.dataset.pagenumber;
+
         if (pageNumber) {
-            element.addEventListener('click', () => {
+            --pageNumber;
+            item.addEventListener('click', () => {
                 callLoadData(idstring, encodedtable, pageNumber);
             });
         }
