@@ -27,6 +27,13 @@ use local_wunderbyte_table\wunderbyte_table;
 require_once(__DIR__ . '/../../config.php');
 require_login();
 
+$syscontext = context_system::instance();
+
+// Make sure only an admin can see this.
+if (!has_capability('moodle/site:config', $syscontext)) {
+    die;
+}
+
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url('/test.php');
@@ -50,7 +57,7 @@ $table->set_sql('*', "{user}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
 
-$table->out(40, true);
+$table->out(5, true);
 
 if (!$table->is_downloading()) {
     echo $OUTPUT->footer();
