@@ -27,6 +27,13 @@ use local_wunderbyte_table\wunderbyte_table;
 require_once(__DIR__ . '/../../config.php');
 require_login();
 
+$syscontext = context_system::instance();
+
+// Make sure only an admin can see this.
+if (!has_capability('moodle/site:config', $syscontext)) {
+    die;
+}
+
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url('/test.php');
@@ -45,50 +52,12 @@ if (!$table->is_downloading()) {
     echo $OUTPUT->header();
 }
 
-cache_helper::purge_by_event('changesinwunderbytetable');
-
 // Work out the sql for the table.
-$table->set_sql('*', "{course}", '1=1');
+$table->set_sql('*', "{user}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
 
-// TODO: Override column headers.
-
-$table->add_subcolumns('cardbody', ['id', 'fullname', 'shortname', 'idnumber', 'format']);
-$table->add_subcolumns('cardheader', ['fullname']);
-$table->add_subcolumns('cardfooter', ['shortname']);
-
-// Here you can use add_subcolumns with 'cardfooter" to show content in cardfooter.
-
-// Not in use right now, this is how an image is added to the card.
-// With the two lines below, image is shown only in card header.
-// The image value should be eg. <img src="..." class="card-img-top d-md-none">.
-// Use add_subcolumns with 'cardimage" and image like shown above.
-
-// This adds the width to all normal columns.
-$table->add_classes_to_subcolumns('cardbody', ['columnclass' => 'col-sm']);
-// This avoids showing all keys in list view.
-$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
-
-// Override naming for columns. one could use getstring for localisation here.
-$table->add_classes_to_subcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
-
-// To hide key in cardheader, set only for special columns.
-$table->add_classes_to_subcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['fullname']);
-
-// Keys are already hidden by for lists, but here we also hide some keys for cards.
-$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['fullname']);
-$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['shortname']);
-// To hide value in card body (because this value is shown in header already).
-$table->add_classes_to_subcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['fullname']);
-// Set Classes not linked to the individual records or columns but for the container.
-$table->set_tableclass('listheaderclass', 'card d-none d-md-block');
-$table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
-$table->set_tableclass('cardbodyclass', 'card-body row');
-
-// From here on it's standard table_sql again.
-
-$table->out(40, true);
+$table->out(5, true);
 
 if (!$table->is_downloading()) {
     echo $OUTPUT->footer();
