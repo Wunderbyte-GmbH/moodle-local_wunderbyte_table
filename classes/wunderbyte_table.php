@@ -160,8 +160,8 @@ class wunderbyte_table extends table_sql
                 $this->sql->params, IGNORE_MULTIPLE);
             // If columns is not set then define columns as the keys of the rows returned.
             // From the db.
-            $this->define_columns(array_keys((array)$onerow));
-            $this->define_headers(array_keys((array)$onerow));
+            parent::define_columns(array_keys((array)$onerow));
+            parent::define_headers(array_keys((array)$onerow));
         }
         $this->pagesize = $pagesize;
         $this->setup();
@@ -309,8 +309,45 @@ class wunderbyte_table extends table_sql
             $columns[] = $value;
         }
         // This is necessary to make sure we create the right content.
-        $this->define_columns($columns);
+        parent::define_columns($columns);
 
+    }
+
+    /** This overrides the classic define columns functions.
+     * In the new table, one wouldn't use it but expose it here for backward compatibility.
+     * @param array $columns
+     * @param boolean $usestandardclasses
+     * @return void
+     */
+    public function define_columns($columns, $usestandardclasses = true) {
+
+        $this->add_subcolumns('cardbody', $columns);
+
+        if ($usestandardclasses) {
+            // This adds the width to all normal columns.
+            $this->add_classes_to_subcolumns('cardbody', ['columnclass' => 'col-sm']);
+            // This avoids showing all keys in list view.
+            $this->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
+
+            // Override naming for columns. one could use getstring for localisation here.
+            $this->add_classes_to_subcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
+
+            // Add some bootstrap to the general table.
+            $this->set_tableclass('listheaderclass', 'card d-none d-md-block');
+            $this->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
+            $this->set_tableclass('cardbodyclass', 'card-body row');
+        }
+    }
+
+    /** This overrides the classic define columns functions.
+     * In the new table, one wouldn't use it but expose it here for backward compatibility.
+     *
+     * @param array $columns
+     * @param boolean $usestandardclasses
+     * @return void
+     */
+    public function define_headers($columns, $usestandardclasses = true) {
+        $this->add_subcolumns('cardheader', $columns);
     }
 
     /**
