@@ -30,8 +30,7 @@ output of wunderbyte table, unless you otherwise purge the cache.
 
 If you use more than one table in your plugin or if there is a possibility that more than one
 Plugin uses local_wunderbyte_table on your system, you should provide your own cache definitons
-in your plugin and override the function query_db_cached($pagesize, $useinitialsbar) in your extended class.
-This will allow you to introduce and call different purge events for different tables.
+in your plugin. Use the define_cache('mod_myplugin', 'mycachename') function to set your own caches.
 
 ## Installing via uploaded ZIP file ##
 

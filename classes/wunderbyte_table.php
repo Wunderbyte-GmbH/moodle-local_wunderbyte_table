@@ -57,6 +57,17 @@ class wunderbyte_table extends table_sql
      */
     public $formatedrows = [];
 
+    /**
+     *
+     * @var string component where cache defintion is to be found.
+     */
+    private $cachecomponent = 'local_wunderbyte_table';
+
+    /**
+     *
+     * @var string name of the cache definition in the above defined component.
+     */
+    private $cachename = 'cachedrawdata';
 
 
     /**
@@ -416,10 +427,23 @@ class wunderbyte_table extends table_sql
     }
 
     /**
+     * Function to set new cache instead of general wunderbyte_table cache.
+     * If you use more than one wunderbyte_table in your project, you can use different caches for each table.
+     *
+     * @param string $componentname
+     * @param string $cachename
+     * @return void
+     */
+    public function define_cache(string $componentname, string $cachename) {
+        $this->cachecomponent = $componentname;
+        $this->cachename = $cachename;
+    }
+
+    /**
      * This calls the parent query_db function, but only after checking for cached queries.
      * This function can and should be overriden if your plugin needs different cache treatment.
      *
-     * @param [type] $pagesize
+     * @param int $pagesize
      * @param boolean $useinitialsbar
      * @return void
      */
@@ -446,7 +470,7 @@ class wunderbyte_table extends table_sql
         $cachekey = crc32($sql);
 
         // And then we query our cache to see if we have it already.
-        $cache = \cache::make('local_wunderbyte_table', 'cachedrawdata');
+        $cache = \cache::make($this->cachecomponent, $this->cachename);
         $cachedrawdata = $cache->get($cachekey);
         if ($cachedrawdata !== false) {
             // If so, just return it.
