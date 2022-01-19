@@ -171,8 +171,7 @@ class wunderbyte_table extends table_sql
                 $this->sql->params, IGNORE_MULTIPLE);
             // If columns is not set then define columns as the keys of the rows returned.
             // From the db.
-            parent::define_columns(array_keys((array)$onerow));
-            parent::define_headers(array_keys((array)$onerow));
+            $this->define_columns(array_keys((array)$onerow));
         }
         $this->pagesize = $pagesize;
         $this->setup();
