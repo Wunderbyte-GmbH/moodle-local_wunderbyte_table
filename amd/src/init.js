@@ -104,7 +104,6 @@ export const callLoadData = (
             'treset': treset
         },
         done: function(res) {
-
             let frag = document.createRange().createContextualFragment(res.content);
 
             if (!page) {
@@ -113,7 +112,6 @@ export const callLoadData = (
                     page = activepage.getAttribute('data-page-number');
                 }
             }
-
             replaceDownloadLink(idstring, encodedtable, frag);
             replaceResetTableLink(idstring, encodedtable, frag, page);
             replacePaginationLinks(idstring, encodedtable, frag);
@@ -126,12 +124,23 @@ export const callLoadData = (
             }
             table.appendChild(frag);
             // Once the frag is appended, we have to trigger all load Events.
-            const allElements = table.getElementsByClassName('wunderbyteTableDiv');
+            const allElements = table.getElementsByClassName('wunderbyteTableJavascript');
+            // eslint-disable-next-line no-console
+            console.log(allElements);
             for (var i = 0; i < allElements.length; i++) {
-                const spanchild = allElements[i].querySelector('span');
-                if (typeof spanchild.onclick === 'function') {
-                    spanchild.click();
-                }
+                const spanchildren = allElements[i].querySelectorAll('span');
+// eslint-disable-next-line no-console
+console.log(spanchildren);
+                spanchildren.forEach(spanchild => {
+                    // eslint-disable-next-line no-console
+                    // console.log(spanchild);
+                    if (typeof spanchild.onclick === 'function') {
+
+                        // eslint-disable-next-line no-console
+                        console.log(spanchild);
+                        spanchild.click();
+                    }
+                });
              }
 
             spinner.classList.add('hidden');

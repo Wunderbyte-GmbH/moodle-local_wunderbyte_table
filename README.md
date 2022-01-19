@@ -32,6 +32,15 @@ If you use more than one table in your plugin or if there is a possibility that 
 Plugin uses local_wunderbyte_table on your system, you should provide your own cache definitons
 in your plugin. Use the define_cache('mod_myplugin', 'mycachename') function to set your own caches.
 
+## JavaScript
+Because of the way the table is lazy loaded, any Template which is included in a cell can't bring it's javascript via the usual way. But there is a workaround. Wunderbyte_table will search for a the "wunderbyteTableJavascript" class and then trigger any click event it can find attached to any span within wunderbyte_table after having lazy loaded the table.
+
+If you want to add an event listener to your own cell, you can eg write this function in your table class:
+
+    public function col_mycolumn($values) {
+        return '<span onclick="console.log('i was lazy loaded'); return false;"'>click on me</span>'
+    }
+
 ## Installing via uploaded ZIP file ##
 
 1. Log in to your Moodle site as an admin and go to _Site administration >
