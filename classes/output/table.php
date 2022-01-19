@@ -92,7 +92,7 @@ class table implements renderable, templatable {
         if ($table->use_pages) {
             $pages = [];
             $numberofpages = ceil($table->totalrows / $table->pagesize);
-            if ($numberofpages == 1) {
+            if ($numberofpages < 2) {
                 $this->pagination['nopages'] = 'nopages';
                 return;
             }
