@@ -98,19 +98,39 @@ class table implements renderable, templatable {
             }
             $pagenumber = 0;
             $currpage = $table->currpage + 1;
-            $shownumberofpages = 4;
+            if ($currpage > 4 && $numberofpages > 8) {
+                $shownumberofpages = 2;
+            } else {
+                $shownumberofpages = 3;
+            }
+
             while (++$pagenumber <= $numberofpages) {
                 $page = [];
-                if ($pagenumber <= $shownumberofpages
-                    || $pagenumber > ($numberofpages - $shownumberofpages)) {
+                if ($pagenumber == ($currpage + $shownumberofpages + 1)) {
+                    // Check if previous page is not already ellipsis.
+                    $lasteleemnt = end($pages);
+                    if (!isset($lasteleemnt['ellipsis'])) {
+                        $page['ellipsis'] = 'ellipsis';
+                        $pages[] = $page;
+                    }
+                } else if ($pagenumber <= $shownumberofpages
+                    || $pagenumber > ($numberofpages - $shownumberofpages)
+                    || ($pagenumber > ($currpage - $shownumberofpages)
+                        && ($pagenumber < ($currpage + $shownumberofpages))
+                    )) {
                     $page['pagenumber'] = $pagenumber;
                     if ($pagenumber === $currpage) {
                         $page['active'] = 'active';
                     }
+                    $pages[] = $page;
                 } else if ($pagenumber == ($shownumberofpages + 1)) {
-                    $page['ellipsis'] = 'ellipsis';
+                    // Check if previous page is not already ellipsis.
+                    $lasteleemnt = end($pages);
+                    if (!isset($lasteleemnt['ellipsis'])) {
+                        $page['ellipsis'] = 'ellipsis';
+                        $pages[] = $page;
+                    }
                 }
-                $pages[] = $page;
             }
 
             // If currentpage is the last one, next is disabled.
