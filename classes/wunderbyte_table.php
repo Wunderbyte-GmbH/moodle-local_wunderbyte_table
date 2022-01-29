@@ -65,6 +65,12 @@ class wunderbyte_table extends table_sql
 
     /**
      *
+     * @var string template for table.
+     */
+    public $tabletemplate = 'local_wunderbyte_table/table';
+
+    /**
+     *
      * @var string name of the cache definition in the above defined component.
      */
     private $cachename = 'cachedrawdata';
@@ -178,7 +184,7 @@ class wunderbyte_table extends table_sql
         $this->query_db_cached($pagesize, $useinitialsbar);
         $this->build_table();
         $this->close_recordset();
-        $this->finish_output();
+        return $this->finish_output();
     }
 
 
@@ -195,12 +201,13 @@ class wunderbyte_table extends table_sql
                 $this->exportclass->finish_document();
             }
         } else {
-            $this->finish_html();
+            return new table($this);
         }
     }
 
     /**
      * Override table_sql function and use renderer.
+     * (Not used in last revision)
      *
      * @return void
      */

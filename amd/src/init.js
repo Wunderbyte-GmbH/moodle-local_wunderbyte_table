@@ -20,6 +20,8 @@
  */
 
 import Ajax from 'core/ajax';
+import Templates from 'core/templates';
+import Notification from 'core/notification';
 
 /**
  * Gets called from mustache template.
@@ -27,7 +29,11 @@ import Ajax from 'core/ajax';
  * @param {string} encodedtable
  */
 export const init = (idstring, encodedtable) => {
-    respondToVisibility(idstring, encodedtable, callLoadData);
+    // eslint-disable-next-line no-console
+    console.log('init called', idstring);
+    if (idstring && encodedtable) {
+        respondToVisibility(idstring, encodedtable, callLoadData);
+    }
 };
 
 /**
@@ -87,8 +93,18 @@ export const callLoadData = (
     tshow = null,
     tdir = null,
     treset = null) => {
+        // eslint-disable-next-line no-console
+        console.log('callLoadData ' + idstring);
     let table = document.getElementById('a' + idstring);
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
+
+
+    // eslint-disable-next-line no-console
+    console.log('3' + table);
+
+    // eslint-disable-next-line no-console
+    console.log('3' + spinner);
+
     spinner.classList.toggle('hidden');
     table.classList.toggle('hidden');
 
@@ -104,44 +120,50 @@ export const callLoadData = (
             'treset': treset
         },
         done: function(res) {
-            let frag = document.createRange().createContextualFragment(res.content);
 
-            if (!page) {
-                const activepage = frag.querySelector('li.page-item active');
-                if (activepage) {
-                    page = activepage.getAttribute('data-page-number');
-                }
-            }
-            replaceDownloadLink(idstring, encodedtable, frag);
-            replaceResetTableLink(idstring, encodedtable, frag, page);
-            replacePaginationLinks(idstring, encodedtable, frag);
-            replaceSortColumnLinks(idstring, encodedtable, frag, page);
-
-            let table = document.getElementById('a' + idstring);
-
-            while (table.firstChild) {
-                table.removeChild(table.lastChild);
-            }
-            table.appendChild(frag);
-            // Once the frag is appended, we have to trigger all load Events.
-            const allElements = table.getElementsByClassName('wunderbyteTableJavascript');
             // eslint-disable-next-line no-console
-            console.log(allElements);
-            for (var i = 0; i < allElements.length; i++) {
-                const spanchildren = allElements[i].querySelectorAll('span');
-// eslint-disable-next-line no-console
-console.log(spanchildren);
-                spanchildren.forEach(spanchild => {
-                    // eslint-disable-next-line no-console
-                    // console.log(spanchild);
-                    if (typeof spanchild.onclick === 'function') {
+            console.log(res);
 
-                        // eslint-disable-next-line no-console
-                        console.log(spanchild);
-                        spanchild.click();
+            const jsonobject = JSON.parse(res.content);
+
+            Templates.renderForPromise(res.template, jsonobject).then(({html, js}) => {
+
+                // eslint-disable-next-line no-console
+                console.log(js);
+
+                const frag = document.querySelector('#a' + idstring);
+
+                while (frag.firstChild) {
+                    frag.removeChild(table.lastChild);
+                }
+
+                Templates.appendNodeContents('#a' + idstring, html, js);
+
+                // eslint-disable-next-line no-console
+                console.log('works');
+
+                // eslint-disable-next-line no-console
+                console.log(frag);
+
+                if (!page) {
+                    const activepage = frag.querySelector('li.page-item active');
+                    if (activepage) {
+                        page = activepage.getAttribute('data-page-number');
                     }
+                }
+
+                replaceDownloadLink(idstring, encodedtable, frag);
+                replaceResetTableLink(idstring, encodedtable, frag, page);
+                replacePaginationLinks(idstring, encodedtable, frag);
+                replaceSortColumnLinks(idstring, encodedtable, frag, page);
+
+                return true;
+            }).catch(ex => {
+                Notification.addNotification({
+                    message: 'failed rendering ' + ex,
+                    type: "danger"
                 });
-             }
+            });
 
             spinner.classList.add('hidden');
             table.classList.remove('hidden');

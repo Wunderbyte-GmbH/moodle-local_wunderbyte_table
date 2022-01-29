@@ -16,6 +16,13 @@ The included test.php is only meant to demonstrate the working of the table.
 
 That's all it takes. Switching pages, sorting, hiding columns and downloading will now run via ajax.
 
+## Templates
+Wunderbyte Table comes with a responsive table template, but it can and should be overriden in your project. To do so, set in your instance of your extended class (eg $yourtable) the template to your proper template, like
+
+    $yourtable->tabletemplate = 'mod_yourtemplate/yourtable'
+
+where yourtable corresponds to yourtable.mustache in your own project.
+
 ## Caching
 One new feature is caching. Wunderbyte_table will automatically pass every sql call to the MODE_APPLICATION cache with the key being the hashed request.
 
@@ -33,13 +40,10 @@ Plugin uses local_wunderbyte_table on your system, you should provide your own c
 in your plugin. Use the define_cache('mod_myplugin', 'mycachename') function to set your own caches.
 
 ## JavaScript
-Because of the way the table is lazy loaded, any Template which is included in a cell can't bring it's javascript via the usual way. But there is a workaround. Wunderbyte_table will search for a the "wunderbyteTableJavascript" class and then trigger any click event it can find attached to any span within wunderbyte_table after having lazy loaded the table.
-
-If you want to add an event listener to your own cell, you can eg write this function in your table class:
-
-    public function col_mycolumn($values) {
-        return '<span onclick="console.log('i was lazy loaded'); return false;"'>click on me</span>'
-    }
+This description is only relevant in one case: If you override a value from your table via the col_mycolumn function in the wunderbyte_table class and you use a mustache template and renderer to echo html (eg. to render a button or a modal etc.) AND if this mustache template includes javascript, then you will encounter the problem, that the JS won't be automatically included.
+The reason is that the js would be added to the page footer via the renderer, but it is simply skipped in this particular usecase. Therefore, you need to add the JS instead of your column template to the table template.
+Any JS which is on this labe (corresponding to table.mustache in the wunderbyte_table project), will be executed after the table is correctly rendered.
+You have to make sure to write your js in a way that your can find the necessary variables (eg. the ids of your rows) without being able to pass them directly via the mustache template.
 
 ## Installing via uploaded ZIP file ##
 

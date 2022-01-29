@@ -79,14 +79,21 @@ class local_wunderbyte_table_external extends external_api {
 
         $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/download.php");
 
+        // The table lib class expects $_POST variables to be present, so we have to set them.
         foreach ($params as $key => $value) {
             $_POST[$key] = $value;
         }
 
-        ob_start();
-        $table->printtable($table->pagesize, $table->useinitialsbar, $table->downloadhelpbutton);
+        // No we return the json object and the matching method.
+        $tableobject = $table->printtable($table->pagesize, $table->useinitialsbar, $table->downloadhelpbutton);
+        $output = $PAGE->get_renderer('local_wunderbyte_table');
+        $tabledata = $tableobject->export_for_template($output);
 
-        $result['content'] = ob_get_clean();
+        if ($tabledata) {
+            $jsonstring = json_encode($tabledata);
+            $result['template'] = $table->tabletemplate;
+            $result['content'] = json_encode($tabledata);
+        }
 
         return $result;
     }
@@ -114,7 +121,8 @@ class local_wunderbyte_table_external extends external_api {
      */
     public static function load_data_returns() {
         return new external_single_structure(array(
-                    'content' => new external_value(PARAM_RAW, 'html content')
+                    'template' => new external_value(PARAM_RAW, 'template name'),
+                    'content' => new external_value(PARAM_RAW, 'json content')
                 )
         );
     }
