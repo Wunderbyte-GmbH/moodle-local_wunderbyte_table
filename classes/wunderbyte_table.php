@@ -61,19 +61,19 @@ class wunderbyte_table extends table_sql
      *
      * @var string component where cache defintion is to be found.
      */
-    private $cachecomponent = 'local_wunderbyte_table';
+    public $cachecomponent = 'local_wunderbyte_table';
+
+    /**
+     *
+     * @var string name of the cache definition in the above defined component.
+     */
+    public $cachename = 'cachedrawdata';
 
     /**
      *
      * @var string template for table.
      */
     public $tabletemplate = 'local_wunderbyte_table/table';
-
-    /**
-     *
-     * @var string name of the cache definition in the above defined component.
-     */
-    private $cachename = 'cachedrawdata';
 
 
     /**
