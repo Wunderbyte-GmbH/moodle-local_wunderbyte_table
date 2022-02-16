@@ -43,6 +43,38 @@ $download = optional_param('download', '', PARAM_ALPHA);
 $table = new wunderbyte_table('uniqueid');
 $table->is_downloading($download, 'test', 'testing123');
 
+$table->add_subcolumns('cardbody', ['id', 'fullname', 'shortname', 'idnumber', 'format']);
+$table->add_subcolumns('cardheader', ['fullname']);
+$table->add_subcolumns('cardfooter', ['shortname']);
+
+// Here you can use add_subcolumns with 'cardfooter" to show content in cardfooter.
+
+// Not in use right now, this is how an image is added to the card.
+// With the two lines below, image is shown only in card header.
+// The image value should be eg. <img src="..." class="card-img-top d-md-none">.
+// Use add_subcolumns with 'cardimage" and image like shown above.
+
+// This adds the width to all normal columns.
+$table->add_classes_to_subcolumns('cardbody', ['columnclass' => 'col-sm']);
+// This avoids showing all keys in list view.
+$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
+
+// Override naming for columns. one could use getstring for localisation here.
+$table->add_classes_to_subcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
+
+// To hide key in cardheader, set only for special columns.
+$table->add_classes_to_subcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['fullname']);
+
+// Keys are already hidden by for lists, but here we also hide some keys for cards.
+$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['fullname']);
+$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['shortname']);
+// To hide value in card body (because this value is shown in header already).
+$table->add_classes_to_subcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['fullname']);
+// Set Classes not linked to the individual records or columns but for the container.
+$table->set_tableclass('listheaderclass', 'card d-none d-md-block');
+$table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
+$table->set_tableclass('cardbodyclass', 'card-body row');
+
 if (!$table->is_downloading()) {
     // Only print headers if not asked to download data
     // Print the page header.
@@ -53,7 +85,7 @@ if (!$table->is_downloading()) {
 }
 
 // Work out the sql for the table.
-$table->set_sql('*', "{user}", '1=1');
+$table->set_sql('*', "{course}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/test.php");
 
