@@ -96,17 +96,16 @@ export const callLoadData = (
         // eslint-disable-next-line no-console
         console.log('callLoadData ' + idstring);
     let table = document.getElementById('a' + idstring);
+
+    // This is now the individual spinner from the wunderbyte table template.
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
 
-
-    // eslint-disable-next-line no-console
-    console.log('3' + table);
-
-    // eslint-disable-next-line no-console
-    console.log('3' + spinner);
-
-    spinner.classList.toggle('hidden');
-    table.classList.toggle('hidden');
+    if (spinner) {
+        spinner.classList.remove('hidden');
+    }
+    if (table) {
+        table.classList.add('hidden');
+    }
 
     Ajax.call([{
         methodname: "local_wunderbyte_table_load_data",
