@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/tablelib.php");
 
 use cache_helper;
+use Exception;
 use gradereport_singleview\local\ui\empty_element;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
@@ -488,7 +489,12 @@ class wunderbyte_table extends table_sql
             $this->use_pages = true;
         } else {
             // If not, we query as usual.
-            parent::query_db($pagesize, $useinitialsbar);
+            try {
+                parent::query_db($pagesize, $useinitialsbar);
+            } catch (Exception $e) {
+                $this->rawdata = [];
+            }
+
             // After the query, we set the result to the.
             $cache->set($cachekey, $this->rawdata);
             if (isset($this->use_pages)
