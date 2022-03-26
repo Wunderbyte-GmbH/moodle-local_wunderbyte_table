@@ -147,6 +147,8 @@ class table implements renderable, templatable {
             }
             $this->pagination['pages'] = $pages;
 
+        } else {
+            $this->pagination['nopages'] = 'nopages';
         }
 
     }
