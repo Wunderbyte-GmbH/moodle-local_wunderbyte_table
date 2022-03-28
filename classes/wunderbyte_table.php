@@ -441,9 +441,17 @@ class wunderbyte_table extends table_sql
      * @param string $cachename
      * @return void
      */
-    public function define_cache(string $componentname, string $cachename) {
-        $this->cachecomponent = $componentname;
-        $this->cachename = $cachename;
+    public function define_cache(string $componentname, string $cachename = null) {
+
+        if ($cachename && $componentname) {
+            $this->cachecomponent = $componentname;
+            $this->cachename = $cachename;
+        } else {
+            // It might be that we don't want to use cache in a table.
+            $this->cachecomponent = null;
+            $this->cachename = null;
+        }
+
     }
 
     /**
