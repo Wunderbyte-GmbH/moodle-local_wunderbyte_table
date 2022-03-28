@@ -162,12 +162,12 @@ class table implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         $data = [
             'table' => $this->table,
-            'pages' => $this->pagination['pages'],
-            'disableprevious' => $this->pagination['disableprevious'],
-            'disablenext' => $this->pagination['disablenext'],
-            'previouspage' => $this->pagination['previouspage'],
-            'nextpage' => $this->pagination['nextpage'],
-            'nopages' => $this->pagination['nopages']
+            'pages' => $this->pagination['pages'] ?? null,
+            'disableprevious' => $this->pagination['disableprevious'] ?? null,
+            'disablenext' => $this->pagination['disablenext'] ?? null,
+            'previouspage' => $this->pagination['previouspage'] ?? null,
+            'nextpage' => $this->pagination['nextpage'] ?? null,
+            'nopages' => $this->pagination['nopages'] ?? null
         ];
 
         return $data;
