@@ -130,6 +130,27 @@ class wunderbyte_table extends table_sql
     }
 
     /**
+     * With this function, the table can be printed without lazy loading.
+     * Can be overridden in child class with own renderer.
+     *
+     * @param int $pagesize
+     * @param bool $useinitialsbar
+     * @param string $downloadhelpbutton
+     * @return void
+     */
+    public function nolazyout($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+
+        global $PAGE, $CFG;
+        $this->pagesize = $pagesize;
+        $this->useinitialsbar = $useinitialsbar;
+        $this->downloadhelpbutton = $downloadhelpbutton;
+
+        $tableobject = $this->printtable(5, true);
+        $output = $PAGE->get_renderer('local_wunderbyte_table');
+        echo $output->render_table($tableobject);
+    }
+
+    /**
      * A version of the out function which does not actually echo but just returns the html plus the idnumber.
      *
      * @param int $pagesize
@@ -485,8 +506,13 @@ class wunderbyte_table extends table_sql
         $cachekey = crc32($sql);
 
         // And then we query our cache to see if we have it already.
-        $cache = \cache::make($this->cachecomponent, $this->cachename);
-        $cachedrawdata = $cache->get($cachekey);
+        if ($this->cachecomponent && $this->cachename) {
+            $cache = \cache::make($this->cachecomponent, $this->cachename);
+            $cachedrawdata = $cache->get($cachekey);
+        } else {
+            $cachedrawdata = false;
+        }
+
         if ($cachedrawdata !== false) {
             // If so, just return it.
             $this->rawdata = (array)$cachedrawdata;
@@ -504,14 +530,19 @@ class wunderbyte_table extends table_sql
             }
 
             // After the query, we set the result to the.
-            $cache->set($cachekey, $this->rawdata);
-            if (isset($this->use_pages)
-                        && isset($this->pagesize)
-                        && isset($this->totalrows)) {
-                $pagination['pagesize'] = $this->pagesize;
-                $pagination['totalrows'] = $this->totalrows;
-                $pagination['currpage'] = $this->currpage;
-                $cache->set($cachekey . '_pagination', $pagination);
+            // But only, if we have a cache by now.
+            if ($this->cachecomponent
+                && $this->cachename
+                && $cache) {
+                $cache->set($cachekey, $this->rawdata);
+                if (isset($this->use_pages)
+                            && isset($this->pagesize)
+                            && isset($this->totalrows)) {
+                    $pagination['pagesize'] = $this->pagesize;
+                    $pagination['totalrows'] = $this->totalrows;
+                    $pagination['currpage'] = $this->currpage;
+                    $cache->set($cachekey . '_pagination', $pagination);
+                }
             }
         }
     }
