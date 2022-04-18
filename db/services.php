@@ -30,9 +30,10 @@ $functions = array(
                 'classname' => 'local_wunderbyte_table_external',
                 'methodname' => 'load_data',
                 'classpath' => 'local/wunderbyte_table/classes/externallib.php',
-                'description' => 'Ajax load list of finishedgames',
+                'description' => 'Ajax load table',
                 'type' => 'read',
                 'capabilities' => '',
-                'ajax' => true
+                'ajax' => true,
+                'loginrequired' => false
         )
 );
