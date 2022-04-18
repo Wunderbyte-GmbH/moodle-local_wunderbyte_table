@@ -90,7 +90,6 @@ class local_wunderbyte_table_external extends external_api {
         $tabledata = $tableobject->export_for_template($output);
 
         if ($tabledata) {
-            $jsonstring = json_encode($tabledata);
             $result['template'] = $table->tabletemplate;
             $result['content'] = json_encode($tabledata);
         }
