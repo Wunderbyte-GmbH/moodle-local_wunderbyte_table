@@ -136,7 +136,7 @@ class wunderbyte_table extends table_sql
      * @param int $pagesize
      * @param bool $useinitialsbar
      * @param string $downloadhelpbutton
-     * @return void
+     * @return string
      */
     public function nolazyout($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
@@ -145,9 +145,9 @@ class wunderbyte_table extends table_sql
         $this->useinitialsbar = $useinitialsbar;
         $this->downloadhelpbutton = $downloadhelpbutton;
 
-        $tableobject = $this->printtable(5, true);
+        $tableobject = $this->printtable($pagesize, $useinitialsbar);
         $output = $PAGE->get_renderer('local_wunderbyte_table');
-        echo $output->render_table($tableobject);
+        return $output->render_table($tableobject);
     }
 
     /**
