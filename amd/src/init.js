@@ -29,8 +29,7 @@ import Notification from 'core/notification';
  * @param {string} encodedtable
  */
 export const init = (idstring, encodedtable) => {
-    // eslint-disable-next-line no-console
-    console.log('init called', idstring);
+
     if (idstring && encodedtable) {
         respondToVisibility(idstring, encodedtable, callLoadData);
     }
@@ -44,6 +43,13 @@ export const init = (idstring, encodedtable) => {
  */
 function respondToVisibility(idstring, encodedtable, callback) {
     let element = document.getElementById('a' + idstring);
+
+    if (element) {
+        element.dataset.encodedtable = encodedtable;
+    } else {
+        // If we don't find an element, we abort.
+        return;
+    }
     var observer = new MutationObserver(function() {
         if (!isHidden(element)) {
             this.disconnect();
@@ -64,14 +70,47 @@ function respondToVisibility(idstring, encodedtable, callback) {
 }
 
 /**
+ * Function to reload a wunderbyte table from js.
+ * Here we trim the idstring before we pass it to the calldatafunction.
+ * @param {*} idstring
+ * @param {*} encodedtable
+ */
+export function wbTableReload(idstring, encodedtable = null) {
+
+
+    // We need to trim the first character. We use the a to make sure no number is in first place due to random generation.
+    idstring = idstring.substring(1);
+
+    let element = document.getElementById('a' + idstring);
+
+    if (!element) {
+        // eslint-disable-next-line no-console
+        console.log('couldnt find element to reload', idstring);
+        return;
+    }
+
+    if (!encodedtable) {
+        encodedtable = element.dataset.encodedtable;
+
+        if (!encodedtable) {
+            // eslint-disable-next-line no-console
+            console.log('couldnt find encodedtable', encodedtable);
+            return;
+        }
+    }
+
+    callLoadData(idstring, encodedtable);
+}
+
+/**
  * Function to check visibility of element.
  * @param {*} el
  * @returns {boolean}
  */
-function isHidden(el) {
+ export const isHidden = (el) => {
     var style = window.getComputedStyle(el);
     return ((style.display === 'none') || (style.visibility === 'hidden'));
-}
+};
 
 /**
  * Reloads the rendered table and sets it to the div with the right identifier.
@@ -93,8 +132,7 @@ export const callLoadData = (
     tshow = null,
     tdir = null,
     treset = null) => {
-        // eslint-disable-next-line no-console
-        console.log('callLoadData ' + idstring);
+
     let table = document.getElementById('a' + idstring);
 
     // This is now the individual spinner from the wunderbyte table template.
@@ -120,15 +158,9 @@ export const callLoadData = (
         },
         done: function(res) {
 
-            // eslint-disable-next-line no-console
-            console.log(res);
-
             const jsonobject = JSON.parse(res.content);
 
             Templates.renderForPromise(res.template, jsonobject).then(({html, js}) => {
-
-                // eslint-disable-next-line no-console
-                console.log(js);
 
                 const frag = document.querySelector('#a' + idstring);
 
@@ -137,12 +169,6 @@ export const callLoadData = (
                 }
 
                 Templates.appendNodeContents('#a' + idstring, html, js);
-
-                // eslint-disable-next-line no-console
-                console.log('works');
-
-                // eslint-disable-next-line no-console
-                console.log(frag);
 
                 if (!page) {
                     const activepage = frag.querySelector('li.page-item active');
@@ -164,8 +190,12 @@ export const callLoadData = (
                 });
             });
 
-            spinner.classList.add('hidden');
-            table.classList.remove('hidden');
+            if (spinner) {
+                spinner.classList.add('hidden');
+            }
+            if (table) {
+                table.classList.remove('hidden');
+            }
             return true;
         },
         fail: function(err) {
