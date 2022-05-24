@@ -41,8 +41,7 @@ use stdClass;
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
-class wunderbyte_table extends table_sql
-{
+class wunderbyte_table extends table_sql {
     /**
      * @var string Id of this table.
      */
@@ -558,5 +557,45 @@ class wunderbyte_table extends table_sql
      */
     public function col_fullname($row) {
         return $row->fullname;
+    }
+
+    public function return_filterjson() {
+
+        $rawdata = $this->rawdata;
+
+        $filtercolumns = [];
+        foreach ($this->columns as $key => $value) {
+            $filtercolumns[$key] = [];
+
+            foreach ($this->rawdata as $row) {
+                if (!isset($filtercolumns[$key][$row->$key])) {
+                    $filtercolumns[$key][$row->$key] = true;
+                }
+            }
+        }
+
+        $filterjson = ['categories' => array()];
+        foreach ($filtercolumns as $key => $values) {
+
+            $categoryobject = [
+                'name' => $key,
+                'values' => []
+            ];
+            foreach ($values as $valuekey => $valuevalue) {
+
+                $itemobject = [
+                    'key' => $valuekey,
+                    'value' => $valuekey,
+                    'category' => $key
+                ];
+
+                $categoryobject['values'][] = $itemobject;
+
+            }
+
+            $filterjson['categories'][] = $categoryobject;
+        }
+
+        return json_encode($filterjson);
     }
 }

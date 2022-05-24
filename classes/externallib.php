@@ -93,6 +93,7 @@ class local_wunderbyte_table_external extends external_api {
         if ($tabledata) {
             $result['template'] = $table->tabletemplate;
             $result['content'] = json_encode($tabledata);
+            $result['filterjson'] = $table->return_filterjson();
         }
 
         return $result;
@@ -122,7 +123,8 @@ class local_wunderbyte_table_external extends external_api {
     public static function load_data_returns() {
         return new external_single_structure(array(
                     'template' => new external_value(PARAM_RAW, 'template name'),
-                    'content' => new external_value(PARAM_RAW, 'json content')
+                    'content' => new external_value(PARAM_RAW, 'json content'),
+                    'filterjson' => new external_value(PARAM_RAW, 'filter json to create checkboxes', VALUE_OPTIONAL, '')
                 )
         );
     }

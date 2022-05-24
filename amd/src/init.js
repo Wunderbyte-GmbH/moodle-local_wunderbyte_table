@@ -23,6 +23,8 @@ import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
 
+import { renderFilter } from 'local_wunderbyte_table/search';
+
 /**
  * Gets called from mustache template.
  * @param {string} idstring
@@ -160,6 +162,8 @@ export const callLoadData = (
 
             const jsonobject = JSON.parse(res.content);
 
+            const filterjson = JSON.parse(res.filterjson);
+
             Templates.renderForPromise(res.template, jsonobject).then(({html, js}) => {
 
                 const frag = document.querySelector('#a' + idstring);
@@ -189,6 +193,8 @@ export const callLoadData = (
                     type: "danger"
                 });
             });
+
+            renderFilter(filterjson, idstring);
 
             if (spinner) {
                 spinner.classList.add('hidden');
