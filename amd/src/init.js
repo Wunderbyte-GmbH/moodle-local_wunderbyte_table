@@ -23,7 +23,7 @@ import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
 
-import { renderFilter } from 'local_wunderbyte_table/search';
+import { renderFilter, renderSearchbox } from 'local_wunderbyte_table/search';
 
 /**
  * Gets called from mustache template.
@@ -195,6 +195,7 @@ export const callLoadData = (
             });
 
             renderFilter(filterjson, idstring);
+            renderSearchbox(idstring);
 
             if (spinner) {
                 spinner.classList.add('hidden');

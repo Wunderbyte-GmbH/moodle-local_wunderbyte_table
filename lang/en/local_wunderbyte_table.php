@@ -27,5 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Wunderbyte Table';
 $string['loading'] = 'Loading...';
+$string['search'] = 'Search';
 
 $string['cachedef_cachedrawdata'] = "Wunderbyte standard cache";

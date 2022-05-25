@@ -25,67 +25,27 @@ import Templates from 'core/templates';
 var checked = {};
 var categories = [];
 var allElements = [];
+var elementToHideSelector = '';
+var listContainerSelector = '';
+var elementToSearchSelector = '';
 
-export const init = (listContainerSelector, elementToHide, elementToSearch) => {
+
+/**
+ * Store some params globally.
+ * @param {string} listContainer
+ * @param {string} elementToHide
+ * @param {string} elementToSearch
+ */
+export const init = (listContainer, elementToHide, elementToSearch) => {
 
     // eslint-disable-next-line no-console
     console.log(listContainerSelector, elementToHide, elementToSearch);
 
-    const inputElement = document.querySelector(listContainerSelector + ' input.search');
+    elementToHideSelector = elementToHide;
+    listContainerSelector = listContainer;
+    elementToSearchSelector = elementToSearch;
 
-    if (!inputElement) {
-        return;
-    }
-
-    inputElement.addEventListener('keyup', () => {
-
-        searchInput(inputElement, elementToHide, elementToSearch);
-    });
-
-    const listContainer = document.querySelector(listContainerSelector);
-
-    // eslint-disable-next-line no-console
-    console.log('listContainer ', listContainer);
-
-    const allCheckboxes = listContainer.querySelector("input[type=checkbox]");
-
-    if (!allCheckboxes) {
-        return;
-    }
 };
-
-/**
- * Initialize Checkboxes.
- * @param {string} selector
- * @returns
- */
-function initializeCheckboxes(selector) {
-
-    // eslint-disable-next-line no-console
-    console.log('initializeCheckboxes ');
-
-    const listContainer = document.querySelector(selector);
-
-    const allCheckboxes = listContainer.querySelectorAll("input[type=checkbox]");
-
-    if (!allCheckboxes) {
-        return;
-    }
-
-    // eslint-disable-next-line no-console
-    console.log('allCheckboxes ', allCheckboxes);
-
-    listContainer.querySelectorAll(".form-group").forEach(e => {
-        categories.push(e.getAttribute("name"));
-        getChecked(e.getAttribute("name"));
-    });
-
-    allCheckboxes.forEach(el => {
-        el.addEventListener("change", toggleCheckbox);
-    });
-
-
-}
 
 export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     let filter, li, a, i, txtValue;
@@ -142,6 +102,9 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     ).map(function(el) {
       return el.value;
     });
+
+    // eslint-disable-next-line no-console
+    console.log("checked", checked);
   };
 
   /**
@@ -155,8 +118,6 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
       let display = true;
       categories.forEach(function(c) {
 
-        // eslint-disable-next-line no-console
-        console.log(el.classList);
         let intersection = checked[c].length
           ? Array.from(Object.values(el.dataset)).filter((x) =>
               checked[c].includes(x)
@@ -210,3 +171,88 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
         console.log(e);
     });
 };
+
+/**
+   * Render the checkboxes for the filer.
+   * @param {string} idstring
+   */
+ export const renderSearchbox = (idstring) => {
+
+
+    Templates.renderForPromise('local_wunderbyte_table/search').then(({html}) => {
+
+        // eslint-disable-next-line no-console
+        console.log('renderSearchbox', html);
+        const selector = ".wunderbyte_table_container_" + idstring;
+
+        // eslint-disable-next-line no-console
+        console.log('selector', selector);
+
+        const container = document.querySelector(selector);
+
+        // eslint-disable-next-line no-console
+        console.log(container);
+
+        container.insertAdjacentHTML('afterbegin', html);
+
+        initializeSearch(selector);
+
+        return;
+    }).catch(e => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+    });
+};
+
+
+/**
+ * Function to initialize the search after rendering the searchbox.
+ * @returns
+ */
+ function initializeSearch() {
+
+    const inputElement = document.querySelector(listContainerSelector + ' input.search');
+
+    if (!inputElement) {
+        return;
+    }
+
+    inputElement.addEventListener('keyup', () => {
+
+        searchInput(inputElement, elementToHideSelector, elementToSearchSelector);
+    });
+}
+
+/**
+ * Initialize Checkboxes.
+ * @param {string} selector
+ * @returns
+ */
+function initializeCheckboxes(selector) {
+
+    // eslint-disable-next-line no-console
+    console.log('initializeCheckboxes ');
+
+    const listContainer = document.querySelector(selector);
+
+    const allCheckboxes = listContainer.querySelectorAll("input[type=checkbox]");
+
+    if (!allCheckboxes) {
+        return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.log('allCheckboxes ', allCheckboxes);
+
+    listContainer.querySelectorAll(".form-group").forEach(e => {
+        categories.push(e.getAttribute("name"));
+        getChecked(e.getAttribute("name"));
+    });
+
+    allCheckboxes.forEach(el => {
+        el.addEventListener("change", toggleCheckbox);
+    });
+
+    allElements = listContainer.querySelectorAll(elementToHideSelector);
+
+}

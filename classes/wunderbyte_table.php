@@ -75,7 +75,6 @@ class wunderbyte_table extends table_sql {
      */
     public $tabletemplate = 'local_wunderbyte_table/table';
 
-
     /**
      * @var array array of supplementary column information. Can be used like below.
      * ['cardheader' => [
@@ -475,6 +474,19 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * Define the columns for which an automatic filter should be generated.
+     * We just store them as subcolumns of type datafields. In the mustache template these fields must be added to every...
+     * ... row or card element, so it can be hidden or shown via the integrated filter mechanism..
+     * @param array $filtercolumns
+     * @return void
+     */
+    public function define_filtercolumns(array $filtercolumns) {
+
+        $this->add_subcolumns('datafields', $filtercolumns);
+
+    }
+
+    /**
      * This calls the parent query_db function, but only after checking for cached queries.
      * This function can and should be overriden if your plugin needs different cache treatment.
      *
@@ -561,15 +573,20 @@ class wunderbyte_table extends table_sql {
 
     public function return_filterjson() {
 
-        $rawdata = $this->rawdata;
-
         $filtercolumns = [];
-        foreach ($this->columns as $key => $value) {
+
+        // We have stored the columns to filter in the subcolumn "datafields";
+        if (!isset($this->subcolumns['datafields'])) {
+            return '';
+        }
+        foreach ($this->subcolumns['datafields'] as $key => $value) {
             $filtercolumns[$key] = [];
 
-            foreach ($this->rawdata as $row) {
-                if (!isset($filtercolumns[$key][$row->$key])) {
-                    $filtercolumns[$key][$row->$key] = true;
+            foreach ($this->formatedrows as $row) {
+
+                if (!isset($filtercolumns[$key][$row[$key]])) {
+
+                    $filtercolumns[$key][$row[$key]] = true;
                 }
             }
         }

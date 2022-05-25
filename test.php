@@ -84,6 +84,8 @@ if (!$table->is_downloading()) {
     echo $OUTPUT->header();
 }
 
+$table->define_filtercolumns(['shortname', 'fullname']);
+
 // Work out the sql for the table.
 $table->set_sql('*', "{course}", '1=1');
 
