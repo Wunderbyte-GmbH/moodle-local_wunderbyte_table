@@ -32,10 +32,27 @@
 
 }}
 
-<div>
+<aside class="wunderbyteTableFilter">
     {{#categories}}
-    <div class="form-group" name="{{name}}">
-        {{name}}
+    <div class="form-group border p-2" name="{{name}}">
+    <legend class="d-flex align-items-center" id="yui_3_17_2_1_1653475522789_1039">
+        <div class="position-relative d-flex ftoggler align-items-center position-relative mr-1" id="yui_3_17_2_1_1653475522789_1038">
+            <a data-toggle="collapse" href="#id_collapse_{{name}}" role="button" aria-expanded="false" aria-controls="id_collapse_{{name}}" class="btn btn-icon mr-1 icons-collapse-expand stretched-link fheader" id="collapseElement-2">
+                <span class="expanded-icon icon-no-margin p-2" title="Collapse">
+                    <i class="icon fa fa-chevron-down fa-fw " aria-hidden="true"></i>
+                </span>
+                <span class="collapsed-icon icon-no-margin p-2" title="Expand">
+                    <span class="dir-rtl-hide"><i class="icon fa fa-chevron-right fa-fw " aria-hidden="true"></i></span>
+                    <span class="dir-ltr-hide"><i class="icon fa fa-chevron-left fa-fw " aria-hidden="true"></i></span>
+                </span>
+                <span class="sr-only">{{name}}</span>
+            </a>
+            <h4 class="d-flex align-self-stretch align-items-center mb-0" aria-hidden="true">
+                {{name}}
+            </h4>
+        </div>
+    </legend>
+        <div class="collapse show" id="id_collapse_{{name}}">
         {{#values}}
             {{#.}}
             <div class="form-check">
@@ -47,6 +64,7 @@
             {{/.}}
         {{/values}}
         </div>
+        </div>
+
     {{/categories}}
-    </div>
-</div>
+</aside>

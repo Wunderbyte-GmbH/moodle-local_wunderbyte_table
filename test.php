@@ -36,7 +36,7 @@ if (!has_capability('moodle/site:config', $syscontext)) {
 
 $context = context_system::instance();
 $PAGE->set_context($context);
-$PAGE->set_url('/test.php');
+$PAGE->set_url('/local/wunderbyte_table/test.php');
 
 $download = optional_param('download', '', PARAM_ALPHA);
 
@@ -80,7 +80,7 @@ if (!$table->is_downloading()) {
     // Print the page header.
     $PAGE->set_title('Testing');
     $PAGE->set_heading('Testing table class');
-    $PAGE->navbar->add('Testing table class', new moodle_url('/test.php'));
+    $PAGE->navbar->add('Testing table class', new moodle_url('/local/wunderbyte_table/test.php'));
     echo $OUTPUT->header();
 }
 
@@ -89,7 +89,7 @@ $table->define_filtercolumns(['shortname', 'fullname']);
 // Work out the sql for the table.
 $table->set_sql('*', "{course}", '1=1');
 
-$table->define_baseurl("$CFG->wwwroot/test.php");
+$table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/test.php");
 
 $table->out(5, true);
 

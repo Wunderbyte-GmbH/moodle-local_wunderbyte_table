@@ -117,7 +117,6 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     allElements.forEach(function(el) {
       let display = true;
       categories.forEach(function(c) {
-
         let intersection = checked[c].length
           ? Array.from(Object.values(el.dataset)).filter((x) =>
               checked[c].includes(x)
@@ -232,10 +231,14 @@ function initializeCheckboxes(selector) {
 
     // eslint-disable-next-line no-console
     console.log('initializeCheckboxes ');
-
+    // eslint-disable-next-line no-console
+    console.log(selector + " " + elementToHideSelector);
     const listContainer = document.querySelector(selector);
 
     const allCheckboxes = listContainer.querySelectorAll("input[type=checkbox]");
+
+    // Error gets spinner
+    allElements = document.querySelectorAll(selector + " " + elementToHideSelector);
 
     if (!allCheckboxes) {
         return;
@@ -252,7 +255,6 @@ function initializeCheckboxes(selector) {
     allCheckboxes.forEach(el => {
         el.addEventListener("change", toggleCheckbox);
     });
-
-    allElements = listContainer.querySelectorAll(elementToHideSelector);
-
+    // eslint-disable-next-line no-console
+    console.log(allElements);
 }

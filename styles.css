@@ -1,0 +1,14 @@
+.wunderbyte_table_container {
+    display: grid;
+    grid-template-columns: fit-content(400px) 1fr;
+    grid-template-areas: "aside content";
+}
+
+.wunderbyte_table_container aside {
+    max-width: 400px;
+    grid-area: aside;
+}
+
+.wunderbyte_table_container .wunderbyteTableClass{
+    grid-area: content;
+}
