@@ -42,6 +42,14 @@ use stdClass;
  * Wunderbyte table class is an extension of table_sql.
  */
 class wunderbyte_table extends table_sql {
+
+    // This variable overrides the one in table_sql. We also need the filter field.
+    /**
+     * @var object sql for querying db. Has fields 'fields', 'from', 'where', 'filter', 'params'.
+     */
+    public $sql = null;
+
+
     /**
      * @var string Id of this table.
      */
@@ -59,6 +67,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var array The string of a json object to output the filter.
+     */
+    public $filterjson = null;
+
+    /**
+     *
      * @var string component where cache defintion is to be found.
      */
     public $cachecomponent = 'local_wunderbyte_table';
@@ -67,7 +81,13 @@ class wunderbyte_table extends table_sql {
      *
      * @var string name of the cache definition in the above defined component.
      */
-    public $cachename = 'cachedrawdata';
+    public $rawcachename = 'cachedrawdata';
+
+    /**
+     *
+     * @var string name of the cache definition in the above defined component.
+     */
+    public $renderedcachename = 'cachedfulltable';
 
     /**
      *
@@ -201,7 +221,9 @@ class wunderbyte_table extends table_sql {
         }
         $this->pagesize = $pagesize;
         $this->setup();
+        // First we query without the filter.
         $this->query_db_cached($pagesize, $useinitialsbar);
+
         $this->build_table();
         $this->close_recordset();
         return $this->finish_output();
@@ -333,7 +355,7 @@ class wunderbyte_table extends table_sql {
      * @param array $subcolumns
      * @return void
      */
-    public function add_subcolumns(string $subcolumnsidentifier, array $subcolumns) {
+    public function add_subcolumns(string $subcolumnsidentifier, array $subcolumns, $maincolumns = true) {
         if (strlen($subcolumnsidentifier) == 0) {
             throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
                     "You need to specify a columnidentifer like cardheader or cardfooter");
@@ -346,8 +368,9 @@ class wunderbyte_table extends table_sql {
             $columns[] = $value;
         }
         // This is necessary to make sure we create the right content.
-        parent::define_columns($columns);
-
+        if ($maincolumns) {
+            parent::define_columns($columns);
+        }
     }
 
     /** This overrides the classic define columns functions.
@@ -358,8 +381,9 @@ class wunderbyte_table extends table_sql {
      */
     public function define_columns($columns, $usestandardclasses = true) {
 
-        $this->add_subcolumns('cardbody', $columns);
+        $this->add_subcolumns('cardbody', $columns, true);
 
+        // The standardclasses offer for a quick and standard way to configure a responsive table.
         if ($usestandardclasses) {
             // This adds the width to all normal columns.
             $this->add_classes_to_subcolumns('cardbody', ['columnclass' => 'col-sm']);
@@ -455,21 +479,28 @@ class wunderbyte_table extends table_sql {
     /**
      * Function to set new cache instead of general wunderbyte_table cache.
      * If you use more than one wunderbyte_table in your project, you can use different caches for each table.
+     * The rawcache goes caches the sql. This might be enough in most cases.
+     * But you also migth need to use a second cache, which goes on the full table.
+     * This is needed when you transform your sql results a lot with information with form other tables.
+     * Having this cache will acutally avoid running the likely expensive "build_table" function.
      *
      * @param string $componentname
-     * @param string $cachename
+     * @param string|null $rawcachename
+     * @param string|null $renderedcachename
      * @return void
      */
-    public function define_cache(string $componentname, string $cachename = null) {
+    public function define_cache(string $componentname, string $rawcachename = null, string $renderedcachename = null) {
 
-        if ($cachename && $componentname) {
+        if ($rawcachename && $componentname) {
             $this->cachecomponent = $componentname;
-            $this->cachename = $cachename;
+            $this->rawcachename = $rawcachename;
         } else {
             // It might be that we don't want to use cache in a table.
             $this->cachecomponent = null;
-            $this->cachename = null;
+            $this->rawcachename = null;
         }
+        // In many cases, everything will work fine without this cache being defined.
+        $this->renderedcachename = $renderedcachename;
 
     }
 
@@ -482,7 +513,7 @@ class wunderbyte_table extends table_sql {
      */
     public function define_filtercolumns(array $filtercolumns) {
 
-        $this->add_subcolumns('datafields', $filtercolumns);
+        $this->add_subcolumns('datafields', $filtercolumns, false);
 
     }
 
@@ -501,6 +532,24 @@ class wunderbyte_table extends table_sql {
         if ($sort) {
             $sort = "ORDER BY $sort";
         }
+
+        // If we haven't a filter json yet and we have filters defined ans usepages is right now true, we set it for a moment to false.
+        // We do so because we need to get the whole table for once. We'll run the same function again twice...
+        // ... and the next time, the pagination will be applied.
+        if (isset($this->subcolumns['datafields'])
+            && !$this->filterjson
+            && ($this->use_pages = true)) {
+
+            // For the caching to work over all pages, we need to set the currpage to null for the filter request.
+            // Else the hash value would not match and we would not have filtering of filterjson over the different pages.
+            $currpage = $this->currpage;
+
+            $this->use_pages = false;
+            $this->currpage = null;
+        } else {
+            $this->use_pages = true;
+        }
+
         // Create the query string including params.
         $sql = "SELECT
                 {$this->sql->fields}
@@ -511,14 +560,15 @@ class wunderbyte_table extends table_sql {
                 . $pagesize
                 . $useinitialsbar
                 . $this->download
-                . $this->currpage;
+                . $this->currpage
+                . $this->use_pages;
 
         // Now that we have the string, we hash it with a very fast method.
         $cachekey = crc32($sql);
 
         // And then we query our cache to see if we have it already.
-        if ($this->cachecomponent && $this->cachename) {
-            $cache = \cache::make($this->cachecomponent, $this->cachename);
+        if ($this->cachecomponent && $this->rawcachename) {
+            $cache = \cache::make($this->cachecomponent, $this->rawcachename);
             $cachedrawdata = $cache->get($cachekey);
         } else {
             $cachedrawdata = false;
@@ -531,11 +581,13 @@ class wunderbyte_table extends table_sql {
             $this->pagesize = $pagination['pagesize'];
             $this->totalrows = $pagination['totalrows'];
             $this->currpage = $pagination['currpage'];
-            $this->use_pages = true;
+            $this->use_pages = $pagination['use_pages'];
         } else {
             // If not, we query as usual.
             try {
-                parent::query_db($pagesize, $useinitialsbar);
+
+                $this->query_db($pagesize, $useinitialsbar);
+
             } catch (Exception $e) {
                 $this->rawdata = [];
             }
@@ -543,7 +595,7 @@ class wunderbyte_table extends table_sql {
             // After the query, we set the result to the.
             // But only, if we have a cache by now.
             if ($this->cachecomponent
-                && $this->cachename
+                && $this->rawcachename
                 && $cache) {
                 $cache->set($cachekey, $this->rawdata);
                 if (isset($this->use_pages)
@@ -552,13 +604,37 @@ class wunderbyte_table extends table_sql {
                     $pagination['pagesize'] = $this->pagesize;
                     $pagination['totalrows'] = $this->totalrows;
                     $pagination['currpage'] = $this->currpage;
+                    $pagination['use_pages'] = $this->use_pages;
                     $cache->set($cachekey . '_pagination', $pagination);
                 }
             }
         }
+
+        // We have stored the columns to filter in the subcolumn "datafields";
+        // If we have filters defines, we need to actually create a filter json.
+        // It might exist already in our DB. We have to create this from all data, without filter applied.
+        // We only run this,
+        if (isset($this->subcolumns['datafields']) && !$this->filterjson) {
+            if (!$this->filterjson = $cache->get($cachekey . '_filterjson')) {
+                // Now we create the filter json from the unfiltered json.
+                $this->filterjson = $this->return_filterjson();
+                $cache->set($cachekey . '_filterjson', $this->filterjson);
+            }
+        }
+
+        // If there is actually a filter, we need to run this code again, but with the filter applied.
+        // The first time, we got rawdata but it's without the filter applied.
+        // We still use it.
+        if (!$this->use_pages || (!empty($this->sql->filter) && !str_contains($this->sql->where, $this->sql->filter))) {
+
+            $this->sql->where .= $this->sql->filter ?? '';
+
+            $this->use_pages = true;
+            $this->currpage = $currpage;
+            $this->query_db_cached($pagesize, $useinitialsbar);
+        }
+
     }
-
-
 
     /**
      * This overrides standardfunction in table_sql class which would output Name with link.
@@ -571,6 +647,11 @@ class wunderbyte_table extends table_sql {
         return $row->fullname;
     }
 
+    /**
+     * Returns a json for rendering the filter elements.
+     *
+     * @return void
+     */
     public function return_filterjson() {
 
         $filtercolumns = [];
@@ -582,7 +663,9 @@ class wunderbyte_table extends table_sql {
         foreach ($this->subcolumns['datafields'] as $key => $value) {
             $filtercolumns[$key] = [];
 
-            foreach ($this->formatedrows as $row) {
+            foreach ($this->rawdata as $row) {
+
+                $row = (array)$row;
 
                 if (!isset($filtercolumns[$key][$row[$key]])) {
 
@@ -614,5 +697,38 @@ class wunderbyte_table extends table_sql {
         }
 
         return json_encode($filterjson);
+    }
+
+    /**
+     * Set the sql to query the db. Query will be :
+     *      SELECT $fields FROM $from WHERE $where
+     * Of course you can use sub-queries, JOINS etc. by putting them in the
+     * appropriate clause of the query.
+     * @param string $fields
+     * @param string $from
+     * @param string $where
+     * @param array $params
+     * @param string $filter
+     * @return void
+     */
+    public function set__filter_sql(string $fields, string $from, string $where, array $params = array(), string $filter) {
+        $this->sql = new stdClass();
+        $this->sql->fields = $fields;
+        $this->sql->from = $from;
+        $this->sql->where = $where;
+        $this->sql->filter = $filter;
+        $this->sql->params = $params;
+    }
+
+    /**
+     * Copy of the parent function, but we don't automatically set the pagesize.
+     * @param int $perpage
+     * @param int $total
+     * @return void
+     */
+    public function pagesize($perpage, $total) {
+        $this->pagesize  = $perpage;
+        $this->totalrows = $total;
+        // $this->use_pages = true;
     }
 }

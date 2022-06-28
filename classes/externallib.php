@@ -93,7 +93,7 @@ class local_wunderbyte_table_external extends external_api {
         if ($tabledata) {
             $result['template'] = $table->tabletemplate;
             $result['content'] = json_encode($tabledata);
-            $result['filterjson'] = $table->return_filterjson();
+            $result['filterjson'] = $table->filterjson ?? '';
         }
 
         return $result;

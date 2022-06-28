@@ -86,8 +86,7 @@ export function wbTableReload(idstring, encodedtable = null) {
     let element = document.getElementById('a' + idstring);
 
     if (!element) {
-        // eslint-disable-next-line no-console
-        console.log('couldnt find element to reload', idstring);
+
         return;
     }
 
@@ -95,8 +94,6 @@ export function wbTableReload(idstring, encodedtable = null) {
         encodedtable = element.dataset.encodedtable;
 
         if (!encodedtable) {
-            // eslint-disable-next-line no-console
-            console.log('couldnt find encodedtable', encodedtable);
             return;
         }
     }
@@ -162,8 +159,6 @@ export const callLoadData = (
 
             const jsonobject = JSON.parse(res.content);
 
-            const filterjson = JSON.parse(res.filterjson);
-
             Templates.renderForPromise(res.template, jsonobject).then(({html, js}) => {
 
                 const frag = document.querySelector('#a' + idstring);
@@ -194,7 +189,11 @@ export const callLoadData = (
                 });
             });
 
-            renderFilter(filterjson, idstring);
+            if (res.filterjson) {
+                const filterjson = JSON.parse(res.filterjson);
+                renderFilter(filterjson, idstring);
+            }
+
             renderSearchbox(idstring);
 
             if (spinner) {

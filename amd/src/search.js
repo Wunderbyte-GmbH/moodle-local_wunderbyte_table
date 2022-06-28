@@ -38,9 +38,6 @@ var elementToSearchSelector = '';
  */
 export const init = (listContainer, elementToHide, elementToSearch) => {
 
-    // eslint-disable-next-line no-console
-    console.log(listContainerSelector, elementToHide, elementToSearch);
-
     elementToHideSelector = elementToHide;
     listContainerSelector = listContainer;
     elementToSearchSelector = elementToSearch;
@@ -52,13 +49,7 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 
     filter = inputElement.value.toUpperCase();
 
-    // eslint-disable-next-line no-console
-    console.log(filter);
-
     li = document.querySelectorAll(elementToHide);
-
-    // eslint-disable-next-line no-console
-    console.log(li);
 
     for (i = 0; i < li.length; i++) {
         if (elementToSearch) {
@@ -68,9 +59,6 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
         }
 
         txtValue = a.textContent || a.innerText;
-
-        // eslint-disable-next-line no-console
-        console.log(txtValue);
 
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
@@ -102,18 +90,12 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     ).map(function(el) {
       return el.value;
     });
-
-    // eslint-disable-next-line no-console
-    console.log("checked", checked);
   };
 
   /**
    * Compares checked boxes with classes of Elements and shows or hides them.
    */
   export const setVisibility = () => {
-
-    // eslint-disable-next-line no-console
-    console.log(categories);
     allElements.forEach(function(el) {
       let display = true;
       categories.forEach(function(c) {
@@ -143,22 +125,11 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
    */
   export const renderFilter = (filterjson, idstring) => {
 
-    // eslint-disable-next-line no-console
-    console.log('filterjson', filterjson);
-
     Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
 
-        // eslint-disable-next-line no-console
-        console.log('renderFilter', html);
         const selector = ".wunderbyte_table_container_" + idstring;
 
-        // eslint-disable-next-line no-console
-        console.log('selector', selector);
-
         const container = document.querySelector(selector);
-
-        // eslint-disable-next-line no-console
-        console.log(container);
 
         container.insertAdjacentHTML('afterbegin', html);
 
@@ -180,17 +151,9 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 
     Templates.renderForPromise('local_wunderbyte_table/search').then(({html}) => {
 
-        // eslint-disable-next-line no-console
-        console.log('renderSearchbox', html);
         const selector = ".wunderbyte_table_container_" + idstring;
 
-        // eslint-disable-next-line no-console
-        console.log('selector', selector);
-
         const container = document.querySelector(selector);
-
-        // eslint-disable-next-line no-console
-        console.log(container);
 
         container.insertAdjacentHTML('afterbegin', html);
 
@@ -206,7 +169,6 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 
 /**
  * Function to initialize the search after rendering the searchbox.
- * @returns
  */
  function initializeSearch() {
 
@@ -225,14 +187,9 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 /**
  * Initialize Checkboxes.
  * @param {string} selector
- * @returns
  */
 function initializeCheckboxes(selector) {
 
-    // eslint-disable-next-line no-console
-    console.log('initializeCheckboxes ');
-    // eslint-disable-next-line no-console
-    console.log(selector + " " + elementToHideSelector);
     const listContainer = document.querySelector(selector);
 
     const allCheckboxes = listContainer.querySelectorAll("input[type=checkbox]");
@@ -244,9 +201,6 @@ function initializeCheckboxes(selector) {
         return;
     }
 
-    // eslint-disable-next-line no-console
-    console.log('allCheckboxes ', allCheckboxes);
-
     listContainer.querySelectorAll(".form-group").forEach(e => {
         categories.push(e.getAttribute("name"));
         getChecked(e.getAttribute("name"));
@@ -255,6 +209,4 @@ function initializeCheckboxes(selector) {
     allCheckboxes.forEach(el => {
         el.addEventListener("change", toggleCheckbox);
     });
-    // eslint-disable-next-line no-console
-    console.log(allElements);
 }
