@@ -148,8 +148,8 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
    */
  export const renderSearchbox = (idstring) => {
 
+    Templates.renderForPromise('local_wunderbyte_table/search', []).then(({html}) => {
 
-    Templates.renderForPromise('local_wunderbyte_table/search').then(({html}) => {
 
         const selector = ".wunderbyte_table_container_" + idstring;
 
