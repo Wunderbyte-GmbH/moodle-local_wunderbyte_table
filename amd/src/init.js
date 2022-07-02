@@ -23,7 +23,7 @@ import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
 
-import { renderFilter, renderSearchbox } from 'local_wunderbyte_table/search';
+import {renderFilter, renderSearchbox} from 'local_wunderbyte_table/search';
 
 /**
  * Gets called from mustache template.
@@ -121,6 +121,8 @@ export function wbTableReload(idstring, encodedtable = null) {
  * @param {null|string} tshow
  * @param {null|int} tdir
  * @param {null|int} treset
+ * @param {null|string} filterobjects
+ * @param {null|string} searchtext
  */
 export const callLoadData = (
     idstring,
@@ -130,7 +132,9 @@ export const callLoadData = (
     thide = null,
     tshow = null,
     tdir = null,
-    treset = null) => {
+    treset = null,
+    filterobjects = null,
+    searchtext = null) => {
 
     let table = document.getElementById('a' + idstring);
 
@@ -153,7 +157,9 @@ export const callLoadData = (
             'thide': thide,
             'tshow': tshow,
             'tdir': tdir,
-            'treset': treset
+            'treset': treset,
+            'filterobjects': filterobjects,
+            'searchtext': searchtext
         },
         done: function(res) {
 

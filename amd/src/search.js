@@ -38,6 +38,9 @@ var elementToSearchSelector = '';
  */
 export const init = (listContainer, elementToHide, elementToSearch) => {
 
+    // eslint-disable-next-line no-console
+    console.log(listContainer, "elementToHide: ", elementToHide, "elementToSearch:", elementToSearch);
+
     elementToHideSelector = elementToHide;
     listContainerSelector = listContainer;
     elementToSearchSelector = elementToSearch;
@@ -75,6 +78,9 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
  * @param {*} e - event
  */
  export const toggleCheckbox = (e) => {
+
+    // eslint-disable-next-line no-console
+    console.log('checked', e.target.name);
     getChecked(e.target.name);
     setVisibility();
   };
@@ -88,6 +94,8 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     checked[name] = Array.from(
       document.querySelectorAll("input[name=" + name + "]:checked")
     ).map(function(el) {
+      // eslint-disable-next-line no-console
+      console.log(el.value);
       return el.value;
     });
   };
@@ -99,6 +107,9 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     allElements.forEach(function(el) {
       let display = true;
       categories.forEach(function(c) {
+
+        // eslint-disable-next-line no-console
+        console.log(checked[c]);
         let intersection = checked[c].length
           ? Array.from(Object.values(el.dataset)).filter((x) =>
               checked[c].includes(x)

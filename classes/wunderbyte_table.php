@@ -355,7 +355,7 @@ class wunderbyte_table extends table_sql {
      * @param array $subcolumns
      * @return void
      */
-    public function add_subcolumns(string $subcolumnsidentifier, array $subcolumns, $maincolumns = true) {
+    public function add_subcolumns(string $subcolumnsidentifier, array $subcolumns) {
         if (strlen($subcolumnsidentifier) == 0) {
             throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
                     "You need to specify a columnidentifer like cardheader or cardfooter");
@@ -368,9 +368,7 @@ class wunderbyte_table extends table_sql {
             $columns[] = $value;
         }
         // This is necessary to make sure we create the right content.
-        if ($maincolumns) {
-            parent::define_columns($columns);
-        }
+        parent::define_columns($columns);
     }
 
     /** This overrides the classic define columns functions.
@@ -533,7 +531,8 @@ class wunderbyte_table extends table_sql {
             $sort = "ORDER BY $sort";
         }
 
-        // If we haven't a filter json yet and we have filters defined ans usepages is right now true, we set it for a moment to false.
+        // If we haven't a filter json yet and we have filters defined ans usepages is right now true...
+        // ... we set it for a moment to false.
         // We do so because we need to get the whole table for once. We'll run the same function again twice...
         // ... and the next time, the pagination will be applied.
         if (isset($this->subcolumns['datafields'])
@@ -610,10 +609,10 @@ class wunderbyte_table extends table_sql {
             }
         }
 
-        // We have stored the columns to filter in the subcolumn "datafields";
+        // We have stored the columns to filter in the subcolumn "datafields".
         // If we have filters defines, we need to actually create a filter json.
         // It might exist already in our DB. We have to create this from all data, without filter applied.
-        // We only run this,
+
         if (isset($this->subcolumns['datafields']) && !$this->filterjson) {
             if (!$this->filterjson = $cache->get($cachekey . '_filterjson')) {
                 // Now we create the filter json from the unfiltered json.
@@ -625,9 +624,12 @@ class wunderbyte_table extends table_sql {
         // If there is actually a filter, we need to run this code again, but with the filter applied.
         // The first time, we got rawdata but it's without the filter applied.
         // We still use it.
-        if (!$this->use_pages || (!empty($this->sql->filter) && !str_contains($this->sql->where, $this->sql->filter))) {
+        if (!$this->use_pages || (!empty($this->sql->filter) && strpos($this->sql->where, $this->sql->filter) == false)) {
 
             $this->sql->where .= $this->sql->filter ?? '';
+
+            // To avoid another run, we have to set filter to empty now.
+            $this->sql->filter = '';
 
             $this->use_pages = true;
             $this->currpage = $currpage;
@@ -656,16 +658,30 @@ class wunderbyte_table extends table_sql {
 
         $filtercolumns = [];
 
-        // We have stored the columns to filter in the subcolumn "datafields";
+        // We have stored the columns to filter in the subcolumn "datafields".
         if (!isset($this->subcolumns['datafields'])) {
             return '';
         }
+
+        // Here, we create the filter first like this:
+        // For every field we want to filter for, we look in our rawdata...
+        // ... to fetch all the available values once.
         foreach ($this->subcolumns['datafields'] as $key => $value) {
+
+            // We won't generate a filter for the id column, but it will be present because we need it as dataset.
+            if ($key == 'id') {
+                continue;
+            }
+
             $filtercolumns[$key] = [];
 
             foreach ($this->rawdata as $row) {
 
                 $row = (array)$row;
+
+                if (empty($row[$key])) {
+                    continue;
+                }
 
                 if (!isset($filtercolumns[$key][$row[$key]])) {
 
@@ -689,9 +705,13 @@ class wunderbyte_table extends table_sql {
                     'category' => $key
                 ];
 
-                $categoryobject['values'][] = $itemobject;
+                $categoryobject['values'][$valuekey] = $itemobject;
 
             }
+
+            // To sort it and make it mustache ready, we have to jump through loops.
+            ksort($categoryobject['values']);
+            $categoryobject['values'] = array_values($categoryobject['values']);
 
             $filterjson['categories'][] = $categoryobject;
         }
@@ -711,7 +731,7 @@ class wunderbyte_table extends table_sql {
      * @param string $filter
      * @return void
      */
-    public function set__filter_sql(string $fields, string $from, string $where, array $params = array(), string $filter) {
+    public function set_filter_sql(string $fields, string $from, string $where, array $params = array(), string $filter) {
         $this->sql = new stdClass();
         $this->sql->fields = $fields;
         $this->sql->from = $from;
@@ -719,6 +739,43 @@ class wunderbyte_table extends table_sql {
         $this->sql->filter = $filter;
         $this->sql->params = $params;
     }
+
+    /**
+     * Applies the filter we got via webservice as jsonobject to the sql object.
+     *
+     * @param string $filter
+     * @return void
+     */
+    public function apply_filter(string $filter) {
+
+        global $DB;
+
+        if (!$filterobject = json_decode($filter)) {
+            throw new moodle_exception('invalidfilterjson', 'local_wunderbyte_table');
+        }
+
+        $filter = '';
+
+        foreach ($filterobject as $key => $value) {
+
+            // Make sure we can use ou
+            $paramsvaluekey = 'param';
+
+            while (isset($this->sql->params[$paramsvaluekey])) {
+                $paramsvaluekey .= '1';
+            }
+
+            $filter .= " AND " . $DB->sql_like("$key", ":$paramsvaluekey");
+            $this->sql->params[$paramsvaluekey] = $value;
+        }
+
+        if (empty($this->sql->filter)) {
+            $this->sql->filter = $filter;
+        } else {
+            $this->sql->filter .= $filter;
+        }
+    }
+
 
     /**
      * Copy of the parent function, but we don't automatically set the pagesize.
