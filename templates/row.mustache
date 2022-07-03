@@ -60,36 +60,65 @@
     }
 }}
 
-{{> local_wunderbyte_table/pagination }}
-
-{{#table}}
-<div class="container-fluid">
-
-    {{#header}}
-    <div class="{{listheaderclass}}">
-        <div class="card-header">
-            <div class="row">
-            {{#cardbody}}
-                <div class="{{#columnclass}}{{.}} {{/columnclass}}">
-                  {{^keystring}}
+   <div class="card mb-2 search-data-element"
+      {{#datafields}}
+        data-{{key}}="{{value}}"
+      {{/datafields}}
+      >
+      <div class="{{cardimageclass}}">
+          {{#cardimage}}
+              {{{value}}}
+          {{/cardimage}}
+        </div>
+      <div class="{{cardheaderclass}}">
+          {{#cardheader}}
+               {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
+                  {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
+                    {{^keystring}}
                    {{{key}}}
                   {{/keystring}}
                   {{#keystring}}
                     {{.}}
+                  {{/keystring}}:
+                  {{#columnkeyclass}}</span>{{/columnkeyclass}}
+                  {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
+                    {{{value}}}
+                  {{#columnvalueclass}}</span>{{/columnvalueclass}}
+               {{#columnclass}}</div>{{/columnclass}}
+          {{/cardheader}}
+      </div>
+      <div class="{{cardbodyclass}} wunderbyteTable">
+                {{#cardbody}}
+               {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
+                  {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
+                    {{^keystring}}
+                   {{{key}}}
                   {{/keystring}}
-                </div>
-            {{/cardbody}}
-            </div>
-        </div>
-    </div>
-   {{/header}}
-
-   {{#rows}}
-   {{> local_wunderbyte_table/row }}
-    {{/rows}}
-
-</div>
-
-{{/table}}
-
-{{> local_wunderbyte_table/pagination }}
+                  {{#keystring}}
+                    {{.}}
+                  {{/keystring}}:
+                  {{#columnkeyclass}}</span>{{/columnkeyclass}}
+                  {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
+                    {{{value}}}
+                  {{#columnvalueclass}}</span>{{/columnvalueclass}}
+               {{#columnclass}}</div>{{/columnclass}}
+               {{/cardbody}}
+      </div>
+      <div class="{{cardfooterclass}}">
+         {{#cardfooter}}
+               {{#columnclass}}<div class="{{.}} ">{{/columnclass}}
+                  {{#columnkeyclass}}<span class="{{.}} ">{{/columnkeyclass}}
+                    {{^keystring}}
+                   {{{key}}}
+                  {{/keystring}}
+                  {{#keystring}}
+                    {{.}}
+                  {{/keystring}}:
+                  {{#columnkeyclass}}</span>{{/columnkeyclass}}
+                  {{#columnvalueclass}}<span class="{{.}} ">{{/columnvalueclass}}
+                    {{{value}}}
+                  {{#columnvalueclass}}</span>{{/columnvalueclass}}
+               {{#columnclass}}</div>{{/columnclass}}
+          {{/cardfooter}}
+      </div>
+   </div>
