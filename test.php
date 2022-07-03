@@ -84,14 +84,14 @@ if (!$table->is_downloading()) {
     echo $OUTPUT->header();
 }
 
-$table->define_filtercolumns(['idnumber', 'fullname', 'format']);
+$table->define_filtercolumns(['id', 'category', 'format']);
 
 // Work out the sql for the table.
 $table->set_sql('*', "{course}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/test.php");
 
-$table->out(5, true);
+$table->out(200, true);
 
 if (!$table->is_downloading()) {
     echo $OUTPUT->footer();

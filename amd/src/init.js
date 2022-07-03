@@ -25,6 +25,8 @@ import Notification from 'core/notification';
 
 import {renderFilter, renderSearchbox} from 'local_wunderbyte_table/search';
 
+var loading = false;
+
 /**
  * Gets called from mustache template.
  * @param {string} idstring
@@ -148,6 +150,7 @@ export const callLoadData = (
         table.classList.add('hidden');
     }
 
+    loading = true;
     Ajax.call([{
         methodname: "local_wunderbyte_table_load_data",
         args: {
@@ -164,6 +167,9 @@ export const callLoadData = (
         done: function(res) {
 
             const jsonobject = JSON.parse(res.content);
+
+            // eslint-disable-next-line no-console
+            console.log(jsonobject);
 
             Templates.renderForPromise(res.template, jsonobject).then(({html, js}) => {
 
@@ -187,20 +193,24 @@ export const callLoadData = (
                 replacePaginationLinks(idstring, encodedtable, frag);
                 replaceSortColumnLinks(idstring, encodedtable, frag, page);
 
+                // When everything is done, we loaded fine.
+                loading = false;
+
                 return true;
             }).catch(ex => {
+                loading = false;
                 Notification.addNotification({
                     message: 'failed rendering ' + ex,
                     type: "danger"
                 });
             });
 
+            renderSearchbox(idstring);
+
             if (res.filterjson) {
                 const filterjson = JSON.parse(res.filterjson);
                 renderFilter(filterjson, idstring);
             }
-
-            renderSearchbox(idstring);
 
             if (spinner) {
                 spinner.classList.add('hidden');

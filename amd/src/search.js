@@ -21,6 +21,7 @@
  */
 
 import Templates from 'core/templates';
+import {callLoadData} from 'local_wunderbyte_table/init';
 
 var checked = {};
 var categories = [];
@@ -29,6 +30,8 @@ var elementToHideSelector = '';
 var listContainerSelector = '';
 var elementToSearchSelector = '';
 
+var idstring = '';
+var encodedtable = '';
 
 /**
  * Store some params globally.
@@ -82,6 +85,24 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     // eslint-disable-next-line no-console
     console.log('checked', e.target.name);
     getChecked(e.target.name);
+
+    // Reload the filtered elements via ajax.
+
+    const filterobjects = getFilterOjects();
+
+    // eslint-disable-next-line no-console
+    console.log(filterobjects);
+
+    callLoadData(idstring,
+    encodedtable,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    filterobjects);
+
     setVisibility();
   };
 
@@ -94,8 +115,6 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     checked[name] = Array.from(
       document.querySelectorAll("input[name=" + name + "]:checked")
     ).map(function(el) {
-      // eslint-disable-next-line no-console
-      console.log(el.value);
       return el.value;
     });
   };
@@ -108,8 +127,6 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
       let display = true;
       categories.forEach(function(c) {
 
-        // eslint-disable-next-line no-console
-        console.log(checked[c]);
         let intersection = checked[c].length
           ? Array.from(Object.values(el.dataset)).filter((x) =>
               checked[c].includes(x)
@@ -134,13 +151,17 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
    * @param {string} filterjson
    * @param {string} idstring
    */
-  export const renderFilter = (filterjson, idstring) => {
+  export const renderFilter = (filterjson, idstringvar) => {
 
     Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
+
+      idstring = idstringvar;
 
         const selector = ".wunderbyte_table_container_" + idstring;
 
         const container = document.querySelector(selector);
+
+        encodedtable = container.querySelector('#a' + idstring).dataset.encodedtable;
 
         container.insertAdjacentHTML('afterbegin', html);
 
@@ -196,8 +217,19 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 }
 
 /**
+ * Returns json of active filters as json.
+ * @returns string
+ */
+function getFilterOjects() {
+
+  return JSON.stringify(checked);
+}
+
+/**
  * Initialize Checkboxes.
  * @param {string} selector
+ * @param {string} idstring
+ * @param {string} encodedtable
  */
 function initializeCheckboxes(selector) {
 

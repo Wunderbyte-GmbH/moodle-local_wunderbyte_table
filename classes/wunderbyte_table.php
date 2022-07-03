@@ -756,17 +756,29 @@ class wunderbyte_table extends table_sql {
 
         $filter = '';
 
-        foreach ($filterobject as $key => $value) {
+        $alreadyappliedfilters = [];
 
-            // Make sure we can use ou
-            $paramsvaluekey = 'param';
+        foreach ($filterobject as $categorykey => $categoryvalue) {
 
-            while (isset($this->sql->params[$paramsvaluekey])) {
-                $paramsvaluekey .= '1';
+            if (!empty($categoryvalue)) {
+
+                $filter .= " AND ( ";
+                $counter = 1;
+                foreach ($categoryvalue as $key => $value) {
+                    // Make sure we can use ou
+                    $paramsvaluekey = 'param';
+
+                    while (isset($this->sql->params[$paramsvaluekey])) {
+                        $paramsvaluekey .= '1';
+                    }
+
+                    $filter .= $counter == 1 ? "" : " OR ";
+                    $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey");
+                    $this->sql->params[$paramsvaluekey] = $value;
+                    $counter++;
+                }
+                $filter .= " ) ";
             }
-
-            $filter .= " AND " . $DB->sql_like("$key", ":$paramsvaluekey");
-            $this->sql->params[$paramsvaluekey] = $value;
         }
 
         if (empty($this->sql->filter)) {
