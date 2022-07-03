@@ -151,6 +151,7 @@ export const callLoadData = (
     }
 
     loading = true;
+
     Ajax.call([{
         methodname: "local_wunderbyte_table_load_data",
         args: {
@@ -195,6 +196,8 @@ export const callLoadData = (
 
                 // When everything is done, we loaded fine.
                 loading = false;
+                // eslint-disable-next-line no-console
+                console.log(loading);
 
                 return true;
             }).catch(ex => {
