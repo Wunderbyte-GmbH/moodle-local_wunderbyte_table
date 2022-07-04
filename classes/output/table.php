@@ -39,6 +39,20 @@ defined('MOODLE_INTERNAL') || die();
 class table implements renderable, templatable {
 
     /**
+     * idstring of the table, needed for output
+     *
+     * @var string
+     */
+    private $idstring = '';
+
+    /**
+     * encodedtable
+     *
+     * @var string
+     */
+    private $encodedtable = '';
+
+    /**
      * Table is the array used for output.
      *
      * @var array
@@ -53,10 +67,22 @@ class table implements renderable, templatable {
     private $pagination = [];
 
     /**
+     * Pagination is the array used for output.
+     *
+     * @var array
+     */
+    private $filterjson = [];
+
+    /**
      * Constructor.
      * @param [type] $table
      */
     public function __construct($table) {
+
+        $this->idstring = $table->idstring;
+
+        $this->categories = json_decode($table->filterjson, true);
+        $this->encodedtable = $table->return_encoded_table();
 
         $this->table = [];
 
@@ -161,13 +187,16 @@ class table implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         $data = [
+            'idstring' => $this->idstring,
+            'encodedtable' => $this->encodedtable,
             'table' => $this->table,
             'pages' => $this->pagination['pages'] ?? null,
             'disableprevious' => $this->pagination['disableprevious'] ?? null,
             'disablenext' => $this->pagination['disablenext'] ?? null,
             'previouspage' => $this->pagination['previouspage'] ?? null,
             'nextpage' => $this->pagination['nextpage'] ?? null,
-            'nopages' => $this->pagination['nopages'] ?? null
+            'nopages' => $this->pagination['nopages'] ?? null,
+            'categories' => $this->categories['categories'] ?? null
         ];
 
         return $data;

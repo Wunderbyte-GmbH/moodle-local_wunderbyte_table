@@ -60,8 +60,17 @@
     }
 }}
 <div class="wunderbyte_table_container_{{idstring}} wunderbyte_table_container">
+     {{> local_wunderbyte_table/filter }}
     <div class= "wunderbyteTableClass" id='a{{idstring}}'>
-      {{> local_wunderbyte_table/filter }}
       {{> local_wunderbyte_table/table }}
     </div>
 </div>
+
+{{#js}}
+    require(['local_wunderbyte_table/init'], function(init) {
+    init.init('{{idstring}}', '{{encodedtable}}');
+    });
+    require(['local_wunderbyte_table/search'], function(init) {
+    init.init('.wunderbyte_table_container_{{idstring}}', '.search-data-element', '');
+    });
+{{/js}}

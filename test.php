@@ -91,7 +91,7 @@ $table->set_sql('*', "{course}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/test.php");
 
-$table->out(200, true);
+echo $table->out(200, true);
 
 if (!$table->is_downloading()) {
     echo $OUTPUT->footer();

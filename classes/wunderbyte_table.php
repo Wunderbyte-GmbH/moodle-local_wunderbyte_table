@@ -165,7 +165,7 @@ class wunderbyte_table extends table_sql {
 
         $tableobject = $this->printtable($pagesize, $useinitialsbar);
         $output = $PAGE->get_renderer('local_wunderbyte_table');
-        return $output->render_table($tableobject);
+        return $output->render_nolazytable($tableobject);
     }
 
     /**
@@ -183,17 +183,8 @@ class wunderbyte_table extends table_sql {
         $this->useinitialsbar = $useinitialsbar;
         $this->downloadhelpbutton = $downloadhelpbutton;
 
-        // We have to do a few steps here to make sure we can recreate afterwards.
-        $encodedtablelib = json_encode($this);
-
-        $jsonobject = json_decode($encodedtablelib);
-        $this->add_classnames_to_classes($jsonobject);
-        $encodedtablelib = json_encode($jsonobject);
-
-        $base64encodedtablelib = base64_encode($encodedtablelib);
-
-        // We need to urlencode everything to make it proof.
-        $base64encodedtablelib = urlencode($base64encodedtablelib);
+        // Retrieve the encoded table
+        $base64encodedtablelib = $this->return_encoded_table();
 
         $this->base64encodedtablelib = $base64encodedtablelib;
         $output = $PAGE->get_renderer('local_wunderbyte_table');
@@ -799,5 +790,24 @@ class wunderbyte_table extends table_sql {
         $this->pagesize  = $perpage;
         $this->totalrows = $total;
         // $this->use_pages = true;
+    }
+
+    /**
+     * Encode the wholetable class and output it.
+     *
+     * @return string
+     */
+    public function return_encoded_table():string {
+        // We have to do a few steps here to make sure we can recreate afterwards.
+        $encodedtablelib = json_encode($this);
+
+        $jsonobject = json_decode($encodedtablelib);
+        $this->add_classnames_to_classes($jsonobject);
+        $encodedtablelib = json_encode($jsonobject);
+
+        $base64encodedtablelib = base64_encode($encodedtablelib);
+
+        // We need to urlencode everything to make it proof.
+        return urlencode($base64encodedtablelib);
     }
 }
