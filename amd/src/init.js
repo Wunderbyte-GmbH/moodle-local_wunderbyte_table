@@ -46,7 +46,9 @@ export const init = (idstring, encodedtable) => {
  * @param {function} callback
  */
 function respondToVisibility(idstring, encodedtable, callback) {
-    let element = document.getElementById('a' + idstring);
+
+    const identifier = 'a' + idstring;
+    let element = document.getElementById(identifier);
 
     if (element) {
         element.dataset.encodedtable = encodedtable;
@@ -54,23 +56,36 @@ function respondToVisibility(idstring, encodedtable, callback) {
         // If we don't find an element, we abort.
         return;
     }
-    var observer = new MutationObserver(function() {
-        if (!isHidden(element)) {
-            this.disconnect();
-            callback(idstring, encodedtable);
-        }
-    });
 
-    // We look if we find a hidden parent. If not, we load right away.
-    while (element !== null) {
-        if (!isHidden(element)) {
-            element = element.parentElement;
-        } else {
-            observer.observe(element, {attributes: true});
-            return;
+    // We only make this callback during init if there is the spinner running.
+    // We don't want to run all of this if we don't use lazyloading.
+    let spinner = document.getElementById(identifier + 'spinner');
+
+    // eslint-disable-next-line no-console
+    console.log(spinner);
+
+    if ((spinner !== null) && !isHidden(spinner)) {
+        callback(idstring, encodedtable);
+
+        var observer = new MutationObserver(function() {
+            if (!isHidden(element)) {
+                this.disconnect();
+                callback(idstring, encodedtable);
+            }
+        });
+
+        // We look if we find a hidden parent. If not, we load right away.
+        while (element !== null) {
+            if (!isHidden(element)) {
+                element = element.parentElement;
+            } else {
+                observer.observe(element, {attributes: true});
+                return;
+            }
         }
+    } else {
+        replaceLinksInFrag(idstring,encodedtable, null, element);
     }
-    callback(idstring, encodedtable);
 }
 
 /**
@@ -182,17 +197,7 @@ export const callLoadData = (
 
                 Templates.appendNodeContents('#a' + idstring, html, js);
 
-                if (!page) {
-                    const activepage = frag.querySelector('li.page-item active');
-                    if (activepage) {
-                        page = activepage.getAttribute('data-page-number');
-                    }
-                }
-
-                replaceDownloadLink(idstring, encodedtable, frag);
-                replaceResetTableLink(idstring, encodedtable, frag, page);
-                replacePaginationLinks(idstring, encodedtable, frag);
-                replaceSortColumnLinks(idstring, encodedtable, frag, page);
+                replaceLinksInFrag(idstring,encodedtable, frag, page);
 
                 // When everything is done, we loaded fine.
                 loading = false;
@@ -336,4 +341,28 @@ function replaceDownloadLink(idstring, encodedtable, frag) {
             item.appendChild(newnode);
         }
     });
+}
+
+/**
+ *
+ * @param {*} idstring
+ * @param {*} encodedtable
+ * @param {*} page
+ */
+ function replaceLinksInFrag(idstring, encodedtable, frag, page = null) {
+
+    // eslint-disable-next-line no-console
+    console.log(frag);
+
+    if (!page) {
+        const activepage = frag.querySelector('li.page-item active');
+        if (activepage) {
+            page = activepage.getAttribute('data-page-number');
+        }
+    }
+
+    replaceDownloadLink(idstring, encodedtable, frag);
+    replaceResetTableLink(idstring, encodedtable, frag, page);
+    replacePaginationLinks(idstring, encodedtable, frag);
+    replaceSortColumnLinks(idstring, encodedtable, frag, page);
 }
