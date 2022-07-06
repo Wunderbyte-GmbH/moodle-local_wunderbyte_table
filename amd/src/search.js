@@ -149,23 +149,34 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
   /**
    * Render the checkboxes for the filer.
    * @param {string} filterjson
-   * @param {string} idstring
+   * @param {string} idstringvar
+   * @param {string} encodedtable
    */
-  export const renderFilter = (filterjson, idstringvar) => {
+  export const renderFilter = (filterjson, idstringvar, encodedtable) => {
+
+    // We render the filter only once, so if we find it already, we don't render it.
+
+    // eslint-disable-next-line no-console
+    console.log(idstringvar);
+
+    idstring = idstringvar;
+
+    const selector = ".wunderbyte_table_container_" + idstring;
+    const container = document.querySelector(selector);
+    const filtercontainer = container.querySelector(".wunderbyteTableFilter");
+
+    if (filtercontainer) {
+      return;
+    }
 
     Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
 
-      idstring = idstringvar;
-
-        const selector = ".wunderbyte_table_container_" + idstring;
-
-        const container = document.querySelector(selector);
-
-        encodedtable = container.querySelector('#a' + idstring).dataset.encodedtable;
+        // eslint-disable-next-line no-console
+        console.log("encodedtable: ", encodedtable);
 
         container.insertAdjacentHTML('afterbegin', html);
 
-        initializeCheckboxes(selector);
+        initializeCheckboxes(selector, idstring, encodedtable);
 
         return;
     }).catch(e => {
@@ -180,12 +191,15 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
    */
  export const renderSearchbox = (idstring) => {
 
+    const selector = ".wunderbyte_table_container_" + idstring;
+    const container = document.querySelector(selector);
+    const searchcontainer = container.querySelector("input.search");
+
+    if (searchcontainer) {
+      return;
+    }
+
     Templates.renderForPromise('local_wunderbyte_table/search', []).then(({html}) => {
-
-
-        const selector = ".wunderbyte_table_container_" + idstring;
-
-        const container = document.querySelector(selector);
 
         container.insertAdjacentHTML('afterbegin', html);
 
@@ -202,7 +216,7 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 /**
  * Function to initialize the search after rendering the searchbox.
  */
- function initializeSearch() {
+ export function initializeSearch() {
 
     const inputElement = document.querySelector(listContainerSelector + ' input.search');
 
@@ -210,10 +224,14 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
         return;
     }
 
-    inputElement.addEventListener('keyup', () => {
+    if (!inputElement.dataset.initialized) {
+      inputElement.addEventListener('keyup', () => {
 
         searchInput(inputElement, elementToHideSelector, elementToSearchSelector);
-    });
+
+        inputElement.dataset.initialized = true;
+      });
+    }
 }
 
 /**
@@ -228,14 +246,21 @@ function getFilterOjects() {
 /**
  * Initialize Checkboxes.
  * @param {string} selector
- * @param {string} idstring
- * @param {string} encodedtable
+ * @param {string} idstringvar
+ * @param {string} encodedtablevar
  */
-function initializeCheckboxes(selector) {
+export function initializeCheckboxes(selector, idstringvar, encodedtablevar) {
 
-    const listContainer = document.querySelector(selector);
+    encodedtable = encodedtablevar;
+    idstring = idstringvar;
 
-    const allCheckboxes = listContainer.querySelectorAll("input[type=checkbox]");
+    const filterContainer = document.querySelector(selector + " .wunderbyteTableFilter");
+
+    if (filterContainer.dataset.initialized) {
+      return;
+    }
+
+    const allCheckboxes = filterContainer.querySelectorAll("input[type=checkbox]");
 
     // Error gets spinner
     allElements = document.querySelectorAll(selector + " " + elementToHideSelector);
@@ -244,7 +269,7 @@ function initializeCheckboxes(selector) {
         return;
     }
 
-    listContainer.querySelectorAll(".form-group").forEach(e => {
+    filterContainer.querySelectorAll(".form-group").forEach(e => {
         categories.push(e.getAttribute("name"));
         getChecked(e.getAttribute("name"));
     });
@@ -252,4 +277,6 @@ function initializeCheckboxes(selector) {
     allCheckboxes.forEach(el => {
         el.addEventListener("change", toggleCheckbox);
     });
+
+    filterContainer.dataset.initialized = true;
 }

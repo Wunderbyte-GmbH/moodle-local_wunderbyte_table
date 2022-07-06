@@ -23,7 +23,8 @@ import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
 
-import {renderFilter, renderSearchbox} from 'local_wunderbyte_table/search';
+// import {renderFilter, initializeCheckboxes} from 'local_wunderbyte_table/search';
+import {initializeCheckboxes} from 'local_wunderbyte_table/search';
 
 var loading = false;
 
@@ -50,7 +51,9 @@ function respondToVisibility(idstring, encodedtable, callback) {
     const identifier = 'a' + idstring;
     let element = document.getElementById(identifier);
 
-    if (element) {
+    // If we find the table element AND if it hasn't yet the encoded table set, we abort this.
+    // Hereby we avoid to run JS multiple times.
+    if (element && !element.dataset.encodedtable) {
         element.dataset.encodedtable = encodedtable;
     } else {
         // If we don't find an element, we abort.
@@ -60,9 +63,6 @@ function respondToVisibility(idstring, encodedtable, callback) {
     // We only make this callback during init if there is the spinner running.
     // We don't want to run all of this if we don't use lazyloading.
     let spinner = document.getElementById(identifier + 'spinner');
-
-    // eslint-disable-next-line no-console
-    console.log(spinner);
 
     if ((spinner !== null) && !isHidden(spinner)) {
         callback(idstring, encodedtable);
@@ -84,7 +84,11 @@ function respondToVisibility(idstring, encodedtable, callback) {
             }
         }
     } else {
-        replaceLinksInFrag(idstring,encodedtable, null, element);
+        // This is what we do when we didn't lazyload.
+        replaceLinksInFrag(idstring,encodedtable, element, null);
+
+        const selector = ".wunderbyte_table_container_" + idstring;
+        initializeCheckboxes(selector, idstring, encodedtable);
     }
 }
 
@@ -153,6 +157,13 @@ export const callLoadData = (
     filterobjects = null,
     searchtext = null) => {
 
+    if (loading) {
+        return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.log("callLoadData", idstring);
+
     let table = document.getElementById('a' + idstring);
 
     // This is now the individual spinner from the wunderbyte table template.
@@ -182,27 +193,66 @@ export const callLoadData = (
         },
         done: function(res) {
 
-            const jsonobject = JSON.parse(res.content);
+            let jsonobject = JSON.parse(res.content);
+            let rendertemplate = res.template;
+            let rendercontainer = true;
+
+            // We can always expect a wunderbyte table container at this point.
+            // The container will hold wunderbyteTableClass, wunderbyteTableFilter, wunderbyteTableSearch classes.
+            let container = document.querySelector(".wunderbyte_table_container_" + idstring);
+            const filtercontainer = container.querySelector(".wunderbyteTableFilter");
+
+            // If there is a container, we don't want to render everything again.
+            if (filtercontainer) {
+                // Also, we want to use the table instead of the container template.
+                // This is not perfect, but necessary at the moment.
+                const i = rendertemplate.lastIndexOf('/');
+                rendertemplate = rendertemplate.substring(0, i);
+                rendertemplate += '/table';
+
+                rendercontainer = false;
+            }
+
+            let frag = container.querySelector(".wunderbyteTableClass");
 
             // eslint-disable-next-line no-console
             console.log(jsonobject);
 
-            Templates.renderForPromise(res.template, jsonobject).then(({html, js}) => {
+            // eslint-disable-next-line no-console
+            console.log(frag);
 
-                const frag = document.querySelector('#a' + idstring);
+            // eslint-disable-next-line no-console
+            console.log("number of records returned; ", jsonobject.table.rows.length);
 
-                while (frag.firstChild) {
-                    frag.removeChild(table.lastChild);
+            // eslint-disable-next-line no-console
+            console.log("template ; ", rendertemplate);
+
+            // We render the html with the right template.
+            Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
+
+                if (!rendercontainer) {
+                    // Now we clean the existing table.
+                    while (frag.firstChild) {
+                        frag.removeChild(frag.lastChild);
+                    }
+
+                    // Here we add the rendered content to the table div.
+                    Templates.appendNodeContents('#a' + idstring, html, js);
+                } else {
+                    // Here we try to render the whole
+                    const parent = container.parentElement;
+                    container.remove();
+                    Templates.appendNodeContents(parent, html, js);
+
+                    container = document.querySelector(".wunderbyte_table_container_" + idstring);
                 }
 
-                Templates.appendNodeContents('#a' + idstring, html, js);
-
-                replaceLinksInFrag(idstring,encodedtable, frag, page);
+                replaceLinksInFrag(idstring,encodedtable, container, page);
 
                 // When everything is done, we loaded fine.
                 loading = false;
                 // eslint-disable-next-line no-console
-                console.log(loading);
+                console.log(loading, idstring);
 
                 return true;
             }).catch(ex => {
@@ -213,12 +263,7 @@ export const callLoadData = (
                 });
             });
 
-            renderSearchbox(idstring);
-
-            if (res.filterjson) {
-                const filterjson = JSON.parse(res.filterjson);
-                renderFilter(filterjson, idstring);
-            }
+            // renderSearchbox(idstring);
 
             if (spinner) {
                 spinner.classList.add('hidden');
@@ -350,9 +395,6 @@ function replaceDownloadLink(idstring, encodedtable, frag) {
  * @param {*} page
  */
  function replaceLinksInFrag(idstring, encodedtable, frag, page = null) {
-
-    // eslint-disable-next-line no-console
-    console.log(frag);
 
     if (!page) {
         const activepage = frag.querySelector('li.page-item active');

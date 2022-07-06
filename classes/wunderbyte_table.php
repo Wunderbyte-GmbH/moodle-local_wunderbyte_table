@@ -460,6 +460,7 @@ class wunderbyte_table extends table_sql {
      * @return void
      */
     public function build_table() {
+        $this->formatedrows = [];
         foreach ($this->rawdata as $rawrow) {
             $this->formatedrows[] = $this->format_row($rawrow);
         }

@@ -91,7 +91,9 @@ $table->set_sql('*', "{course}", '1=1');
 
 $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/test.php");
 
-echo $table->out(200, true);
+$table->tabletemplate = 'local_wunderbyte_table/nolazytable';
+
+echo $table->nolazyout(10, true);
 
 if (!$table->is_downloading()) {
     echo $OUTPUT->footer();

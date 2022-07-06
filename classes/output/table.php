@@ -67,13 +67,6 @@ class table implements renderable, templatable {
     private $pagination = [];
 
     /**
-     * Pagination is the array used for output.
-     *
-     * @var array
-     */
-    private $filterjson = [];
-
-    /**
      * Constructor.
      * @param [type] $table
      */
@@ -196,7 +189,7 @@ class table implements renderable, templatable {
             'previouspage' => $this->pagination['previouspage'] ?? null,
             'nextpage' => $this->pagination['nextpage'] ?? null,
             'nopages' => $this->pagination['nopages'] ?? null,
-            'categories' => $this->categories['categories'] ?? null
+            'filter' => $this->categories ?? null
         ];
 
         return $data;
