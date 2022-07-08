@@ -9,6 +9,6 @@
     grid-area: aside;
 }
 
-.wunderbyte_table_container .wunderbyteTableClass{
+.wunderbyte_table_container .wunderbyteTableClass {
     grid-area: content;
 }
