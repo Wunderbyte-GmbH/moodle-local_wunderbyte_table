@@ -91,11 +91,11 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     const filterobjects = getFilterOjects();
 
     // eslint-disable-next-line no-console
-    console.log(filterobjects);
+    console.log('reload from filter ', filterobjects);
 
     callLoadData(idstring,
     encodedtable,
-    null,
+    0,
     null,
     null,
     null,
@@ -237,8 +237,9 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 /**
  * Returns json of active filters as json.
  * @returns string
+ * @returns string
  */
-function getFilterOjects() {
+export function getFilterOjects() {
 
   return JSON.stringify(checked);
 }

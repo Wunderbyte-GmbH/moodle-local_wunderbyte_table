@@ -24,9 +24,12 @@ import Templates from 'core/templates';
 import Notification from 'core/notification';
 
 // import {renderFilter, initializeCheckboxes} from 'local_wunderbyte_table/search';
-import {initializeCheckboxes} from 'local_wunderbyte_table/search';
+import {initializeCheckboxes, getFilterOjects} from 'local_wunderbyte_table/search';
 
 var loading = false;
+var scrollpage = 0;
+
+var tablejs = null;
 
 /**
  * Gets called from mustache template.
@@ -90,6 +93,40 @@ function respondToVisibility(idstring, encodedtable, callback) {
         const selector = ".wunderbyte_table_container_" + idstring;
         initializeCheckboxes(selector, idstring, encodedtable);
     }
+
+    // Check to see if scrolling near bottom of page; load more photos
+    // This shoiuld only be added once.
+
+    // As this can only be here once per table, we mark the table.
+    if (element.dataset.scrollinitialized) {
+        return;
+    }
+    element.dataset.scrollinitialized = true;
+
+    window.addEventListener('scroll', () => {
+
+        if (!loading && scrollpage >= 0) {
+            if (window.scrollY + window.innerHeight >= element.scrollHeight - 100) {
+                // eslint-disable-next-line no-console
+                console.log('load more data', window.scrollY, window.scrollY + window.innerHeight,
+                    document.body.scrollHeight);
+                scrollpage++;
+                // eslint-disable-next-line no-console
+                console.log('call load for scroll', scrollpage);
+                callLoadData(idstring,
+                        encodedtable,
+                        scrollpage,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null);
+            }
+        }
+
+    });
 }
 
 /**
@@ -161,19 +198,29 @@ export const callLoadData = (
         return;
     }
 
-    // eslint-disable-next-line no-console
-    console.log("callLoadData", idstring);
+    // We reset scrollpage with 0 when we come from the filter.
+    if (page !== null) {
+        scrollpage = page;
+    }
+
+    // We always have to see if we need to apply a filter. Reload might come from scroll, but filter has to be applied nevertheless.
+    if (filterobjects === null) {
+        filterobjects = getFilterOjects();
+    }
 
     let table = document.getElementById('a' + idstring);
 
     // This is now the individual spinner from the wunderbyte table template.
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
 
-    if (spinner) {
-        spinner.classList.remove('hidden');
-    }
-    if (table) {
-        table.classList.add('hidden');
+    // If we replace the whole table, we show the spinner. If we only add rows in infinite scroll, we don't.
+    if (scrollpage == 0) {
+        if (spinner) {
+            spinner.classList.remove('hidden');
+        }
+        if (table) {
+            table.classList.add('hidden');
+        }
     }
 
     loading = true;
@@ -193,6 +240,9 @@ export const callLoadData = (
         },
         done: function(res) {
 
+            // eslint-disable-next-line no-console
+            console.log(res);
+
             let jsonobject = JSON.parse(res.content);
             let rendertemplate = res.template;
             let rendercontainer = true;
@@ -203,7 +253,77 @@ export const callLoadData = (
             const filtercontainer = container.querySelector(".wunderbyteTableFilter");
 
             // If there is a container, we don't want to render everything again.
-            if (filtercontainer) {
+            if (scrollpage > 0) {
+                // Also, we want to use the table instead of the container template.
+                // This is not perfect, but necessary at the moment.
+                const i = rendertemplate.lastIndexOf('/');
+                let rowtemplate = rendertemplate.substring(0, i);
+                rowtemplate += '/row';
+
+                // eslint-disable-next-line no-console
+                console.log(rowtemplate, rendertemplate);
+
+                if (!jsonobject.table.hasOwnProperty('rows')) {
+                    // We set the scrollpage to -1 which means that we don't reload anymore.
+                    scrollpage = -1;
+                    loading = false;
+                    return;
+                }
+                let rows = jsonobject.table.rows;
+
+                // eslint-disable-next-line no-console
+                console.log(rendertemplate, rows);
+
+                // We create an array of promises where every line is rendered individually.
+                const promises = rows.map(row => {
+                    Templates.renderForPromise(rowtemplate, row).then(({html, js}) => {
+                        // Here we add the rendered content to the table div.
+                        Templates.appendNodeContents('#a' + idstring + " div.rows", html, js);
+                        return true;
+                    }).catch(e => {
+                        // eslint-disable-next-line no-console
+                        console.log(e);
+                    });
+                });
+
+                if (tablejs === null) {
+                    // eslint-disable-next-line no-unused-vars
+                    const promise = Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
+
+                        tablejs = js;
+                        return true;
+                    }).catch(e => {
+                        // eslint-disable-next-line no-console
+                        console.log(e);
+                    });
+
+                    promises.push(promise);
+                }
+
+                // Once all the promises are fullfilled, we set loading to false.
+                Promise.all(promises).then(() => {
+
+                    // eslint-disable-next-line no-console
+                    console.log(promises.length);
+
+                    setTimeout(() => {
+                        // We only added rows, but they might need some js from the table, so we add the table js again.
+                        Templates.appendNodeContents('#a' + idstring, '', tablejs);
+
+                        // eslint-disable-next-line no-console
+                        console.log('just added js to page ' + page + " " + rows);
+                    }, 100);
+
+                    loading = false;
+                    return;
+                }).catch(e => {
+                    // eslint-disable-next-line no-console
+                    console.log(e);
+                });
+
+                return;
+
+            } else if (filtercontainer) { // If there is a container, we don't want to render everything again.
                 // Also, we want to use the table instead of the container template.
                 // This is not perfect, but necessary at the moment.
                 const i = rendertemplate.lastIndexOf('/');
@@ -214,18 +334,6 @@ export const callLoadData = (
             }
 
             let frag = container.querySelector(".wunderbyteTableClass");
-
-            // eslint-disable-next-line no-console
-            console.log(jsonobject);
-
-            // eslint-disable-next-line no-console
-            console.log(frag);
-
-            // eslint-disable-next-line no-console
-            console.log("number of records returned; ", jsonobject.table.rows.length);
-
-            // eslint-disable-next-line no-console
-            console.log("template ; ", rendertemplate);
 
             // We render the html with the right template.
             Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
@@ -251,8 +359,6 @@ export const callLoadData = (
 
                 // When everything is done, we loaded fine.
                 loading = false;
-                // eslint-disable-next-line no-console
-                console.log(loading, idstring);
 
                 return true;
             }).catch(ex => {

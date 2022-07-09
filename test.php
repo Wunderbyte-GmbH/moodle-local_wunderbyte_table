@@ -93,6 +93,8 @@ $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/test.php");
 
 $table->tabletemplate = 'local_wunderbyte_table/nolazytable';
 
+$table->infinitescroll = 50;
+
 echo $table->nolazyout(10, true);
 
 if (!$table->is_downloading()) {

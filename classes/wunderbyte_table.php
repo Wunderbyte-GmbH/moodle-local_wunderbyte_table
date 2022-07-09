@@ -28,13 +28,10 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/tablelib.php");
 
-use cache_helper;
 use Exception;
-use gradereport_singleview\local\ui\empty_element;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
 use table_sql;
-use moodle_url;
 use local_wunderbyte_table\output\viewtable;
 use stdClass;
 
@@ -70,6 +67,12 @@ class wunderbyte_table extends table_sql {
      * @var array The string of a json object to output the filter.
      */
     public $filterjson = null;
+
+    /**
+     *
+     * @var int Specify the number of records which should be loaded at once (like on a page). 0 is don't use it.
+     */
+    public $infinitescroll = 0;
 
     /**
      *
@@ -517,6 +520,10 @@ class wunderbyte_table extends table_sql {
      */
     public function query_db_cached($pagesize, $useinitialsbar=true) {
 
+        // We might run this function twice to generate the filter options.
+        // Therefore, we need to store the values we actually want to use temporary.
+        $setbackvalues = false;
+
         // First create hash of all relevant entries.
         $sort = $this->get_sql_sort();
         if ($sort) {
@@ -529,16 +536,17 @@ class wunderbyte_table extends table_sql {
         // ... and the next time, the pagination will be applied.
         if (isset($this->subcolumns['datafields'])
             && !$this->filterjson
-            && ($this->use_pages = true)) {
+            && (($this->use_pages == true) || $this->infinitescroll > 0) || !empty($this->sql->filter)) {
 
             // For the caching to work over all pages, we need to set the currpage to null for the filter request.
             // Else the hash value would not match and we would not have filtering of filterjson over the different pages.
             $currpage = $this->currpage;
+            $usepages = $this->use_pages;
 
             $this->use_pages = false;
             $this->currpage = null;
-        } else {
-            $this->use_pages = true;
+
+            $setbackvalues = true;
         }
 
         // Create the query string including params.
@@ -613,21 +621,28 @@ class wunderbyte_table extends table_sql {
             }
         }
 
-        // If there is actually a filter, we need to run this code again, but with the filter applied.
+        // If we have chosen this value above, we want to run the code again.
         // The first time, we got rawdata but it's without the filter applied.
         // We still use it.
-        if (!$this->use_pages || (!empty($this->sql->filter) && strpos($this->sql->where, $this->sql->filter) == false)) {
+        if ($setbackvalues) {
 
             $this->sql->where .= $this->sql->filter ?? '';
-
             // To avoid another run, we have to set filter to empty now.
             $this->sql->filter = '';
 
-            $this->use_pages = true;
-            $this->currpage = $currpage;
-            $this->query_db_cached($pagesize, $useinitialsbar);
-        }
+            $this->use_pages = $usepages ?? $this->use_pages; // We set back the old value.
+            $this->currpage = $currpage ?? $this->currpage;
 
+            // If we want to use infinite scroll, we need to fetch the current page.
+            // We use the same functionality as for just loading the page itself.
+            if ($this->infinitescroll > 0) {
+                $pagesize = $this->infinitescroll;
+                $this->use_pages = true;
+            }
+
+            $this->query_db_cached($pagesize, $useinitialsbar);
+
+        }
     }
 
     /**

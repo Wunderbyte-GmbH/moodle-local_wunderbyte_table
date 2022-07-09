@@ -86,7 +86,14 @@ class table implements renderable, templatable {
         // We have to prepare the row for output.
         foreach ($table->formatedrows as $row) {
             $rowarray = [];
+
+            // The tableheaderclasses need to be available also within the rows.
+            foreach ($table->tableclasses as $key => $value) {
+                $rowarray[$key] = $value;
+            }
+
             foreach ($row as $key => $value) {
+
                 // We run through all our set subcolumnsidentifiers.
                 foreach ($table->subcolumns as $subcolumnskey => $subcolumnsvalue) {
 
@@ -108,7 +115,7 @@ class table implements renderable, templatable {
 
         // Create pagination data.
         // We show ellipsis if there are more than the specified number of pages.
-        if ($table->use_pages) {
+        if ($table->use_pages && $table->infinitescroll == 0) {
             $pages = [];
             $numberofpages = ceil($table->totalrows / $table->pagesize);
             if ($numberofpages < 2) {
