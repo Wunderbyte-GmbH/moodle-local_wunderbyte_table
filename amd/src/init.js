@@ -113,11 +113,6 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
     scrollableelement.addEventListener('scroll', () => {
 
-        // eslint-disable-next-line no-console
-        console.log('load more data', element.scrollHeight,
-        scrollableelement.scrollTop,
-        document.body.scrollHeight, scrollableelement.scrollTop + document.body.scrollHeight);
-
         if (!loading && scrollpage >= 0) {
             if (element.scrollHeight < scrollableelement.scrollTop + document.body.scrollHeight) {
                 // eslint-disable-next-line no-console
