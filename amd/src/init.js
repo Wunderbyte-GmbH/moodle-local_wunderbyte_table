@@ -103,10 +103,23 @@ function respondToVisibility(idstring, encodedtable, callback) {
     }
     element.dataset.scrollinitialized = true;
 
-    window.addEventListener('scroll', () => {
+    // eslint-disable-next-line no-console
+    console.log('initialize scroll', element.dataset.scrollinitialized);
+
+    const scrollableelement = document.querySelector("#page");
+
+    // eslint-disable-next-line no-console
+    console.log(scrollableelement);
+
+    scrollableelement.addEventListener('scroll', () => {
+
+        // eslint-disable-next-line no-console
+        console.log('load more data', element.scrollHeight,
+        scrollableelement.scrollTop,
+        document.body.scrollHeight, scrollableelement.scrollTop + document.body.scrollHeight);
 
         if (!loading && scrollpage >= 0) {
-            if (window.scrollY + window.innerHeight >= element.scrollHeight - 100) {
+            if (element.scrollHeight < scrollableelement.scrollTop + document.body.scrollHeight) {
                 // eslint-disable-next-line no-console
                 console.log('load more data', window.scrollY, window.scrollY + window.innerHeight,
                     document.body.scrollHeight);
@@ -212,6 +225,9 @@ export const callLoadData = (
 
     // This is now the individual spinner from the wunderbyte table template.
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
+
+    // eslint-disable-next-line no-console
+    console.log(table);
 
     // If we replace the whole table, we show the spinner. If we only add rows in infinite scroll, we don't.
     if (scrollpage == 0) {
@@ -360,6 +376,13 @@ export const callLoadData = (
                 // When everything is done, we loaded fine.
                 loading = false;
 
+                if (spinner) {
+                    spinner.classList.add('hidden');
+                }
+                if (table) {
+                    table.classList.remove('hidden');
+                }
+
                 return true;
             }).catch(ex => {
                 loading = false;
@@ -368,16 +391,6 @@ export const callLoadData = (
                     type: "danger"
                 });
             });
-
-            // renderSearchbox(idstring);
-
-            if (spinner) {
-                spinner.classList.add('hidden');
-            }
-            if (table) {
-                table.classList.remove('hidden');
-            }
-            return true;
         },
         fail: function(err) {
             // If we have an error, resetting the table might be enough. we do that.
@@ -498,6 +511,7 @@ function replaceDownloadLink(idstring, encodedtable, frag) {
  *
  * @param {*} idstring
  * @param {*} encodedtable
+ * @param {*} frag
  * @param {*} page
  */
  function replaceLinksInFrag(idstring, encodedtable, frag, page = null) {
