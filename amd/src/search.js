@@ -25,28 +25,29 @@ import {callLoadData} from 'local_wunderbyte_table/init';
 
 var checked = {};
 var categories = [];
-var allElements = [];
-var elementToHideSelector = '';
+
+
 var listContainerSelector = '';
-var elementToSearchSelector = '';
 
 var idstring = '';
 var encodedtable = '';
 
+var lastsearchinput = 0;
+
+var loading = false;
+
 /**
  * Store some params globally.
  * @param {string} listContainer
- * @param {string} elementToHide
- * @param {string} elementToSearch
  */
-export const init = (listContainer, elementToHide, elementToSearch) => {
+export const init = (listContainer) => {
 
     // eslint-disable-next-line no-console
-    console.log(listContainer, "elementToHide: ", elementToHide, "elementToSearch:", elementToSearch);
+    console.log("listContainer", listContainer);
 
-    elementToHideSelector = elementToHide;
     listContainerSelector = listContainer;
-    elementToSearchSelector = elementToSearch;
+
+    initializeSearch();
 
 };
 
@@ -89,6 +90,7 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     // Reload the filtered elements via ajax.
 
     const filterobjects = getFilterOjects();
+    const searchstring = getSearchInput();
 
     // eslint-disable-next-line no-console
     console.log('reload from filter ', filterobjects);
@@ -101,9 +103,9 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
     null,
     null,
     null,
-    filterobjects);
+    filterobjects,
+    searchstring);
 
-    setVisibility();
   };
 
   /**
@@ -118,33 +120,6 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
       return el.value;
     });
   };
-
-  /**
-   * Compares checked boxes with classes of Elements and shows or hides them.
-   */
-  export const setVisibility = () => {
-    allElements.forEach(function(el) {
-      let display = true;
-      categories.forEach(function(c) {
-
-        let intersection = checked[c].length
-          ? Array.from(Object.values(el.dataset)).filter((x) =>
-              checked[c].includes(x)
-            ).length
-          : true;
-        if (!intersection) {
-          display = false;
-          return;
-        }
-      });
-      if (display) {
-        el.style.display = "block";
-      } else {
-        el.style.display = "none";
-      }
-    });
-  };
-
 
   /**
    * Render the checkboxes for the filer.
@@ -220,28 +195,79 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 
     const inputElement = document.querySelector(listContainerSelector + ' input.search');
 
+    // eslint-disable-next-line no-console
+    console.log("initializeSearch", inputElement);
+
     if (!inputElement) {
         return;
     }
 
     if (!inputElement.dataset.initialized) {
+
+      inputElement.dataset.initialized = true;
+
       inputElement.addEventListener('keyup', () => {
 
-        searchInput(inputElement, elementToHideSelector, elementToSearchSelector);
+        let now = Date.now();
 
-        inputElement.dataset.initialized = true;
+        lastsearchinput = now;
+
+        setTimeout(() => {
+
+          const searchstring = getSearchInput();
+
+          // If the timevalue after the wait is the same as before, we didn't have another input.
+          // we want to make sure we do no loading while we are waiting for the answer.
+          // And the iput string must be longr than 3.
+          if (lastsearchinput === now
+              && loading == false
+              && (!searchstring
+                || searchstring.length > 3)) {
+
+            const filterobjects = getFilterOjects();
+
+            callLoadData(idstring,
+              encodedtable,
+              0, // We set page to 0 because we need to start the container anew.
+              null,
+              null,
+              null,
+              null,
+              null,
+              filterobjects,
+              searchstring);
+
+          }
+        }, 400);
+
+        return;
       });
     }
 }
 
 /**
  * Returns json of active filters as json.
- * @returns string
- * @returns string
+ * @returns {string}
  */
 export function getFilterOjects() {
 
   return JSON.stringify(checked);
+}
+
+/**
+ * Function to read the searchstring from the input leement.
+ * @returns {null|string}
+ */
+export function getSearchInput() {
+
+  const inputElement = document.querySelector(listContainerSelector + ' input.search');
+    let searchstring = null;
+
+    if (inputElement.value.length > 3) {
+      searchstring = inputElement.value;
+    }
+
+  return searchstring;
 }
 
 /**
@@ -262,9 +288,6 @@ export function initializeCheckboxes(selector, idstringvar, encodedtablevar) {
     }
 
     const allCheckboxes = filterContainer.querySelectorAll("input[type=checkbox]");
-
-    // Error gets spinner
-    allElements = document.querySelectorAll(selector + " " + elementToHideSelector);
 
     if (!allCheckboxes) {
         return;

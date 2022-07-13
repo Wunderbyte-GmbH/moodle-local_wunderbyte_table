@@ -123,6 +123,15 @@ class wunderbyte_table extends table_sql {
     public $tableclasses = [];
 
     /**
+     * array array of [classidentifier => classname] to use in mustache template on table level.
+     *
+     * @var array
+     */
+    public $fulltextsearchcolumns = [];
+
+
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      *
      * @param string $uniqueid
@@ -215,6 +224,7 @@ class wunderbyte_table extends table_sql {
         }
         $this->pagesize = $pagesize;
         $this->setup();
+        $this->setup_fulltextsearch();
         // First we query without the filter.
         $this->query_db_cached($pagesize, $useinitialsbar);
 
@@ -358,8 +368,14 @@ class wunderbyte_table extends table_sql {
             $columns[] = $key;
         }
         foreach ($subcolumns as $key => $value) {
-            $this->subcolumns[$subcolumnsidentifier][$value] = [];
-            $columns[] = $value;
+
+            if (gettype($value) == 'array') {
+                $this->subcolumns[$subcolumnsidentifier][$key] = $value;
+                $columns[] = $key;
+            } else {
+                $this->subcolumns[$subcolumnsidentifier][$value] = [];
+                $columns[] = $value;
+            }
         }
         // This is necessary to make sure we create the right content.
         parent::define_columns($columns);
@@ -501,12 +517,52 @@ class wunderbyte_table extends table_sql {
      * Define the columns for which an automatic filter should be generated.
      * We just store them as subcolumns of type datafields. In the mustache template these fields must be added to every...
      * ... row or card element, so it can be hidden or shown via the integrated filter mechanism..
+     *
+     * The filtercolumns can, suppelementary to just the values, also hold more information about the way the categories are displayed.
+     * First we can add a sortorder, second we can add a string for localisation.
      * @param array $filtercolumns
      * @return void
      */
     public function define_filtercolumns(array $filtercolumns) {
 
         $this->add_subcolumns('datafields', $filtercolumns, false);
+
+    }
+
+    /**
+     * Define the columns for the fulltext search. This does not have to be rendered, so we don't add it als subcolumn.
+     * @return void
+     */
+    public function define_fulltextsearchcolumns(array $fulltextsearchcolumns) {
+
+        $this->fulltextsearchcolumns = $fulltextsearchcolumns;
+
+    }
+
+    /**
+     * Add fulltext search.
+     *
+     * @return void
+     */
+    private function setup_fulltextsearch() {
+
+        global $DB;
+
+        $searchcolumns = $this->fulltextsearchcolumns;
+
+        if (!empty($searchcolumns) && count($searchcolumns)) {
+
+            foreach ($searchcolumns as $key => $value) {
+
+                $searchcolumns[$key] = "COALESCE(" . $value . ", ' ')";
+
+            }
+
+            $searchcolumns = array_values($searchcolumns);
+            // $DB->sql_concat_join(' ', $searchcolumns) . " as wbfulltextsearch"; // Good.
+
+            $this->sql->fields .= " , " . $DB->sql_concat_join("' '", $searchcolumns) . " as wbfulltextsearch ";
+        }
 
     }
 
@@ -682,6 +738,17 @@ class wunderbyte_table extends table_sql {
 
             $filtercolumns[$key] = [];
 
+
+            // Now we want to see if there is a sortorder defined for this field.
+
+            // if (isset($this->subcolumns['datafields'][$key])
+            //             && gettype($this->subcolumns['datafields'][$key]) == 'array') {
+
+            //                     $sortarray = $this->subcolumns['datafields'][$key];
+            // } else {
+            //     $sortarray = null;
+            // }
+
             foreach ($this->rawdata as $row) {
 
                 $row = (array)$row;
@@ -693,37 +760,121 @@ class wunderbyte_table extends table_sql {
                 if (!isset($filtercolumns[$key][$row[$key]])) {
 
                     $filtercolumns[$key][$row[$key]] = true;
+
+                    // // Here we need to apply our sorting and also the language.
+
+                    // if ($sortarray != null) {
+
+                    //     // If we find the actual value in the sortarray
+
+                    //     if (isset($sortarray[$row[$key]])) {
+                    //         // We might want to replace it with the value, to make sure we use the localized version.
+                    //         $localizedkey = $sortarray[$row[$key]];
+                    //         $sortarray[$localizedkey] = true;
+                    //     } else {
+                    //         // A key which is used but not in the sortarray will be added at the end.
+                    //         $sortarray[$row[$key]] = true;
+                    //     }
+
+                    // } else {
+
+                    // }
                 }
             }
+            // // If we have used the sorting array, we add it here.
+            // if ($sortarray != null) {
+            //     $filtercolumns[$key] = $sortarray;
+            // }
+
         }
 
         $filterjson = ['categories' => array()];
+
         foreach ($filtercolumns as $key => $values) {
 
+            // Special treatment for key localizedname.
+            if (isset($this->subcolumns['datafields'][$key]['localizedname'])) {
+                $localizedname = $this->subcolumns['datafields'][$key]['localizedname'];
+                unset($this->subcolumns['datafields'][$key]['localizedname']);
+            } else {
+                $localizedname = $key;
+            }
+
             $categoryobject = [
-                'name' => $key,
+                'name' => $localizedname, // Localised name.
+                'columnname' => $key, // The column name.
                 'values' => []
             ];
+
+            // We have to check if we have a sortarray for this filtercolumn
+            if (isset($this->subcolumns['datafields'][$key])
+                        && count($this->subcolumns['datafields'][$key]) > 0) {
+
+                                $sortarray = $this->subcolumns['datafields'][$key];
+            } else {
+                $sortarray = null;
+            }
+
+            // First we create our sortedarray and add all values in the right order.
+            if ($sortarray != null) {
+                $sortedarray = [];
+                foreach ($sortarray as $sortkey => $sortvalue) {
+                    if (isset($values[$sortkey])) {
+                        $sortedarray[$sortvalue] = $sortkey;
+
+                        unset($values[$sortkey]);
+                    }
+                }
+
+                // Now we make sure we havent forgotten any values.
+                // If so, we sort them and add them at the end.
+                if (count($values) > 0) {
+                    // First sort the values first.
+                    ksort($values);
+
+                    foreach ($values as $unsortedkey => $unsortedvalue) {
+                        $sortedarray[$unsortedkey] = true;
+                    }
+                }
+
+                // Finally, we pass the sorted array to the values back.
+                $values = $sortedarray;
+            }
+
             foreach ($values as $valuekey => $valuevalue) {
 
                 $itemobject = [
                     'key' => $valuekey,
-                    'value' => $valuekey,
+                    'value' => $valuevalue === true ? $valuekey : $valuevalue,
                     'category' => $key
                 ];
 
                 $categoryobject['values'][$valuekey] = $itemobject;
-
             }
 
-            // To sort it and make it mustache ready, we have to jump through loops.
-            ksort($categoryobject['values']);
+            if ($sortarray == null) {
+                // If we didn't sort otherwise, we do it now.
+                ksort($categoryobject['values']);
+            }
+
+            // Make the arrays mustache ready, we have to jump through loops.
             $categoryobject['values'] = array_values($categoryobject['values']);
 
             $filterjson['categories'][] = $categoryobject;
         }
 
         return json_encode($filterjson);
+    }
+
+
+    /**
+     * Save the filter sortoder here.
+     *
+     * @param array $categories
+     * @return void
+     */
+    public function define_sortorder_filter(array $categories) {
+        $this->filtersortorder = $categories;
     }
 
     /**
@@ -739,12 +890,9 @@ class wunderbyte_table extends table_sql {
      * @return void
      */
     public function set_filter_sql(string $fields, string $from, string $where, array $params = array(), string $filter) {
-        $this->sql = new stdClass();
-        $this->sql->fields = $fields;
-        $this->sql->from = $from;
-        $this->sql->where = $where;
+
+        $this->set_sql($fields, $from, $where, $params);
         $this->sql->filter = $filter;
-        $this->sql->params = $params;
     }
 
     /**
@@ -794,6 +942,53 @@ class wunderbyte_table extends table_sql {
             $this->sql->filter .= $filter;
         }
     }
+
+    /**
+     * Applies the searchtext we got via webservice as jsonobject to the sql object.
+     * This code actually adds a created fulltext searchcolumn to the sql. we need to encapsulate it to make it searchable.
+     *
+     * @param string $filter
+     * @return void
+     */
+    public function apply_searchtext(string $searchtext) {
+
+        global $DB;
+
+        if (empty($searchtext)) {
+            throw new moodle_exception('invalidsearchtext', 'local_wunderbyte_table');
+        }
+
+        // Add the fields/Select to the FROM part
+        $from = " ( SELECT " . $this->sql->fields . " FROM " . $this->sql->from;
+
+        // Add the new container here.
+        $fields = " fulltextsearchcontainer.* ";
+
+        // and close it in from.
+        $from .= " ) fulltextsearchcontainer ";
+
+        $filter = " AND ( ";
+
+        // Make sure we can use ou
+        $paramsvaluekey = 'param';
+
+        while (isset($this->sql->params[$paramsvaluekey])) {
+            $paramsvaluekey .= '2';
+        }
+
+        $filter .= $DB->sql_like("wbfulltextsearch", ":$paramsvaluekey", false);
+        $this->sql->params[$paramsvaluekey] = "%$searchtext%";
+
+        $filter .= " ) ";
+
+        if (!empty($this->sql->filter)) {
+            $filter = $this->sql->filter . $filter;
+        }
+
+        // We have to use this function to apply the sql at the right place.
+        $this->set_filter_sql($fields, $from, $this->sql->where, $this->sql->params, $filter);
+    }
+
 
 
     /**

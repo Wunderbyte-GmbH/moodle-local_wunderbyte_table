@@ -96,7 +96,6 @@ class local_wunderbyte_table_external extends external_api {
         if ($params['filterobjects']) {
             $table->apply_filter($params['filterobjects']);
         }
-
         if ($params['searchtext']) {
             $table->apply_searchtext($params['searchtext']);
         }

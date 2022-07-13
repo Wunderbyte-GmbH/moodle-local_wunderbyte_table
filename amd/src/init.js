@@ -24,7 +24,7 @@ import Templates from 'core/templates';
 import Notification from 'core/notification';
 
 // import {renderFilter, initializeCheckboxes} from 'local_wunderbyte_table/search';
-import {initializeCheckboxes, getFilterOjects} from 'local_wunderbyte_table/search';
+import {initializeCheckboxes, getFilterOjects, getSearchInput} from 'local_wunderbyte_table/search';
 
 var loading = false;
 var scrollpage = 0;
@@ -214,6 +214,10 @@ export const callLoadData = (
     // We always have to see if we need to apply a filter. Reload might come from scroll, but filter has to be applied nevertheless.
     if (filterobjects === null) {
         filterobjects = getFilterOjects();
+    }
+    // We always have to see if we need to apply a serachtextfilter.
+    if (searchtext === null) {
+        searchtext = getSearchInput();
     }
 
     let table = document.getElementById('a' + idstring);
