@@ -221,8 +221,7 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
           // And the iput string must be longr than 3.
           if (lastsearchinput === now
               && loading == false
-              && (!searchstring
-                || searchstring.length > 3)) {
+              && searchstring !== null) {
 
             const filterobjects = getFilterOjects();
 
@@ -263,7 +262,8 @@ export function getSearchInput() {
   const inputElement = document.querySelector(listContainerSelector + ' input.search');
     let searchstring = null;
 
-    if (inputElement.value.length > 3) {
+    if (inputElement.value.length > 3
+        || inputElement.value.length === 0) {
       searchstring = inputElement.value;
     }
 
