@@ -29,8 +29,6 @@ use renderable;
 use renderer_base;
 use templatable;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * viewtable class to display view.php
  * @package local_wunderbyte_table

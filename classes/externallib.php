@@ -97,8 +97,6 @@ class local_wunderbyte_table_external extends external_api {
             $_POST[$key] = $value;
         }
 
-        // $params['filterobjects'] = '{"location":"WU-PRATER"}';
-
         if ($params['filterobjects']) {
             $table->apply_filter($params['filterobjects']);
         }
@@ -151,5 +149,4 @@ class local_wunderbyte_table_external extends external_api {
                 )
         );
     }
-
 }
