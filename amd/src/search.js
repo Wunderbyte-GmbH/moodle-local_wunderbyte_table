@@ -195,9 +195,6 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 
     const inputElement = document.querySelector(listContainerSelector + ' input.search');
 
-    // eslint-disable-next-line no-console
-    console.log("initializeSearch", inputElement);
-
     if (!inputElement) {
         return;
     }
@@ -260,6 +257,11 @@ export function getFilterOjects() {
 export function getSearchInput() {
 
   const inputElement = document.querySelector(listContainerSelector + ' input.search');
+
+  if (!inputElement) {
+    return null;
+  }
+
     let searchstring = null;
 
     if (inputElement.value.length > 3
@@ -283,7 +285,7 @@ export function initializeCheckboxes(selector, idstringvar, encodedtablevar) {
 
     const filterContainer = document.querySelector(selector + " .wunderbyteTableFilter");
 
-    if (filterContainer.dataset.initialized) {
+    if (!filterContainer || filterContainer.dataset.initialized) {
       return;
     }
 

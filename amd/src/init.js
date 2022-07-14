@@ -225,9 +225,6 @@ export const callLoadData = (
     // This is now the individual spinner from the wunderbyte table template.
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
 
-    // eslint-disable-next-line no-console
-    console.log(table);
-
     // If we replace the whole table, we show the spinner. If we only add rows in infinite scroll, we don't.
     if (scrollpage == 0) {
         if (spinner) {
