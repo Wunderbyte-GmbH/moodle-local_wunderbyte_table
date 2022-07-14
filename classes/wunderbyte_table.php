@@ -224,7 +224,9 @@ class wunderbyte_table extends table_sql {
         }
         $this->pagesize = $pagesize;
         $this->setup();
-        $this->setup_fulltextsearch();
+        if (!empty($this->fulltextsearchcolumns)) {
+            $this->setup_fulltextsearch();
+        }
         // First we query without the filter.
         $this->query_db_cached($pagesize, $useinitialsbar);
 

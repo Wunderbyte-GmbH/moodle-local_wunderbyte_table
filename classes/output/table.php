@@ -67,6 +67,20 @@ class table implements renderable, templatable {
     private $pagination = [];
 
     /**
+     * Categories are used for filter
+     *
+     * @var array
+     */
+    private $categories = [];
+
+    /**
+     * Search is to display search field
+     *
+     * @var array
+     */
+    private $search = false;
+
+    /**
      * Constructor.
      * @param [type] $table
      */
@@ -78,6 +92,10 @@ class table implements renderable, templatable {
         $this->encodedtable = $table->return_encoded_table();
 
         $this->table = [];
+
+        if (!empty($table->fulltextsearchcolumns)) {
+            $this->search = true;
+        }
 
         foreach ($table->tableclasses as $key => $value) {
             $this->table[$key] = $value;
@@ -196,8 +214,12 @@ class table implements renderable, templatable {
             'previouspage' => $this->pagination['previouspage'] ?? null,
             'nextpage' => $this->pagination['nextpage'] ?? null,
             'nopages' => $this->pagination['nopages'] ?? null,
-            'filter' => $this->categories ?? null
+            'filter' => $this->categories ?? null,
         ];
+
+        if ($this->search) {
+            $data['search'] = true;
+        }
 
         return $data;
     }
