@@ -203,7 +203,7 @@ class wunderbyte_table extends table_sql {
         $this->useinitialsbar = $useinitialsbar;
         $this->downloadhelpbutton = $downloadhelpbutton;
 
-        // Retrieve the encoded table
+        // Retrieve the encoded table.
         $base64encodedtablelib = $this->return_encoded_table();
 
         $this->base64encodedtablelib = $base64encodedtablelib;
@@ -544,7 +544,8 @@ class wunderbyte_table extends table_sql {
      * We just store them as subcolumns of type datafields. In the mustache template these fields must be added to every...
      * ... row or card element, so it can be hidden or shown via the integrated filter mechanism..
      *
-     * The filtercolumns can, suppelementary to just the values, also hold more information about the way the categories are displayed.
+     * The filtercolumns can, suppelementary to just the values...
+     * ... also hold more information about the way the categories are displayed.
      * First we can add a sortorder, second we can add a string for localisation.
      * @param array $filtercolumns
      * @return void
@@ -585,7 +586,6 @@ class wunderbyte_table extends table_sql {
             }
 
             $searchcolumns = array_values($searchcolumns);
-            // $DB->sql_concat_join(' ', $searchcolumns) . " as wbfulltextsearch"; // Good.
 
             $this->sql->fields .= " , " . $DB->sql_concat_join("' '", $searchcolumns) . " as wbfulltextsearch ";
         }
@@ -764,17 +764,6 @@ class wunderbyte_table extends table_sql {
 
             $filtercolumns[$key] = [];
 
-
-            // Now we want to see if there is a sortorder defined for this field.
-
-            // if (isset($this->subcolumns['datafields'][$key])
-            //             && gettype($this->subcolumns['datafields'][$key]) == 'array') {
-
-            //                     $sortarray = $this->subcolumns['datafields'][$key];
-            // } else {
-            //     $sortarray = null;
-            // }
-
             foreach ($this->rawdata as $row) {
 
                 $row = (array)$row;
@@ -786,32 +775,8 @@ class wunderbyte_table extends table_sql {
                 if (!isset($filtercolumns[$key][$row[$key]])) {
 
                     $filtercolumns[$key][$row[$key]] = true;
-
-                    // // Here we need to apply our sorting and also the language.
-
-                    // if ($sortarray != null) {
-
-                    //     // If we find the actual value in the sortarray
-
-                    //     if (isset($sortarray[$row[$key]])) {
-                    //         // We might want to replace it with the value, to make sure we use the localized version.
-                    //         $localizedkey = $sortarray[$row[$key]];
-                    //         $sortarray[$localizedkey] = true;
-                    //     } else {
-                    //         // A key which is used but not in the sortarray will be added at the end.
-                    //         $sortarray[$row[$key]] = true;
-                    //     }
-
-                    // } else {
-
-                    // }
                 }
             }
-            // // If we have used the sorting array, we add it here.
-            // if ($sortarray != null) {
-            //     $filtercolumns[$key] = $sortarray;
-            // }
-
         }
 
         $filterjson = ['categories' => array()];
@@ -832,7 +797,7 @@ class wunderbyte_table extends table_sql {
                 'values' => []
             ];
 
-            // We have to check if we have a sortarray for this filtercolumn
+            // We have to check if we have a sortarray for this filtercolumn.
             if (isset($this->subcolumns['datafields'][$key])
                         && count($this->subcolumns['datafields'][$key]) > 0) {
 
@@ -937,8 +902,6 @@ class wunderbyte_table extends table_sql {
 
         $filter = '';
 
-        $alreadyappliedfilters = [];
-
         foreach ($filterobject as $categorykey => $categoryvalue) {
 
             if (!empty($categoryvalue)) {
@@ -946,11 +909,10 @@ class wunderbyte_table extends table_sql {
                 $filter .= " AND ( ";
                 $counter = 1;
                 foreach ($categoryvalue as $key => $value) {
-                    // Make sure we can use ou
+                    // We use the while function to find a param we can actually use.
                     $paramsvaluekey = 'param';
-
                     while (isset($this->sql->params[$paramsvaluekey])) {
-                        $paramsvaluekey .= '1';
+                        $paramsvaluekey .= '1'; // Not elegant, but effecitve.
                     }
 
                     $filter .= $counter == 1 ? "" : " OR ";
@@ -984,18 +946,18 @@ class wunderbyte_table extends table_sql {
             throw new moodle_exception('invalidsearchtext', 'local_wunderbyte_table');
         }
 
-        // Add the fields/Select to the FROM part
+        // Add the fields/Select to the FROM part.
         $from = " ( SELECT " . $this->sql->fields . " FROM " . $this->sql->from;
 
         // Add the new container here.
         $fields = " fulltextsearchcontainer.* ";
 
-        // and close it in from.
+        // And close it in from..
         $from .= " ) fulltextsearchcontainer ";
 
         $filter = " AND ( ";
 
-        // Make sure we can use ou
+        // Make sure we can use the param.
         $paramsvaluekey = 'param';
 
         while (isset($this->sql->params[$paramsvaluekey])) {
@@ -1026,7 +988,6 @@ class wunderbyte_table extends table_sql {
     public function pagesize($perpage, $total) {
         $this->pagesize  = $perpage;
         $this->totalrows = $total;
-        // $this->use_pages = true;
     }
 
     /**
