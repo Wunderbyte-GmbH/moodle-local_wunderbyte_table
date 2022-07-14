@@ -89,7 +89,12 @@ $table->define_filtercolumns(['id', 'category', 'format']);
 // Work out the sql for the table.
 $table->set_sql('*', "{course}", '1=1');
 
-$table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/test.php");
+$baseurl = new moodle_url(
+    $_SERVER['REQUEST_URI'],
+    $_GET
+);
+
+$table->define_baseurl($baseurl->out());
 
 $table->tabletemplate = 'local_wunderbyte_table/nolazytable';
 

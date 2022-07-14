@@ -84,7 +84,11 @@ class local_wunderbyte_table_external extends external_api {
 
         $table->update_from_json($lib);
 
-        $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/download.php");
+        if (empty($table->baseurl)) {
+            throw new moodle_exception('undefinedbaseurl', 'local_wunderbyte_table');
+        }
+
+        // $table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/download.php");
 
         // The table lib class expects $_POST variables to be present, so we have to set them.
         foreach ($params as $key => $value) {
