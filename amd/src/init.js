@@ -26,10 +26,10 @@ import Notification from 'core/notification';
 // import {renderFilter, initializeCheckboxes} from 'local_wunderbyte_table/search';
 import {initializeCheckboxes, getFilterOjects, getSearchInput} from 'local_wunderbyte_table/search';
 
-var loading = false;
-var scrollpage = 0;
+var loadings = [];
+var scrollpages = [];
 
-var tablejs = null;
+var tablejss = [];
 
 /**
  * Gets called from mustache template.
@@ -41,6 +41,8 @@ export const init = (idstring, encodedtable) => {
     if (idstring && encodedtable) {
         respondToVisibility(idstring, encodedtable, callLoadData);
     }
+
+    scrollpages[idstring] = 0;
 };
 
 /**
@@ -52,7 +54,7 @@ export const init = (idstring, encodedtable) => {
 function respondToVisibility(idstring, encodedtable, callback) {
 
     const identifier = 'a' + idstring;
-    let element = document.getElementById(identifier);
+    let element = document.querySelector('#' + identifier);
 
     // If we find the table element AND if it hasn't yet the encoded table set, we abort this.
     // Hereby we avoid to run JS multiple times.
@@ -65,7 +67,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
     // We only make this callback during init if there is the spinner running.
     // We don't want to run all of this if we don't use lazyloading.
-    let spinner = document.getElementById(identifier + 'spinner');
+    let spinner = document.querySelector("#" + identifier + 'spinner');
 
     if ((spinner !== null) && !isHidden(spinner)) {
         callback(idstring, encodedtable);
@@ -103,27 +105,31 @@ function respondToVisibility(idstring, encodedtable, callback) {
     }
     element.dataset.scrollinitialized = true;
 
-    // eslint-disable-next-line no-console
-    console.log('initialize scroll', element.dataset.scrollinitialized);
-
-    const scrollableelement = document.querySelector("#page");
+    const scrollableelement = getScrollParent(element);
 
     // eslint-disable-next-line no-console
-    console.log(scrollableelement);
+    console.log('scrollableelement ', scrollableelement);
 
     scrollableelement.addEventListener('scroll', () => {
 
-        if (!loading && scrollpage >= 0) {
-            if (element.scrollHeight < scrollableelement.scrollTop + document.body.scrollHeight) {
+        const elementtop = element.getBoundingClientRect().top;
+        const elementheight = element.getBoundingClientRect().top;
+        const screenheight = document.body.scrollHeight;
+
+        // eslint-disable-next-line no-console
+        console.log('scrollinformation', idstring , elementtop + elementheight - screenheight);
+
+        if (!loadings[idstring] && scrollpages[idstring] >= 0) {
+            if (elementtop + elementheight - screenheight < 0) {
                 // eslint-disable-next-line no-console
-                console.log('load more data', window.scrollY, window.scrollY + window.innerHeight,
+                console.log('scrollinformation load more data', idstring, window.scrollY, window.scrollY + window.innerHeight,
                     document.body.scrollHeight);
-                scrollpage++;
+                    scrollpages[idstring]++;
                 // eslint-disable-next-line no-console
-                console.log('call load for scroll', scrollpage);
+                console.log('call load for scroll', scrollpages[idstring]);
                 callLoadData(idstring,
                         encodedtable,
-                        scrollpage,
+                        scrollpages[idstring],
                         null,
                         null,
                         null,
@@ -136,6 +142,23 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
     });
 }
+
+/**
+ * Return the next scrollable element.
+ * @param {*} node
+ * @returns {*} node
+ */
+function getScrollParent(node) {
+    if (node === null) {
+      return null;
+    }
+
+    if (node.scrollHeight > node.clientHeight) {
+      return node;
+    } else {
+      return getScrollParent(node.parentNode);
+    }
+  }
 
 /**
  * Function to reload a wunderbyte table from js.
@@ -202,13 +225,13 @@ export const callLoadData = (
     filterobjects = null,
     searchtext = null) => {
 
-    if (loading) {
+    if (loadings[idstring]) {
         return;
     }
 
     // We reset scrollpage with 0 when we come from the filter.
     if (page !== null) {
-        scrollpage = page;
+        scrollpages[idstring] = page;
     }
 
     // We always have to see if we need to apply a filter. Reload might come from scroll, but filter has to be applied nevertheless.
@@ -226,7 +249,7 @@ export const callLoadData = (
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
 
     // If we replace the whole table, we show the spinner. If we only add rows in infinite scroll, we don't.
-    if (scrollpage == 0) {
+    if (scrollpages[idstring] == 0) {
         if (spinner) {
             spinner.classList.remove('hidden');
         }
@@ -235,7 +258,7 @@ export const callLoadData = (
         }
     }
 
-    loading = true;
+    loadings[idstring] = true;
 
     Ajax.call([{
         methodname: "local_wunderbyte_table_load_data",
@@ -265,7 +288,7 @@ export const callLoadData = (
             const filtercontainer = container.querySelector(".wunderbyteTableFilter");
 
             // If there is a container, we don't want to render everything again.
-            if (scrollpage > 0) {
+            if (scrollpages[idstring] > 0) {
                 // Also, we want to use the table instead of the container template.
                 // This is not perfect, but necessary at the moment.
                 const i = rendertemplate.lastIndexOf('/');
@@ -277,8 +300,8 @@ export const callLoadData = (
 
                 if (!jsonobject.table.hasOwnProperty('rows')) {
                     // We set the scrollpage to -1 which means that we don't reload anymore.
-                    scrollpage = -1;
-                    loading = false;
+                    scrollpages[idstring] = -1;
+                    loadings[idstring] = false;
                     return;
                 }
                 let rows = jsonobject.table.rows;
@@ -298,11 +321,11 @@ export const callLoadData = (
                     });
                 });
 
-                if (tablejs === null) {
+                if (tablejss[idstring] === null) {
                     // eslint-disable-next-line no-unused-vars
                     const promise = Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
 
-                        tablejs = js;
+                        tablejss[idstring] = js;
                         return true;
                     }).catch(e => {
                         // eslint-disable-next-line no-console
@@ -320,13 +343,13 @@ export const callLoadData = (
 
                     setTimeout(() => {
                         // We only added rows, but they might need some js from the table, so we add the table js again.
-                        Templates.appendNodeContents('#a' + idstring, '', tablejs);
+                        Templates.appendNodeContents('#a' + idstring, '', tablejss[idstring]);
 
                         // eslint-disable-next-line no-console
                         console.log('just added js to page ' + page + " " + rows);
                     }, 100);
 
-                    loading = false;
+                    loadings[idstring] = false;
                     return;
                 }).catch(e => {
                     // eslint-disable-next-line no-console
@@ -370,7 +393,7 @@ export const callLoadData = (
                 replaceLinksInFrag(idstring,encodedtable, container, page);
 
                 // When everything is done, we loaded fine.
-                loading = false;
+                loadings[idstring] = false;
 
                 if (spinner) {
                     spinner.classList.add('hidden');
@@ -381,7 +404,7 @@ export const callLoadData = (
 
                 return true;
             }).catch(ex => {
-                loading = false;
+                loadings[idstring] = false;
                 Notification.addNotification({
                     message: 'failed rendering ' + ex,
                     type: "danger"
