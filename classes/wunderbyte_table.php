@@ -33,6 +33,7 @@ use local_wunderbyte_table\output\table;
 use moodle_exception;
 use table_sql;
 use local_wunderbyte_table\output\viewtable;
+use moodle_url;
 use stdClass;
 
 /**
@@ -128,6 +129,13 @@ class wunderbyte_table extends table_sql {
      * @var array
      */
     public $fulltextsearchcolumns = [];
+
+    /**
+     * tabellib saves the string in the moodle_url class, which we can't encode, so we have to translate it.
+     *
+     * @var string
+     */
+    public $baseurlstring = '';
 
 
 
@@ -254,6 +262,15 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * Sets $this->baseurl.
+     * @param moodle_url|string $url the url with params needed to call up this page
+     */
+    public function define_baseurl($url) {
+        $this->baseurl = new moodle_url($url);
+        $this->baseurlstring = $url;
+    }
+
+    /**
      * Override table_sql function and use renderer.
      * (Not used in last revision)
      *
@@ -293,6 +310,12 @@ class wunderbyte_table extends table_sql {
             } else {
                 $this->{$key} = $value;
             }
+
+            if ($key === 'baseurl') {
+                if (!$value && !empty($lib['baseurlstring'])) {
+                    $this->define_baseurl($lib['baseurlstring']);
+                }
+            }
         }
     }
 
@@ -314,6 +337,7 @@ class wunderbyte_table extends table_sql {
             throw new moodle_exception('novalidjson', 'local_wunderbyte_table', null, null,
                     'Invalid json string');
         }
+
         return $lib;
     }
 
@@ -1011,6 +1035,7 @@ class wunderbyte_table extends table_sql {
      * @return string
      */
     public function return_encoded_table():string {
+
         // We have to do a few steps here to make sure we can recreate afterwards.
         $encodedtablelib = json_encode($this);
 
