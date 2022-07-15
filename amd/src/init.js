@@ -23,7 +23,6 @@ import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
 
-// import {renderFilter, initializeCheckboxes} from 'local_wunderbyte_table/search';
 import {initializeCheckboxes, getFilterOjects, getSearchInput} from 'local_wunderbyte_table/search';
 
 var loadings = [];
@@ -42,7 +41,9 @@ export const init = (idstring, encodedtable) => {
         respondToVisibility(idstring, encodedtable, callLoadData);
     }
 
-    scrollpages[idstring] = 0;
+    if (!scrollpages.hasOwnProperty(idstring)) {
+        scrollpages[idstring] = 0;
+    }
 };
 
 /**
@@ -56,7 +57,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
     const identifier = 'a' + idstring;
     let element = document.querySelector('#' + identifier);
 
-    // If we find the table element AND if it hasn't yet the encoded table set, we abort this.
+    // If we find the table element AND if it has the encoded table set, we abort this.
     // Hereby we avoid to run JS multiple times.
     if (element && !element.dataset.encodedtable) {
         element.dataset.encodedtable = encodedtable;
@@ -70,7 +71,6 @@ function respondToVisibility(idstring, encodedtable, callback) {
     let spinner = document.querySelector("#" + identifier + 'spinner');
 
     if ((spinner !== null) && !isHidden(spinner)) {
-        callback(idstring, encodedtable);
 
         var observer = new MutationObserver(function() {
             if (!isHidden(element)) {
@@ -79,68 +79,27 @@ function respondToVisibility(idstring, encodedtable, callback) {
             }
         });
 
-        // We look if we find a hidden parent. If not, we load right away.
-        while (element !== null) {
-            if (!isHidden(element)) {
-                element = element.parentElement;
-            } else {
-                observer.observe(element, {attributes: true});
-                return;
-            }
+        const hiddenElement = returnHiddenElement(element);
+
+        if (hiddenElement !== null) {
+            // eslint-disable-next-line no-console
+            console.log('we observe element for visibility', hiddenElement);
+            observer.observe(hiddenElement, {attributes: true});
         }
+
     } else {
         // This is what we do when we didn't lazyload.
         replaceLinksInFrag(idstring,encodedtable, element, null);
 
         const selector = ".wunderbyte_table_container_" + idstring;
         initializeCheckboxes(selector, idstring, encodedtable);
+
+        // Check to see if scrolling near bottom of page; load more photos
+        // This shoiuld only be added once.
+
+        // As this can only be here once per table, we mark the table.
+        addScrollFunctionality(idstring, encodedtable, element);
     }
-
-    // Check to see if scrolling near bottom of page; load more photos
-    // This shoiuld only be added once.
-
-    // As this can only be here once per table, we mark the table.
-    if (element.dataset.scrollinitialized) {
-        return;
-    }
-    element.dataset.scrollinitialized = true;
-
-    const scrollableelement = getScrollParent(element);
-
-    // eslint-disable-next-line no-console
-    console.log('scrollableelement ', scrollableelement);
-
-    scrollableelement.addEventListener('scroll', () => {
-
-        const elementtop = element.getBoundingClientRect().top;
-        const elementheight = element.getBoundingClientRect().top;
-        const screenheight = document.body.scrollHeight;
-
-        // eslint-disable-next-line no-console
-        console.log('scrollinformation', idstring , elementtop + elementheight - screenheight);
-
-        if (!loadings[idstring] && scrollpages[idstring] >= 0) {
-            if (elementtop + elementheight - screenheight < 0) {
-                // eslint-disable-next-line no-console
-                console.log('scrollinformation load more data', idstring, window.scrollY, window.scrollY + window.innerHeight,
-                    document.body.scrollHeight);
-                    scrollpages[idstring]++;
-                // eslint-disable-next-line no-console
-                console.log('call load for scroll', scrollpages[idstring]);
-                callLoadData(idstring,
-                        encodedtable,
-                        scrollpages[idstring],
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
-            }
-        }
-
-    });
 }
 
 /**
@@ -275,9 +234,6 @@ export const callLoadData = (
         },
         done: function(res) {
 
-            // eslint-disable-next-line no-console
-            console.log(res);
-
             let jsonobject = JSON.parse(res.content);
             let rendertemplate = res.template;
             let rendercontainer = true;
@@ -295,9 +251,6 @@ export const callLoadData = (
                 let rowtemplate = rendertemplate.substring(0, i);
                 rowtemplate += '/row';
 
-                // eslint-disable-next-line no-console
-                console.log(rowtemplate, rendertemplate);
-
                 if (!jsonobject.table.hasOwnProperty('rows')) {
                     // We set the scrollpage to -1 which means that we don't reload anymore.
                     scrollpages[idstring] = -1;
@@ -305,9 +258,6 @@ export const callLoadData = (
                     return;
                 }
                 let rows = jsonobject.table.rows;
-
-                // eslint-disable-next-line no-console
-                console.log(rendertemplate, rows);
 
                 // We create an array of promises where every line is rendered individually.
                 const promises = rows.map(row => {
@@ -319,9 +269,10 @@ export const callLoadData = (
                         // eslint-disable-next-line no-console
                         console.log(e);
                     });
+                    return true;
                 });
 
-                if (tablejss[idstring] === null) {
+                if (!tablejss.hasOwnProperty(idstring)) {
                     // eslint-disable-next-line no-unused-vars
                     const promise = Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
 
@@ -338,18 +289,16 @@ export const callLoadData = (
                 // Once all the promises are fullfilled, we set loading to false.
                 Promise.all(promises).then(() => {
 
-                    // eslint-disable-next-line no-console
-                    console.log(promises.length);
-
                     setTimeout(() => {
                         // We only added rows, but they might need some js from the table, so we add the table js again.
                         Templates.appendNodeContents('#a' + idstring, '', tablejss[idstring]);
 
                         // eslint-disable-next-line no-console
-                        console.log('just added js to page ' + page + " " + rows);
+                        console.log('just added js to page ' + idstring + " " + page + " " + rows);
                     }, 100);
 
                     loadings[idstring] = false;
+
                     return;
                 }).catch(e => {
                     // eslint-disable-next-line no-console
@@ -402,6 +351,11 @@ export const callLoadData = (
                     table.classList.remove('hidden');
                 }
 
+                const element = container.querySelector('#a' + idstring);
+
+                // This is the place where we are after lazyloading. We check if we need to reinitialize scrolllistener:
+                addScrollFunctionality(idstring, encodedtable, element);
+
                 return true;
             }).catch(ex => {
                 loadings[idstring] = false;
@@ -427,6 +381,87 @@ export const callLoadData = (
         }
     }]);
 };
+
+/**
+ * Add the scroll functionality to the right table.
+ * @param {*} idstring
+ * @param {*} encodedtable
+ * @param {*} element
+ * @returns {void}
+ */
+function addScrollFunctionality(idstring, encodedtable, element) {
+
+    if (element.dataset.scrollinitialized) {
+        return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.log('addScrollFunctionality', idstring);
+
+    element.dataset.scrollinitialized = true;
+
+    const scrollableelement = getScrollParent(element);
+
+    // eslint-disable-next-line no-console
+    console.log('scrollableelement ' + idstring, scrollableelement);
+
+    scrollableelement.addEventListener('scroll', () => {
+
+        // We only want to scroll, if the element is visible.
+        // So, if we find a hidden element in the parent, we don't scroll.
+        if (returnHiddenElement(element)) {
+            // eslint-disable-next-line no-console
+            console.log('we dont scroll because element is hidden');
+            return;
+        }
+
+        const elementtop = element.getBoundingClientRect().top;
+        const elementheight = element.getBoundingClientRect().height;
+        const screenheight = document.body.scrollHeight;
+
+        // eslint-disable-next-line no-console
+        console.log('scrollinformation', idstring , elementtop + elementheight - screenheight, elementtop, elementheight);
+
+        if (!loadings[idstring] && scrollpages[idstring] >= 0) {
+            if (elementtop + elementheight - screenheight < 0) {
+                scrollpages[idstring] = scrollpages[idstring] + 1;
+                // eslint-disable-next-line no-console
+                console.log('call load for scroll ' + idstring, scrollpages[idstring]);
+                callLoadData(idstring,
+                        encodedtable,
+                        scrollpages[idstring],
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null);
+            }
+        }
+
+    });
+}
+
+/**
+ * If the element or one of its parents is hidden, we return it. the hiddenn element.
+ * Else we return null.
+ * @param {node} element
+ * @returns {null|node}
+ */
+function returnHiddenElement(element) {
+    // We look if we find a hidden parent. If not, we load right away.
+    while (element !== null) {
+        if (!isHidden(element)) {
+            element = element.parentElement;
+        } else {
+            // eslint-disable-next-line no-console
+            console.log('we observe element for visibility');
+            return element;
+        }
+    }
+    return null;
+}
 
 /**
  * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
