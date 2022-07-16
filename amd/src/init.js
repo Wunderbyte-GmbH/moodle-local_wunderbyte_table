@@ -23,12 +23,14 @@ import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
 
-import {initializeCheckboxes, getFilterOjects, getSearchInput} from 'local_wunderbyte_table/search';
+import {initializeCheckboxes, getFilterOjects} from 'local_wunderbyte_table/filter';
+import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
+import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 
-var loadings = [];
-var scrollpages = [];
-
-var tablejss = [];
+// All these variables will be objects with the idstringso their tables as identifiers.
+var loadings = {};
+var scrollpages = {};
+var tablejss = {};
 
 /**
  * Gets called from mustache template.
@@ -38,11 +40,12 @@ var tablejss = [];
 export const init = (idstring, encodedtable) => {
 
     if (idstring && encodedtable) {
-        respondToVisibility(idstring, encodedtable, callLoadData);
-    }
 
-    if (!scrollpages.hasOwnProperty(idstring)) {
-        scrollpages[idstring] = 0;
+        if (!scrollpages.hasOwnProperty(idstring)) {
+            scrollpages[idstring] = 0;
+        }
+
+        respondToVisibility(idstring, encodedtable, callLoadData);
     }
 };
 
@@ -93,6 +96,8 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
         const selector = ".wunderbyte_table_container_" + idstring;
         initializeCheckboxes(selector, idstring, encodedtable);
+        initializeSearch(selector, idstring, encodedtable);
+        initializeSort(selector, idstring, encodedtable);
 
         // Check to see if scrolling near bottom of page; load more photos
         // This shoiuld only be added once.
@@ -122,29 +127,13 @@ function getScrollParent(node) {
 /**
  * Function to reload a wunderbyte table from js.
  * Here we trim the idstring before we pass it to the calldatafunction.
- * @param {*} idstring
+ * @param {*} idstringplusa
  * @param {*} encodedtable
  */
-export function wbTableReload(idstring, encodedtable = null) {
-
+export function wbTableReload(idstringplusa, encodedtable) {
 
     // We need to trim the first character. We use the a to make sure no number is in first place due to random generation.
-    idstring = idstring.substring(1);
-
-    let element = document.getElementById('a' + idstring);
-
-    if (!element) {
-
-        return;
-    }
-
-    if (!encodedtable) {
-        encodedtable = element.dataset.encodedtable;
-
-        if (!encodedtable) {
-            return;
-        }
-    }
+    const idstring = idstringplusa.substring(1);
 
     callLoadData(idstring, encodedtable);
 }
@@ -184,6 +173,9 @@ export const callLoadData = (
     filterobjects = null,
     searchtext = null) => {
 
+    // eslint-disable-next-line no-console
+    console.log('we load ', idstring);
+
     if (loadings[idstring]) {
         return;
     }
@@ -195,11 +187,15 @@ export const callLoadData = (
 
     // We always have to see if we need to apply a filter. Reload might come from scroll, but filter has to be applied nevertheless.
     if (filterobjects === null) {
-        filterobjects = getFilterOjects();
+        filterobjects = getFilterOjects(idstring);
     }
     // We always have to see if we need to apply a serachtextfilter.
     if (searchtext === null) {
-        searchtext = getSearchInput();
+        searchtext = getSearchInput(idstring);
+    }
+    // We always have to see if we need to apply a sortorder.
+    if (tsort === null) {
+        tsort = getSortSelection(idstring);
     }
 
     let table = document.getElementById('a' + idstring);
@@ -218,6 +214,9 @@ export const callLoadData = (
     }
 
     loadings[idstring] = true;
+
+    // eslint-disable-next-line no-console
+    console.log('launch ajax ', idstring);
 
     Ajax.call([{
         methodname: "local_wunderbyte_table_load_data",

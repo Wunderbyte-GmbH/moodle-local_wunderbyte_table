@@ -23,142 +23,10 @@
 import Templates from 'core/templates';
 import {callLoadData} from 'local_wunderbyte_table/init';
 
-var checked = {};
-var categories = [];
+import {getFilterOjects} from 'local_wunderbyte_table/filter';
+import {getSortSelection} from 'local_wunderbyte_table/sort';
 
-
-var listContainerSelector = '';
-
-var idstring = '';
-var encodedtable = '';
-
-var lastsearchinput = 0;
-
-var loading = false;
-
-/**
- * Store some params globally.
- * @param {string} listContainer
- */
-export const init = (listContainer) => {
-
-    // eslint-disable-next-line no-console
-    console.log("listContainer", listContainer);
-
-    listContainerSelector = listContainer;
-
-    initializeSearch();
-
-};
-
-export const searchInput = (inputElement, elementToHide, elementToSearch) => {
-    let filter, li, a, i, txtValue;
-
-    filter = inputElement.value.toUpperCase();
-
-    li = document.querySelectorAll(elementToHide);
-
-    for (i = 0; i < li.length; i++) {
-        if (elementToSearch) {
-            a = li[i].querySelector(elementToSearch);
-        } else {
-            a = li[i];
-        }
-
-        txtValue = a.textContent || a.innerText;
-
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-        }
-    }
-};
-
-
-/**
- * Eventhandler
- *
- * @param {*} e - event
- */
- export const toggleCheckbox = (e) => {
-
-    // eslint-disable-next-line no-console
-    console.log('checked', e.target.name);
-    getChecked(e.target.name);
-
-    // Reload the filtered elements via ajax.
-
-    const filterobjects = getFilterOjects();
-    const searchstring = getSearchInput();
-
-    // eslint-disable-next-line no-console
-    console.log('reload from filter ', filterobjects);
-
-    callLoadData(idstring,
-    encodedtable,
-    0,
-    null,
-    null,
-    null,
-    null,
-    null,
-    filterobjects,
-    searchstring);
-
-  };
-
-  /**
-   * Check which Checkboxes are selected inside a group.
-   *
-   * @param {*} name of Element group
-   */
-  export const getChecked = (name) => {
-    checked[name] = Array.from(
-      document.querySelectorAll("input[name=" + name + "]:checked")
-    ).map(function(el) {
-      return el.value;
-    });
-  };
-
-  /**
-   * Render the checkboxes for the filer.
-   * @param {string} filterjson
-   * @param {string} idstringvar
-   * @param {string} encodedtable
-   */
-  export const renderFilter = (filterjson, idstringvar, encodedtable) => {
-
-    // We render the filter only once, so if we find it already, we don't render it.
-
-    // eslint-disable-next-line no-console
-    console.log(idstringvar);
-
-    idstring = idstringvar;
-
-    const selector = ".wunderbyte_table_container_" + idstring;
-    const container = document.querySelector(selector);
-    const filtercontainer = container.querySelector(".wunderbyteTableFilter");
-
-    if (filtercontainer) {
-      return;
-    }
-
-    Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
-
-        // eslint-disable-next-line no-console
-        console.log("encodedtable: ", encodedtable);
-
-        container.insertAdjacentHTML('afterbegin', html);
-
-        initializeCheckboxes(selector, idstring, encodedtable);
-
-        return;
-    }).catch(e => {
-        // eslint-disable-next-line no-console
-        console.log(e);
-    });
-};
+var lastsearchinputs = {};
 
 /**
    * Render the checkboxes for the filer.
@@ -190,10 +58,14 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 
 /**
  * Function to initialize the search after rendering the searchbox.
+ * @param {*} containerselector
+ * @param {*} idstring
+ * @param {*} encodedtable
+ * @returns {*}
  */
- export function initializeSearch() {
+ export function initializeSearch(containerselector, idstring, encodedtable) {
 
-    const inputElement = document.querySelector(listContainerSelector + ' input.search');
+    const inputElement = document.querySelector(containerselector + ' input.search');
 
     if (!inputElement) {
         return;
@@ -207,26 +79,26 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 
         let now = Date.now();
 
-        lastsearchinput = now;
+        lastsearchinputs[idstring] = now;
 
         setTimeout(() => {
 
-          const searchstring = getSearchInput();
+          const searchstring = getSearchInput(idstring);
 
           // If the timevalue after the wait is the same as before, we didn't have another input.
           // we want to make sure we do no loading while we are waiting for the answer.
           // And the iput string must be longr than 3.
-          if (lastsearchinput === now
-              && loading == false
+          if (lastsearchinputs[idstring] === now
               && searchstring !== null) {
 
-            const filterobjects = getFilterOjects();
+            const filterobjects = getFilterOjects(idstring);
+            const sort = getSortSelection(idstring);
 
             callLoadData(idstring,
               encodedtable,
               0, // We set page to 0 because we need to start the container anew.
               null,
-              null,
+              sort,
               null,
               null,
               null,
@@ -242,21 +114,13 @@ export const searchInput = (inputElement, elementToHide, elementToSearch) => {
 }
 
 /**
- * Returns json of active filters as json.
- * @returns {string}
- */
-export function getFilterOjects() {
-
-  return JSON.stringify(checked);
-}
-
-/**
  * Function to read the searchstring from the input leement.
+ * @param {*} idstring
  * @returns {null|string}
  */
-export function getSearchInput() {
+export function getSearchInput(idstring) {
 
-  const inputElement = document.querySelector(listContainerSelector + ' input.search');
+  const inputElement = document.querySelector(".wunderbyte_table_container_" + idstring + ' input.search');
 
   if (!inputElement) {
     return null;
@@ -270,39 +134,4 @@ export function getSearchInput() {
     }
 
   return searchstring;
-}
-
-/**
- * Initialize Checkboxes.
- * @param {string} selector
- * @param {string} idstringvar
- * @param {string} encodedtablevar
- */
-export function initializeCheckboxes(selector, idstringvar, encodedtablevar) {
-
-    encodedtable = encodedtablevar;
-    idstring = idstringvar;
-
-    const filterContainer = document.querySelector(selector + " .wunderbyteTableFilter");
-
-    if (!filterContainer || filterContainer.dataset.initialized) {
-      return;
-    }
-
-    const allCheckboxes = filterContainer.querySelectorAll("input[type=checkbox]");
-
-    if (!allCheckboxes) {
-        return;
-    }
-
-    filterContainer.querySelectorAll(".form-group").forEach(e => {
-        categories.push(e.getAttribute("name"));
-        getChecked(e.getAttribute("name"));
-    });
-
-    allCheckboxes.forEach(el => {
-        el.addEventListener("change", toggleCheckbox);
-    });
-
-    filterContainer.dataset.initialized = true;
 }

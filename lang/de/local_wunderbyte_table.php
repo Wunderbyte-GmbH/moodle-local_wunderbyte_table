@@ -28,5 +28,9 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Wunderbyte Table';
 $string['loading'] = 'Laden...';
 $string['search'] = 'Suchen';
+$string['sortby'] = 'Sortieren nach...';
+$string['changesortorder'] = "Ändere die Sortierungsrichtung";
+$string['orderup'] = "Von A nach Z sortiert";
+$string['orderdown'] = "Von Z nach A sortiert";
 
 $string['cachedef_cachedrawdata'] = "Wunderbyte Standard Cache";

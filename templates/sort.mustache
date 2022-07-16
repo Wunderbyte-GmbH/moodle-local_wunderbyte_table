@@ -1,0 +1,53 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_wunderbyte_table/viewtable
+    Template which defines a mooduell view page.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+    Context variables required for this template:
+    * statistics - array: An array with values.
+    * opengames - array: empty array, will be filled with JS.
+    * finishedgames - array: empty array, will be filled with JS.
+    * highscores - array: empty array, will be filled with JS.
+
+    Example context (json):
+    {
+       "idstring": "sdkjafjlsadjflasjdklf",
+       "encodedtable": "fdaskjfdjalsdjfkldsjflsajflksdjfklasdjflkdasjljkdfsalkjfoweijfoeisjgdklyjglky"
+    }
+
+}}
+
+{{#sort}}
+
+    <aside class="wunderbyteTableSelect">
+        <select class="sortcolumn">
+            <option value="" aria-label="{{#str}} sortby, local_wunderbyte_table {{/str}}">{{#str}} sortby, local_wunderbyte_table {{/str}}</option>
+            {{#options}}
+                <option value="{{sortid}}">{{key}}</option>
+            {{/options}}
+        </select>
+        <a href="#" class="changesortorder" aria-label="{{#str}} changesortorder, local_wunderbyte_table {{/str}}">
+            {{#sortup}}
+                <i class="fa fa-sort-alpha-desc" aria-label="{{#str}} orderup, local_wunderbyte_table {{/str}}"></i>
+            {{/sortup}}
+            {{#sortdown}}
+                <i class="fa fa-sort-alpha-asc" aria-label="{{#str}} orderdown, local_wunderbyte_table {{/str}}"></i>
+            {{/sortdown}}
+        </a>
+    </aside>
+{{/sort}}

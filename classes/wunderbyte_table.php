@@ -567,6 +567,16 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * Define the columns for the sorting.
+     * @return void
+     */
+    public function define_sortablecolumns(array $sortablecolumns) {
+
+        $this->sortablecolumns = $sortablecolumns;
+
+    }
+
+    /**
      * Add fulltext search.
      *
      * @return void
@@ -856,6 +866,74 @@ class wunderbyte_table extends table_sql {
 
         return json_encode($filterjson);
     }
+
+
+    /**
+     * Return the array for rendering the mustache template.
+     *
+     * @return array
+     */
+    public function return_sort_columns() {
+
+        global $SESSION;
+
+        if (empty($this->sortablecolumns )) {
+            return null;
+        }
+
+        $sortarray['options'] = [];
+        foreach ($this->sortablecolumns as $key => $value) {
+
+            // If we have an assoziative array, we have localized values.
+            // Else, we need to use the same value twice.
+            if (!isset($this->columns[$key])) {
+                $key = $value;
+            }
+
+            $item['sortid'] = $key;
+            $item['key'] = $value;
+
+            $sortarray['options'][] = $item;
+        }
+        if ($this->return_current_sortorder() == 3) {
+            $sortarray['sortup'] = true;
+        } else {
+            $sortarray['sortdown'] = true;
+        }
+
+
+        return $sortarray;
+    }
+
+    /**
+     * This function finds out the column after which the current table is sorted at the moment and returns the present sortorder.
+     *
+     * @return null|int
+     */
+    public function return_current_sortorder() {
+
+        global $SESSION;
+
+        $sortorder = null;
+
+        // We need the flextable session to get the sortorder.
+        if (isset($SESSION->flextable[$this->idstring])) {
+            $prefs = $SESSION->flextable[$this->idstring];
+        } else {
+            return null;
+        }
+
+        // Return the currently used sortorder.
+        // We only need the first one.
+        foreach ($prefs['sortby'] as $key => $value) {
+            $currentcolumname = $key;
+            $sortorder = $value;
+            break;
+        }
+
+        return $sortorder;
+    }
+
 
 
     /**

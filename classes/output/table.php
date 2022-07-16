@@ -74,9 +74,16 @@ class table implements renderable, templatable {
     /**
      * Search is to display search field
      *
-     * @var array
+     * @var bool
      */
     private $search = false;
+
+    /**
+     * Sort is to display the available sortcolumns.
+     *
+     * @var array
+     */
+    private $sort = [];
 
     /**
      * Constructor.
@@ -84,17 +91,23 @@ class table implements renderable, templatable {
      */
     public function __construct($table) {
 
-        $this->idstring = $table->idstring;
-
-        $this->categories = json_decode($table->filterjson, true);
-        $this->encodedtable = $table->return_encoded_table();
-
         $this->table = [];
 
+        $this->idstring = $table->idstring;
+
+        $this->encodedtable = $table->return_encoded_table();
+
+        // If we have filtercolumns defined, we add the filter key to the output.
+        $this->categories = json_decode($table->filterjson, true);
+
+        // If we want to use fulltextsearch, we add the search key to the output.
         if (!empty($table->fulltextsearchcolumns)) {
             $this->search = true;
         }
 
+        $this->sort = $table->return_sort_columns();
+
+        // Now we create the Table with all necessary columns.
         foreach ($table->tableclasses as $key => $value) {
             $this->table[$key] = $value;
         }
@@ -215,8 +228,14 @@ class table implements renderable, templatable {
             'filter' => $this->categories ?? null,
         ];
 
+        // Only if we want to show the searchfield, we actually add the key.
         if ($this->search) {
             $data['search'] = true;
+        }
+
+        // Only if we want to show the searchfield, we actually add the key.
+        if ($this->sort) {
+            $data['sort'] = $this->sort;
         }
 
         return $data;
