@@ -901,7 +901,6 @@ class wunderbyte_table extends table_sql {
             $sortarray['sortdown'] = true;
         }
 
-
         return $sortarray;
     }
 
