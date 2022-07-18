@@ -1027,7 +1027,7 @@ class wunderbyte_table extends table_sql {
         $from = " ( SELECT " . $this->sql->fields . " FROM " . $this->sql->from;
 
         // Add the new container here.
-        $fields = " fulltextsearchcontainer.* ";
+        $fields = " DISTINCT fulltextsearchcontainer.* ";
 
         // And close it in from..
         $from .= " ) fulltextsearchcontainer ";
