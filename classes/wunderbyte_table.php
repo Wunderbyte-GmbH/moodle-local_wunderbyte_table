@@ -232,9 +232,7 @@ class wunderbyte_table extends table_sql {
         }
         $this->pagesize = $pagesize;
         $this->setup();
-        if (!empty($this->fulltextsearchcolumns)) {
-            $this->setup_fulltextsearch();
-        }
+
         // First we query without the filter.
         $this->query_db_cached($pagesize, $useinitialsbar);
 
@@ -1022,6 +1020,8 @@ class wunderbyte_table extends table_sql {
         if (empty($searchtext)) {
             throw new moodle_exception('invalidsearchtext', 'local_wunderbyte_table');
         }
+
+        $this->setup_fulltextsearch();
 
         // Add the fields/Select to the FROM part.
         $from = " ( SELECT " . $this->sql->fields . " FROM " . $this->sql->from;
