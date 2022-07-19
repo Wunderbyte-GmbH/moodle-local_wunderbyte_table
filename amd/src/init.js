@@ -85,8 +85,6 @@ function respondToVisibility(idstring, encodedtable, callback) {
         const hiddenElement = returnHiddenElement(element);
 
         if (hiddenElement !== null) {
-            // eslint-disable-next-line no-console
-            console.log('we observe element for visibility', hiddenElement);
             observer.observe(hiddenElement, {attributes: true});
         } else {
             callback(idstring, encodedtable);
@@ -175,9 +173,6 @@ export const callLoadData = (
     filterobjects = null,
     searchtext = null) => {
 
-    // eslint-disable-next-line no-console
-    console.log('we load ', idstring);
-
     if (loadings[idstring]) {
         return;
     }
@@ -216,9 +211,6 @@ export const callLoadData = (
     }
 
     loadings[idstring] = true;
-
-    // eslint-disable-next-line no-console
-    console.log('launch ajax ', idstring);
 
     Ajax.call([{
         methodname: "local_wunderbyte_table_load_data",
@@ -294,8 +286,6 @@ export const callLoadData = (
                         // We only added rows, but they might need some js from the table, so we add the table js again.
                         Templates.appendNodeContents('#a' + idstring, '', tablejss[idstring]);
 
-                        // eslint-disable-next-line no-console
-                        console.log('just added js to page ' + idstring + " " + page + " " + rows);
                     }, 100);
 
                     loadings[idstring] = false;
@@ -396,23 +386,15 @@ function addScrollFunctionality(idstring, encodedtable, element) {
         return;
     }
 
-    // eslint-disable-next-line no-console
-    console.log('addScrollFunctionality', idstring);
-
     element.dataset.scrollinitialized = true;
 
     const scrollableelement = getScrollParent(element);
-
-    // eslint-disable-next-line no-console
-    console.log('scrollableelement ' + idstring, scrollableelement);
 
     scrollableelement.addEventListener('scroll', () => {
 
         // We only want to scroll, if the element is visible.
         // So, if we find a hidden element in the parent, we don't scroll.
         if (returnHiddenElement(element)) {
-            // eslint-disable-next-line no-console
-            console.log('we dont scroll because element is hidden');
             return;
         }
 
@@ -420,14 +402,9 @@ function addScrollFunctionality(idstring, encodedtable, element) {
         const elementheight = element.getBoundingClientRect().height;
         const screenheight = document.body.scrollHeight;
 
-        // eslint-disable-next-line no-console
-        console.log('scrollinformation', idstring , elementtop + elementheight - screenheight, elementtop, elementheight);
-
         if (!loadings[idstring] && scrollpages[idstring] >= 0) {
             if (elementtop + elementheight - screenheight < 0) {
                 scrollpages[idstring] = scrollpages[idstring] + 1;
-                // eslint-disable-next-line no-console
-                console.log('call load for scroll ' + idstring, scrollpages[idstring]);
                 callLoadData(idstring,
                         encodedtable,
                         scrollpages[idstring],
@@ -456,8 +433,6 @@ function returnHiddenElement(element) {
         if (!isHidden(element)) {
             element = element.parentElement;
         } else {
-            // eslint-disable-next-line no-console
-            console.log('we observe element for visibility');
             return element;
         }
     }

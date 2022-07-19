@@ -33,9 +33,6 @@ import {getSearchInput} from 'local_wunderbyte_table/search';
  */
  export function initializeSort(listContainer, idstring, encodedtable) {
 
-  // eslint-disable-next-line no-console
-    console.log("soinitializeSortrt called ", listContainer);
-
     const container = document.querySelector(listContainer);
 
     const sortColumnElement = container.querySelector('select.sortcolumn');
@@ -70,17 +67,12 @@ import {getSearchInput} from 'local_wunderbyte_table/search';
  */
 function callSortAjax(event, idstring, encodedtable) {
 
-  // eslint-disable-next-line no-console
-  console.log('callSortAjax was called');
-
   let sortcolumn = null;
   let sortorder = null;
   let reset = null;
 
   // If we get an event, we are in the sortcolum mode.
   if (event !== null) {
-    // eslint-disable-next-line no-console
-    console.log("sort called ", event.target.value);
 
     sortcolumn = event.target.value;
     // We reset only on changed sortcolumn, not on order.
@@ -97,22 +89,14 @@ function callSortAjax(event, idstring, encodedtable) {
 
     const sortColumnElement = container.querySelector('select.sortcolumn');
 
-    // eslint-disable-next-line no-console
-    console.log("classname ", container.querySelector("a.changesortorder").className);
-
     let className = container.querySelector("a.changesortorder i").className;
 
     // Get the sortorder by the icon and change it.
     if (className.includes('asc')) {
 
-      // eslint-disable-next-line no-console
-      console.log("change order from A to z", className);
-
       sortorder = 3;
       container.querySelector("a.changesortorder i").className = className.replace('asc', 'desc');
     } else {
-      // eslint-disable-next-line no-console
-      console.log("change order from Z to A", className);
 
       sortorder = 4;
       container.querySelector("a.changesortorder i").className = className.replace('desc', 'asc');
@@ -121,9 +105,6 @@ function callSortAjax(event, idstring, encodedtable) {
     // We also need the sortcolumn name to effectuate the change.
     sortcolumn = sortColumnElement.selectedOptions[0].value;
   }
-
-   // eslint-disable-next-line no-console
-   console.log("we found the sortcolum ", sortcolumn, sortorder);
 
    const filterobjects = getFilterOjects(idstring);
    const searchstring = getSearchInput(idstring);

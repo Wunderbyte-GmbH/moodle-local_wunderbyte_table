@@ -82,21 +82,13 @@ var checked = {};
  */
  export function toggleCheckbox(e, selector, idstring, encodedtable) {
 
-  // eslint-disable-next-line no-console
-  console.log('checked', e.target.name);
   getChecked(e.target.name, selector, idstring);
-
-  // eslint-disable-next-line no-console
-  console.log('checked', checked);
 
   // Reload the filtered elements via ajax.
 
   const filterobjects = getFilterOjects(idstring);
   const searchstring = getSearchInput(idstring);
   const sort = getSortSelection(idstring);
-
-  // eslint-disable-next-line no-console
-  console.log('reload from filter ', filterobjects);
 
   // The filter reloads data from the Server.
   // Because of pages and infinite scroll we don't have the data to do without.
@@ -131,8 +123,6 @@ var checked = {};
       return el.value;
     });
 
-    // eslint-disable-next-line no-console
-    console.log("after every step ", checked[idstring]);
   }
 
   /**
@@ -141,22 +131,6 @@ var checked = {};
  * @returns {string}
  */
 export function getFilterOjects(idstring) {
-
-  // eslint-disable-next-line no-console
-  console.log(checked[idstring]);
-
-  const test = {
-    'sport': [
-      'eins', 'zwei', 'drei']
-  };
-
-  // eslint-disable-next-line no-console
-  console.log(test, JSON.stringify(test));
-
-  const testzwei = JSON.stringify(checked[idstring]);
-
-  // eslint-disable-next-line no-console
-  console.log(testzwei);
 
   return JSON.stringify(checked[idstring]);
 }
@@ -171,9 +145,6 @@ export function getFilterOjects(idstring) {
 
       // We render the filter only once, so if we find it already, we don't render it.
 
-      // eslint-disable-next-line no-console
-      console.log(idstring);
-
       const selector = ".wunderbyte_table_container_" + idstring;
       const container = document.querySelector(selector);
       const filtercontainer = container.querySelector(".wunderbyteTableFilter");
@@ -183,9 +154,6 @@ export function getFilterOjects(idstring) {
       }
 
       Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
-
-          // eslint-disable-next-line no-console
-          console.log("encodedtable: ", encodedtable);
 
           container.insertAdjacentHTML('afterbegin', html);
 
