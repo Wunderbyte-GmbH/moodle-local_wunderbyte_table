@@ -88,6 +88,8 @@ function respondToVisibility(idstring, encodedtable, callback) {
             // eslint-disable-next-line no-console
             console.log('we observe element for visibility', hiddenElement);
             observer.observe(hiddenElement, {attributes: true});
+        } else {
+            callback(idstring, encodedtable);
         }
 
     } else {

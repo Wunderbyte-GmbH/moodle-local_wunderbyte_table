@@ -43,9 +43,6 @@ import {getSearchInput} from 'local_wunderbyte_table/search';
 
     if (!sortColumnElement || !sortOrderElement) {
 
-        // eslint-disable-next-line no-console
-        console.log('abort ', sortColumnElement, sortOrderElement.className);
-
         return;
     }
 
