@@ -39,6 +39,9 @@ var tablejss = {};
  */
 export const init = (idstring, encodedtable) => {
 
+    // eslint-disable-next-line no-console
+    console.log('wb init');
+
     if (idstring && encodedtable) {
 
         if (!scrollpages.hasOwnProperty(idstring)) {

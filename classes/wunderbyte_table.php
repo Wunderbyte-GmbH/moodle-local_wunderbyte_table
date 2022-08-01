@@ -791,6 +791,31 @@ class wunderbyte_table extends table_sql {
 
         foreach ($filtercolumns as $key => $values) {
 
+            // We might need to explode values, because of a multi-field.
+            if (isset($this->subcolumns['datafields'][$key]['explode'])
+                || self::check_if_multi_customfield($key)) {
+
+                // We run through the array of values and explode each item.
+                foreach ($values as $keytoexplode => $valuetoexplode) {
+
+                    $separator = $this->subcolumns['datafields'][$key]['explode'] ?? ',';
+
+                    $explodedarray = explode($separator, $keytoexplode);
+
+                    // Onoy if we have more than one item, we unset key and insert all the new keys we got.
+                    if (count($explodedarray) > 1) {
+                        // Run through all the keys.
+                        foreach ($explodedarray as $explodeditem) {
+                            $values[$explodeditem] = true;
+                        }
+                        // we make sure the strings with more than one values are not treated anymore.
+                        unset($values[$keytoexplode]);
+                    }
+                }
+
+                unset($this->subcolumns['datafields'][$key]['explode']);
+            }
+
             // Special treatment for key localizedname.
             if (isset($this->subcolumns['datafields'][$key]['localizedname'])) {
                 $localizedname = $this->subcolumns['datafields'][$key]['localizedname'];
@@ -992,7 +1017,7 @@ class wunderbyte_table extends table_sql {
 
                     $filter .= $counter == 1 ? "" : " OR ";
                     $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
-                    $this->sql->params[$paramsvaluekey] = $value;
+                    $this->sql->params[$paramsvaluekey] = "%$value%";
                     $counter++;
                 }
                 $filter .= " ) ";
@@ -1085,5 +1110,29 @@ class wunderbyte_table extends table_sql {
 
         // We need to urlencode everything to make it proof.
         return urlencode($base64encodedtablelib);
+    }
+
+    /**
+     * Checks if a config shortname exists and if so, checks for configdata to see, if it's set to multi.
+     *
+     * @param string $columnname
+     * @return bool
+     */
+    private static function check_if_multi_customfield($columnname) {
+        global $DB;
+
+        $configmulti = $DB->sql_like('configdata', ":param1");
+        $params = ['param1' => '%multiselect\":\"1\"%'];
+
+        $sql = "SELECT id
+                FROM {customfield_field}
+                WHERE shortname='$columnname'
+                AND $configmulti";
+
+        if (!$DB->record_exists_sql($sql, $params)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
