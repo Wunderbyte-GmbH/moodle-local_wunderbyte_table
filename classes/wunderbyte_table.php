@@ -808,7 +808,7 @@ class wunderbyte_table extends table_sql {
                         foreach ($explodedarray as $explodeditem) {
                             $values[$explodeditem] = true;
                         }
-                        // we make sure the strings with more than one values are not treated anymore.
+                        // We make sure the strings with more than one values are not treated anymore.
                         unset($values[$keytoexplode]);
                     }
                 }
