@@ -806,6 +806,14 @@ class wunderbyte_table extends table_sql {
                     if (count($explodedarray) > 1) {
                         // Run through all the keys.
                         foreach ($explodedarray as $explodeditem) {
+
+                            // Make sure we don't have any empty values.
+                            $explodeditem = trim($explodeditem);
+
+                            if (empty($explodeditem)) {
+                                continue;
+                            }
+
                             $values[$explodeditem] = true;
                         }
                         // We make sure the strings with more than one values are not treated anymore.
@@ -1059,15 +1067,41 @@ class wunderbyte_table extends table_sql {
 
         $filter = " AND ( ";
 
-        // Make sure we can use the param.
-        $paramsvaluekey = 'param';
+        $searchtext = trim($searchtext);
 
-        while (isset($this->sql->params[$paramsvaluekey])) {
-            $paramsvaluekey .= '2';
+        $searcharray = explode(' ', $searchtext);
+
+        // We add the parts of the filter to this array, to be able to implode it afterwards.
+        $filterarray = [];
+
+        foreach ($searcharray as $searchword) {
+
+            // Make sure we can use the param.
+            $originalparamsvaluekey = 'param';
+            $paramsvaluekey = $originalparamsvaluekey;
+
+            $counter = 1;
+
+            while (isset($this->sql->params[$paramsvaluekey])) {
+                $paramsvaluekey = $originalparamsvaluekey . $counter;
+                $counter++;
+            }
+
+            $filterarray[] = $DB->sql_like("wbfulltextsearch", ":$paramsvaluekey", false);
+            $this->sql->params[$paramsvaluekey] = "%$searchword%";
+
         }
 
-        $filter .= $DB->sql_like("wbfulltextsearch", ":$paramsvaluekey", false);
-        $this->sql->params[$paramsvaluekey] = "%$searchtext%";
+        // Now we have the filterarray with all the filters for every word.
+        // We implode it with AND, because all the words should be in the column.
+
+        if (count($filterarray) > 1) {
+            $filter .= ' ( ';
+            $filter .= implode(' ) AND ( ', $filterarray);
+            $filter .= ' ) ';
+        } else {
+            $filter .= reset($filterarray);
+        }
 
         $filter .= " ) ";
 
