@@ -126,13 +126,13 @@ class local_wunderbyte_table_external extends external_api {
         return new external_function_parameters(array(
                         'encodedtable'  => new external_value(PARAM_RAW, 'eoncodedtable', VALUE_DEFAULT, ''),
                         'page'  => new external_value(PARAM_INT, 'page', VALUE_OPTIONAL),
-                        'tsort'   => new external_value(PARAM_RAW, 'sort value', VALUE_OPTIONAL),
-                        'thide'   => new external_value(PARAM_RAW, 'hide value', VALUE_OPTIONAL),
+                        'tsort'   => new external_value(PARAM_TEXT, 'sort value', VALUE_OPTIONAL),
+                        'thide'   => new external_value(PARAM_TEXT, 'hide value', VALUE_OPTIONAL),
                         'tshow'   => new external_value(PARAM_RAW, 'show value', VALUE_OPTIONAL),
                         'tdir'    => new external_value(PARAM_INT, 'dir value', VALUE_OPTIONAL),
                         'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_OPTIONAL),
-                        'filterobjects'  => new external_value(PARAM_RAW, 'reset value', VALUE_OPTIONAL),
-                        'searchtext'  => new external_value(PARAM_RAW, 'reset value', VALUE_OPTIONAL),
+                        'filterobjects'  => new external_value(PARAM_TEXT, 'reset value', VALUE_OPTIONAL),
+                        'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_OPTIONAL),
                 )
         );
     }
@@ -143,7 +143,7 @@ class local_wunderbyte_table_external extends external_api {
      */
     public static function load_data_returns() {
         return new external_single_structure(array(
-                    'template' => new external_value(PARAM_RAW, 'template name'),
+                    'template' => new external_value(PARAM_TEXT, 'template name'),
                     'content' => new external_value(PARAM_RAW, 'json content'),
                     'filterjson' => new external_value(PARAM_RAW, 'filter json to create checkboxes', VALUE_OPTIONAL, '')
                 )
