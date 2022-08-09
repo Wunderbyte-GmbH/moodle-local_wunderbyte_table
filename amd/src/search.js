@@ -128,7 +128,7 @@ export function getSearchInput(idstring) {
 
     let searchstring = null;
 
-    if (inputElement.value.length > 3
+    if (inputElement.value.length > 2
         || inputElement.value.length === 0) {
       searchstring = inputElement.value;
     }
