@@ -1,5 +1,4 @@
 # Wunderbyte Table #
-
 Wunderbyte Table can be used instead of the table_sql class and then supports all the actions via Ajax.
 
 This local plugin was developed to allow the use of the table_sql class within modals and tabs.
@@ -16,12 +15,18 @@ The included test.php is only meant to demonstrate the working of the table.
 
 That's all it takes. Switching pages, sorting, hiding columns and downloading will now run via ajax.
 
-## Templates
+## Multiple custom templates
 Wunderbyte Table comes with a responsive table template, but it can and should be overriden in your project. To do so, set in your instance of your extended class (eg $yourtable) the template to your proper template, like
 
     $yourtable->tabletemplate = 'mod_yourtemplate/yourtable'
 
 where yourtable corresponds to yourtable.mustache in your own project.
+
+With Version 1.2.1 Wunderbyte Table supports multiple templates in one project. The structure has to be like this:
+- A yourfirsttable_container.mustache includes possible search, filter and sort components
+- This container also contains yourfirsttable.mustache
+- This table mustache contains yourfirsttable_row.mustache.
+Only by obeing this structure in your own project, the reloading triggered by filter, search etc. will work.
 
 ## Caching
 One new feature is caching. Wunderbyte_table will automatically pass every sql call to the MODE_APPLICATION cache with the key being the hashed request.
@@ -45,8 +50,10 @@ The reason is that the js would be added to the page footer via the renderer, bu
 Any JS which is on this labe (corresponding to table.mustache in the wunderbyte_table project), will be executed after the table is correctly rendered.
 You have to make sure to write your js in a way that your can find the necessary variables (eg. the ids of your rows) without being able to pass them directly via the mustache template.
 
-## Installing via uploaded ZIP file ##
+## Lazy loading vs. direct out
+To lazy load wunderbyte table (eg. for loading in tabs or modals) you need to call $table->lazyout() instead of $table->out. While out will return the html to echo, lazyout echos right away. If you want the html of lazyout, use $table->lazyouthtml();
 
+## Installing via uploaded ZIP file ##
 1. Log in to your Moodle site as an admin and go to _Site administration >
    Plugins > Install plugins_.
 2. Upload the ZIP file with the plugin code. You should only be prompted to add
@@ -54,7 +61,6 @@ You have to make sure to write your js in a way that your can find the necessary
 3. Check the plugin validation report and finish the installation.
 
 ## Installing manually ##
-
 The plugin can be also installed by putting the contents of this directory to
 
     {your/moodle/dirroot}/local/wunderbyte_table}
@@ -69,7 +75,6 @@ Alternatively, you can run
 to complete the installation from the command line.
 
 ## License ##
-
 2021 Wunderbyte GmbH <info@wunderbyte.at>
 
 This program is free software: you can redistribute it and/or modify it under

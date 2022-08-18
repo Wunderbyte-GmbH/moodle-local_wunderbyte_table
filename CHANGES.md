@@ -1,3 +1,9 @@
+## Version 1.2.1 (2022081800)
+* Clarify container structure for generalical ajax reload (pages, infinite scroll, filtering) and support for multiple table formats in one project.
+
+## Version 1.2.0 (2022080900)
+* Introduce fulltext search, filter and sort
+
 ## Version 1.1.8 (2022050400)
 * Improvement: Improved code quality
 
