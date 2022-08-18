@@ -96,11 +96,11 @@ $baseurl = new moodle_url(
 
 $table->define_baseurl($baseurl->out());
 
-$table->tabletemplate = 'local_wunderbyte_table/nolazytable';
+$table->tabletemplate = 'local_wunderbyte_table/table_card';
 
 $table->infinitescroll = 50;
 
-echo $table->nolazyout(10, true);
+echo $table->out(10, true);
 
 if (!$table->is_downloading()) {
     echo $OUTPUT->footer();
