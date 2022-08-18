@@ -40,7 +40,7 @@ var tablejss = {};
 export const init = (idstring, encodedtable) => {
 
     // eslint-disable-next-line no-console
-    console.log('wb init');
+    console.log('wb init', idstring);
 
     if (idstring && encodedtable) {
 
@@ -68,7 +68,8 @@ function respondToVisibility(idstring, encodedtable, callback) {
     if (element && !element.dataset.encodedtable) {
         element.dataset.encodedtable = encodedtable;
     } else {
-        // If we don't find an element, we abort.
+        // eslint-disable-next-line no-console
+        console.log('wb didnnt find element aborted', identifier, element, element.dataset.encodedtable);
         return;
     }
 
@@ -94,6 +95,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
         }
 
     } else {
+
         // This is what we do when we didn't lazyload.
         replaceLinksInFrag(idstring, encodedtable, element, null);
 
@@ -232,19 +234,17 @@ export const callLoadData = (
 
             let jsonobject = JSON.parse(res.content);
             let rendertemplate = res.template;
-            let rendercontainer = true;
 
             // We can always expect a wunderbyte table container at this point.
             // The container will hold wunderbyteTableClass, wunderbyteTableFilter, wunderbyteTableSearch classes.
             let container = document.querySelector(".wunderbyte_table_container_" + idstring);
-            const filtercontainer = container.querySelector(".wunderbyteTableFilter");
+            const componentscontainer = container.querySelector(".wunderbyte_table_components");
 
-            // If there is a container, we don't want to render everything again.
+            // If we only increase the scrollpage, we don't need to render everything again.
             if (scrollpages[idstring] > 0) {
 
                 // Also, we want to use the table instead of the container template.
                 const rowtemplate = rendertemplate + '_row';
-                rendertemplate = rendertemplate + '_container';
 
                 if (!jsonobject.table.hasOwnProperty('rows')) {
                     // We set the scrollpage to -1 which means that we don't reload anymore.
@@ -300,11 +300,11 @@ export const callLoadData = (
 
                 return;
 
-            } else if (filtercontainer) { // If there is a container, we don't want to render everything again.
-                // Also, we want to use the table instead of the container template.
-                // This is not perfect, but necessary at the moment.
+            }
 
-                rendercontainer = false;
+            if (!componentscontainer) {
+                // If the componentscontainer is not yet rendered, we render the container. else, only the table.
+                rendertemplate = rendertemplate + '_container';
             }
 
             let frag = container.querySelector(".wunderbyteTableClass");
@@ -312,7 +312,7 @@ export const callLoadData = (
             // We render the html with the right template.
             Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
 
-                if (!rendercontainer) {
+                if (componentscontainer) {
                     // Now we clean the existing table.
                     while (frag.firstChild) {
                         frag.removeChild(frag.lastChild);
@@ -321,7 +321,7 @@ export const callLoadData = (
                     // Here we add the rendered content to the table div.
                     Templates.appendNodeContents('#a' + idstring, html, js);
                 } else {
-                    // Here we try to render the whole
+                    // Here we try to render the whole.hro
                     const parent = container.parentElement;
                     container.remove();
                     Templates.appendNodeContents(parent, html, js);
@@ -340,6 +340,12 @@ export const callLoadData = (
                 if (table) {
                     table.classList.remove('hidden');
                 }
+
+                // Make sure all elements are working.
+                const selector = ".wunderbyte_table_container_" + idstring;
+                initializeCheckboxes(selector, idstring, encodedtable);
+                initializeSearch(selector, idstring, encodedtable);
+                initializeSort(selector, idstring, encodedtable);
 
                 const element = container.querySelector('#a' + idstring);
 

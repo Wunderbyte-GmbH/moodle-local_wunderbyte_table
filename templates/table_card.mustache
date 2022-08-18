@@ -60,7 +60,7 @@
     }
 }}
 
-{{> local_wunderbyte_table/pagination }}
+{{> local_wunderbyte_table/component_pagination }}
 
 {{#table}}
 <div class="container-fluid rows">
@@ -84,12 +84,20 @@
     </div>
    {{/header}}
 
+    <div class="rows-container">
    {{#rows}}
-   {{> local_wunderbyte_table/row }}
+   {{> local_wunderbyte_table/table_card_row }}
     {{/rows}}
+    </div>
 
 </div>
 
 {{/table}}
 
-{{> local_wunderbyte_table/pagination }}
+{{> local_wunderbyte_table/component_pagination }}
+
+{{#js}}
+    require(['local_wunderbyte_table/init'], function(init) {
+     init.init('{{idstring}}', '{{encodedtable}}');
+    });
+{{/js}}

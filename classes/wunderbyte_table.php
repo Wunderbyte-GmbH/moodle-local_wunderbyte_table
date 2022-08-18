@@ -98,7 +98,7 @@ class wunderbyte_table extends table_sql {
      *
      * @var string template for table.
      */
-    public $tabletemplate = 'local_wunderbyte_table/table';
+    public $tabletemplate = 'local_wunderbyte_table/table_card';
 
     /**
      * @var array array of supplementary column information. Can be used like below.
@@ -387,9 +387,10 @@ class wunderbyte_table extends table_sql {
      *
      * @param string $subcolumnsidentifier
      * @param array $subcolumns
+     * @param bool $addtocolumns
      * @return void
      */
-    public function add_subcolumns(string $subcolumnsidentifier, array $subcolumns) {
+    public function add_subcolumns(string $subcolumnsidentifier, array $subcolumns, bool $addtocolumns = true) {
         if (strlen($subcolumnsidentifier) == 0) {
             throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
                     "You need to specify a columnidentifer like cardheader or cardfooter");
@@ -397,6 +398,7 @@ class wunderbyte_table extends table_sql {
         foreach ($this->columns as $key => $value) {
             $columns[] = $key;
         }
+
         foreach ($subcolumns as $key => $value) {
 
             if (gettype($value) == 'array') {
@@ -407,8 +409,11 @@ class wunderbyte_table extends table_sql {
                 $columns[] = $value;
             }
         }
-        // This is necessary to make sure we create the right content.
-        parent::define_columns($columns);
+
+        if ($addtocolumns) {
+             // This is necessary to make sure we create the right content.
+            parent::define_columns($columns);
+        }
     }
 
     /** This overrides the classic define columns functions.
@@ -446,7 +451,7 @@ class wunderbyte_table extends table_sql {
      * @return void
      */
     public function define_headers($columns, $usestandardclasses = true) {
-        $this->add_subcolumns('cardheader', $columns);
+        $this->add_subcolumns('cardheader', $columns, false);
     }
 
     /**
