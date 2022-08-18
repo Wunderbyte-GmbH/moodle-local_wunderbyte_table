@@ -69,7 +69,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
         element.dataset.encodedtable = encodedtable;
     } else {
         // eslint-disable-next-line no-console
-        console.log('wb didnnt find element aborted', identifier, element, element.dataset.encodedtable);
+        console.log('wb didnnt find element aborted', identifier);
         return;
     }
 
@@ -82,6 +82,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
         var observer = new MutationObserver(function() {
             if (!isHidden(element)) {
                 this.disconnect();
+
                 callback(idstring, encodedtable);
             }
         });
@@ -89,6 +90,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
         const hiddenElement = returnHiddenElement(element);
 
         if (hiddenElement !== null) {
+
             observer.observe(hiddenElement, {attributes: true});
         } else {
             callback(idstring, encodedtable);
