@@ -648,6 +648,15 @@ class wunderbyte_table extends table_sql {
             $this->currpage = null;
 
             $setbackvalues = true;
+        } else {
+            // If we don't cache, we need to set infinite scroll at this point:
+
+            // If we want to use infinite scroll, we need to fetch the current page.
+            // We use the same functionality as for just loading the page itself.
+            if ($this->infinitescroll > 0) {
+                $pagesize = $this->infinitescroll;
+                $this->use_pages = true;
+            }
         }
 
         // Create the query string including params.
