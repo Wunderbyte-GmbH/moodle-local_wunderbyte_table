@@ -15,7 +15,7 @@
 
 /*
  * @package    local_wunderbyte_table
- * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
+ * @copyright Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -95,7 +95,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
     } else {
         // This is what we do when we didn't lazyload.
-        replaceLinksInFrag(idstring,encodedtable, element, null);
+        replaceLinksInFrag(idstring, encodedtable, element, null);
 
         const selector = ".wunderbyte_table_container_" + idstring;
         initializeCheckboxes(selector, idstring, encodedtable);
@@ -241,11 +241,10 @@ export const callLoadData = (
 
             // If there is a container, we don't want to render everything again.
             if (scrollpages[idstring] > 0) {
+
                 // Also, we want to use the table instead of the container template.
-                // This is not perfect, but necessary at the moment.
-                const i = rendertemplate.lastIndexOf('/');
-                let rowtemplate = rendertemplate.substring(0, i);
-                rowtemplate += '/row';
+                const rowtemplate = rendertemplate + '_row';
+                rendertemplate = rendertemplate + '_container';
 
                 if (!jsonobject.table.hasOwnProperty('rows')) {
                     // We set the scrollpage to -1 which means that we don't reload anymore.
@@ -259,7 +258,7 @@ export const callLoadData = (
                 const promises = rows.map(row => {
                     Templates.renderForPromise(rowtemplate, row).then(({html, js}) => {
                         // Here we add the rendered content to the table div.
-                        Templates.appendNodeContents('#a' + idstring + " div.rows", html, js);
+                        Templates.appendNodeContents('#a' + idstring + " .rows-container", html, js);
                         return true;
                     }).catch(e => {
                         // eslint-disable-next-line no-console
@@ -304,9 +303,6 @@ export const callLoadData = (
             } else if (filtercontainer) { // If there is a container, we don't want to render everything again.
                 // Also, we want to use the table instead of the container template.
                 // This is not perfect, but necessary at the moment.
-                const i = rendertemplate.lastIndexOf('/');
-                rendertemplate = rendertemplate.substring(0, i);
-                rendertemplate += '/table';
 
                 rendercontainer = false;
             }
@@ -333,7 +329,7 @@ export const callLoadData = (
                     container = document.querySelector(".wunderbyte_table_container_" + idstring);
                 }
 
-                replaceLinksInFrag(idstring,encodedtable, container, page);
+                replaceLinksInFrag(idstring, encodedtable, container, page);
 
                 // When everything is done, we loaded fine.
                 loadings[idstring] = false;

@@ -30,11 +30,11 @@ use renderer_base;
 use templatable;
 
 /**
- * viewtable class to display view.php
+ * lazytable class is used to print a lazy table.
  * @package local_wunderbyte_table
  *
  */
-class viewtable implements renderable, templatable {
+class lazytable implements renderable, templatable {
 
     /**
      * An idstring for the table & spinner.

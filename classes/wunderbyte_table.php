@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/tablelib.php");
 
 use Exception;
+use local_wunderbyte_table\output\lazytable;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
 use table_sql;
@@ -152,7 +153,7 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
-     * New out function just stores the settings as json in base64 format and creates a table.
+     * New lazyout function just stores the settings as json in base64 format and creates a table.
      * It also attaches the necessary javascript to fetch the actual table via ajax afterwards.
      *
      * @param int $pagesize
@@ -160,9 +161,9 @@ class wunderbyte_table extends table_sql {
      * @param string $downloadhelpbutton
      * @return void
      */
-    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+    public function lazyout($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
-        list($idnumber, $encodedtable, $html) = $this->outhtml($pagesize, $useinitialsbar, $downloadhelpbutton);
+        list($idnumber, $encodedtable, $html) = $this->lazyouthtml($pagesize, $useinitialsbar, $downloadhelpbutton);
 
         echo $html;
     }
@@ -176,27 +177,32 @@ class wunderbyte_table extends table_sql {
      * @param string $downloadhelpbutton
      * @return string
      */
-    public function nolazyout($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+    public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
         global $PAGE, $CFG;
         $this->pagesize = $pagesize;
         $this->useinitialsbar = $useinitialsbar;
         $this->downloadhelpbutton = $downloadhelpbutton;
 
+        // In the following function we return the template we want to use.
+        // This function also checks, if there is a special container template present. If so, we use it instead.
+        list($component, $template) = $this->return_component_and_template();
+
         $tableobject = $this->printtable($pagesize, $useinitialsbar);
-        $output = $PAGE->get_renderer('local_wunderbyte_table');
-        return $output->render_nolazytable($tableobject);
+        $output = $PAGE->get_renderer($component);
+        return $output->render_table($tableobject, $component . "/" . $template);
     }
 
     /**
      * A version of the out function which does not actually echo but just returns the html plus the idnumber.
+     * This is only used for lazy loading.
      *
      * @param int $pagesize
      * @param bool $useinitialsbar
      * @param string $downloadhelpbutton
      * @return array
      */
-    public function outhtml($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+    public function lazyouthtml($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
         global $PAGE, $CFG;
         $this->pagesize = $pagesize;
@@ -208,8 +214,8 @@ class wunderbyte_table extends table_sql {
 
         $this->base64encodedtablelib = $base64encodedtablelib;
         $output = $PAGE->get_renderer('local_wunderbyte_table');
-        $viewtable = new viewtable($this->idstring, $base64encodedtablelib);
-        return [$this->idstring, $base64encodedtablelib, $output->render_viewtable($viewtable)];
+        $data = new lazytable($this->idstring, $base64encodedtablelib);
+        return [$this->idstring, $base64encodedtablelib, $output->render_lazytable($data)];
     }
 
     /**
@@ -1124,6 +1130,40 @@ class wunderbyte_table extends table_sql {
     public function pagesize($perpage, $total) {
         $this->pagesize  = $perpage;
         $this->totalrows = $total;
+    }
+
+    /**
+     * This function returns custom comonent and template of instance.
+     * If there is a _container template present, this templatename_container is returned.
+     *
+     * @throws moodle_exception
+     * @return array
+     */
+    private function return_component_and_template() {
+
+        global $CFG;
+
+        if (!empty($this->tabletemplate)) {
+            list($component, $template) = explode("/", $this->tabletemplate);
+        }
+
+        if (empty($component) || empty($template)) {
+            throw new moodle_exception('wrongtemplatespecified', 'local_wunderbyte_table', '', $this->tabletemplate);
+        }
+
+        $componentarray = explode("_", $component);
+        $componenttype = array_shift($componentarray);
+        $componentname = implode("_", $componentarray);
+
+        // First, we get all the available conditions from our directory.
+        $path = $CFG->dirroot . '/' . $componenttype . '/' . $componentname . '/templates//' . $template . '_container.mustache';
+        $filelist = glob($path);
+
+        if (count($filelist) === 1) {
+            $template = $template . '_container';
+        }
+
+        return [$component, $template];
     }
 
     /**

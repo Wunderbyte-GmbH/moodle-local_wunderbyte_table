@@ -27,8 +27,6 @@ namespace local_wunderbyte_table\output;
 use plugin_renderer_base;
 use templatable;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Renderer class.
  * @package local_wunderbyte_table
@@ -42,30 +40,20 @@ class renderer extends plugin_renderer_base {
      * @param templatable $viewtable
      * @return string|boolean
      */
-    public function render_viewtable(templatable $viewtable) {
+    public function render_lazytable(templatable $viewtable) {
         $data = $viewtable->export_for_template($this);
-        return $this->render_from_template('local_wunderbyte_table/viewtable', $data);
+        return $this->render_from_template('local_wunderbyte_table/table_lazy', $data);
     }
 
-    /**
-     * Combines data array with mustache template.
-     *
-     * @param templatable $table
-     * @return void
+    /** Function to render the cards table
+     * @param any $data
+     * @param string $data
+     * @return string
      */
-    public function render_table(templatable $table) {
-        $data = $table->export_for_template($this);
-        return $this->render_from_template('local_wunderbyte_table/table', $data);
-    }
-
-    /**
-     * Combines data array with mustache template.
-     *
-     * @param templatable $table
-     * @return void
-     */
-    public function render_nolazytable(templatable $table) {
-        $data = $table->export_for_template($this);
-        return $this->render_from_template('local_wunderbyte_table/nolazytable', $data);
+    public function render_table($data, string $templatename) {
+        $o = '';
+        $data = $data->export_for_template($this);
+        $o .= $this->render_from_template($templatename, $data);
+        return $o;
     }
 }
