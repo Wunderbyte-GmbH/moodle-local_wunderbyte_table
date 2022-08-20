@@ -44,8 +44,7 @@ $table = new wunderbyte_table('uniqueid');
 $table->is_downloading($download, 'test', 'testing123');
 
 $table->add_subcolumns('cardbody', ['id', 'fullname', 'shortname', 'idnumber', 'format']);
-$table->add_subcolumns('cardheader', ['fullname']);
-$table->add_subcolumns('cardfooter', ['shortname']);
+$table->define_headers(['id', 'fullname', 'shortname', 'idnumber', 'format']);
 
 // Here you can use add_subcolumns with 'cardfooter" to show content in cardfooter.
 
@@ -86,6 +85,11 @@ if (!$table->is_downloading()) {
 
 $table->define_filtercolumns(['id', 'category', 'format']);
 
+$table->define_fulltextsearchcolumns(['fullname', 'shortname', 'format']);
+
+$table->define_sortablecolumns(['id', 'category', 'fullname', 'shortname', 'format']);
+
+
 // Work out the sql for the table.
 $table->set_sql('*', "{course}", '1=1');
 
@@ -96,7 +100,7 @@ $baseurl = new moodle_url(
 
 $table->define_baseurl($baseurl->out());
 
-$table->tabletemplate = 'local_wunderbyte_table/table_card';
+$table->tabletemplate = 'local_wunderbyte_table/table_list';
 
 $table->infinitescroll = 50;
 
