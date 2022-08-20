@@ -88,8 +88,10 @@ class local_wunderbyte_table_external extends external_api {
 
             if (!empty($table->baseurlstring)) {
                 $table->define_baseurl($table->baseurlstring);
+            } else {
+                // Fallback, wunderbyte_table doesn't really need the baseurl anyways.
+                $table->baseurl = new moodle_url($CFG->wwwroot);
             }
-            throw new moodle_exception('undefinedbaseurl', 'local_wunderbyte_table');
         }
 
         // The table lib class expects $_POST variables to be present, so we have to set them.
