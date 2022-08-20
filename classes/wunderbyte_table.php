@@ -311,6 +311,8 @@ class wunderbyte_table extends table_sql {
                 }
             } else if (in_array($key, ['sql'])) {
                 $this->{$key} = (object)$value;
+            } else if ($key === 'output') { // We don't want to override the output renderer.
+                continue;
             } else {
                 $this->{$key} = $value;
             }
