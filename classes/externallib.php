@@ -99,10 +99,10 @@ class local_wunderbyte_table_external extends external_api {
             $_POST[$key] = $value;
         }
 
-        if ($params['filterobjects']) {
+        if (!empty($params['filterobjects'])) {
             $table->apply_filter($params['filterobjects']);
         }
-        if ($params['searchtext']) {
+        if (!empty($params['searchtext'])) {
             $table->apply_searchtext($params['searchtext']);
         }
 
