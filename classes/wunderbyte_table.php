@@ -170,7 +170,6 @@ class wunderbyte_table extends table_sql {
 
     /**
      * With this function, the table can be printed without lazy loading.
-     * Can be overridden in child class with own renderer.
      *
      * @param int $pagesize
      * @param bool $useinitialsbar
@@ -178,6 +177,20 @@ class wunderbyte_table extends table_sql {
      * @return string
      */
     public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+
+        echo self::outhtml($pagesize, $useinitialsbar, $downloadhelpbutton);
+    }
+
+    /**
+     * With this function, the table can be returned as html without lazy loading.
+     * Can be overridden in child class with own renderer.
+     *
+     * @param int $pagesize
+     * @param bool $useinitialsbar
+     * @param string $downloadhelpbutton
+     * @return string
+     */
+    public function outhtml($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
         global $PAGE, $CFG;
         $this->pagesize = $pagesize;
