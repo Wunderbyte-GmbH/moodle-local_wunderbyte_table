@@ -132,6 +132,10 @@ var checked = {};
  */
 export function getFilterOjects(idstring) {
 
+  if (!(idstring in checked)) {
+    return '';
+  }
+
   return JSON.stringify(checked[idstring]);
 }
 
