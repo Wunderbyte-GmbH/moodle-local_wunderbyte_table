@@ -71,6 +71,10 @@ function callSortAjax(event, idstring, encodedtable) {
   let sortorder = null;
   let reset = null;
 
+  const container = document.querySelector(".wunderbyte_table_container_" + idstring);
+  const sortColumnElement = container.querySelector('select.sortcolumn');
+  let className = container.querySelector("a.changesortorder i").className;
+
   // If we get an event, we are in the sortcolum mode.
   if (event !== null) {
 
@@ -81,15 +85,19 @@ function callSortAjax(event, idstring, encodedtable) {
     if (!sortcolumn) {
       return;
     }
+
+    // Get the sortorder by the icon and apply it.
+    if (className.includes('asc')) {
+
+      sortorder = 4;
+    } else {
+
+      sortorder = 3;
+    }
+
   } else {
     // Else, we are in the sortorder mode.
     // 3 is ASC, 4 is DESC. We have to find out which is the current mode.
-
-    const container = document.querySelector(".wunderbyte_table_container_" + idstring);
-
-    const sortColumnElement = container.querySelector('select.sortcolumn');
-
-    let className = container.querySelector("a.changesortorder i").className;
 
     // Get the sortorder by the icon and change it.
     if (className.includes('asc')) {
