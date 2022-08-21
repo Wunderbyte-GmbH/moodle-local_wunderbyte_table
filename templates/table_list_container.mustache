@@ -67,9 +67,11 @@
           {{> local_wunderbyte_table/component_search }}
           {{> local_wunderbyte_table/component_filter }}
      </aside>
-     <div class= "wunderbyteTableClass" id='a{{idstring}}'>
-          {{> local_wunderbyte_table/table_list }}
-     </div>
+     <div> {{! This div makes sure infinite scroll works properly }}
+          <div class= "wunderbyteTableClass" id='a{{idstring}}'>
+               {{> local_wunderbyte_table/table_list }}
+          </div>
+     <div>
 </div>
 
 {{#js}}

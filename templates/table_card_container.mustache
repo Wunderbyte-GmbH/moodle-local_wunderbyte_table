@@ -71,8 +71,10 @@
                {{> local_wunderbyte_table/component_filter }}
           </div>
      </aside>
-     <div class= "wunderbyteTableClass" id='a{{idstring}}'>
-          {{> local_wunderbyte_table/table_card }}
+      <div> {{! This div makes sure infinite scroll works properly }}
+          <div class= "wunderbyteTableClass" id='a{{idstring}}'>
+               {{> local_wunderbyte_table/table_card }}
+          </div>
      </div>
 </div>
 
