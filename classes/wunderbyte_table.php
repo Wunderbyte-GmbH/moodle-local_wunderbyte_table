@@ -1059,8 +1059,15 @@ class wunderbyte_table extends table_sql {
                     }
 
                     $filter .= $counter == 1 ? "" : " OR ";
+
                     $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
-                    $this->sql->params[$paramsvaluekey] = "%$value%";
+
+                    if (is_numeric($value)) {
+                        $this->sql->params[$paramsvaluekey] = "$value";
+                    } else {
+                        $this->sql->params[$paramsvaluekey] = "%$value%";
+                    }
+
                     $counter++;
                 }
                 $filter .= " ) ";
