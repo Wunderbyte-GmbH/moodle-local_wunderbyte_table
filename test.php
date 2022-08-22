@@ -83,7 +83,7 @@ if (!$table->is_downloading()) {
     echo $OUTPUT->header();
 }
 
-$table->define_filtercolumns(['id', 'category', 'format']);
+$table->define_filtercolumns(['id', 'category', 'format', 'shortname', 'fullname']);
 
 $table->define_fulltextsearchcolumns(['fullname', 'shortname', 'format']);
 
@@ -102,7 +102,7 @@ $table->define_baseurl($baseurl->out());
 
 $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-$table->infinitescroll = 50;
+$table->infinitescroll = 5;
 
 echo $table->out(10, true);
 
