@@ -54,9 +54,9 @@ $table->define_headers(['id', 'fullname', 'shortname', 'idnumber', 'format']);
 // Use add_subcolumns with 'cardimage" and image like shown above.
 
 // This adds the width to all normal columns.
-$table->add_classes_to_subcolumns('cardbody', ['columnclass' => 'col-sm']);
+$table->add_classes_to_subcolumns('cardbody', ['columnclass' => 'wunderbytetd']);
 // This avoids showing all keys in list view.
-$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
+//$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
 
 // Override naming for columns. one could use getstring for localisation here.
 $table->add_classes_to_subcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
@@ -100,7 +100,7 @@ $baseurl = new moodle_url(
 
 $table->define_baseurl($baseurl->out());
 
-$table->tabletemplate = 'local_wunderbyte_table/table_list';
+$table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
 $table->infinitescroll = 50;
 

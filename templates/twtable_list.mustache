@@ -60,17 +60,28 @@
     }
 }}
 
-
-<div class="wunderbyte_table_container_{{idstring}} wunderbyte_table_container">
-     <aside class="wunderbyte_table_components">
-          {{> local_wunderbyte_table/component_sort }}
-          {{> local_wunderbyte_table/component_search }}
-          {{> local_wunderbyte_table/component_filter }}
-     </aside>
-     <div class= "wunderbyteTableClass" id='a{{idstring}}'>
-          {{> local_wunderbyte_table/table_list }}
-     </div>
+{{#table}}
+<div class="wunderbyte-table-grid">
+<table class="table">
+     <thead>
+          <tr>
+               {{#header}}
+                    {{#cardbody}}
+                         <th class="{{columnclass}} {{key}}">
+                              {{key}}
+                         </th>
+                    {{/cardbody}}
+               {{/header}}
+          </tr>
+     </thead>
+     <tbody class="rows-container">
+          {{#rows}}
+               {{> local_wunderbyte_table/twtable_list_row }}
+          {{/rows}}
+     </tbody>
+</table>
 </div>
+{{/table}}
 
 {{#js}}
     require(['local_wunderbyte_table/init'], function(init) {
