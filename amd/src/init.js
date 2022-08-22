@@ -136,13 +136,35 @@ function getScrollParent(node) {
  * Here we trim the idstring before we pass it to the calldatafunction.
  * @param {*} idstringplusa
  * @param {*} encodedtable
+ * @param {number} rowid
  */
-export function wbTableReload(idstringplusa, encodedtable) {
+export function wbTableReload(idstringplusa, encodedtable, rowid) {
 
     // We need to trim the first character. We use the a to make sure no number is in first place due to random generation.
     const idstring = idstringplusa.substring(1);
 
-    callLoadData(idstring, encodedtable);
+    let filterobjects = getFilterOjects(idstring);
+
+    // If we have a rowid, we add the rowid to the filter.
+    if (rowid) {
+        let filterobject = JSON.parse(filterobjects);
+        filterobject = filterobject.id = rowid;
+        filterobjects = JSON.stringify(filterobject);
+    }
+
+    const searchstring = getSearchInput(idstring);
+    const sort = getSortSelection(idstring);
+
+    callLoadData(idstring,
+        encodedtable,
+        0, // Pagenumber is always rest to 0.
+        null,
+        sort,
+        null,
+        null,
+        null,
+        filterobjects,
+        searchstring);
 }
 
 /**
@@ -426,6 +448,30 @@ function addScrollFunctionality(idstring, encodedtable, element) {
         }
 
     });
+}
+
+/**
+ *
+ * @param {*} idstring
+ * @param {*} encodedtable
+ * @param {*} table
+ */
+function addReloadFunctionality(idstring, encodedtable, table) {
+
+    let rowelements = table.querySelectorAll('tr.id');
+
+    rowelements.forEach(item => {
+
+        const rowid = item.dataset.id;
+
+        // eslint-disable-next-line no-console
+        console.log('add reload row',rowid);
+
+        item.addEventListener('click', () => {
+            wbTableReload(idstring, encodedtable, rowid);
+        });
+    });
+
 }
 
 /**
