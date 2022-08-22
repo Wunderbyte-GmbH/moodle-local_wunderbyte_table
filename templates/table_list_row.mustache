@@ -60,7 +60,10 @@
     }
 }}
 
-<tr class="table row">
+<tr class="table row"
+{{#datafields}}
+    data-{{key}}="{{value}}"
+{{/datafields}}>
       {{#cardbody}}
         {{#columnclass}}<td class="{{.}} {{key}}">{{/columnclass}}
           <span {{^value}} style="display:none" {{/value}}>
