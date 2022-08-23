@@ -34,3 +34,5 @@ $string['orderup'] = "Von A nach Z sortiert";
 $string['orderdown'] = "Von Z nach A sortiert";
 
 $string['cachedef_cachedrawdata'] = "Wunderbyte Standard Cache";
+
+$string['noentriesfound'] = "Keine Einträge gefunden";

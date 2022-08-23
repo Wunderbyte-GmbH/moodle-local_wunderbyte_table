@@ -88,6 +88,11 @@
    {{#rows}}
    {{> local_wunderbyte_table/table_card_row }}
     {{/rows}}
+
+    {{^rows}}
+        {{#str}} noentriesfound, local_wunderbyte_table {{/str}}
+    {{/rows}}
+
     </div>
 
 </div>
