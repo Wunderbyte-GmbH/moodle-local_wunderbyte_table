@@ -60,7 +60,10 @@
     }
 }}
 
-<tr>
+<tr class=""
+{{#datafields}}
+    data-{{key}}="{{value}}"
+{{/datafields}}>
       {{#cardbody}}
         {{#columnclass}}<td class="{{.}} {{key}} {{^value}}novalue{{/value}}" data-label="{{key}}">{{/columnclass}}
                     {{{value}}}

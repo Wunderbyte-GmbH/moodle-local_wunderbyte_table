@@ -111,6 +111,9 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
         // As this can only be here once per table, we mark the table.
         addScrollFunctionality(idstring, encodedtable, element);
+
+        addReloadFunctionality(idstring, encodedtable, element);
+
     }
 }
 
@@ -140,17 +143,28 @@ function getScrollParent(node) {
  */
 export function wbTableReload(idstringplusa, encodedtable, rowid) {
 
+    // eslint-disable-next-line no-console
+    console.log(idstringplusa, rowid, encodedtable);
+
     // We need to trim the first character. We use the a to make sure no number is in first place due to random generation.
     const idstring = idstringplusa.substring(1);
 
     let filterobjects = getFilterOjects(idstring);
 
     // If we have a rowid, we add the rowid to the filter.
-    if (rowid) {
-        let filterobject = JSON.parse(filterobjects);
-        filterobject = filterobject.id = rowid;
+    if (rowid > 0) {
+
+        let filterobject = {};
+
+        if (filterobjects.length !== 0) {
+            filterobject = JSON.parse(filterobjects);
+        }
+
+        filterobject.id = [rowid];
         filterobjects = JSON.stringify(filterobject);
     }
+
+    const replacerow = rowid > 0 ? true : false;
 
     const searchstring = getSearchInput(idstring);
     const sort = getSortSelection(idstring);
@@ -164,7 +178,42 @@ export function wbTableReload(idstringplusa, encodedtable, rowid) {
         null,
         null,
         filterobjects,
-        searchstring);
+        searchstring,
+        replacerow);
+}
+
+/**
+ * This function can be called from a button. The button identifies the table and the id and calls reload.
+ * @param {HTMLElement} element
+ */
+export function wbTableRowReload(element) {
+
+    // eslint-disable-next-line no-console
+    console.log(element);
+
+    let parentelement = element;
+    let rowid = null;
+
+    // We run through the parents until we have the table class.
+    while (!parentelement.classList.contains('wunderbyteTableClass')) {
+        // We only want the first id, so we check if we have found an id already.
+        if (!rowid && parentelement.dataset.id) {
+            rowid = parentelement.dataset.id;
+        }
+        parentelement = parentelement.parentElement;
+
+        if (!parentelement) {
+            break;
+        }
+    }
+    // Only if we have found a parent element, we call reload.
+    if (parentelement) {
+        const idstring = parentelement.getAttribute('id');
+        const encodedtable = parentelement.dataset.encodedtable;
+
+        wbTableReload(idstring, encodedtable, rowid);
+    }
+
 }
 
 /**
@@ -189,6 +238,7 @@ export function wbTableReload(idstringplusa, encodedtable, rowid) {
  * @param {null|int} treset
  * @param {null|string} filterobjects
  * @param {null|string} searchtext
+ * @param {null|bool} replacerow
  */
 export const callLoadData = (
     idstring,
@@ -200,7 +250,8 @@ export const callLoadData = (
     tdir = null,
     treset = null,
     filterobjects = null,
-    searchtext = null) => {
+    searchtext = null,
+    replacerow = false) => {
 
     if (loadings[idstring]) {
         return;
@@ -230,7 +281,8 @@ export const callLoadData = (
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
 
     // If we replace the whole table, we show the spinner. If we only add rows in infinite scroll, we don't.
-    if (scrollpages[idstring] == 0) {
+    if (scrollpages[idstring] == 0
+            && !replacerow) {
         if (spinner) {
             spinner.classList.remove('hidden');
         }
@@ -265,7 +317,8 @@ export const callLoadData = (
             const componentscontainer = container.querySelector(".wunderbyte_table_components");
 
             // If we only increase the scrollpage, we don't need to render everything again.
-            if (scrollpages[idstring] > 0) {
+            if (replacerow
+                || (scrollpages[idstring] > 0)) {
 
                 // Also, we want to use the table instead of the container template.
                 const rowtemplate = rendertemplate + '_row';
@@ -281,8 +334,20 @@ export const callLoadData = (
                 // We create an array of promises where every line is rendered individually.
                 const promises = rows.map(row => {
                     Templates.renderForPromise(rowtemplate, row).then(({html, js}) => {
-                        // Here we add the rendered content to the table div.
-                        Templates.appendNodeContents('#a' + idstring + " .rows-container", html, js);
+
+                        if (replacerow) {
+
+                            // We need the id.
+                            const filterobject = JSON.parse(filterobjects);
+                            const rowid = filterobject.id;
+
+                            Templates.replaceNode("#a" + idstring
+                                + " .rows-container tr[data-id='" + rowid + "']", html, js);
+                        } else {
+                            // Here we add the rendered content to the table div.
+                            Templates.appendNodeContents('#a' + idstring + " .rows-container", html, js);
+                        }
+
                         return true;
                     }).catch(e => {
                         // eslint-disable-next-line no-console
@@ -375,6 +440,7 @@ export const callLoadData = (
 
                 // This is the place where we are after lazyloading. We check if we need to reinitialize scrolllistener:
                 addScrollFunctionality(idstring, encodedtable, element);
+                addReloadFunctionality(idstring, encodedtable, element);
 
                 return true;
             }).catch(ex => {
@@ -458,17 +524,23 @@ function addScrollFunctionality(idstring, encodedtable, element) {
  */
 function addReloadFunctionality(idstring, encodedtable, table) {
 
-    let rowelements = table.querySelectorAll('tr.id');
+    let rowelements = table.querySelectorAll('tr td.id');
+
+    // eslint-disable-next-line no-console
+    console.log('addReloadFunctionality', rowelements);
 
     rowelements.forEach(item => {
 
-        const rowid = item.dataset.id;
+        // eslint-disable-next-line no-console
+        console.log('addReloadFunctionality', item);
+
+        const rowid = item.innerHTML.trim();
 
         // eslint-disable-next-line no-console
-        console.log('add reload row',rowid);
+        console.log('add reload row', rowid);
 
         item.addEventListener('click', () => {
-            wbTableReload(idstring, encodedtable, rowid);
+            wbTableReload('a' + idstring, encodedtable, rowid);
         });
     });
 
