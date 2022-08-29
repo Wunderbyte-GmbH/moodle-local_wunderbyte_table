@@ -1,6 +1,11 @@
+## Version 1.2.5 (2022082901)
+* Fix infinite scroll on some themes
+
 ## Version 1.2.4 (2022082900)
-* Use localized string when there are not entries
 * Work on templates and consistency
+* Fix localized column headers
+* Add possibility to show reload button
+* Numeric filters can't have wildcards anymore
 
 ## Version 1.2.1 (2022081800)
 * Clarify container structure for generalical ajax reload (pages, infinite scroll, filtering) and support for multiple table formats in one project.
