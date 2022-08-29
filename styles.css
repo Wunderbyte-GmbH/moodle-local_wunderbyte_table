@@ -10,10 +10,9 @@
     grid-area: aside;
 }
 
-.wunderbyte_table_container .wunderbyteTableClass{
+.wunderbyte_table_container .wunderbyteTableClass {
     grid-area: content;
 }
-
 
 @media screen and (max-width: 768px) {
     .wunderbyte_table_container {
@@ -21,50 +20,50 @@
     }
 
     .wunderbyte-table-grid table {
-      border: 0;
+        border: 0;
     }
 
     .wunderbyte-table-grid table caption {
-      font-size: 1.3em;
+        font-size: 1.3em;
     }
 
     .wunderbyte-table-grid table thead {
-      border: none;
-      clip: rect(0 0 0 0);
-      height: 1px;
-      margin: -1px;
-      overflow: hidden;
-      padding: 0;
-      position: absolute;
-      width: 1px;
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
     }
 
     .wunderbyte-table-grid table tr {
-      border-bottom: 3px solid #ddd;
-      display: block;
-      margin-bottom: .625em;
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
     }
 
     .wunderbyte-table-grid table td {
-      border-bottom: 1px solid #ddd;
-      display: block;
-      font-size: .8em;
-      text-align: right;
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
     }
 
     .wunderbyte-table-grid table td::before {
-      /*
-      * aria-label has no advantage, it won't be read inside a table
-      content: attr(aria-label);
-      */
-      content: attr(data-label) ':';
-      float: left;
-      font-weight: bold;
-      text-transform: uppercase;
+        /*
+          * aria-label has no advantage, it won't be read inside a table
+          content: attr(aria-label);
+          */
+        content: attr(data-localized) ':';
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
     }
 
     .wunderbyte-table-grid table td:last-child {
-      border-bottom: 0;
+        border-bottom: 0;
     }
 
     .wunderbyte-table-grid table .novalue {
@@ -74,10 +73,10 @@
     .wunderbyte-table-grid table tr {
         border: 1px solid;
     }
-  }
+}
 
-.wunderbyte-table-grid .list-group-item+.list-group-item {
-    border-top: 1px solid rgba(0,0,0,.125);
+.wunderbyte-table-grid .list-group-item + .list-group-item {
+    border-top: 1px solid rgba(0, 0, 0, .125);
     border-top-width: 1px;
 }
 

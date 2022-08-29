@@ -119,6 +119,8 @@ class table implements renderable, templatable {
             $this->table[$key] = $value;
         }
 
+        // Now we see if we have a header class.
+
         // We have to prepare the row for output.
         foreach ($table->formatedrows as $row) {
             $rowarray = [];
@@ -128,14 +130,22 @@ class table implements renderable, templatable {
                 $rowarray[$key] = $value;
             }
 
+            $counter = 0;
             foreach ($row as $key => $value) {
 
                 // We run through all our set subcolumnsidentifiers.
+
                 foreach ($table->subcolumns as $subcolumnskey => $subcolumnsvalue) {
 
                     if (isset($subcolumnsvalue[$key])) {
                         $subcolumnsvalue[$key]['key'] = $key;
                         $subcolumnsvalue[$key]['value'] = $value;
+                        if (!empty($table->headers[$counter])) {
+                            $subcolumnsvalue[$key]['localized'] = $table->headers[$counter];
+                            $counter++;
+                        } else {
+                            $subcolumnsvalue[$key]['localized'] = $key;
+                        }
                         $rowarray[$subcolumnskey][] = $subcolumnsvalue[$key];
                     }
                 }
@@ -147,6 +157,10 @@ class table implements renderable, templatable {
 
                 $this->table['header'] = $rowarray;
             }
+        }
+
+        if (!empty($table->headers)) {
+            $this->table['header']['headers'] = array_values($table->headers);
         }
 
         // Create pagination data.

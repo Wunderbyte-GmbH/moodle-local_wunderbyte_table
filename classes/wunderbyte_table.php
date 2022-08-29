@@ -98,7 +98,7 @@ class wunderbyte_table extends table_sql {
      *
      * @var string template for table.
      */
-    public $tabletemplate = 'local_wunderbyte_table/table_card';
+    public $tabletemplate = 'local_wunderbyte_table/twtable_list';
 
     /**
      * @var array array of supplementary column information. Can be used like below.
@@ -467,6 +467,8 @@ class wunderbyte_table extends table_sql {
      */
     public function define_headers($columns, $usestandardclasses = true) {
         $this->add_subcolumns('cardheader', $columns, false);
+
+        $this->headers = $columns;
     }
 
     /**

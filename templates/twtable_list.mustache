@@ -66,11 +66,11 @@
      <thead>
           <tr>
                {{#header}}
-                    {{#cardbody}}
-                         <th class="{{columnclass}} {{key}}">
-                              {{key}}
+                    {{#headers}}
+                         <th class="{{.}}">
+                              {{.}}
                          </th>
-                    {{/cardbody}}
+                    {{/headers}}
                {{/header}}
           </tr>
      </thead>

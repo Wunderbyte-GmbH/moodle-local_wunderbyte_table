@@ -56,7 +56,7 @@ $table->define_headers(['id', 'fullname', 'shortname', 'idnumber', 'format']);
 // This adds the width to all normal columns.
 $table->add_classes_to_subcolumns('cardbody', ['columnclass' => 'wunderbytetd']);
 // This avoids showing all keys in list view.
-//$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
+// $table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
 
 // Override naming for columns. one could use getstring for localisation here.
 $table->add_classes_to_subcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
