@@ -86,6 +86,13 @@ class table implements renderable, templatable {
     private $sort = [];
 
     /**
+     * Reload is to display a button to reload the table
+     *
+     * @var bool
+     */
+    private $reload = false;
+
+    /**
      * Constructor.
      * @param [type] $table
      */
@@ -236,6 +243,11 @@ class table implements renderable, templatable {
         // Only if we want to show the searchfield, we actually add the key.
         if ($this->sort) {
             $data['sort'] = $this->sort;
+        }
+
+        // Only if we want to show the searchfield, we actually add the key.
+        if ($this->reload) {
+            $data['reload'] = true;
         }
 
         return $data;

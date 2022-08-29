@@ -26,6 +26,8 @@ import Notification from 'core/notification';
 import {initializeCheckboxes, getFilterOjects} from 'local_wunderbyte_table/filter';
 import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
+import { initializeReload, wbTableReload } from 'local_wunderbyte_table/reload';
+
 
 // All these variables will be objects with the idstringso their tables as identifiers.
 var loadings = {};
@@ -105,6 +107,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
         initializeCheckboxes(selector, idstring, encodedtable);
         initializeSearch(selector, idstring, encodedtable);
         initializeSort(selector, idstring, encodedtable);
+        initializeReload(selector, idstring, encodedtable);
 
         // Check to see if scrolling near bottom of page; load more photos
         // This shoiuld only be added once.
@@ -133,88 +136,6 @@ function getScrollParent(node) {
       return getScrollParent(node.parentNode);
     }
   }
-
-/**
- * Function to reload a wunderbyte table from js.
- * Here we trim the idstring before we pass it to the calldatafunction.
- * @param {*} idstringplusa
- * @param {*} encodedtable
- * @param {number} rowid
- */
-export function wbTableReload(idstringplusa, encodedtable, rowid) {
-
-    // eslint-disable-next-line no-console
-    console.log(idstringplusa, rowid, encodedtable);
-
-    // We need to trim the first character. We use the a to make sure no number is in first place due to random generation.
-    const idstring = idstringplusa.substring(1);
-
-    let filterobjects = getFilterOjects(idstring);
-
-    // If we have a rowid, we add the rowid to the filter.
-    if (rowid > 0) {
-
-        let filterobject = {};
-
-        if (filterobjects.length !== 0) {
-            filterobject = JSON.parse(filterobjects);
-        }
-
-        filterobject.id = [rowid];
-        filterobjects = JSON.stringify(filterobject);
-    }
-
-    const replacerow = rowid > 0 ? true : false;
-
-    const searchstring = getSearchInput(idstring);
-    const sort = getSortSelection(idstring);
-
-    callLoadData(idstring,
-        encodedtable,
-        0, // Pagenumber is always rest to 0.
-        null,
-        sort,
-        null,
-        null,
-        null,
-        filterobjects,
-        searchstring,
-        replacerow);
-}
-
-/**
- * This function can be called from a button. The button identifies the table and the id and calls reload.
- * @param {HTMLElement} element
- */
-export function wbTableRowReload(element) {
-
-    // eslint-disable-next-line no-console
-    console.log(element);
-
-    let parentelement = element;
-    let rowid = null;
-
-    // We run through the parents until we have the table class.
-    while (!parentelement.classList.contains('wunderbyteTableClass')) {
-        // We only want the first id, so we check if we have found an id already.
-        if (!rowid && parentelement.dataset.id) {
-            rowid = parentelement.dataset.id;
-        }
-        parentelement = parentelement.parentElement;
-
-        if (!parentelement) {
-            break;
-        }
-    }
-    // Only if we have found a parent element, we call reload.
-    if (parentelement) {
-        const idstring = parentelement.getAttribute('id');
-        const encodedtable = parentelement.dataset.encodedtable;
-
-        wbTableReload(idstring, encodedtable, rowid);
-    }
-
-}
 
 /**
  * Function to check visibility of element.
