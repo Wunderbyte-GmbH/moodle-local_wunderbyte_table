@@ -444,17 +444,14 @@ class wunderbyte_table extends table_sql {
         // The standardclasses offer for a quick and standard way to configure a responsive table.
         if ($usestandardclasses) {
             // This adds the width to all normal columns.
-            $this->add_classes_to_subcolumns('cardbody', ['columnclass' => 'col-sm']);
+            $this->add_classes_to_subcolumns('cardbody', ['columnclass' => 'columnclass']);
             // This avoids showing all keys in list view.
-            $this->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
-
-            // Override naming for columns. one could use getstring for localisation here.
-            $this->add_classes_to_subcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
+            $this->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'columnkeyclass']);
 
             // Add some bootstrap to the general table.
-            $this->set_tableclass('listheaderclass', 'card d-none d-md-block');
-            $this->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
-            $this->set_tableclass('cardbodyclass', 'card-body row');
+            // $this->set_tableclass('listheaderclass', 'card d-none d-md-block');
+            // $this->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
+            // $this->set_tableclass('cardbodyclass', 'card-body row');
         }
     }
 
