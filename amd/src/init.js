@@ -26,13 +26,14 @@ import Notification from 'core/notification';
 import {initializeCheckboxes, getFilterOjects} from 'local_wunderbyte_table/filter';
 import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
-import { initializeReload, wbTableReload } from 'local_wunderbyte_table/reload';
+import {initializeReload} from 'local_wunderbyte_table/reload';
 
 
 // All these variables will be objects with the idstringso their tables as identifiers.
 var loadings = {};
 var scrollpages = {};
 var tablejss = {};
+var scrollingelement = {};
 
 /**
  * Gets called from mustache template.
@@ -114,8 +115,6 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
         // As this can only be here once per table, we mark the table.
         addScrollFunctionality(idstring, encodedtable, element);
-
-        addReloadFunctionality(idstring, encodedtable, element);
 
     }
 }
@@ -361,7 +360,6 @@ export const callLoadData = (
 
                 // This is the place where we are after lazyloading. We check if we need to reinitialize scrolllistener:
                 addScrollFunctionality(idstring, encodedtable, element);
-                addReloadFunctionality(idstring, encodedtable, element);
 
                 return true;
             }).catch(ex => {
@@ -398,6 +396,9 @@ export const callLoadData = (
  */
 function addScrollFunctionality(idstring, encodedtable, element) {
 
+    // eslint-disable-next-line no-console
+    console.log("addScrollFunctionality");
+
     if (element.dataset.scrollinitialized) {
         return;
     }
@@ -406,65 +407,67 @@ function addScrollFunctionality(idstring, encodedtable, element) {
 
     const scrollableelement = getScrollParent(element);
 
+    // eslint-disable-next-line no-console
+    console.log(scrollableelement);
+
     scrollableelement.addEventListener('scroll', () => {
 
-        // We only want to scroll, if the element is visible.
-        // So, if we find a hidden element in the parent, we don't scroll.
-        if (returnHiddenElement(element)) {
-            return;
-        }
-
-        const elementtop = element.getBoundingClientRect().top;
-        const elementheight = element.getBoundingClientRect().height;
-        const screenheight = document.body.scrollHeight;
-
-        if (!loadings[idstring] && scrollpages[idstring] >= 0) {
-            if (elementtop + elementheight - screenheight < 0) {
-                scrollpages[idstring] = scrollpages[idstring] + 1;
-                callLoadData(idstring,
-                        encodedtable,
-                        scrollpages[idstring],
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
+        if (!scrollingelement.hasOwnProperty(idstring)) {
+            scrollingelement[idstring] = 'scrollElement';
+        } else {
+            if (scrollingelement[idstring] === 'scrollElement') {
+                scrollListener(element, idstring, encodedtable);
             }
         }
-
     });
+
+    // It's not easy to decide which is the right, so we have to add both.
+    window.addEventListener('scroll', () => {
+
+        if (!scrollingelement.hasOwnProperty(idstring)) {
+            scrollingelement[idstring] = 'window';
+        } else {
+            if (scrollingelement[idstring] === 'window') {
+                scrollListener(element, idstring, encodedtable);
+            }
+        }
+    });
+
 }
 
 /**
- *
- * @param {*} idstring
- * @param {*} encodedtable
- * @param {*} table
+ * To be called in the scroll listener.
+ * @param {node} element
+ * @param {string} idstring
+ * @param {string} encodedtable
+ * @returns {void}
  */
-function addReloadFunctionality(idstring, encodedtable, table) {
+function scrollListener(element, idstring, encodedtable) {
+    // We only want to scroll, if the element is visible.
+    // So, if we find a hidden element in the parent, we don't scroll.
+    if (returnHiddenElement(element)) {
+        return;
+    }
 
-    let rowelements = table.querySelectorAll('tr td.id');
+    const elementtop = element.getBoundingClientRect().top;
+    const elementheight = element.getBoundingClientRect().height;
+    const screenheight = document.body.scrollHeight;
 
-    // eslint-disable-next-line no-console
-    console.log('addReloadFunctionality', rowelements);
-
-    rowelements.forEach(item => {
-
-        // eslint-disable-next-line no-console
-        console.log('addReloadFunctionality', item);
-
-        const rowid = item.innerHTML.trim();
-
-        // eslint-disable-next-line no-console
-        console.log('add reload row', rowid);
-
-        item.addEventListener('click', () => {
-            wbTableReload('a' + idstring, encodedtable, rowid);
-        });
-    });
-
+    if (!loadings[idstring] && scrollpages[idstring] >= 0) {
+        if (elementtop + elementheight - screenheight < 0) {
+            scrollpages[idstring] = scrollpages[idstring] + 1;
+            callLoadData(idstring,
+                    encodedtable,
+                    scrollpages[idstring],
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
+        }
+    }
 }
 
 /**
