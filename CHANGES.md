@@ -1,3 +1,7 @@
+## Version 1.2.4 (2022082900)
+* Use localized string when there are not entries
+* Work on templates and consistency
+
 ## Version 1.2.1 (2022081800)
 * Clarify container structure for generalical ajax reload (pages, infinite scroll, filtering) and support for multiple table formats in one project.
 
