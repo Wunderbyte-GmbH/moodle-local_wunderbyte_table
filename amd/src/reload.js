@@ -35,6 +35,11 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
  export function initializeReload(selector, idstring, encodedtable) {
 
   const button = document.querySelector(selector + " .wb_reload_button");
+
+  if (!button) {
+    return;
+  }
+
   const idstringplusa = 'a' + idstring;
 
   // eslint-disable-next-line no-console
