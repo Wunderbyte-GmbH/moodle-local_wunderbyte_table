@@ -93,10 +93,7 @@ $table->define_sortablecolumns(['id', 'category', 'fullname', 'shortname', 'form
 // Work out the sql for the table.
 $table->set_sql('*', "{course}", '1=1');
 
-$baseurl = new moodle_url(
-    $_SERVER['REQUEST_URI'],
-    $_GET
-);
+$baseurl = new moodle_url('/local/wunderbyte_table/download.php');
 
 $table->define_baseurl($baseurl->out());
 

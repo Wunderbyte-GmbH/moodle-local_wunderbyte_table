@@ -32,6 +32,22 @@
 
 }}
 
-{{#reload}}
-    <div><a href="#" class="btn btn-primary wb_print_button">{{#str}} print, local_wunderbyte_table {{/str}}</a></div>
-{{/reload}}
+{{#print}}
+    <form method="post" action="{{baseurl}}" class="dataformatselector m-1">
+        <div class="form-inline text-xs-right">
+            <input type="hidden" name="sesskey" value="{{sesskey}}">
+            <input type="hidden" name="idstring" value="{{idstring}}">
+            <input type="hidden" name="encodedtable" value="{{encodedtable}}">
+            <label for="downloadtype_download" class="mr-1">{{#str}} downloadastype, local_wunderbyte_table {{/str}}<</label>
+            <select name="download" id="downloadtype_download" class="form-control custom-select mr-1">
+                    <option value="csv">Komma separierte Werte (.csv)</option>
+                    <option value="excel">Microsoft Excel (.xlsx)</option>
+                    <option value="html">HTML-Tabelle</option>
+                    <option value="json">Javascript Object Notation (.json)</option>
+                    <option value="ods">OpenDocument (.ods)</option>
+                    <option value="pdf">Portable Document Format (.pdf)</option>
+            </select>
+            <button type="submit" class="btn btn-secondary">{{#str}} print, local_wunderbyte_table {{/str}}</button>
+        </div>
+    </form>
+{{/print}}

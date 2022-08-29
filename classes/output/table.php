@@ -52,6 +52,13 @@ class table implements renderable, templatable {
     private $encodedtable = '';
 
     /**
+     * baseurl
+     *
+     * @var string
+     */
+    private $baseurl = '';
+
+    /**
      * Table is the array used for output.
      *
      * @var array
@@ -91,7 +98,14 @@ class table implements renderable, templatable {
      *
      * @var bool
      */
-    private $reload = false;
+    private $reload = true;
+
+    /**
+     * Print is to display a button to reload the table
+     *
+     * @var bool
+     */
+    private $print = true;
 
     /**
      * Constructor.
@@ -104,6 +118,8 @@ class table implements renderable, templatable {
         $this->idstring = $table->idstring;
 
         $this->encodedtable = $table->return_encoded_table();
+
+        $this->baseurl = $table->baseurl->out(false);
 
         // If we have filtercolumns defined, we add the filter key to the output.
         $this->categories = json_decode($table->filterjson, true);
@@ -250,6 +266,7 @@ class table implements renderable, templatable {
         $data = [
             'idstring' => $this->idstring,
             'encodedtable' => $this->encodedtable,
+            'baseurl' => $this->baseurl,
             'table' => $this->table,
             'totalrecords' => $this->totalrecords,
             'filteredrecords' => $this->filteredrecords,
@@ -275,6 +292,11 @@ class table implements renderable, templatable {
         // Only if we want to show the searchfield, we actually add the key.
         if ($this->reload) {
             $data['reload'] = true;
+        }
+
+        // Only if we want to show the searchfield, we actually add the key.
+        if ($this->print) {
+            $data['print'] = true;
         }
 
         return $data;
