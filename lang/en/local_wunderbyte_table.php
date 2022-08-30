@@ -39,6 +39,7 @@ $string['noentriesfound'] = "No entries found";
 
 $string['reload'] = "Reload table";
 $string['print'] = "Print table";
+$string['downloadas'] = "Download table data as";
 
 // Cache.
 $string['cachedef_cachedfulltable'] = 'Cached full table';

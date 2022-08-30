@@ -39,6 +39,7 @@ $string['noentriesfound'] = "Keine Einträge gefunden";
 
 $string['reload'] = "Tabelle neu laden";
 $string['print'] = "Tabelle drucken";
+$string['downloadas'] = "Tabelle laden als";
 
 // Cache.
 $string['cachedef_cachedfulltable'] = 'Cache für die ganze Tabelle';

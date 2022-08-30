@@ -542,7 +542,13 @@ class wunderbyte_table extends table_sql {
     public function build_table() {
         $this->formatedrows = [];
         foreach ($this->rawdata as $rawrow) {
-            $this->formatedrows[] = $this->format_row($rawrow);
+            $formattedrow = $this->format_row($rawrow);
+            $this->formatedrows[] = $formattedrow;
+
+            if ($this->is_downloading()) {
+                $this->add_data_keyed($formattedrow,
+                $this->get_row_class($rawrow));
+            }
         }
     }
 
