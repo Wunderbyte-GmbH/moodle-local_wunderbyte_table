@@ -38,3 +38,6 @@ $string['cachedef_cachedrawdata'] = "Wunderbyte Standard Cache";
 $string['noentriesfound'] = "Keine Einträge gefunden";
 
 $string['reload'] = "Tabelle neu laden";
+
+// Cache.
+$string['cachedef_cachedfulltable'] = 'Cache für die ganze Tabelle';

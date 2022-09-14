@@ -127,14 +127,14 @@ class local_wunderbyte_table_external extends external_api {
     public static function load_data_parameters() {
         return new external_function_parameters(array(
                         'encodedtable'  => new external_value(PARAM_RAW, 'eoncodedtable', VALUE_DEFAULT, ''),
-                        'page'  => new external_value(PARAM_INT, 'page', VALUE_OPTIONAL),
-                        'tsort'   => new external_value(PARAM_TEXT, 'sort value', VALUE_OPTIONAL),
-                        'thide'   => new external_value(PARAM_TEXT, 'hide value', VALUE_OPTIONAL),
-                        'tshow'   => new external_value(PARAM_RAW, 'show value', VALUE_OPTIONAL),
-                        'tdir'    => new external_value(PARAM_INT, 'dir value', VALUE_OPTIONAL),
-                        'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_OPTIONAL),
-                        'filterobjects'  => new external_value(PARAM_TEXT, 'reset value', VALUE_OPTIONAL),
-                        'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_OPTIONAL),
+                        'page'  => new external_value(PARAM_INT, 'page', VALUE_REQUIRED),
+                        'tsort'   => new external_value(PARAM_TEXT, 'sort value', VALUE_REQUIRED),
+                        'thide'   => new external_value(PARAM_TEXT, 'hide value', VALUE_REQUIRED),
+                        'tshow'   => new external_value(PARAM_RAW, 'show value', VALUE_REQUIRED),
+                        'tdir'    => new external_value(PARAM_INT, 'dir value', VALUE_REQUIRED),
+                        'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_REQUIRED),
+                        'filterobjects'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
+                        'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
                 )
         );
     }
