@@ -28,7 +28,6 @@ import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
 
-
 // All these variables will be objects with the idstringso their tables as identifiers.
 var loadings = {};
 var scrollpages = {};
@@ -317,6 +316,26 @@ export const callLoadData = (
             }
 
             let frag = container.querySelector(".wunderbyteTableClass");
+
+            // We add the sortclass, if necessary.
+            if (tsort
+                && 'table' in jsonobject
+                && 'header' in jsonobject.table
+                && 'headers' in jsonobject.table.header) {
+
+                jsonobject.table.header.headers.forEach(item => {
+                    if (item.key == tsort) {
+
+                        if (tdir == 4) {
+                            item.sortclass = 'desc';
+                        } else {
+                            item.sortclass = 'asc';
+                        }
+                    } else {
+                        delete item.sortclass;
+                    }
+                });
+            }
 
             // We render the html with the right template.
             Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {

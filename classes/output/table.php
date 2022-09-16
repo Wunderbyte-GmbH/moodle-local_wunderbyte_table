@@ -160,7 +160,15 @@ class table implements renderable, templatable {
         }
 
         if (!empty($table->headers)) {
-            $this->table['header']['headers'] = array_values($table->headers);
+
+            foreach ($table->columns as $column => $key) {
+
+                $localized = $table->headers[$key] ?? $column;
+                $this->table['header']['headers'][] = [
+                    'key' => $column,
+                    'localized' => $localized
+                ];
+            }
         }
 
         // Create pagination data.

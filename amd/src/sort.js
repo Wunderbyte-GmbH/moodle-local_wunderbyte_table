@@ -38,6 +38,8 @@ import {getSearchInput} from 'local_wunderbyte_table/search';
     const sortColumnElement = container.querySelector('select.sortcolumn');
     const sortOrderElement = container.querySelector('a.changesortorder');
 
+    initializeSortColumns(listContainer, idstring, encodedtable);
+
     if (!sortColumnElement || !sortOrderElement) {
 
         return;
@@ -60,6 +62,37 @@ import {getSearchInput} from 'local_wunderbyte_table/search';
 }
 
 /**
+ * Initialize Sort Columns in list table.
+ * @param {*} listContainer
+ * @param {*} idstring
+ * @param {*} encodedtable
+ */
+export function initializeSortColumns(listContainer, idstring, encodedtable) {
+
+  const container = document.querySelector(listContainer);
+
+  const sortColumnHeaders = container.querySelectorAll('th.wb-table-column');
+
+  // Add the listeners to column headers.
+  sortColumnHeaders.forEach(element => {
+    if (element.dataset.initialized) {
+      return;
+    }
+    element.dataset.initialized = true;
+
+    element.addEventListener('click', () => {
+      // eslint-disable-next-line no-console
+      console.log('click column');
+      const columnname = element.dataset.columnname;
+
+      // eslint-disable-next-line no-console
+      console.log(columnname);
+      callSortAjax(columnname, idstring, encodedtable);
+    });
+  });
+}
+
+/**
  * Execture the two possible sort Ajax calls as reaction on the triggered event.
  * @param {*} event
  * @param {*} idstring
@@ -73,12 +106,28 @@ function callSortAjax(event, idstring, encodedtable) {
 
   const container = document.querySelector(".wunderbyte_table_container_" + idstring);
   const sortColumnElement = container.querySelector('select.sortcolumn');
-  let className = container.querySelector("a.changesortorder i").className;
+
+  let sortOrderElement = container.querySelector("a.changesortorder i");
+  let className = null;
+
+  if (typeof event === 'string') {
+    // We are sure that we clicked on a column header.
+    sortOrderElement = container.querySelector('th.wb-table-column.' + event);
+  }
+
+  className = sortOrderElement.className;
+
 
   // If we get an event, we are in the sortcolum mode.
   if (event !== null) {
 
-    sortcolumn = event.target.value;
+    if (typeof event === 'string') {
+      // We have gotten the column directly as string.
+      sortcolumn = event;
+    } else {
+      sortcolumn = event.target.value;
+    }
+
     // We reset only on changed sortcolumn, not on order.
     reset = 1;
 
@@ -103,11 +152,11 @@ function callSortAjax(event, idstring, encodedtable) {
     if (className.includes('asc')) {
 
       sortorder = 3;
-      container.querySelector("a.changesortorder i").className = className.replace('asc', 'desc');
+      sortOrderElement.className = className.replace('asc', 'desc');
     } else {
 
       sortorder = 4;
-      container.querySelector("a.changesortorder i").className = className.replace('desc', 'asc');
+      sortOrderElement.className = className.replace('desc', 'asc');
     }
 
     // We also need the sortcolumn name to effectuate the change.
