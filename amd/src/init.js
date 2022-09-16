@@ -410,6 +410,10 @@ function addScrollFunctionality(idstring, encodedtable, element) {
     // eslint-disable-next-line no-console
     console.log(scrollableelement);
 
+    if (!scrollableelement) {
+        return;
+    }
+
     scrollableelement.addEventListener('scroll', () => {
 
         if (!scrollingelement.hasOwnProperty(idstring)) {
