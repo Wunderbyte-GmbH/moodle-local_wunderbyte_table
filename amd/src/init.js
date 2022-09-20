@@ -337,30 +337,9 @@ export const callLoadData = (
                 });
             }
 
-            // We render the html with the right template.
-            Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
-
-                if (componentscontainer) {
-                    // Now we clean the existing table.
-                    while (frag.firstChild) {
-                        frag.removeChild(frag.lastChild);
-                    }
-
-                    // Here we add the rendered content to the table div.
-                    Templates.appendNodeContents('#a' + idstring, html, js);
-                } else {
-                    // Here we try to render the whole.hro
-                    const parent = container.parentElement;
-                    container.remove();
-                    Templates.appendNodeContents(parent, html, js);
-
-                    container = document.querySelector(".wunderbyte_table_container_" + idstring);
-                }
-
-                replaceLinksInFrag(idstring, encodedtable, container, page);
-
-                // When everything is done, we loaded fine.
-                loadings[idstring] = false;
+            // If we called a sorting and the result is an empty array, we don't need to render.
+            let rows = jsonobject.table.rows;
+            if (tsort && (!rows || rows.length < 1)) {
 
                 if (spinner) {
                     spinner.classList.add('hidden');
@@ -369,25 +348,62 @@ export const callLoadData = (
                     table.classList.remove('hidden');
                 }
 
-                // Make sure all elements are working.
-                const selector = ".wunderbyte_table_container_" + idstring;
-                initializeCheckboxes(selector, idstring, encodedtable);
-                initializeSearch(selector, idstring, encodedtable);
-                initializeSort(selector, idstring, encodedtable);
-
-                const element = container.querySelector('#a' + idstring);
-
-                // This is the place where we are after lazyloading. We check if we need to reinitialize scrolllistener:
-                addScrollFunctionality(idstring, encodedtable, element);
-
-                return true;
-            }).catch(ex => {
                 loadings[idstring] = false;
-                Notification.addNotification({
-                    message: 'failed rendering ' + ex,
-                    type: "danger"
+
+            } else {
+                // We render the html with the right template.
+                Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
+
+                    if (componentscontainer) {
+                        // Now we clean the existing table.
+                        while (frag.firstChild) {
+                            frag.removeChild(frag.lastChild);
+                        }
+
+                        // Here we add the rendered content to the table div.
+                        Templates.appendNodeContents('#a' + idstring, html, js);
+                    } else {
+                        // Here we try to render the whole.hro
+                        const parent = container.parentElement;
+                        container.remove();
+                        Templates.appendNodeContents(parent, html, js);
+
+                        container = document.querySelector(".wunderbyte_table_container_" + idstring);
+                    }
+
+                    replaceLinksInFrag(idstring, encodedtable, container, page);
+
+                    // When everything is done, we loaded fine.
+                    loadings[idstring] = false;
+
+                    if (spinner) {
+                        spinner.classList.add('hidden');
+                    }
+                    if (table) {
+                        table.classList.remove('hidden');
+                    }
+
+                    // Make sure all elements are working.
+                    const selector = ".wunderbyte_table_container_" + idstring;
+                    initializeCheckboxes(selector, idstring, encodedtable);
+                    initializeSearch(selector, idstring, encodedtable);
+                    initializeSort(selector, idstring, encodedtable);
+
+                    const element = container.querySelector('#a' + idstring);
+
+                    // This is the place where we are after lazyloading. We check if we need to reinitialize scrolllistener:
+                    addScrollFunctionality(idstring, encodedtable, element);
+
+                    return true;
+                }).catch(ex => {
+                    loadings[idstring] = false;
+                    Notification.addNotification({
+                        message: 'failed rendering ' + ex,
+                        type: "danger"
+                    });
                 });
-            });
+            }
+
         },
         fail: function(err) {
             // If we have an error, resetting the table might be enough. we do that.
