@@ -59,6 +59,16 @@ class wunderbyte_table extends table_sql {
     public $classname = '';
 
     /**
+     * @var int number of total records found.
+     */
+    private $totalrecords = 0;
+
+    /**
+     * @var string number of filtered records. We need to know if altered or just 0.
+     */
+    private $filteredrecords = -1;
+
+    /**
      *
      * @var array array of formated rows.
      */
@@ -66,7 +76,7 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
-     * @var array The string of a json object to output the filter.
+     * @var string The string of a json object to output the filter.
      */
     public $filterjson = null;
 
@@ -99,6 +109,8 @@ class wunderbyte_table extends table_sql {
      * @var string template for table.
      */
     public $tabletemplate = 'local_wunderbyte_table/twtable_list';
+
+
 
     /**
      * @var array array of supplementary column information. Can be used like below.
@@ -690,6 +702,7 @@ class wunderbyte_table extends table_sql {
         $cachekey = crc32($sql);
 
         // And then we query our cache to see if we have it already.
+
         if ($this->cachecomponent && $this->rawcachename) {
             $cache = \cache::make($this->cachecomponent, $this->rawcachename);
             $cachedrawdata = $cache->get($cachekey);
@@ -731,6 +744,18 @@ class wunderbyte_table extends table_sql {
                     $cache->set($cachekey . '_pagination', $pagination);
                 }
             }
+        }
+
+        // We store the total number of records.
+        // In the first tour, totalrecords will aways be 0.
+        // If we filter, the second value will be lower or the same.
+        if ($this->totalrecords > 0) {
+            $this->filteredrecords = $this->totalrows;
+        } else {
+            $this->totalrecords = $this->totalrows;
+
+            // We have to reset the count sql.
+            $this->set_count_sql(null, []);
         }
 
         // We have stored the columns to filter in the subcolumn "datafields".
@@ -1243,5 +1268,18 @@ class wunderbyte_table extends table_sql {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Return an arraf of the count of the total records and the filtered records.
+     *
+     * @return array
+     */
+    public function return_records_count() {
+
+        $totalrecords = $this->totalrecords;
+        $filteredrecords = $this->filteredrecords === -1 ? $totalrecords : $this->filteredrecords;
+
+        return [$totalrecords, $filteredrecords];
     }
 }

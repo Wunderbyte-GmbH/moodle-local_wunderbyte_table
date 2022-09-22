@@ -25,6 +25,7 @@
 
 namespace local_wunderbyte_table\output;
 
+use local_wunderbyte_table\wunderbyte_table;
 use renderable;
 use renderer_base;
 use templatable;
@@ -94,9 +95,9 @@ class table implements renderable, templatable {
 
     /**
      * Constructor.
-     * @param [type] $table
+     * @param wunderbyte_table $table
      */
-    public function __construct($table) {
+    public function __construct(wunderbyte_table $table) {
 
         $this->table = [];
 
@@ -106,6 +107,8 @@ class table implements renderable, templatable {
 
         // If we have filtercolumns defined, we add the filter key to the output.
         $this->categories = json_decode($table->filterjson, true);
+
+        list($this->totalrecords, $this->filteredrecords) = $table->return_records_count();
 
         // If we want to use fulltextsearch, we add the search key to the output.
         if (!empty($table->fulltextsearchcolumns)) {
@@ -248,6 +251,8 @@ class table implements renderable, templatable {
             'idstring' => $this->idstring,
             'encodedtable' => $this->encodedtable,
             'table' => $this->table,
+            'totalrecords' => $this->totalrecords,
+            'filteredrecords' => $this->filteredrecords,
             'pages' => $this->pagination['pages'] ?? null,
             'disableprevious' => $this->pagination['disableprevious'] ?? null,
             'disablenext' => $this->pagination['disablenext'] ?? null,

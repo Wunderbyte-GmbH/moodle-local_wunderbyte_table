@@ -41,3 +41,5 @@ $string['reload'] = "Tabelle neu laden";
 
 // Cache.
 $string['cachedef_cachedfulltable'] = 'Cache für die ganze Tabelle';
+
+$string['countlabel'] = '{$a->filteredrecords} von {$a->totalrecords} Einträgen gefunden';

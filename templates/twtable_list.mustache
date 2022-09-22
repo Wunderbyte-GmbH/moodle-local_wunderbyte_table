@@ -62,7 +62,11 @@
 
 {{#table}}
 <div class="wunderbyte-table-grid">
+
 <table class="table">
+     <div class="wb-records-count-label">
+          {{#str}} countlabel, local_wunderbyte_table, { "totalrecords":{{totalrecords}}, "filteredrecords":{{filteredrecords}} } {{/str}}
+     </div>
      <thead>
           <tr>
                {{#header}}
