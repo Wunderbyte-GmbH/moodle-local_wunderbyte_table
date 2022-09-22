@@ -1,3 +1,9 @@
+## Version 1.3.1 (2022092200)
+* Bugfix: Sorting of non sql column caught now.
+
+## Version 1.3.0 (2022091900)
+* Bugfix: Fix scrolling bug.
+
 ## Version 1.2.6 (2022091500)
 * Bugfix: Fix incorrectly implemented optional values, move to required.
 * Bugfix: Fix issue #1, missing cached table string.
