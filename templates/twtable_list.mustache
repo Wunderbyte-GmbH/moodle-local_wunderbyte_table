@@ -62,28 +62,29 @@
 
 {{#table}}
 <div class="wunderbyte-table-grid">
-
-<table class="table">
      <div class="wb-records-count-label">
           {{#str}} countlabel, local_wunderbyte_table, { "totalrecords":{{totalrecords}}, "filteredrecords":{{filteredrecords}} } {{/str}}
      </div>
-     <thead>
-          <tr>
-               {{#header}}
-                    {{#headers}}
-                         <th class="{{key}} wb-table-column {{sortclass}}" data-columnname="{{key}}">
-                              {{localized}}
-                         </th>
-                    {{/headers}}
-               {{/header}}
-          </tr>
-     </thead>
-     <tbody class="rows-container">
-          {{#rows}}
-               {{> local_wunderbyte_table/twtable_list_row }}
-          {{/rows}}
-     </tbody>
-</table>
+     <div>
+          <table class="table">
+               <thead>
+                    <tr>
+                         {{#header}}
+                              {{#headers}}
+                                   <th class="{{key}} wb-table-column {{sortclass}}" data-columnname="{{key}}">
+                                        {{localized}}
+                                   </th>
+                              {{/headers}}
+                         {{/header}}
+                    </tr>
+               </thead>
+               <tbody class="rows-container">
+                    {{#rows}}
+                         {{> local_wunderbyte_table/twtable_list_row }}
+                    {{/rows}}
+               </tbody>
+          </table>
+     </div>
 </div>
 {{/table}}
 

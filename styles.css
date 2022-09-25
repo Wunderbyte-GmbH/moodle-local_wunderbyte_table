@@ -10,6 +10,14 @@
     grid-area: aside;
 }
 
+.wb-records-count-label {
+    width: 100%;
+}
+
+.wunderbyte-table-grid {
+    display: block;
+}
+
 .wunderbyte_table_container .wunderbyteTableClass {
     grid-area: content;
 }
