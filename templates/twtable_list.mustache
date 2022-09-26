@@ -72,8 +72,16 @@
                          {{#header}}
                               {{#headers}}
                                    <th class="{{key}} wb-table-column {{sortclass}}" data-columnname="{{key}}">
-                                        {{localized}}
+
+                                        <span class="wb-table-column-sort">{{localized}}</span>
+                                        {{#hide}}
+                                             <i class="fa fa-minus" aria-hidden="true"></i>
+                                        {{/hide}}
+                                        <i class="fa fa-minus wb-table-column-hide" aria-hidden="true"></i>
                                    </th>
+                                   {{#show}}
+                                             <i class="fa fa-plus wb-table-column-show" aria-hidden="true"></i>
+                                   {{/show}}
                               {{/headers}}
                          {{/header}}
                     </tr>

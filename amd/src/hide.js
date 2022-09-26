@@ -31,47 +31,25 @@ import {getSearchInput} from 'local_wunderbyte_table/search';
  * @param {*} encodedtable
  * @returns {void}
  */
- export function initializeSort(listContainer, idstring, encodedtable) {
+ export function initializeHide(listContainer, idstring, encodedtable) {
 
-    const container = document.querySelector(listContainer);
+    // eslint-disable-next-line no-console
+    console.log('init hide');
 
-    const sortColumnElement = container.querySelector('select.sortcolumn');
-    const sortOrderElement = container.querySelector('a.changesortorder');
-
-    initializeSortColumns(listContainer, idstring, encodedtable);
-
-    if (!sortColumnElement || !sortOrderElement) {
-
-        return;
-    }
-
-    if (!sortColumnElement.dataset.initialized || !sortOrderElement.dataset.initialized) {
-
-      sortColumnElement.dataset.initialized = true;
-      sortOrderElement.dataset.initialized = true;
-
-      // We add to listener, on on the select, one on the sortorder button.
-
-      sortColumnElement.addEventListener('change', (e) => {
-        callSortAjax(e, idstring, encodedtable);
-      });
-      sortOrderElement.addEventListener('click', () => {
-        callSortAjax(null, idstring, encodedtable);
-      });
-    }
+    initializeHideColumns(listContainer, idstring, encodedtable);
 }
 
 /**
- * Initialize Sort Columns in list table.
+ * Initialize Hide Columns in list table.
  * @param {*} listContainer
  * @param {*} idstring
  * @param {*} encodedtable
  */
-export function initializeSortColumns(listContainer, idstring, encodedtable) {
+export function initializeHideColumns(listContainer, idstring, encodedtable) {
 
   const container = document.querySelector(listContainer);
 
-  const sortColumnHeaders = container.querySelectorAll('th .wb-table-column-sort');
+  const sortColumnHeaders = container.querySelectorAll('th .wb-table-column-hide');
 
   // Add the listeners to column headers.
   sortColumnHeaders.forEach(element => {
@@ -82,7 +60,7 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
 
     element.addEventListener('click', () => {
       // eslint-disable-next-line no-console
-      console.log('click column');
+      console.log('click hide column', element);
 
       let columnname = null;
 

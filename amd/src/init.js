@@ -24,6 +24,7 @@ import Templates from 'core/templates';
 import Notification from 'core/notification';
 
 import {initializeCheckboxes, getFilterOjects} from 'local_wunderbyte_table/filter';
+import {initializeHide} from 'local_wunderbyte_table/hide';
 import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
@@ -108,6 +109,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
         initializeSearch(selector, idstring, encodedtable);
         initializeSort(selector, idstring, encodedtable);
         initializeReload(selector, idstring, encodedtable);
+        initializeHide(selector, idstring, encodedtable);
 
         // Check to see if scrolling near bottom of page; load more photos
         // This shoiuld only be added once.
