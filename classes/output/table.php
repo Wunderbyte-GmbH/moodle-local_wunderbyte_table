@@ -113,7 +113,7 @@ class table implements renderable, templatable {
      *
      * @var array
      */
-    private $options = [];
+    private $printoptions = [];
 
     /**
      * Constructor.
@@ -262,22 +262,22 @@ class table implements renderable, templatable {
             $this->pagination['nopages'] = 'nopages';
         }
 
-        $this->options = $this->return_dataformat_selector();
+        $this->printoptions = $this->return_dataformat_selector();
     }
 
 
     private function return_dataformat_selector() {
         $formats = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
-        $options = array();
+        $printoptions = array();
         foreach ($formats as $format) {
             if ($format->is_enabled()) {
-                $options[] = array(
+                $printoptions[] = array(
                     'value' => $format->name,
                     'label' => get_string('dataformat', $format->component),
                 );
             }
         }
-        return $options;
+        return $printoptions;
     }
 
     /**
@@ -300,6 +300,7 @@ class table implements renderable, templatable {
             'previouspage' => $this->pagination['previouspage'] ?? null,
             'nextpage' => $this->pagination['nextpage'] ?? null,
             'nopages' => $this->pagination['nopages'] ?? null,
+            'sesskey' => sesskey(),
             'filter' => $this->categories ?? null,
         ];
 
@@ -321,7 +322,7 @@ class table implements renderable, templatable {
         // Only if we want to show the searchfield, we actually add the key.
         if ($this->print) {
             $data['print'] = true;
-            $data['options'] = $this->options;
+            $data['printoptions'] = $this->printoptions;
         }
 
         return $data;

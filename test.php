@@ -43,8 +43,8 @@ $download = optional_param('download', '', PARAM_ALPHA);
 $table = new wunderbyte_table('uniqueid');
 $table->is_downloading($download, 'test', 'testing123');
 
-$table->add_subcolumns('cardbody', ['id', 'fullname', 'shortname', 'idnumber', 'format']);
-$table->define_headers(['id', 'fullname', 'shortname', 'idnumber', 'format']);
+$table->define_columns(['id', 'fullname', 'shortname', 'idnumber', 'format', 'action']);
+$table->define_headers(['meine id', 'Ganzer Name', 'shortname', 'idnumber', 'format', 'action']);
 
 // Here you can use add_subcolumns with 'cardfooter" to show content in cardfooter.
 
@@ -83,7 +83,14 @@ if (!$table->is_downloading()) {
     echo $OUTPUT->header();
 }
 
-$table->define_filtercolumns(['id', 'category', 'format', 'shortname', 'fullname']);
+$table->define_filtercolumns([
+    'id',
+    'format' => [
+        'localizedname' => 'neuer name',
+        'site' => 'Dienstag',
+        'topics' => 'Montag'
+    ],
+    'shortname', 'fullname']);
 
 $table->define_fulltextsearchcolumns(['fullname', 'shortname', 'format']);
 
@@ -99,7 +106,7 @@ $table->define_baseurl($baseurl->out());
 
 $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-$table->infinitescroll = 5;
+$table->infinitescroll = 15;
 
 echo $table->out(10, true);
 

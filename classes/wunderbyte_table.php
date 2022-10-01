@@ -552,6 +552,16 @@ class wunderbyte_table extends table_sql {
         }
     }
 
+    public function col_shortname($values) {
+
+        return 'overridevalue';
+
+    }
+
+    public function col_action($values) {
+        return '<a href="https://wunderbyte.at">my button</a>';
+    }
+
     /**
      * Function to set new cache instead of general wunderbyte_table cache.
      * If you use more than one wunderbyte_table in your project, you can use different caches for each table.
