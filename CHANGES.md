@@ -1,3 +1,7 @@
+## Version 1.3.2 (2022101001)
+* New feature: New export (print) functionality.
+* New feature: Show number of found and filtered rows.
+
 ## Version 1.3.1 (2022092200)
 * Bugfix: Sorting of non sql column caught now.
 
