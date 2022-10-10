@@ -1,3 +1,6 @@
+## Version 1.3.2 (2022101000)
+* New feature: New export (print) functionality.
+
 ## Version 1.3.1 (2022092200)
 * Bugfix: Sorting of non sql column caught now.
 
