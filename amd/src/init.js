@@ -61,7 +61,7 @@ export const init = (idstring, encodedtable) => {
  export const initToggleAside = (idstring) => {
     document.querySelector('#asidecollapse_' + idstring).addEventListener('click', () => {
             let aside = document.querySelector('.wunderbyte_table_container_' + idstring + ' aside');
-            aside.classList.toggle('active');
+            aside.classList.toggle('inactive');
         }
     );
 };

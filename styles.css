@@ -149,3 +149,7 @@
 .wunderbyteTableSearch {
     text-align: right;
 }
+
+.wunderbyte_table_container aside.inactive {
+  margin-left: -400px;
+}
