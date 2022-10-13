@@ -43,8 +43,9 @@ $download = optional_param('download', '', PARAM_ALPHA);
 $table = new wunderbyte_table('uniqueid');
 $table->is_downloading($download, 'test', 'testing123');
 
-$table->define_columns(['id', 'fullname', 'shortname', 'idnumber', 'format', 'action']);
-$table->define_headers(['meine id', 'Ganzer Name', 'shortname', 'idnumber', 'format', 'action']);
+// $table->add_subcolumns('cardbody', ['id', 'username', 'firstname', 'lastname', 'email']);
+$table->define_headers(['id', 'username', 'firstname', 'lastname', 'email']);
+$table->define_columns(['id', 'username', 'firstname', 'lastname', 'email']);
 
 // Here you can use add_subcolumns with 'cardfooter" to show content in cardfooter.
 
@@ -54,25 +55,25 @@ $table->define_headers(['meine id', 'Ganzer Name', 'shortname', 'idnumber', 'for
 // Use add_subcolumns with 'cardimage" and image like shown above.
 
 // This adds the width to all normal columns.
-$table->add_classes_to_subcolumns('cardbody', ['columnclass' => 'wunderbytetd']);
+// $table->add_classes_to_subcolumns('cardbody', ['columnclass' => 'wunderbytetd']);
 // This avoids showing all keys in list view.
 // $table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'd-md-none']);
 
 // Override naming for columns. one could use getstring for localisation here.
-$table->add_classes_to_subcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
+// $table->add_classes_to_subcolumns('cardbody', ['keystring' => 'Moodle id'], ['id']);
 
 // To hide key in cardheader, set only for special columns.
-$table->add_classes_to_subcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['fullname']);
+// $table->add_classes_to_subcolumns('cardheader', ['columnkeyclass' => 'hidden'], ['firstanme']);
 
 // Keys are already hidden by for lists, but here we also hide some keys for cards.
-$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['fullname']);
-$table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['shortname']);
+// $table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['firstname']);
+// $table->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'hidden'], ['lastname']);
 // To hide value in card body (because this value is shown in header already).
-$table->add_classes_to_subcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['fullname']);
+// $table->add_classes_to_subcolumns('cardbody', ['columnvalueclass' => 'd-none d-md-block'], ['fullname']);
 // Set Classes not linked to the individual records or columns but for the container.
-$table->set_tableclass('listheaderclass', 'card d-none d-md-block');
-$table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
-$table->set_tableclass('cardbodyclass', 'card-body row');
+// $table->set_tableclass('listheaderclass', 'card d-none d-md-block');
+// $table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
+// $table->set_tableclass('cardbodyclass', 'card-body row');
 
 if (!$table->is_downloading()) {
     // Only print headers if not asked to download data
@@ -83,30 +84,26 @@ if (!$table->is_downloading()) {
     echo $OUTPUT->header();
 }
 
-$table->define_filtercolumns([
-    'id',
-    'format' => [
-        'localizedname' => 'neuer name',
-        'site' => 'Dienstag',
-        'topics' => 'Montag'
-    ],
-    'shortname', 'fullname']);
+$table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
 
-$table->define_fulltextsearchcolumns(['fullname', 'shortname', 'format']);
+$table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
 
-$table->define_sortablecolumns(['id', 'category', 'fullname', 'shortname', 'format']);
+$table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 
 
 // Work out the sql for the table.
-$table->set_sql('*', "{course}", '1=1');
+$table->set_sql('*', "{user}", '1=1');
 
-$baseurl = new moodle_url('/local/wunderbyte_table/download.php');
+$baseurl = new moodle_url(
+    $_SERVER['REQUEST_URI'],
+    $_GET
+);
 
 $table->define_baseurl($baseurl->out());
 
 $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-$table->infinitescroll = 15;
+$table->infinitescroll = 50;
 
 echo $table->out(10, true);
 
