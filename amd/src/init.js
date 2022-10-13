@@ -206,7 +206,7 @@ export const callLoadData = (
             spinner.classList.remove('hidden');
         }
         if (table) {
-            table.classList.add('hidden');
+            // table.classList.add('hidden');
         }
     }
 
