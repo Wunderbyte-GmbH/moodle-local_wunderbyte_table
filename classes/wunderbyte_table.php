@@ -88,6 +88,24 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Show a label where number of totalrows and filtered rows are displayed.
+     */
+    public $showcountlabel = false;
+
+    /**
+     *
+     * @var bool Show elements to download the table.
+     */
+    public $showdownloadbutton = false;
+
+    /**
+     *
+     * @var bool Show elements to reload the table.
+     */
+    public $showreloadbutton = false;
+
+    /**
+     *
      * @var string component where cache defintion is to be found.
      */
     public $cachecomponent = 'local_wunderbyte_table';

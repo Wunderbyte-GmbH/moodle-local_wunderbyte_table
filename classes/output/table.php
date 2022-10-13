@@ -99,14 +99,21 @@ class table implements renderable, templatable {
      *
      * @var bool
      */
-    private $reload = true;
+    private $showreloadbutton = true;
 
     /**
-     * Print is to display a button to reload the table
+     * Button to print table.
      *
      * @var bool
      */
-    private $print = true;
+    private $showdownloadbutton = true;
+
+    /**
+     * Countlabel.
+     *
+     * @var bool
+     */
+    private $showcountlabel = true;
 
     /**
      * Options data format
@@ -266,6 +273,12 @@ class table implements renderable, templatable {
         }
 
         $this->printoptions = $this->return_dataformat_selector();
+
+        $this->showdownloadbutton = $table->showdownloadbutton;
+
+        $this->showreloadbutton = $table->showreloadbutton;
+
+        $this->showcountlabel = $table->showcountlabel;
     }
 
 
@@ -319,12 +332,16 @@ class table implements renderable, templatable {
         }
 
         // Only if we want to show the searchfield, we actually add the key.
-        if ($this->reload) {
+        if ($this->showreloadbutton) {
             $data['reload'] = true;
         }
 
-        // Only if we want to show the searchfield, we actually add the key.
-        if ($this->print) {
+        if ($this->showcountlabel) {
+            $data['countlabel'] = true;
+        }
+
+        // Only if we want to show the print elements, we actually add the key.
+        if ($this->showdownloadbutton) {
             $data['print'] = true;
             $data['printoptions'] = $this->printoptions;
         }

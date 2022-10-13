@@ -62,9 +62,7 @@
 
 {{#table}}
 <div class="wunderbyte-table-table">
-     <div class="wb-records-count-label">
-          {{#str}} countlabel, local_wunderbyte_table, { "totalrecords":{{totalrecords}}, "filteredrecords":{{filteredrecords}} } {{/str}}
-     </div>
+     {{> local_wunderbyte_table/component_countlabel }}
      <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}} style="height: {{tableheight}};" {{/tableheight}}>
           <table class="table">
                <thead>
