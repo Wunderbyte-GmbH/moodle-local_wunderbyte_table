@@ -55,6 +55,18 @@ export const init = (idstring, encodedtable) => {
 };
 
 /**
+ * Toggle aside block with filters.
+ * @param {string} idstring
+ */
+ export const initToggleAside = (idstring) => {
+    document.querySelector('#asidecollapse_' + idstring).addEventListener('click', () => {
+            let aside = document.querySelector('.wunderbyte_table_container_' + idstring + ' aside');
+            aside.classList.toggle('active');
+        }
+    );
+};
+
+/**
  * React on visibility change.
  * @param {string} idstring
  * @param {string} encodedtable
