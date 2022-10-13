@@ -47,7 +47,13 @@ export const init = (idstring, encodedtable) => {
     if (idstring && encodedtable) {
 
         if (!scrollpages.hasOwnProperty(idstring)) {
-            scrollpages[idstring] = 0;
+
+            if (infinitescrollEnabled(idstring)) {
+                scrollpages[idstring] = 0;
+            } else  {
+                scrollpages[idstring] = -1;
+            }
+
         }
 
         respondToVisibility(idstring, encodedtable, callLoadData);
@@ -190,7 +196,12 @@ export const callLoadData = (
 
     // We reset scrollpage with 0 when we come from the filter.
     if (page !== null) {
-        scrollpages[idstring] = page;
+
+        if (infinitescrollEnabled(idstring)) {
+            scrollpages[idstring] = page;
+        } else {
+            scrollpages[idstring] = -1;
+        }
     }
 
     // We always have to see if we need to apply a filter. Reload might come from scroll, but filter has to be applied nevertheless.
@@ -216,9 +227,6 @@ export const callLoadData = (
             && !replacerow) {
         if (spinner) {
             spinner.classList.remove('hidden');
-        }
-        if (table) {
-            // table.classList.add('hidden');
         }
     }
 
@@ -443,8 +451,10 @@ export const callLoadData = (
  */
 function addScrollFunctionality(idstring, encodedtable, element) {
 
-    // eslint-disable-next-line no-console
-    console.log("addScrollFunctionality");
+    // First we check if scroll functioanlity is enabled.
+    if (!infinitescrollEnabled(idstring)) {
+        return;
+    }
 
     if (element.dataset.scrollinitialized) {
         return;
@@ -494,6 +504,8 @@ function addScrollFunctionality(idstring, encodedtable, element) {
  * @returns {void}
  */
 function scrollListener(element, idstring, encodedtable) {
+
+
     // We only want to scroll, if the element is visible.
     // So, if we find a hidden element in the parent, we don't scroll.
     if (returnHiddenElement(element)) {
@@ -657,4 +669,18 @@ function replaceDownloadLink(idstring, encodedtable, frag) {
     replaceResetTableLink(idstring, encodedtable, frag, page);
     replacePaginationLinks(idstring, encodedtable, frag);
     replaceSortColumnLinks(idstring, encodedtable, frag, page);
+}
+
+/**
+ * Function to check if the talbe in question has infinitescroll enabled.
+ * @param {string} idstring
+ * @returns {bool}
+ */
+function infinitescrollEnabled(idstring) {
+    // If we don't find the infinitescrollelement, we don#t add the listener.
+    const selector = ".wunderbyte_table_container_" + idstring;
+    if (document.querySelector(selector + ' div.infinitescroll_enabled')) {
+        return true;
+    }
+    return false;
 }

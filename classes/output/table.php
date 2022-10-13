@@ -258,6 +258,9 @@ class table implements renderable, templatable {
             }
             $this->pagination['pages'] = $pages;
 
+        } else if ($table->infinitescroll > 0) {
+            $this->pagination['nopages'] = 'nopages';
+            $this->pagination['infinitescroll'] = true;
         } else {
             $this->pagination['nopages'] = 'nopages';
         }
@@ -300,6 +303,7 @@ class table implements renderable, templatable {
             'previouspage' => $this->pagination['previouspage'] ?? null,
             'nextpage' => $this->pagination['nextpage'] ?? null,
             'nopages' => $this->pagination['nopages'] ?? null,
+            'infinitescroll' => $this->pagination['infinitescroll'] ?? null,
             'sesskey' => sesskey(),
             'filter' => $this->categories ?? null,
         ];
