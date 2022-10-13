@@ -61,11 +61,11 @@
 }}
 
 {{#table}}
-<div class="wunderbyte-table-grid">
+<div class="wunderbyte-table-table">
      <div class="wb-records-count-label">
           {{#str}} countlabel, local_wunderbyte_table, { "totalrecords":{{totalrecords}}, "filteredrecords":{{filteredrecords}} } {{/str}}
      </div>
-     <div>
+     <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}} style="height: {{tableheight}};" {{/tableheight}}>
           <table class="table">
                <thead>
                     <tr>
@@ -78,12 +78,16 @@
                          {{/header}}
                     </tr>
                </thead>
+               <div class="dataTables_scrollBody" style="position: relative; overflow: auto; max-height: 200px; width: 100%;">
                <tbody class="rows-container">
                     {{#rows}}
                          {{> local_wunderbyte_table/twtable_list_row }}
                     {{/rows}}
                </tbody>
+               </div>
           </table>
+          </div>
+          </div>
      </div>
 </div>
 {{/table}}

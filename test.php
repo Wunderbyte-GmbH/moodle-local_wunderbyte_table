@@ -101,6 +101,8 @@ $baseurl = new moodle_url(
 
 $table->define_baseurl($baseurl->out());
 
+// TODO: set stickyheader to true and tableheight to 500 e.g.
+// TODO: asc and desc used wrong.
 $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
 $table->infinitescroll = 50;
