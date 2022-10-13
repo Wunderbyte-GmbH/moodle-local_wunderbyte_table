@@ -116,6 +116,20 @@ class table implements renderable, templatable {
     private $showcountlabel = true;
 
     /**
+     * Stickyheader.
+     *
+     * @var bool
+     */
+    private $stickyheader = true;
+
+    /**
+     * Tableheight.
+     *
+     * @var string
+     */
+    private $tableheigt = '';
+
+    /**
      * Options data format
      *
      * @var array
@@ -279,6 +293,10 @@ class table implements renderable, templatable {
         $this->showreloadbutton = $table->showreloadbutton;
 
         $this->showcountlabel = $table->showcountlabel;
+
+        $this->tableheight = $table->tableheight;
+
+        $this->stickyheader = $table->stickyheader;
     }
 
 
@@ -338,6 +356,14 @@ class table implements renderable, templatable {
 
         if ($this->showcountlabel) {
             $data['countlabel'] = true;
+        }
+
+        if ($this->stickyheader) {
+            $data['stickyheader'] = $this->stickyheader;
+        }
+
+        if ($this->tableheight) {
+            $data['tableheight'] = $this->tableheigt;
         }
 
         // Only if we want to show the print elements, we actually add the key.

@@ -106,6 +106,18 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var string Set height of table.
+     */
+    public $tableheight = '1000px';
+
+    /**
+     *
+     * @var bool Use sticky header.
+     */
+    public $stickyheader = true;
+
+    /**
+     *
      * @var string component where cache defintion is to be found.
      */
     public $cachecomponent = 'local_wunderbyte_table';
