@@ -105,7 +105,14 @@ $table->define_baseurl($baseurl->out());
 // TODO: asc and desc used wrong.
 $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-$table->infinitescroll = 50;
+// $table->infinitescroll = 20;
+$table->pageable(true);
+
+$table->stickyheader = false;
+
+$table->showcountlabel = true;
+$table->showdownloadbutton = true;
+$table->showreloadbutton = true;
 
 echo $table->out(10, true);
 
