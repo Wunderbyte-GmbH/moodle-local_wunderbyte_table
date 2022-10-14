@@ -135,11 +135,12 @@
   top: 0;
   background-color: #fff;
 }
-
 .wunderbyteTableSearch {
     text-align: right;
+    max-width: 250px;
+    margin-left: auto;
+}
+.wunderbyte_table_container aside.inactive {
+  margin-left: -500px;
 }
 
-.wunderbyte_table_container aside.inactive {
-  margin-left: -400px;
-}

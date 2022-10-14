@@ -64,13 +64,16 @@
      <div>
           <div class="row mb-2">
                <div class="col">
-                    <div class="toggle">
+                    <div>
                          <button type="button" id="asidecollapse_{{idstring}}" class="btn btn-info">
                               <i class="fa fa-align-left"></i>
                          </button>
+                         {{> local_wunderbyte_table/component_reload }}
+                         {{> local_wunderbyte_table/component_print }}
                     </div>
+
                </div>
-               <div class="col text-right">
+               <div class="col text-right align-self-end">
                     {{> local_wunderbyte_table/component_search }}
                </div>
           </div>
@@ -79,8 +82,6 @@
 
      <div class="wunderbyte_table_container">
           <aside class="wunderbyte_table_components">
-               {{> local_wunderbyte_table/component_reload }}
-               {{> local_wunderbyte_table/component_print }}
                {{> local_wunderbyte_table/component_sort }}
                {{> local_wunderbyte_table/component_filter }}
                {{> local_wunderbyte_table/component_infinitescroll }}

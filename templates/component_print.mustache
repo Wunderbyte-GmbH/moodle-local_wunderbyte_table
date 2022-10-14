@@ -33,14 +33,13 @@
 }}
 
 {{#print}}
-    <form method="post" action="{{baseurl}}" class="dataformatselector mb-2">
+    <form method="post" action="{{baseurl}}" class="dataformatselector mt-2">
         <div class="form-inline text-xs-right">
             <input type="hidden" name="sesskey" value="{{sesskey}}">
             <input type="hidden" name="idstring" value="{{idstring}}">
             <input type="hidden" name="encodedtable" value="{{encodedtable}}">
             <input type="hidden" name="whichview" value="showactive">
-            <label for="downloadtype_download" class="mr-1">{{#str}} downloadas, local_wunderbyte_table {{/str}}</label>
-            <select name="download" id="downloadtype_download" class="form-control custom-select mr-1 mb-2">
+            <select name="download" id="downloadtype_download" class="form-control custom-select mr-1">
                 {{#printoptions}}
                     <option value="{{value}}">{{label}}</option>
                 {{/printoptions}}
