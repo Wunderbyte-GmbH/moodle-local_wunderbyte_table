@@ -22,16 +22,6 @@
   grid-area: content;
 }
 
-.wunderbyte_table_container .wunderbyteTableClass .wb-table-column.desc::after {
-  content: "\f0dd";
-  font: normal normal normal 14px/1 FontAwesome;
-}
-
-.wunderbyte_table_container .wunderbyteTableClass .wb-table-column.asc::after {
-  content: "\f0de";
-  font: normal normal normal 14px/1 FontAwesome;
-}
-
 @media screen and (max-width: 768px) {
   .wunderbyte_table_container {
     display: block;
