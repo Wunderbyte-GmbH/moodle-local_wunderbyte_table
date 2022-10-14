@@ -114,7 +114,7 @@ class wunderbyte_table extends table_sql {
      *
      * @var bool Use sticky header.
      */
-    public $stickyheader = true;
+    public $stickyheader = false;
 
     /**
      *
