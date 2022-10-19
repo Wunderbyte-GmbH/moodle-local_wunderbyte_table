@@ -65,9 +65,7 @@
           <div class="row mb-2">
                <div class="col-md-6">
                     <div>
-                         <button type="button" id="asidecollapse_{{idstring}}" class="btn btn-info">
-                              <i class="fa fa-align-left"></i>
-                         </button>
+                         {{> local_wunderbyte_table/component_toggle }}
                          {{> local_wunderbyte_table/component_reload }}
                          {{> local_wunderbyte_table/component_print }}
                     </div>
@@ -81,7 +79,7 @@
 
 
      <div class="wunderbyte_table_container">
-          <aside class="wunderbyte_table_components">
+          <aside class="wunderbyte_table_components {{^showcomponentstoggle}} inactive {{/showcomponentstoggle}}">
                {{> local_wunderbyte_table/component_sort }}
                {{> local_wunderbyte_table/component_filter }}
                {{> local_wunderbyte_table/component_infinitescroll }}
@@ -95,6 +93,5 @@
 {{#js}}
     require(['local_wunderbyte_table/init'], function(init) {
     init.init('{{idstring}}', '{{encodedtable}}');
-    init.initToggleAside('{{idstring}}');
     });
 {{/js}}

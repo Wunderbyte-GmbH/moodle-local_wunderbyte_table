@@ -64,12 +64,16 @@ export const init = (idstring, encodedtable) => {
  * Toggle aside block with filters.
  * @param {string} idstring
  */
- export const initToggleAside = (idstring) => {
-    document.querySelector('#asidecollapse_' + idstring).addEventListener('click', () => {
-            let aside = document.querySelector('.wunderbyte_table_container_' + idstring + ' aside');
+ const initToggleAside = (idstring) => {
+    const togglebutton = document.querySelector('#asidecollapse_' + idstring);
+
+    if (togglebutton) {
+        togglebutton.addEventListener('click', () => {
+            const aside = document.querySelector('.wunderbyte_table_container_' + idstring + ' aside');
             aside.classList.toggle('inactive');
-        }
-    );
+        });
+    }
+
 };
 
 /**
@@ -132,6 +136,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
         // As this can only be here once per table, we mark the table.
         addScrollFunctionality(idstring, encodedtable, element);
+        initToggleAside(idstring);
 
     }
 }

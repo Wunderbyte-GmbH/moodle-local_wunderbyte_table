@@ -344,7 +344,7 @@ class table implements renderable, templatable {
             $data['search'] = true;
         }
 
-        // Only if we want to show the searchfield, we actually add the key.
+        // Only if we want to show the sortelements, we actually add the key.
         if ($this->sort) {
             $data['sort'] = $this->sort;
         }
@@ -370,6 +370,10 @@ class table implements renderable, templatable {
         if ($this->showdownloadbutton) {
             $data['print'] = true;
             $data['printoptions'] = $this->printoptions;
+        }
+
+        if ($this->categories) {
+            $data['showcomponentstoggle'] = true;
         }
 
         return $data;
