@@ -14,10 +14,6 @@
     width: 100%;
 }
 
-.wunderbyte-table-grid {
-    display: block;
-}
-
 .wunderbyte_table_container .wunderbyteTableClass {
     grid-area: content;
 }
@@ -143,4 +139,9 @@
 .wunderbyte_table_container aside.inactive {
     margin-left: -500px;
 }
-
+.wunderbyte-table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+    padding: 10px;
+    grid-gap: 20px;
+}
