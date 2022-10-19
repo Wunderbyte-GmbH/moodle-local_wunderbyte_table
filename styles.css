@@ -1,139 +1,139 @@
 .wunderbyte_table_container {
-  display: grid;
-  grid-template-columns: fit-content(400px) 1fr;
-  grid-template-areas: "aside content";
-  grid-gap: 20px;
+    display: grid;
+    grid-template-columns: fit-content(400px) 1fr;
+    grid-template-areas: "aside content";
+    grid-gap: 20px;
 }
 
 .wunderbyte_table_container aside {
-  max-width: 400px;
-  grid-area: aside;
+    max-width: 400px;
+    grid-area: aside;
 }
 
 .wb-records-count-label {
-  width: 100%;
+    width: 100%;
 }
 
 .wunderbyte-table-grid {
-  display: block;
+    display: block;
 }
 
 .wunderbyte_table_container .wunderbyteTableClass {
-  grid-area: content;
+    grid-area: content;
 }
 
 @media screen and (max-width: 768px) {
-  .wunderbyte_table_container {
-    display: block;
-  }
+    .wunderbyte_table_container {
+        display: block;
+    }
 
-  .wunderbyte-table-grid table {
-    border: 0;
-  }
+    .wunderbyte-table-grid table {
+        border: 0;
+    }
 
-  .wunderbyte-table-grid table caption {
-    font-size: 1.3em;
-  }
+    .wunderbyte-table-grid table caption {
+        font-size: 1.3em;
+    }
 
-  .wunderbyte-table-grid table thead {
-    border: none;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-  }
+    .wunderbyte-table-grid table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
 
-  .wunderbyte-table-grid table tr {
-    border-bottom: 3px solid #ddd;
-    display: block;
-    margin-bottom: 0.625em;
-  }
+    .wunderbyte-table-grid table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: 0.625em;
+    }
 
-  .wunderbyte-table-grid table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
-    font-size: 0.8em;
-    text-align: right;
-  }
+    .wunderbyte-table-grid table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: 0.8em;
+        text-align: right;
+    }
 
-  .wunderbyte-table-grid table td::before {
-    /*
-          * aria-label has no advantage, it won't be read inside a table
-          content: attr(aria-label);
-          */
-    content: attr(data-localized) ":";
-    float: left;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
+    .wunderbyte-table-grid table td::before {
+        /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: attr(data-localized) ":";
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
 
-  .wunderbyte-table-grid table td:last-child {
-    border-bottom: 0;
-  }
+    .wunderbyte-table-grid table td:last-child {
+        border-bottom: 0;
+    }
 
-  .wunderbyte-table-grid table .novalue {
-    display: none;
-  }
+    .wunderbyte-table-grid table .novalue {
+        display: none;
+    }
 
-  .wunderbyte-table-grid table tr {
-    border: 1px solid;
-  }
+    .wunderbyte-table-grid table tr {
+        border: 1px solid;
+    }
 }
 
 .wunderbyte-table-grid .list-group-item + .list-group-item {
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
-  border-top-width: 1px;
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    border-top-width: 1px;
 }
 
 .wunderbyteTableJavascript.search-data-element h3 {
-  word-break: break-word;
+    word-break: break-word;
 }
 
 .wunderbyte-table-table table th {
-  position: relative;
-  margin-right: 5px;
+    position: relative;
+    margin-right: 5px;
 }
 
 .wunderbyte-table-table table th::before,
 .wunderbyte-table-table table th::after {
-  position: absolute;
-  display: block;
-  opacity: 0.125;
-  right: 0px;
-  line-height: 9px;
-  font-size: 0.9em;
+    position: absolute;
+    display: block;
+    opacity: 0.125;
+    right: 0px;
+    line-height: 9px;
+    font-size: 0.9em;
 }
 
 .wunderbyte-table-table th.desc::after {
-  opacity: 1;
+    opacity: 1;
 }
 .wunderbyte-table-table th.asc::before {
-  opacity: 1;
+    opacity: 1;
 }
 .wunderbyte-table-table th::after {
-  content: "\f0d7";
-  font: normal normal normal 14px/1 FontAwesome;
-  top: 60%;
+    content: "\f0d7";
+    font: normal normal normal 14px/1 FontAwesome;
+    top: 60%;
 }
 .wunderbyte-table-table th::before {
-  content: "\f0de";
-  font: normal normal normal 14px/1 FontAwesome;
-  top: 42%;
-  right: 0;
+    content: "\f0de";
+    font: normal normal normal 14px/1 FontAwesome;
+    top: 42%;
+    right: 0;
 }
 .wunderbyte-table-table .scroll-y {
-  height: 600px;
-  border: 1px solid #dee2e6;
-  overflow: auto;
+    height: 600px;
+    border: 1px solid #dee2e6;
+    overflow: auto;
 }
 /* Set header to stick to the top of the container. */
 .wunderbyte-table-table .scroll-y thead tr th {
-  position: sticky;
-  top: 0;
-  background-color: #fff;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
 }
 .wunderbyteTableSearch {
     text-align: right;
@@ -141,6 +141,6 @@
     margin-left: auto;
 }
 .wunderbyte_table_container aside.inactive {
-  margin-left: -500px;
+    margin-left: -500px;
 }
 
