@@ -98,7 +98,7 @@
     position: absolute;
     display: block;
     opacity: 0.125;
-    right: 0px;
+    right: 0;
     line-height: 9px;
     font-size: 0.9em;
 }
@@ -141,7 +141,7 @@
 }
 .wunderbyte-table-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     padding: 10px;
     grid-gap: 20px;
 }
