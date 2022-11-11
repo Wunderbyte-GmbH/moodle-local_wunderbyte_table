@@ -358,11 +358,11 @@ class table implements renderable, templatable {
             $data['countlabel'] = true;
         }
 
-        if ($this->stickyheader) {
+        if (!empty($this->stickyheader)) {
             $data['stickyheader'] = $this->stickyheader;
         }
 
-        if ($this->tableheight) {
+        if (!empty($this->tableheight)) {
             $data['tableheight'] = $this->tableheigt;
         }
 
