@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Contains class mod_questionnaire\output\indexpage
+ * Class \local_wunderbyte_table\output\table
  *
  * @package    local_wunderbyte_table
- * @copyright  2020 Wunderbyte Gmbh <info@wunderbyte.at>
+ * @copyright  2022 Wunderbyte Gmbh <info@wunderbyte.at>
  * @author     Georg Maißer
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
