@@ -114,8 +114,9 @@ $table->showcountlabel = true;
 $table->showdownloadbutton = true;
 $table->showreloadbutton = true;
 
-echo $table->out(10, true);
-
 if (!$table->is_downloading()) {
+    echo $table->lazyout(10, true);
     echo $OUTPUT->footer();
+} else {
+    echo $table->out(10, true);
 }
