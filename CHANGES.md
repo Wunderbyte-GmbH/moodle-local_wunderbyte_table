@@ -1,3 +1,17 @@
+## Version 1.4.1
+* Improvement: Improved styling of sorting buttons and layout.
+* Bugfix: Fixed baseurl handling to fix download which didn't work in modal.
+* Bugfix: Fixed lazyout on test.php.
+
+## Version 1.4.0
+* New feature: New possibility to turn infinite scroll on and off.
+* New feature: New possibility to turn labels and code buttons on and off.
+* Improvement: Better export (print) functionality.
+* Improvement: Don't hide table on reload.
+* Improvement: Sticky header and new sorting icons, new toggler.
+* Improvement: Improved code quality (linting).
+* Bugfix: Many minor bugfixes.
+
 ## Version 1.3.2 (2022101000)
 * New feature: New export (print) functionality.
 
