@@ -90,7 +90,7 @@ class local_wunderbyte_table_external extends external_api {
                 $table->define_baseurl($table->baseurlstring);
             } else {
                 // Fallback, wunderbyte_table doesn't really need the baseurl anyways.
-                $table->baseurl = new moodle_url($CFG->wwwroot);
+                $table->baseurl = new moodle_url("/local/wunderbyte_table/download.php");
             }
         }
 

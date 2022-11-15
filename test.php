@@ -94,13 +94,6 @@ $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 // Work out the sql for the table.
 $table->set_sql('*', "{user}", '1=1');
 
-$baseurl = new moodle_url(
-    $_SERVER['REQUEST_URI'],
-    $_GET
-);
-
-$table->define_baseurl($baseurl->out());
-
 // TODO: set stickyheader to true and tableheight to 500 e.g.
 // TODO: asc and desc used wrong.
 $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
@@ -115,8 +108,8 @@ $table->showdownloadbutton = true;
 $table->showreloadbutton = true;
 
 if (!$table->is_downloading()) {
-    echo $table->lazyout(10, true);
+    $table->lazyout(10, true);
     echo $OUTPUT->footer();
 } else {
-    echo $table->out(10, true);
+    $table->out(10, true);
 }

@@ -48,7 +48,6 @@ class wunderbyte_table extends table_sql {
      */
     public $sql = null;
 
-
     /**
      * @var string Id of this table.
      */
@@ -140,6 +139,12 @@ class wunderbyte_table extends table_sql {
      */
     public $tabletemplate = 'local_wunderbyte_table/twtable_list';
 
+    /**
+     *
+     * @var moodle_url fallback url for downloading.
+     */
+    public $baseurl = null;
+
 
 
     /**
@@ -192,7 +197,11 @@ class wunderbyte_table extends table_sql {
 
         $this->idstring = md5($uniqueid);
         $this->classname = get_class($this);
+
+        // This is a fallback for the downloading function. A different baseurl can be defined later in the process.
+        $this->define_baseurl(new moodle_url('/local/wunderbyte_table/download.php'));
     }
+
 
     /**
      * New lazyout function just stores the settings as json in base64 format and creates a table.
@@ -325,8 +334,13 @@ class wunderbyte_table extends table_sql {
      * @param moodle_url|string $url the url with params needed to call up this page
      */
     public function define_baseurl($url) {
-        $this->baseurl = new moodle_url($url);
-        $this->baseurlstring = $url;
+        if (gettype($url) === 'string') {
+            $this->baseurl = new moodle_url($url);
+        } else {
+            $this->baseurl = $url;
+        }
+
+        $this->baseurlstring = $this->baseurl->out();
     }
 
     /**
