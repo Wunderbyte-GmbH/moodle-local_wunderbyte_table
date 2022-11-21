@@ -18,6 +18,10 @@
     grid-area: content;
 }
 
+.wunderbyte_table_container .icons-collapse-expand {
+    margin-left: 3px;
+}
+
 @media screen and (max-width: 768px) {
     .wunderbyte_table_container {
         display: block;
