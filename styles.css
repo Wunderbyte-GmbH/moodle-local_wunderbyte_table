@@ -27,15 +27,15 @@
         display: block;
     }
 
-    .wunderbyte-table-grid table {
+    .wunderbyte-table-table table {
         border: 0;
     }
 
-    .wunderbyte-table-grid table caption {
+    .wunderbyte-table-table table caption {
         font-size: 1.3em;
     }
 
-    .wunderbyte-table-grid table thead {
+    .wunderbyte-table-table table thead {
         border: none;
         clip: rect(0 0 0 0);
         height: 1px;
@@ -46,20 +46,20 @@
         width: 1px;
     }
 
-    .wunderbyte-table-grid table tr {
+    .wunderbyte-table-table table tr {
         border-bottom: 3px solid #ddd;
         display: block;
         margin-bottom: 0.625em;
     }
 
-    .wunderbyte-table-grid table td {
+    .wunderbyte-table-table table td {
         border-bottom: 1px solid #ddd;
         display: block;
         font-size: 0.8em;
         text-align: right;
     }
 
-    .wunderbyte-table-grid table td::before {
+    .wunderbyte-table-table table td::before {
         /*
         * aria-label has no advantage, it won't be read inside a table
         content: attr(aria-label);
@@ -80,6 +80,13 @@
 
     .wunderbyte-table-grid table tr {
         border: 1px solid;
+    }
+
+    .wunderbyteTableSearch {
+        text-align: right;
+        max-width: unset;
+        margin-left: auto;
+        min-width: calc(100vw - 100px);
     }
 }
 
@@ -143,10 +150,15 @@
 }
 .wunderbyte_table_container aside.inactive {
     margin-left: -500px;
+    height: 0px;
 }
 .wunderbyte-table-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     padding: 10px;
     gap: 20px;
+}
+
+.wunderbyteTableFilter .form-group .collapse {
+    padding-left:16px
 }
