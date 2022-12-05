@@ -1,3 +1,6 @@
+## Version 1.4.2 (2022120500)
+* Improvement: Some layout and design changes.
+
 ## Version 1.4.1
 * Improvement: Improved styling of sorting buttons and layout.
 * Bugfix: Fixed baseurl handling to fix download which didn't work in modal.
