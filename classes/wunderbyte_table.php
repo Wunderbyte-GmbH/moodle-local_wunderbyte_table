@@ -1107,7 +1107,7 @@ class wunderbyte_table extends table_sql {
      * @param string $filter
      * @return void
      */
-    public function set_filter_sql(string $fields, string $from, string $where, array $params = array(), string $filter) {
+    public function set_filter_sql(string $fields, string $from, string $where, string $filter, array $params = array()) {
 
         $this->set_sql($fields, $from, $where, $params);
         $this->sql->filter = $filter;
@@ -1236,7 +1236,7 @@ class wunderbyte_table extends table_sql {
         }
 
         // We have to use this function to apply the sql at the right place.
-        $this->set_filter_sql($fields, $from, $this->sql->where, $this->sql->params, $filter);
+        $this->set_filter_sql($fields, $from, $this->sql->where, $filter, $this->sql->params);
     }
 
 
