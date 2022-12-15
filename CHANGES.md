@@ -1,3 +1,6 @@
+## Verison 1.4.3 (2022121500)
+* Bugfix: Some changes due to deprecation waringing.
+
 ## Version 1.4.2 (2022120500)
 * Improvement: Some layout and design changes.
 
