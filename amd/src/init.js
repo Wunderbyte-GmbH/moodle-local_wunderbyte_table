@@ -41,9 +41,6 @@ var scrollingelement = {};
  */
 export const init = (idstring, encodedtable) => {
 
-    // eslint-disable-next-line no-console
-    console.log('wb init', idstring);
-
     if (idstring && encodedtable) {
 
         if (!scrollpages.hasOwnProperty(idstring)) {
@@ -92,8 +89,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
     if (element && !element.dataset.encodedtable) {
         element.dataset.encodedtable = encodedtable;
     } else {
-        // eslint-disable-next-line no-console
-        console.log('wb didnnt find element aborted', identifier);
+
         return;
     }
 
@@ -468,9 +464,6 @@ function addScrollFunctionality(idstring, encodedtable, element) {
     element.dataset.scrollinitialized = true;
 
     const scrollableelement = getScrollParent(element);
-
-    // eslint-disable-next-line no-console
-    console.log(scrollableelement);
 
     if (!scrollableelement) {
         return;
