@@ -47,7 +47,7 @@ export const init = (idstring, encodedtable) => {
 
             if (infinitescrollEnabled(idstring)) {
                 scrollpages[idstring] = 0;
-            } else  {
+            } else {
                 scrollpages[idstring] = -1;
             }
 
