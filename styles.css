@@ -1,6 +1,6 @@
 .wunderbyte_table_container {
     display: grid;
-    grid-template-columns: fit-content(400px) 1fr;
+    grid-template-columns: 1fr 2fr;
     grid-template-areas: "aside content";
     gap: 20px;
 }
@@ -90,7 +90,7 @@
     }
 }
 
-.wunderbyte-table-grid .list-group-item + .list-group-item {
+.wunderbyte-table-grid .list-group-item+.list-group-item {
     border-top: 1px solid rgba(0, 0, 0, 0.125);
     border-top-width: 1px;
 }
@@ -118,40 +118,48 @@
 .wunderbyte-table-table th.desc::after {
     opacity: 1;
 }
+
 .wunderbyte-table-table th.asc::before {
     opacity: 1;
 }
+
 .wunderbyte-table-table th::after {
     content: "\f0d7";
     font: normal normal normal 14px/1 FontAwesome;
     top: 60%;
 }
+
 .wunderbyte-table-table th::before {
     content: "\f0de";
     font: normal normal normal 14px/1 FontAwesome;
     top: 42%;
     right: 0;
 }
+
 .wunderbyte-table-table .scroll-y {
     height: 600px;
     border: 1px solid #dee2e6;
     overflow: auto;
 }
+
 /* Set header to stick to the top of the container. */
 .wunderbyte-table-table .scroll-y thead tr th {
     position: sticky;
     top: 0;
     background-color: #fff;
 }
+
 .wunderbyteTableSearch {
     text-align: right;
     max-width: 250px;
     margin-left: auto;
 }
+
 .wunderbyte_table_container aside.inactive {
     margin-left: -500px;
     height: 0px;
 }
+
 .wunderbyte-table-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -159,6 +167,210 @@
     gap: 20px;
 }
 
+/* FILTER */
 .wunderbyteTableFilter .form-group .collapse {
-    padding-left:16px
+    padding-left: 16px
+}
+
+.wunderbyteTableFilter ul {
+    overflow-y: auto;
+    max-height: 20.5rem;
+}
+
+.wunderbyteTableFilter .collapse-accordion-toggle[aria-expanded=true] span svg:not(:first-child) {
+    display: none;
+}
+
+.wunderbyteTableFilter .collapse-accordion-toggle[aria-expanded=false] span svg:not(:last-child) {
+    display: none;
+}
+
+.wunderbyteTableFilter button {
+    border-width: 0;
+    background-color: transparent;
+    width: 100%;
+    outline: 0 !important;
+}
+
+.wunderbyteTableFilter li {
+    position: relative;
+    display: block;
+    min-height: 1.6rem;
+    padding-left: 2rem;
+}
+
+.wunderbyteTableFilter .form-check-label {
+    color: #77838f;
+    font-size: 1rem;
+    padding-left: 6px;
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+}
+
+.wunderbyteTableFilter .form-check-input {
+    position: absolute;
+    left: 0;
+    z-index: 30000001;
+    width: 20px;
+    height: 1.3rem;
+    opacity: 0;
+}
+
+.wunderbyteTableFilter :checked~.form-check-label::before {
+    border-color: #090761;
+}
+
+.wunderbyteTableFilter :checked~.form-check-label::after {
+    background-color: #090761;
+    border-radius: 3px;
+}
+
+.wunderbyteTableFilter .form-check-label::after {
+    top: 0.55rem;
+    background-color: #090761;
+    border-radius: 3px;
+    left: -1.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    content: "";
+    background: 0 0;
+    border-radius: 3px;
+    position: absolute;
+    z-index: 200000;
+}
+
+.wunderbyteTableFilter .form-check-label::before {
+    position: absolute;
+    top: 0.3rem;
+    left: -1.75rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: transparent;
+    border: #e7e7ec solid 1px;
+    border-radius: 3px;
+    z-index: 200000;
+}
+.zoom:hover {
+    transform: scale(1.025);
+    transition: transform .4s;
+}
+@media (min-width: 768px) {
+
+    .pagelayout-standard #page.drawers .main-inner,
+    body.limitedwidth #page.drawers .main-inner {
+        max-width: 100%;
+    }
+}
+.list-group-item {
+    box-shadow: 0 .5rem .937rem rgba(140, 152, 164, .1);
+}
+body {
+    background: #fff;
+}
+.footer-columns,
+.copyright {
+    display: none;
+}
+.projects {
+    border-radius: 7px;
+}
+
+#entity-calendar {
+    max-height: 80vh;
+}
+.wunderbyte-table-grid .grid-entry {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px;
+}
+/* FILTER */
+.wunderbyteTableFilter .form-group .collapse {
+    padding-left: 16px
+}
+.wunderbyteTableFilter ul {
+    overflow-y: auto;
+    max-height: 20.5rem;
+}
+.wunderbyteTableFilter .collapse-accordion-toggle[aria-expanded=true] span svg:not(:first-child) {
+    display: none;
+}
+.wunderbyteTableFilter .collapse-accordion-toggle[aria-expanded=false] span svg:not(:last-child) {
+    display: none;
+}
+.wunderbyteTableFilter button {
+    border-width: 0;
+    background-color: transparent;
+    width: 100%;
+    outline: 0;
+    box-shadow: none;
+}
+.wunderbyteTableFilter li {
+    position: relative;
+    display: block;
+    min-height: 1.6rem;
+    padding-left: 2rem;
+}
+.wunderbyteTableFilter .form-check-label {
+    color: #77838f;
+    font-size: 1rem;
+    padding-left: 6px;
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+}
+.wunderbyteTableFilter .form-check-input {
+    position: absolute;
+    left: 0;
+    z-index: 30000001;
+    width: 20px;
+    height: 1.3rem;
+    opacity: 0;
+}
+.wunderbyteTableFilter :checked~.form-check-label::before {
+    border-color: #090761;
+}
+
+.wunderbyteTableFilter :checked~.form-check-label::after {
+    background-color: #090761;
+    border-radius: 3px;
+}
+.wunderbyteTableFilter .form-check-label::after {
+    top: 0.55rem;
+    background-color: #090761;
+    border-radius: 3px;
+    left: -1.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    content: "";
+    background: 0 0;
+    border-radius: 3px;
+    position: absolute;
+    z-index: 200000;
+}
+.wunderbyteTableFilter .form-check-label::before {
+    position: absolute;
+    top: 0.3rem;
+    left: -1.75rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: transparent;
+    border: #e7e7ec solid 1px;
+    border-radius: 3px;
+    z-index: 200000;
+}
+
+.inactivefilter .wunderbyte_table_container {
+    grid-template-columns: 2fr;
+    gap: 0;
 }

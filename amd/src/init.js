@@ -68,6 +68,8 @@ export const init = (idstring, encodedtable) => {
         togglebutton.addEventListener('click', () => {
             const aside = document.querySelector('.wunderbyte_table_container_' + idstring + ' aside');
             aside.classList.toggle('inactive');
+            const wbtable = document.querySelector('.wunderbyte_table_container_' + idstring);
+            wbtable.classList.toggle('inactivefilter');
         });
     }
 

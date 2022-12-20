@@ -35,38 +35,46 @@
 {{#filter}}
     <div class="wunderbyteTableFilter">
         {{#categories}}
+    <div class="border rounded mb-4">
         <div class="form-group m-0" name="{{columnname}}">
-        <legend class="d-flex align-items-center" id="yui_3_17_2_1_1653475522789_1039">
-            <div class="position-relative d-flex ftoggler align-items-center position-relative mr-1" id="yui_3_17_2_1_1653475522789_1038">
-                <a data-toggle="collapse" href="#id_collapse_{{columnname}}" role="button" aria-expanded="false" aria-controls="id_collapse_{{columnname}}" class="btn btn-icon mr-1 icons-collapse-expand stretched-link fheader collapsed" id="collapseElement-2">
-                    <span class="expanded-icon icon-no-margin p-2" title="Collapse">
-                        <i class="icon fa fa-chevron-down fa-fw " aria-hidden="true"></i>
-                    </span>
-                    <span class="collapsed-icon icon-no-margin p-2" title="Expand">
-                        <span class="dir-rtl-hide"><i class="icon fa fa-chevron-right fa-fw " aria-hidden="true"></i></span>
-                        <span class="dir-ltr-hide"><i class="icon fa fa-chevron-left fa-fw " aria-hidden="true"></i></span>
-                    </span>
-                    <span class="sr-only">{{name}}</span>
-                </a>
-                <span class="d-flex align-self-stretch align-items-center mb-0 filtertitle" aria-hidden="true">
+        <h4 class="mb-0">
+        <button class="p-4 align-items-center collapse-accordion-toggle text-left collapsed"
+        data-toggle="collapse" href="#id_collapse_{{columnname}}" role="button" aria-expanded="false" aria-controls="id_collapse_{{columnname}}">
+            <div class="position-relative d-flex ftoggler align-items-center position-relative mr-1">
+                <div class="d-flex align-self-stretch align-items-center mb-0 filtertitle" aria-hidden="true">
                     {{name}}
+                </div>
+                <span class="ml-auto">
+                        <!-- Icon -->
+                        <svg width="15" height="2" viewBox="0 0 15 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="15" height="2" fill="currentColor"></rect>
+                        </svg>
+
+                        <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 7H15V9H0V7Z" fill="currentColor"></path>
+                            <path d="M6 16L6 8.74228e-08L8 0L8 16H6Z" fill="currentColor"></path>
+                        </svg>
+
                 </span>
             </div>
-        </legend>
-            <div class="collapse" id="id_collapse_{{columnname}}">
-            {{#values}}
-                {{#.}}
-                <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="{{value}}" id="{{key}}" name="{{category}}" data-action="csshide" data-key="sports" data-targetvalue="{{value}}">
-                        <label class="form-check-label" for="{{key}}">
-                            {{key}}
-                        </label>
-                </div>
-                {{/.}}
-            {{/values}}
+        </button>
+        </h4>
+        </div>
+            <div class="collapse mt-2" id="id_collapse_{{columnname}}">
+                <ul class="wunderbyterFilterList pt-2">
+                {{#values}}
+                    {{#.}}
+                    <li class="form-check">
+                            <input class="form-check-input" type="checkbox" value="{{value}}" id="{{key}}" name="{{category}}" data-action="csshide" data-key="sports" data-targetvalue="{{value}}">
+                            <label class="form-check-label" for="{{key}}">
+                                {{key}}
+                            </label>
+                    </li>
+                    {{/.}}
+                {{/values}}
+                </ul>
             </div>
-            </div>
-
+        </div>
         {{/categories}}
     </div>
 {{/filter}}
