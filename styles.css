@@ -371,6 +371,6 @@ body {
 }
 
 .inactivefilter .wunderbyte_table_container {
-    grid-template-columns: 2fr;
+    grid-template-columns: 0fr 2fr;
     gap: 0;
 }
