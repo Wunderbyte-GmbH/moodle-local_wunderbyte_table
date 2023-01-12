@@ -1,8 +1,15 @@
-.wunderbyte_table_container {
+.wunderbyte_table_filter_on .wunderbyte_table_container {
     display: grid;
     grid-template-columns: 1fr 2fr;
     grid-template-areas: "aside content";
     gap: 20px;
+}
+
+.wunderbyte_table_container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-areas: "content";
+    gap: 0px;
 }
 
 .wunderbyte_table_container aside {
@@ -161,6 +168,13 @@
 }
 
 .wunderbyte-table-grid {
+    display: grid;
+    grid-template-columns: repeat(minmax(350px, 1fr));
+    padding: 10px;
+    gap: 20px;
+}
+
+.wunderbyte_table_filter_on .wunderbyte-table-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     padding: 10px;
