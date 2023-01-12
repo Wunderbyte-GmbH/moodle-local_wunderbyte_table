@@ -1,4 +1,8 @@
-## Verison 1.4.3 (2022121500)
+## Version 1.4.4 (2023011200)
+* Improvement: Improved layout and styling.
+* Improvement: Code quality.
+
+## Version 1.4.3 (2022121500)
 * Bugfix: Some changes due to deprecation waringing.
 
 ## Version 1.4.2 (2022120500)
