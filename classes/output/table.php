@@ -376,6 +376,10 @@ class table implements renderable, templatable {
             $data['showcomponentstoggle'] = true;
         }
 
+        if (class_exists('local_shopping_cart\shopping_cart')) {
+            $data['shoppingcartisavailable'] = true;
+        }
+
         return $data;
     }
 }

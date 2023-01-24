@@ -73,6 +73,10 @@ class lazytable implements renderable, templatable {
             'encodedtable' => $this->encodedtable
         ];
 
+        if (class_exists('local_shopping_cart\shopping_cart')) {
+            $data['shoppingcartisavailable'] = true;
+        }
+
         return $data;
     }
 }
