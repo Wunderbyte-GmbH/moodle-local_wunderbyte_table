@@ -253,7 +253,7 @@ class wunderbyte_table extends table_sql {
         list($component, $template) = $this->return_component_and_template();
 
         $tableobject = $this->printtable($pagesize, $useinitialsbar);
-        $output = $PAGE->get_renderer($component);
+        $output = $PAGE->get_renderer('local_wunderbyte_table');
         return $output->render_table($tableobject, $component . "/" . $template);
     }
 
