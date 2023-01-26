@@ -7,7 +7,7 @@
 
 .wunderbyte_table_container {
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns: 1fr;
     grid-template-areas: "content";
     gap: 0px;
 }
@@ -165,11 +165,12 @@
 .wunderbyte_table_container aside.inactive {
     margin-left: -500px;
     height: 0px;
+    display: none;
 }
 
 .wunderbyte-table-grid {
     display: grid;
-    grid-template-columns: repeat(minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     padding: 10px;
     gap: 20px;
 }
