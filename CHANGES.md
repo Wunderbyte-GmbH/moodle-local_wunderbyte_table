@@ -1,3 +1,9 @@
+## Version 1.4.5 (2023012600)
+* Improvement: Improved layout and styling for filter.
+* Improvement: Better CSS for cards view.
+* Improvement: New export param 'shoppingcartisavailable' for templates - so shopping cart plugin is optional.
+* Bugfix: Fixed bug with component of renderer (must be 'local_wunderbyte_table').
+
 ## Version 1.4.4 (2023011200)
 * Improvement: Improved layout and styling.
 * Improvement: Code quality.
