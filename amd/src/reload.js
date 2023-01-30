@@ -42,12 +42,8 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
 
   const idstringplusa = 'a' + idstring;
 
-  // eslint-disable-next-line no-console
-  console.log(button, idstringplusa);
-
   button.addEventListener('click', () => {
-    // eslint-disable-next-line no-console
-    console.log('register click');
+
     wbTableReload(idstringplusa, encodedtable);
   });
 }
@@ -60,9 +56,6 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
  * @param {number} rowid
  */
  export function wbTableReload(idstringplusa, encodedtable, rowid = 0) {
-
-  // eslint-disable-next-line no-console
-  console.log(idstringplusa, rowid, encodedtable);
 
   // We need to trim the first character. We use the a to make sure no number is in first place due to random generation.
   const idstring = idstringplusa.substring(1);
@@ -105,9 +98,6 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
 * @param {HTMLElement} element
 */
 export function wbTableRowReload(element) {
-
-  // eslint-disable-next-line no-console
-  console.log(element);
 
   let parentelement = element;
   let rowid = null;

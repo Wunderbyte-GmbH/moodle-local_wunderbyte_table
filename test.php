@@ -44,8 +44,8 @@ $table = new wunderbyte_table('uniqueid');
 $table->is_downloading($download, 'test', 'testing123');
 
 // $table->add_subcolumns('cardbody', ['id', 'username', 'firstname', 'lastname', 'email']);
-$table->define_headers(['id', 'username', 'firstname', 'lastname', 'email']);
-$table->define_columns(['id', 'username', 'firstname', 'lastname', 'email']);
+$table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
+$table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
 
 // Here you can use add_subcolumns with 'cardfooter" to show content in cardfooter.
 
@@ -85,11 +85,35 @@ if (!$table->is_downloading()) {
 }
 
 $table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
-
 $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
-
 $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 
+// When true and action buttons are present, checkboxes will be rendered to every line.
+$table->addcheckboxes = true;
+
+$table->actionbuttons[] = [
+    'label' => get_string('add', 'core'), // Name of your action button.
+    'class' => 'btn btn-primary',
+    'id' => -1, // This forces single call execution.
+    'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+    'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
+    'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+        'id' => 'id',
+    ],
+];
+
+$table->actionbuttons[] = [
+    'label' => get_string('delete', 'core'), // Name of your action button.
+    'class' => 'btn btn-danger',
+    'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+    'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+        'id' => 'id',
+        'titlestring' => 'deletedatatitle',
+        'bodystring' => 'deletedatabody',
+        'submitbuttonstring' => 'deletedatasubmit',
+        'component' => 'local_wunderbyte_table',
+    ]
+];
 
 // Work out the sql for the table.
 $table->set_sql('*', "{user}", '1=1');
@@ -102,13 +126,12 @@ $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 $table->pageable(true);
 
 $table->stickyheader = false;
-
 $table->showcountlabel = true;
 $table->showdownloadbutton = true;
 $table->showreloadbutton = true;
 
 if (!$table->is_downloading()) {
-    $table->lazyout(10, true);
+    $table->out(10, true);
     echo $OUTPUT->footer();
 } else {
     $table->out(10, true);

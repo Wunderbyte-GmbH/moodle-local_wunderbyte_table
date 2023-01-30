@@ -27,6 +27,7 @@ import {initializeCheckboxes, getFilterOjects} from 'local_wunderbyte_table/filt
 import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
+import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 
 // All these variables will be objects with the idstringso their tables as identifiers.
 var loadings = {};
@@ -92,6 +93,9 @@ function respondToVisibility(idstring, encodedtable, callback) {
         element.dataset.encodedtable = encodedtable;
     } else {
 
+        // We abort everything else, but we run again the components initialization.
+        // important, as parts of the table might have been reloaded.
+        initializeComponents(idstring, encodedtable);
         return;
     }
 
@@ -123,11 +127,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
         // This is what we do when we didn't lazyload.
         replaceLinksInFrag(idstring, encodedtable, element, null);
 
-        const selector = ".wunderbyte_table_container_" + idstring;
-        initializeCheckboxes(selector, idstring, encodedtable);
-        initializeSearch(selector, idstring, encodedtable);
-        initializeSort(selector, idstring, encodedtable);
-        initializeReload(selector, idstring, encodedtable);
+        initializeComponents(idstring, encodedtable);
 
         // Check to see if scrolling near bottom of page; load more photos
         // This shoiuld only be added once.
@@ -193,7 +193,7 @@ export const callLoadData = (
     searchtext = null,
     replacerow = false) => {
 
-    if (loadings[idstring]) {
+    if (loadings[idstring] && !replacerow) {
         return;
     }
 
@@ -298,16 +298,11 @@ export const callLoadData = (
                     return true;
                 });
 
-                if (!tablejss.hasOwnProperty(idstring)) {
-                    // eslint-disable-next-line no-unused-vars
-                    const promise = Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
 
-                        tablejss[idstring] = js;
-                        return true;
-                    }).catch(e => {
-                        // eslint-disable-next-line no-console
-                        console.log(e);
-                    });
+                if (!tablejss.hasOwnProperty(idstring)) {
+
+                    // eslint-disable-next-line no-unused-vars
+                    const promise = returnPromiseToSaveJS(rendertemplate, jsonobject, idstring);
 
                     promises.push(promise);
                 }
@@ -407,10 +402,7 @@ export const callLoadData = (
                     }
 
                     // Make sure all elements are working.
-                    const selector = ".wunderbyte_table_container_" + idstring;
-                    initializeCheckboxes(selector, idstring, encodedtable);
-                    initializeSearch(selector, idstring, encodedtable);
-                    initializeSort(selector, idstring, encodedtable);
+                    initializeComponents(idstring, encodedtable);
 
                     const element = container.querySelector('#a' + idstring);
 
@@ -683,4 +675,38 @@ function infinitescrollEnabled(idstring) {
         return true;
     }
     return false;
+}
+
+/**
+ * Initialize all the JS we need.
+ * @param {string} idstring
+ * @param {string} encodedtable
+ */
+function initializeComponents(idstring, encodedtable) {
+    const selector = ".wunderbyte_table_container_" + idstring;
+    initializeCheckboxes(selector, idstring, encodedtable);
+    initializeSearch(selector, idstring, encodedtable);
+    initializeSort(selector, idstring, encodedtable);
+    initializeReload(selector, idstring, encodedtable);
+    initializeActionButton(selector, idstring, encodedtable);
+}
+
+/**
+ * Function to return promise.
+ * @param {*} rendertemplate
+ * @param {*} jsonobject
+ * @param {*} idstring
+ * @returns {Promise}
+ */
+function returnPromiseToSaveJS(rendertemplate, jsonobject, idstring) {
+    // eslint-disable-next-line no-unused-vars
+    return Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
+
+        tablejss[idstring] = js;
+
+        return true;
+    }).catch(e => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+    });
 }

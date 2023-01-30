@@ -27,13 +27,19 @@ defined('MOODLE_INTERNAL') || die();
 
 $functions = array(
         'local_wunderbyte_table_load_data' => array(
-                'classname' => 'local_wunderbyte_table_external',
-                'methodname' => 'load_data',
-                'classpath' => 'local/wunderbyte_table/classes/externallib.php',
+                'classname' => 'local_wunderbyte_table\external\load_data',
                 'description' => 'Ajax load table',
                 'type' => 'read',
                 'capabilities' => '',
                 'ajax' => true,
                 'loginrequired' => false
-        )
+        ),
+        'local_wunderbyte_table_execute_action' => array(
+                'classname' => 'local_wunderbyte_table\external\execute_action',
+                'description' => 'Executes an action button',
+                'type' => 'read',
+                'capabilities' => '',
+                'ajax' => true,
+                'loginrequired' => false
+        ),
 );

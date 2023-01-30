@@ -24,6 +24,14 @@ import {callLoadData} from 'local_wunderbyte_table/init';
 import {getFilterOjects} from 'local_wunderbyte_table/filter';
 import {getSearchInput} from 'local_wunderbyte_table/search';
 
+const SELECTOR = {
+  SORTCOLUMN: 'select.sortcolumn',
+  CHANGESORTORDER: 'a.changesortorder',
+  TABLECOLUMN: 'th.wb-table-column',
+  WBCONTAINER: ".wunderbyte_table_container_",
+  CHECKBOXES: 'input.wb-checkbox',
+};
+
 /**
  * Function to initialize the search after rendering the searchbox.
  * @param {*} listContainer
@@ -35,8 +43,8 @@ import {getSearchInput} from 'local_wunderbyte_table/search';
 
     const container = document.querySelector(listContainer);
 
-    const sortColumnElement = container.querySelector('select.sortcolumn');
-    const sortOrderElement = container.querySelector('a.changesortorder');
+    const sortColumnElement = container.querySelector(SELECTOR.SORTCOLUMN);
+    const sortOrderElement = container.querySelector(SELECTOR.CHANGESORTORDER);
 
     initializeSortColumns(listContainer, idstring, encodedtable);
 
@@ -71,7 +79,7 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
 
   const container = document.querySelector(listContainer);
 
-  const sortColumnHeaders = container.querySelectorAll('th.wb-table-column');
+  const sortColumnHeaders = container.querySelectorAll(SELECTOR.TABLECOLUMN);
 
   // Add the listeners to column headers.
   sortColumnHeaders.forEach(element => {
@@ -80,14 +88,20 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
     }
     element.dataset.initialized = true;
 
-    element.addEventListener('click', () => {
-      // eslint-disable-next-line no-console
-      console.log('click column');
-      const columnname = element.dataset.columnname;
+    element.addEventListener('click', e => {
 
-      // eslint-disable-next-line no-console
-      console.log(columnname);
-      callSortAjax(columnname, idstring, encodedtable);
+      let columnname = element.dataset.columnname;
+
+      let checked = e.target.dataset.checked !== "true" ? true : false;
+
+      switch (columnname) {
+        case 'wbcheckbox':
+          selectAllCheckboxes(idstring, checked);
+          e.target.dataset.checked = checked;
+          break;
+        default:
+          callSortAjax(columnname, idstring, encodedtable);
+      }
     });
   });
 }
@@ -104,15 +118,15 @@ function callSortAjax(event, idstring, encodedtable) {
   let sortorder = null;
   let reset = null;
 
-  const container = document.querySelector(".wunderbyte_table_container_" + idstring);
-  const sortColumnElement = container.querySelector('select.sortcolumn');
+  const container = document.querySelector(SELECTOR.WBCONTAINER + idstring);
+  const sortColumnElement = container.querySelector(SELECTOR.SORTCOLUMN);
 
   let sortOrderElement = container.querySelector("a.changesortorder i");
   let className = null;
 
   if (typeof event === 'string') {
     // We are sure that we clicked on a column header.
-    sortOrderElement = container.querySelector('th.wb-table-column.' + event);
+    sortOrderElement = container.querySelector(SELECTOR.TABLECOLUMN + '.' + event);
   }
 
   className = sortOrderElement.className;
@@ -186,11 +200,30 @@ function callSortAjax(event, idstring, encodedtable) {
  */
 export function getSortSelection(idstring) {
 
-  const inputElement = document.querySelector(".wunderbyte_table_container_" + idstring + ' select.sort');
+  const inputElement = document.querySelector(SELECTOR.WBCONTAINER + idstring + ' select.sort');
 
   if (!inputElement) {
     return null;
   }
 
   return '';
+}
+
+/**
+ *
+ * @param {string} idstring
+ * @param {bool} checked
+ */
+function selectAllCheckboxes(idstring, checked) {
+
+  const container = document.querySelector('#a' + idstring);
+
+  const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOXES);
+
+  // eslint-disable-next-line no-console
+  console.log(idstring, checked);
+
+  checkboxes.forEach(x => {
+    x.checked = checked;
+  });
 }

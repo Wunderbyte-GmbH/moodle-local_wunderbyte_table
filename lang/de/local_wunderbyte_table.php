@@ -45,3 +45,15 @@ $string['downloadas'] = "Tabelle laden als";
 $string['cachedef_cachedfulltable'] = 'Cache für die ganze Tabelle';
 
 $string['countlabel'] = '{$a->filteredrecords} von {$a->totalrecords} Einträgen gefunden';
+
+$string['checkallcheckbox'] = "Alles auswählen";
+$string['functiondoesntexist'] = "Funktion des Aktionsbuttons exisitert nicht.";
+
+// Test and example strings.
+$string['deletedatatitle'] = 'Möchten Sie diese Daten wirklich löschen?';
+$string['deletedatabody'] = 'Sie sind dabei, diese Daten zu löschen: <br> "{$a->data}"';
+$string['deletedatasubmit'] = 'Löschen';
+
+$string['generictitle'] = 'Möchten Sie wirklich diese Daten bearbeiten?';
+$string['genericbody'] = 'Sie sind dabei, diese Zeilen zu bearbeiten: <br> "{$a->data}"';
+$string['genericsubmit'] = 'Bestätigen';

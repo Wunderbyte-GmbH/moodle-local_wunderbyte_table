@@ -125,9 +125,23 @@ class table implements renderable, templatable {
     /**
      * Tableheight.
      *
-     * @var string
+     * @var int
      */
-    private $tableheigt = '';
+    private $tableheight = '';
+
+    /**
+     * Filtered records.
+     *
+     * @var int
+     */
+    private $filteredrecords = '';
+
+    /**
+     * Tableheight.
+     *
+     * @var int
+     */
+    private $totalrecords = '';
 
     /**
      * Options data format
@@ -137,16 +151,24 @@ class table implements renderable, templatable {
     private $printoptions = [];
 
     /**
+     * Action buttons
+     *
+     * @var array
+     */
+    private $actionbuttons = [];
+
+    /**
      * Constructor.
      * @param wunderbyte_table $table
      */
-    public function __construct(wunderbyte_table $table) {
+    public function __construct(wunderbyte_table $table, string $encodedtable = '') {
 
         $this->table = [];
 
         $this->idstring = $table->idstring;
 
-        $this->encodedtable = $table->return_encoded_table();
+        // We don't want the encoded table stable, regardless of previous actions.
+        $this->encodedtable = empty($encodedtable) ? $table->return_encoded_table() : $encodedtable;
 
         $this->baseurl = $table->baseurl->out(false);
 
@@ -164,6 +186,8 @@ class table implements renderable, templatable {
         $this->tableheight = $table->tableheight;
 
         $this->stickyheader = $table->stickyheader;
+
+        $this->set_actionbuttons_array($table->actionbuttons);
 
         list($this->totalrecords, $this->filteredrecords) = $table->return_records_count();
 
@@ -363,7 +387,7 @@ class table implements renderable, templatable {
         }
 
         if (!empty($this->tableheight)) {
-            $data['tableheight'] = $this->tableheigt;
+            $data['tableheight'] = $this->tableheight;
         }
 
         // Only if we want to show the print elements, we actually add the key.
@@ -376,10 +400,38 @@ class table implements renderable, templatable {
             $data['showcomponentstoggle'] = true;
         }
 
+        if (!empty($this->actionbuttons)) {
+            $data['showactionbuttons'] = $this->actionbuttons;
+        }
+
         if (class_exists('local_shopping_cart\shopping_cart')) {
             $data['shoppingcartisavailable'] = true;
         }
 
         return $data;
+    }
+
+    /**
+     * Store the actionbuttons in the right form for output.
+     *
+     * @param array $actionbuttons
+     * @return void
+     */
+    private function set_actionbuttons_array(array $actionbuttons) {
+        $actionbuttonsarray = [];
+        foreach ($actionbuttons as $actionbutton) {
+            $datas = $actionbutton['data'];
+            $newdatas = [];
+            foreach ($datas as $key => $value) {
+                $newdatas[] = [
+                    'key' => $key,
+                    'value' => $value,
+                ];
+            }
+            $actionbutton['data'] = $newdatas;
+            $actionbutton['id'] = $actionbutton['id'] ?? 0;
+            $actionbuttonsarray[] = $actionbutton;
+        }
+        $this->actionbuttons = $actionbuttonsarray;
     }
 }

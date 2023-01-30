@@ -117,6 +117,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Add checkboxes to select single columns.
+     */
+    public $addcheckboxes = false;
+
+    /**
+     *
      * @var string component where cache defintion is to be found.
      */
     public $cachecomponent = 'local_wunderbyte_table';
@@ -185,7 +191,44 @@ class wunderbyte_table extends table_sql {
      */
     public $baseurlstring = '';
 
+    /**
+     * Sortable columns.
+     *
+     * @var array
+     */
+    public $sortablecolumns = [];
 
+    /**
+     * Filtersortorder columns.
+     *
+     * @var array
+     */
+    public $filtersortorder = [];
+
+    /**
+     * Legacy from table_sql.
+     *
+     * @var bool
+     */
+    public $useinitialsbar = true;
+
+    /**
+     *
+     * @var bool
+     */
+    public $downloadhelpbutton = true;
+
+    /**
+     *
+     * @var string
+     */
+    public $base64encodedtablelib = '';
+
+    /**
+     *
+     * @var array $actionbuttons
+     */
+    public $actionbuttons = [];
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
@@ -292,7 +335,9 @@ class wunderbyte_table extends table_sql {
      * @return void
      */
     public function printtable($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+
         global $DB;
+
         if (!$this->columns) {
             $onerow = $DB->get_record_sql("SELECT {$this->sql->fields} FROM {$this->sql->from} WHERE {$this->sql->where}",
                 $this->sql->params, IGNORE_MULTIPLE);
@@ -300,15 +345,29 @@ class wunderbyte_table extends table_sql {
             // From the db.
             $this->define_columns(array_keys((array)$onerow));
         }
+
+        // At this point, we check if we need to add the checkboxes.
+        if ($this->addcheckboxes) {
+            $columns = array_keys($this->columns);
+            $headers = $this->headers;
+            array_unshift($columns, 'wbcheckbox');
+            array_unshift($headers, get_string('checkallcheckbox', 'local_wunderbyte_table'));
+            $this->columns = [];
+            $this->define_columns($columns);
+            $this->headers = $headers;
+        }
+
         $this->pagesize = $pagesize;
         $this->setup();
+
+        $encodedtable = $this->return_encoded_table();
 
         // First we query without the filter.
         $this->query_db_cached($pagesize, $useinitialsbar);
 
         $this->build_table();
         $this->close_recordset();
-        return $this->finish_output();
+        return $this->finish_output(true, $encodedtable);
     }
 
 
@@ -316,16 +375,17 @@ class wunderbyte_table extends table_sql {
      * You should call this to finish outputting the table data after adding
      * data to the table with add_data or add_data_keyed.
      * @param boolean $closeexportclassdoc
+     * @param string $encodedtable
      * @return void
      */
-    public function finish_output($closeexportclassdoc = true) {
+    public function finish_output($closeexportclassdoc = true, $encodedtable = '') {
         if ($this->exportclass !== null) {
             $this->exportclass->finish_table();
             if ($closeexportclassdoc) {
                 $this->exportclass->finish_document();
             }
         } else {
-            return new table($this);
+            return new table($this, $encodedtable);
         }
     }
 
@@ -503,11 +563,6 @@ class wunderbyte_table extends table_sql {
             $this->add_classes_to_subcolumns('cardbody', ['columnclass' => 'columnclass']);
             // This avoids showing all keys in list view.
             $this->add_classes_to_subcolumns('cardbody', ['columnkeyclass' => 'columnkeyclass']);
-
-            // Add some bootstrap to the general table.
-            // $this->set_tableclass('listheaderclass', 'card d-none d-md-block');
-            // $this->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
-            // $this->set_tableclass('cardbodyclass', 'card-body row');
         }
     }
 
@@ -594,16 +649,6 @@ class wunderbyte_table extends table_sql {
                 $this->get_row_class($rawrow));
             }
         }
-    }
-
-    public function col_shortname($values) {
-
-        return 'overridevalue';
-
-    }
-
-    public function col_action($values) {
-        return '<a href="https://wunderbyte.at">my button</a>';
     }
 
     /**
@@ -735,7 +780,7 @@ class wunderbyte_table extends table_sql {
 
             $setbackvalues = true;
         } else {
-            // If we don't cache, we need to set infinite scroll at this point:
+            // If we don't cache, we need to set infinite scroll at this point.
 
             // If we want to use infinite scroll, we need to fetch the current page.
             // We use the same functionality as for just loading the page itself.
@@ -1341,5 +1386,73 @@ class wunderbyte_table extends table_sql {
         $filteredrecords = $this->filteredrecords === -1 ? $totalrecords : $this->filteredrecords;
 
         return [$totalrecords, $filteredrecords];
+    }
+
+    /**
+     * This handles the colum checkboxes.
+     *
+     * @param stdClass $values
+     * @return void
+     */
+    public function col_wbcheckbox($values) {
+
+        global $OUTPUT;
+
+        $data['id'] = $values->id;
+        $data['label'] = '';
+        $data['checkboxclass'] = '';
+        $data['checked'] = !empty($values->checkbox) ? true : false;
+
+        return $OUTPUT->render_from_template('local_wunderbyte_table/col_checkbox', $data);;
+    }
+
+    /**
+     * This handles the colum checkboxes.
+     *
+     * @param stdClass $values
+     * @return void
+     */
+    public function col_action($values) {
+
+        global $OUTPUT;
+
+        $data['showactionbuttons'][] = [
+            'label' => get_string('delete', 'core'), // Name of your action button.
+            'class' => 'btn btn-danger',
+            'id' => $values->id,
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'key' => 'id',
+                'value' => $values->id,
+            ]
+        ];
+
+        $data['showactionbuttons'][] = [
+            'label' => get_string('add', 'core'), // Name of your action button.
+            'class' => 'btn btn-success',
+            'id' => $values->id,
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'key' => 'id',
+                'value' => $values->id,
+            ]
+        ];
+
+        return $OUTPUT->render_from_template('local_wunderbyte_table/component_actionbutton', $data);;
+    }
+
+    /**
+     * Delete item.
+     *
+     * @param integer $id
+     * @param string $data
+     * @return array
+     */
+    public function deleteitem(int $id, string $data):array {
+
+        return [
+            'success' => 1,
+            'message' => 'Did work',
+        ];
     }
 }

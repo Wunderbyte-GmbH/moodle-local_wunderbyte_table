@@ -45,3 +45,15 @@ $string['downloadas'] = "Download table data as";
 $string['cachedef_cachedfulltable'] = 'Cached full table';
 
 $string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found';
+
+$string['checkallcheckbox'] = "Check all";
+$string['functiondoesntexist'] = "Function of action button doesn\'t exist.";
+
+// Test and example strings.
+$string['deletedatatitle'] = 'Do you really want to delete this data?';
+$string['deletedatabody'] = 'You are about to submit this data: <br> "{$a->data}"';
+$string['deletedatasubmit'] = 'Delete';
+
+$string['generictitle'] = 'Do you really want to treat this data?';
+$string['genericbody'] = 'You are about to treat this rows: <br> "{$a->data}"';
+$string['genericsubmit'] = 'Confirm';

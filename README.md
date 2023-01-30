@@ -50,6 +50,51 @@ The reason is that the js would be added to the page footer via the renderer, bu
 Any JS which is on this labe (corresponding to table.mustache in the wunderbyte_table project), will be executed after the table is correctly rendered.
 You have to make sure to write your js in a way that your can find the necessary variables (eg. the ids of your rows) without being able to pass them directly via the mustache template.
 
+## Action buttons
+You can add a number of action buttons to your table. If you combine them with "$yourtable->addcheckbox = true", you will be able to select single lines and execute your function with it. The methods will need to be implemented in your child class of wunderbyte table and they will be called via ajax. Example:
+
+    $mytable->addcheckbox = true;
+    $mytable->actionbuttons = [
+        'label' => get_string('deleterow', 'mod_myproject'), // Name of your action button.
+        'methodname' => 'deleterow', // The method needs to be added to your child of wunderbyte_table class.
+        'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+            'id' => 'id'
+        ]
+    ];
+
+## Filter, Sort and Search
+WB Table provides direct filter, search and sort functionality.
+
+    $table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
+    $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
+    $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
+
+In order for them to work, you must obey some rules: Filter basically just add another 'where' to the sql. The column name must therefor be like the filtercolumn. If the "WHERE columnname like '%myname%'" doesn't work, because you would need to write "WHERE s1.columnname like '%myname%'", then the filter will not work. You would need to wrap your SQL so to eliminate the need for the columnname prefix.
+
+As for the filter, you have these further functionalities:
+- localize labels and results
+- sort possible results in the filter panel (eg to have weekdays in order)
+
+Here is an example how to set this up:
+By the way: 'id' will aways be obmitted, as it is not a useful filter in any case.
+
+    $table->define_filtercolumns([
+        'id', 'sport' => [
+            'localizedname' => get_string('sport', 'mod_myplugin')
+        ], 'dayofweek' => [
+            'localizedname' => get_string('dayofweek', 'mod_myplugin'),
+            'monday' => get_string('monday', 'mod_myplugin'),
+            'tuesday' => get_string('tuesday', 'mod_myplugin'),
+            'wednesday' => get_string('wednesday', 'mod_myplugin'),
+            'thursday' => get_string('thursday', 'mod_myplugin'),
+            'friday' => get_string('friday', 'mod_myplugin'),
+            'saturday' => get_string('saturday', 'mod_myplugin'),
+            'sunday' => get_string('sunday', 'mod_myplugin')
+        ],  'location' => [
+            'localizedname' => get_string('location', 'mod_myplugin')
+        ],
+    ]);
+
 ## Lazy loading vs. direct out
 To lazy load wunderbyte table (eg. for loading in tabs or modals) you need to call $table->lazyout() instead of $table->out. While out will return the html to echo, lazyout echos right away. If you want the html of lazyout, use $table->lazyouthtml();
 

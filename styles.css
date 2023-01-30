@@ -9,7 +9,7 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-areas: "content";
-    gap: 0px;
+    gap: 0;
 }
 
 .wunderbyte_table_container aside {
@@ -97,7 +97,7 @@
     }
 }
 
-.wunderbyte-table-grid .list-group-item+.list-group-item {
+.wunderbyte-table-grid .list-group-item + .list-group-item {
     border-top: 1px solid rgba(0, 0, 0, 0.125);
     border-top-width: 1px;
 }
@@ -164,7 +164,7 @@
 
 .wunderbyte_table_container aside.inactive {
     margin-left: -500px;
-    height: 0px;
+    height: 0;
     display: none;
 }
 
@@ -184,7 +184,7 @@
 
 /* FILTER */
 .wunderbyteTableFilter .form-group .collapse {
-    padding-left: 16px
+    padding-left: 16px;
 }
 
 .wunderbyteTableFilter ul {
@@ -232,11 +232,11 @@
     opacity: 0;
 }
 
-.wunderbyteTableFilter :checked~.form-check-label::before {
+.wunderbyteTableFilter :checked ~ .form-check-label::before {
     border-color: #090761;
 }
 
-.wunderbyteTableFilter :checked~.form-check-label::after {
+.wunderbyteTableFilter :checked ~ .form-check-label::after {
     background-color: #090761;
     border-radius: 3px;
 }
@@ -273,8 +273,8 @@
     transform: scale(1.025);
     transition: transform .4s;
 }
-@media (min-width: 768px) {
 
+@media (min-width: 768px) {
     .pagelayout-standard #page.drawers .main-inner,
     body.limitedwidth #page.drawers .main-inner {
         max-width: 100%;
@@ -308,7 +308,7 @@ body {
 }
 /* FILTER */
 .wunderbyteTableFilter .form-group .collapse {
-    padding-left: 16px
+    padding-left: 16px;
 }
 .wunderbyteTableFilter ul {
     overflow-y: auto;
@@ -349,11 +349,11 @@ body {
     height: 1.3rem;
     opacity: 0;
 }
-.wunderbyteTableFilter :checked~.form-check-label::before {
+.wunderbyteTableFilter :checked ~ .form-check-label::before {
     border-color: #090761;
 }
 
-.wunderbyteTableFilter :checked~.form-check-label::after {
+.wunderbyteTableFilter :checked ~ .form-check-label::after {
     background-color: #090761;
     border-radius: 3px;
 }
@@ -366,7 +366,6 @@ body {
     height: 0.5rem;
     content: "";
     background: 0 0;
-    border-radius: 3px;
     position: absolute;
     z-index: 200000;
 }
