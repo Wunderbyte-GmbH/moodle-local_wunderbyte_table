@@ -29,6 +29,10 @@
     margin-left: 3px;
 }
 
+.wunderbyte_table_container .dropdown-menu {
+    width: max-content;
+}
+
 @media screen and (max-width: 768px) {
     .wunderbyte_table_container {
         display: block;
