@@ -82,19 +82,28 @@ async function showConfirmationModal(button, titleText, bodyText, saveButtonText
   const data = button.dataset; // Get all the data of the clicked button.
 
   var checkedids = [];
+  const labelarray = [];
 
   // If the id is 0, we return for all checked checkboxes.
   // if not, just for the current one.
   if (id < 1) {
     const container = document.querySelector('#a' + idstring);
     const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOX);
-
     // eslint-disable-next-line no-console
     console.log(SELECTOR.CHECKBOX, checkboxes);
 
     // Create an array of ids of the checked boxes.
     checkboxes.forEach(x => {
         if (x.checked) {
+
+          // If the key labelcolumn is defined, we use this.
+          if (data.labelcolumn) {
+
+            const name = container.querySelector('[data-id="' + x.id + '"] [data-label="' + data.labelcolumn + '"]').textContent;
+            labelarray.push(name);
+          } else {
+            labelarray.push(x.id);
+          }
           checkedids.push(x.id);
       }
     });
@@ -104,7 +113,7 @@ async function showConfirmationModal(button, titleText, bodyText, saveButtonText
     checkedids = [id];
   }
 
-  const datastring = checkedids.join(', ') ?? '';
+  const datastring = labelarray.join('<br>') ?? '';
 
   // eslint-disable-next-line no-console
   console.log(datastring, checkedids);
