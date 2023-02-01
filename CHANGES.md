@@ -1,3 +1,6 @@
+## Version 1.4.6 (2023012800)
+* New feature: Add the "addcheckboxes functionality" with configurable action.
+
 ## Version 1.4.5 (2023012600)
 * Improvement: Improved layout and styling for filter.
 * Improvement: Better CSS for cards view.
