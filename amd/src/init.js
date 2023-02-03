@@ -238,9 +238,6 @@ export const callLoadData = (
         }
     }
 
-    // eslint-disable-next-line no-console
-    console.log('callLoadData', idstring);
-
     // This is used to store information for reload etc.
     checkInTable(
         idstring,
@@ -760,21 +757,6 @@ function checkInTable(
     filterobjects = null,
     searchtext = null,
     replacerow = false) {
-
-
-    // eslint-disable-next-line no-console
-    console.log('checkInTable',
-        idstring,
-        page,
-        tsort,
-        thide,
-        tshow,
-        tdir,
-        treset,
-        filterobjects,
-        searchtext,
-        replacerow
-    );
 
     // We don't want to save any queries that want to replace row.
     if (replacerow) {

@@ -129,13 +129,8 @@ export function wbTableRowReload(element) {
  */
 export function reloadAllTables() {
 
-  // eslint-disable-next-line no-console
-  console.log('reloadAllTables', queries);
-
-
+  // eslint-disable-next-line no-unused-vars
   for (const [key, value] of Object.entries(queries)) {
-    // eslint-disable-next-line no-console
-    console.log(key, value);
 
     callLoadData(
       value.idstring,

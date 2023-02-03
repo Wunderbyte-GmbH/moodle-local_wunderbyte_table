@@ -65,8 +65,8 @@
                 {{#values}}
                     {{#.}}
                     <li class="form-check">
-                            <input class="form-check-input" type="checkbox" value="{{value}}" id="{{key}}" name="{{category}}" data-action="csshide" data-key="sports" data-targetvalue="{{value}}">
-                            <label class="form-check-label" for="{{key}}">
+                            <input class="form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{idstring}}" name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
+                            <label class="form-check-label" for="{{key}}{{idstring}}">
                                 {{key}}
                             </label>
                     </li>

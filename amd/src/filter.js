@@ -28,7 +28,6 @@ import Templates from 'core/templates';
 
 // These variables are specific to the filter.
 var checked = {};
-// var categories = {};
 
 /**
  * Initialize Checkboxes.
@@ -50,6 +49,9 @@ var checked = {};
       return;
   }
 
+  // eslint-disable-next-line no-console
+  console.log('initializeCheckboxes', allCheckboxes);
+
   // We create the key for the checked items of this table.
   if (!checked.hasOwnProperty(idstring)) {
     checked[idstring] = {};
@@ -66,6 +68,16 @@ var checked = {};
   // });
 
   allCheckboxes.forEach(el => {
+
+      // eslint-disable-next-line no-console
+      console.log(selector);
+
+      if (!el.dataset.idstring) {
+        el.dataset.idstring = idstring;
+      } else {
+        el.dataset.idstring2 = idstring;
+      }
+
       el.addEventListener("change", (e) => toggleCheckbox(e, selector, idstring, encodedtable));
   });
 
@@ -81,6 +93,12 @@ var checked = {};
 * @param {*} encodedtable
  */
  export function toggleCheckbox(e, selector, idstring, encodedtable) {
+
+  e.stopPropagation();
+  e.preventDefault();
+
+  // eslint-disable-next-line no-console
+  console.log(e, selector, idstring);
 
   getChecked(e.target.name, selector, idstring);
 
@@ -109,7 +127,6 @@ var checked = {};
    * @param {*} name
    * @param {*} selector
    * @param {*} idstring
-   * @returns {array}
    */
    export function getChecked(name, selector, idstring) {
 
@@ -139,33 +156,33 @@ export function getFilterOjects(idstring) {
   return JSON.stringify(checked[idstring]);
 }
 
-    /**
-   * Render the checkboxes for the filer.
-   * @param {string} filterjson
-   * @param {string} idstring
-   * @param {string} encodedtable
-   */
-     export const renderFilter = (filterjson, idstring, encodedtable) => {
+/**
+ * Render the checkboxes for the filer.
+ * @param {string} filterjson
+ * @param {string} idstring
+ * @param {string} encodedtable
+ */
+    export const renderFilter = (filterjson, idstring, encodedtable) => {
 
-      // We render the filter only once, so if we find it already, we don't render it.
+    // We render the filter only once, so if we find it already, we don't render it.
 
-      const selector = ".wunderbyte_table_container_" + idstring;
-      const container = document.querySelector(selector);
-      const filtercontainer = container.querySelector(".wunderbyteTableFilter");
+    const selector = ".wunderbyte_table_container_" + idstring;
+    const container = document.querySelector(selector);
+    const filtercontainer = container.querySelector(".wunderbyteTableFilter");
 
-      if (filtercontainer) {
+    if (filtercontainer) {
+      return;
+    }
+
+    Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
+
+        container.insertAdjacentHTML('afterbegin', html);
+
+        initializeCheckboxes(selector, idstring, encodedtable);
+
         return;
-      }
-
-      Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
-
-          container.insertAdjacentHTML('afterbegin', html);
-
-          initializeCheckboxes(selector, idstring, encodedtable);
-
-          return;
-      }).catch(e => {
-          // eslint-disable-next-line no-console
-          console.log(e);
-      });
-  };
+    }).catch(e => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+    });
+};
