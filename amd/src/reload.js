@@ -20,7 +20,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {callLoadData} from 'local_wunderbyte_table/init';
+import {callLoadData, queries} from 'local_wunderbyte_table/init';
 import {getFilterOjects} from 'local_wunderbyte_table/filter';
 import {getSearchInput} from 'local_wunderbyte_table/search';
 import {getSortSelection} from 'local_wunderbyte_table/sort';
@@ -94,9 +94,9 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
 }
 
 /**
-* This function can be called from a button. The button identifies the table and the id and calls reload.
-* @param {HTMLElement} element
-*/
+ * This function can be called from a button. The button identifies the table and the id and calls reload.
+ * @param {HTMLElement} element
+ */
 export function wbTableRowReload(element) {
 
   let parentelement = element;
@@ -122,4 +122,33 @@ export function wbTableRowReload(element) {
       wbTableReload(idstring, encodedtable, rowid);
   }
 
+}
+
+/**
+ * Reload all other tables on the same page.
+ */
+export function reloadAllTables() {
+
+  // eslint-disable-next-line no-console
+  console.log('reloadAllTables', queries);
+
+
+  for (const [key, value] of Object.entries(queries)) {
+    // eslint-disable-next-line no-console
+    console.log(key, value);
+
+    callLoadData(
+      value.idstring,
+      value.encodedtable,
+      value.page,
+      value.tsort,
+      value.thide,
+      value.tshow,
+      value.tdir,
+      value.treset,
+      value.filterobjects,
+      value.searchtext,
+      value.replacerow
+  );
+  }
 }

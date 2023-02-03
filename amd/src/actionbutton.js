@@ -24,8 +24,8 @@ import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
 import Ajax from 'core/ajax';
 import {showNotification} from 'local_wunderbyte_table/notifications';
-import {wbTableReload} from 'local_wunderbyte_table/reload';
-import {get_strings} from 'core/str';
+import {reloadAllTables} from 'local_wunderbyte_table/reload';
+import {get_strings as getStrings} from 'core/str';
 
 const SELECTOR = {
   ACTIONBUTTON: '.wb_action_button',
@@ -140,7 +140,7 @@ async function showConfirmationModal(button, titleText, bodyText, saveButtonText
   // eslint-disable-next-line no-console
   console.log(strings);
 
-  const localizedstrings = await get_strings(strings);
+  const localizedstrings = await getStrings(strings);
 
   // eslint-disable-next-line no-console
   console.log(localizedstrings);
@@ -197,7 +197,8 @@ function transmitAction(id, methodname, datastring, idstring, encodedtable) {
         } else {
           showNotification(data.message, "danger");
         }
-        wbTableReload('a' + idstring, encodedtable, id);
+        reloadAllTables();
+
 
     },
     fail: function(ex) {

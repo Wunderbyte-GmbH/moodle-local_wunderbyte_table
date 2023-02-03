@@ -31,6 +31,7 @@ import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 
 // All these variables will be objects with the idstringso their tables as identifiers.
 var loadings = {};
+export var queries = {};
 var scrollpages = {};
 var tablejss = {};
 var scrollingelement = {};
@@ -41,6 +42,10 @@ var scrollingelement = {};
  * @param {string} encodedtable
  */
 export const init = (idstring, encodedtable) => {
+
+    if (!queries[idstring]) {
+        checkInTable(idstring, encodedtable);
+    }
 
     if (idstring && encodedtable) {
 
@@ -62,7 +67,7 @@ export const init = (idstring, encodedtable) => {
  * Toggle aside block with filters.
  * @param {string} idstring
  */
- const initToggleAside = (idstring) => {
+const initToggleAside = (idstring) => {
     const togglebutton = document.querySelector('#asidecollapse_' + idstring);
 
     if (togglebutton) {
@@ -146,22 +151,22 @@ function respondToVisibility(idstring, encodedtable, callback) {
  */
 function getScrollParent(node) {
     if (node === null) {
-      return null;
+        return null;
     }
 
     if (node.scrollHeight > node.clientHeight) {
-      return node;
+        return node;
     } else {
-      return getScrollParent(node.parentNode);
+        return getScrollParent(node.parentNode);
     }
-  }
+}
 
 /**
  * Function to check visibility of element.
  * @param {*} el
  * @returns {boolean}
  */
- export const isHidden = (el) => {
+export const isHidden = (el) => {
     var style = window.getComputedStyle(el);
     return ((style.display === 'none') || (style.visibility === 'hidden'));
 };
@@ -227,11 +232,29 @@ export const callLoadData = (
 
     // If we replace the whole table, we show the spinner. If we only add rows in infinite scroll, we don't.
     if (scrollpages[idstring] == 0
-            && !replacerow) {
+        && !replacerow) {
         if (spinner) {
             spinner.classList.remove('hidden');
         }
     }
+
+    // eslint-disable-next-line no-console
+    console.log('callLoadData', idstring);
+
+    // This is used to store information for reload etc.
+    checkInTable(
+        idstring,
+        encodedtable,
+        page,
+        tsort,
+        thide,
+        tshow,
+        tdir,
+        treset,
+        filterobjects,
+        searchtext,
+        replacerow
+    );
 
     loadings[idstring] = true;
 
@@ -512,15 +535,15 @@ function scrollListener(element, idstring, encodedtable) {
         if (elementtop + elementheight - screenheight < 0) {
             scrollpages[idstring] = scrollpages[idstring] + 1;
             callLoadData(idstring,
-                    encodedtable,
-                    scrollpages[idstring],
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null);
+                encodedtable,
+                scrollpages[idstring],
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
         }
     }
 }
@@ -648,7 +671,7 @@ function replaceDownloadLink(idstring, encodedtable, frag) {
  * @param {*} frag
  * @param {*} page
  */
- function replaceLinksInFrag(idstring, encodedtable, frag, page = null) {
+function replaceLinksInFrag(idstring, encodedtable, frag, page = null) {
 
     if (!page) {
         const activepage = frag.querySelector('li.page-item active');
@@ -709,4 +732,66 @@ function returnPromiseToSaveJS(rendertemplate, jsonobject, idstring) {
         // eslint-disable-next-line no-console
         console.log(e);
     });
+}
+
+/**
+ * Function to save queries. Has some logic which helps us to achieve the desired result.
+ * @param {*} idstring
+ * @param {*} encodedtable
+ * @param {*} page
+ * @param {*} tsort
+ * @param {*} thide
+ * @param {*} tshow
+ * @param {*} tdir
+ * @param {*} treset
+ * @param {*} filterobjects
+ * @param {*} searchtext
+ * @param {*} replacerow
+ */
+function checkInTable(
+    idstring,
+    encodedtable,
+    page = null,
+    tsort = null,
+    thide = null,
+    tshow = null,
+    tdir = null,
+    treset = null,
+    filterobjects = null,
+    searchtext = null,
+    replacerow = false) {
+
+
+    // eslint-disable-next-line no-console
+    console.log('checkInTable',
+        idstring,
+        page,
+        tsort,
+        thide,
+        tshow,
+        tdir,
+        treset,
+        filterobjects,
+        searchtext,
+        replacerow
+    );
+
+    // We don't want to save any queries that want to replace row.
+    if (replacerow) {
+        return;
+    }
+
+    queries[idstring] = {
+        idstring,
+        encodedtable,
+        page,
+        tsort,
+        thide,
+        tshow,
+        tdir,
+        treset,
+        filterobjects,
+        searchtext,
+        replacerow: false // Replace row is always false.
+    };
 }
