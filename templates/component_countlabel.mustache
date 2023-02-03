@@ -22,7 +22,7 @@
 
     Example context (json):
     {
-       "idstring": "sdkjafjlsadjflasjdklf",
+       "countlabelstring": "1 of 10 records",
        "encodedtable": "fdaskjfdjalsdjfkldsjflsajflksdjfklasdjflkdasjljkdfsalkjfoweijfoeisjgdklyjglky"
     }
 
@@ -30,6 +30,6 @@
 
 {{#countlabel}}
     <div class="wb-records-count-label">
-        {{#str}} countlabel, local_wunderbyte_table, { "totalrecords":{{totalrecords}}, "filteredrecords":{{filteredrecords}} } {{/str}}
+        {{countlabelstring}}
     </div>
 {{/countlabel}}

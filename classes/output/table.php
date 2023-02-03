@@ -352,6 +352,12 @@ class table implements renderable, templatable {
             'table' => $this->table,
             'totalrecords' => $this->totalrecords,
             'filteredrecords' => $this->filteredrecords,
+            'countlabelstring' => get_string('countlabel',
+                'local_wunderbyte_table',
+                (object)[
+                    'totalrecords' => $this->totalrecords,
+                    'filteredrecords' => $this->filteredrecords,
+                ]),
             'pages' => $this->pagination['pages'] ?? null,
             'disableprevious' => $this->pagination['disableprevious'] ?? null,
             'disablenext' => $this->pagination['disablenext'] ?? null,
