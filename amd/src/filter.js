@@ -49,9 +49,6 @@ var checked = {};
       return;
   }
 
-  // eslint-disable-next-line no-console
-  console.log('initializeCheckboxes', allCheckboxes);
-
   // We create the key for the checked items of this table.
   if (!checked.hasOwnProperty(idstring)) {
     checked[idstring] = {};
@@ -68,9 +65,6 @@ var checked = {};
   // });
 
   allCheckboxes.forEach(el => {
-
-      // eslint-disable-next-line no-console
-      console.log(selector);
 
       if (!el.dataset.idstring) {
         el.dataset.idstring = idstring;
@@ -96,9 +90,6 @@ var checked = {};
 
   e.stopPropagation();
   e.preventDefault();
-
-  // eslint-disable-next-line no-console
-  console.log(e, selector, idstring);
 
   getChecked(e.target.name, selector, idstring);
 
