@@ -1072,6 +1072,10 @@ class wunderbyte_table extends table_sql {
                 $categoryobject['values'][$valuekey] = $itemobject;
             }
 
+            if (count($categoryobject['values']) == 0) {
+                continue;
+            }
+
             if ($sortarray == null) {
                 // If we didn't sort otherwise, we do it now.
                 ksort($categoryobject['values']);
