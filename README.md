@@ -7,7 +7,7 @@ extended class to wunderbyte_table (instead of table_sql).
 
     class booking_table extends wunderbyte_table {}
 
-If your extended table lass contains another class (eg myplugin_class), make sure you can instantiate it with only the cmid. Errors will be thrown if this is not possible.
+If your extended table class contains another class (eg myplugin_class), make sure you can instantiate it with only the cmid. Errors will be thrown if this is not possible.
 
 From 1.1.1 on, wunderbyte_table is loaded only once the corresponding div and none of it's parent is hidden (display:none) and it will add a visbility listener on the next hidden parent element. Unhiding will trigger loading of the table.
 
@@ -95,6 +95,31 @@ By the way: 'id' will aways be obmitted, as it is not a useful filter in any cas
         ],
     ]);
 
+
+### Exploding strings for columns storing multiple values
+The define_filtercolumns function also supports columns with multiple values stored as string with a separator.
+
+You can define the separator like this:
+
+    $table->define_filtercolumns([
+        'mycolname' => [
+            'localizedname' => get_string('mystring', 'mod_myplugin'),
+            'explode' => ',', // In this example, a comma is the separator, you might need another one.
+        ],
+    ]);
+
+### Handle JSON objects
+The define_filtercolumns function also supports columns storing one or multiple JSON objects.
+You can define the attribute of the JSON object which should be used for the filter:
+
+    $table->define_filtercolumns([
+        'mycolname' => [
+            'localizedname' => get_string('mystring', 'mod_myplugin'),
+            'jsonattribute' => 'name', // Replace 'name' with the actual attribute name.
+        ],
+    ]);
+     
+
 ## Lazy loading vs. direct out
 To lazy load wunderbyte table (eg. for loading in tabs or modals) you need to call $table->lazyout() instead of $table->out. While out will return the html to echo, lazyout echos right away. If you want the html of lazyout, use $table->lazyouthtml();
 
@@ -120,7 +145,7 @@ Alternatively, you can run
 to complete the installation from the command line.
 
 ## License ##
-2021 Wunderbyte GmbH <info@wunderbyte.at>
+2023 Wunderbyte GmbH <info@wunderbyte.at>
 
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
