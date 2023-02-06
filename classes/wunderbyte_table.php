@@ -988,6 +988,30 @@ class wunderbyte_table extends table_sql {
                 unset($this->subcolumns['datafields'][$key]['explode']);
             }
 
+            // If we have JSON, we need special treatment.
+            if (!empty($this->subcolumns['datafields'][$key]['jsonattribute'])) {
+                $valuescopy = $values;
+                $values = [];
+
+                // We run through the array of values containing the JSON strings.
+                foreach ($valuescopy as $jsonstring => $boolvalue) {
+                    // Convert into an array, so we can handle items with multiple objects.
+                    $jsonstring = '[' . $jsonstring . ']';
+                    $jsonarray = json_decode($jsonstring);
+
+                    foreach ($jsonarray as $jsonobj) {
+                        if (empty($jsonobj)) {
+                            continue;
+                        }
+                        // We only want to show the attribute of the JSON which is relevant for the filter.
+                        $searchattribute = $jsonobj->{$this->subcolumns['datafields'][$key]['jsonattribute']};
+                        $values[$searchattribute] = true;
+                    }
+                }
+
+                unset($this->subcolumns['datafields'][$key]['json']);
+            }
+
             // Special treatment for key localizedname.
             if (isset($this->subcolumns['datafields'][$key]['localizedname'])) {
                 $localizedname = $this->subcolumns['datafields'][$key]['localizedname'];
@@ -997,7 +1021,7 @@ class wunderbyte_table extends table_sql {
             }
 
             $categoryobject = [
-                'name' => $localizedname, // Localised name.
+                'name' => $localizedname, // Localized name.
                 'columnname' => $key, // The column name.
                 'values' => []
             ];
