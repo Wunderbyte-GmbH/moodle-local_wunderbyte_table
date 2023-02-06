@@ -640,9 +640,9 @@ class wunderbyte_table extends table_sql {
      */
     public function build_table() {
         $this->formatedrows = [];
-        foreach ($this->rawdata as $rawrow) {
+        foreach ($this->rawdata as $key => $rawrow) {
             $formattedrow = $this->format_row($rawrow);
-            $this->formatedrows[] = $formattedrow;
+            $this->formatedrows[$key] = $formattedrow;
 
             if ($this->is_downloading()) {
                 $this->add_data_keyed($formattedrow,

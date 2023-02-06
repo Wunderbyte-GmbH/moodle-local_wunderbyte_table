@@ -206,7 +206,7 @@ class table implements renderable, templatable {
         // Now we see if we have a header class.
 
         // We have to prepare the row for output.
-        foreach ($table->formatedrows as $row) {
+        foreach ($table->formatedrows as $rowid => $row) {
             $rowarray = [];
 
             // The tableheaderclasses need to be available also within the rows.
@@ -233,6 +233,23 @@ class table implements renderable, templatable {
                         $rowarray[$subcolumnskey][] = $subcolumnsvalue[$key];
                     }
                 }
+
+                // If at this point, we have not dataset id, we need to add it now.
+
+                if (!isset($rowarray['datafields'])) {
+                    $rowarray['datafields'] = [];
+                }
+
+                $foundid = array_filter($rowarray['datafields'], function($x) {
+                    return $x['key'] === 'id';
+                });
+
+                if (empty($foundid)) {
+                    $rowarray['datafields'][] = [
+                        'key' => 'id',
+                        'value' => $rowid,
+                    ];
+                };
             }
 
             $this->table['rows'][] = $rowarray;
