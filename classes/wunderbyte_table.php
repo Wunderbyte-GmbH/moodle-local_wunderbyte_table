@@ -18,7 +18,7 @@
  * The Wunderbyte table class is an extension of the tablelib table_sql class.
  *
  * @package local_wunderbyte_table
- * @copyright 2021 onwards Wunderbyte Gmbh <info@wunderbyte.at>
+ * @copyright 2023 Wunderbyte Gmbh <info@wunderbyte.at>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

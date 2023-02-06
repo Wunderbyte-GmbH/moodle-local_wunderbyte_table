@@ -18,7 +18,7 @@
  * Testfile to see how wunderbyte_table works.
  *
  * @package     local_wunderbyte_table
- * @copyright   2021 Wunderbyte GmbH <info@wunderbyte.at>
+ * @copyright   2023 Wunderbyte GmbH <info@wunderbyte.at>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -18,7 +18,8 @@
  * Mobile cache definitions.
  *
  * @package    local_wunderbyte_table
- * @copyright  2021 Georg Maißer <info@wudnerbyte.at>
+ * @copyright  2023 Wunderbyte GmbH <info@wunderbyte.at>
+ * @author     Georg Maißer
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

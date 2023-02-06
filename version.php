@@ -18,7 +18,7 @@
  * Plugin version and other meta-data are defined here.
  *
  * @package     local_wunderbyte_table
- * @copyright   2021 Wunderbyte GmbH <info@wunderbyte.at>
+ * @copyright   2023 Wunderbyte GmbH <info@wunderbyte.at>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
