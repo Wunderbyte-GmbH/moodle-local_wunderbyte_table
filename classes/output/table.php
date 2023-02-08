@@ -45,6 +45,14 @@ class table implements renderable, templatable {
      */
     private $idstring = '';
 
+
+    /**
+     * uniqueid of the table, needed for output
+     *
+     * @var string
+     */
+    private $uniqueid = '';
+
     /**
      * encodedtable
      *
@@ -167,6 +175,8 @@ class table implements renderable, templatable {
 
         $this->idstring = $table->idstring;
 
+        $this->uniqueid = $table->uniqueid;
+
         // We don't want the encoded table stable, regardless of previous actions.
         $this->encodedtable = empty($encodedtable) ? $table->return_encoded_table() : $encodedtable;
 
@@ -203,11 +213,16 @@ class table implements renderable, templatable {
             $this->table[$key] = $value;
         }
 
-        // Now we see if we have a header class.
+        // We need a dedicated rowid. It will work like this:
+        // #tableidentifier_rx
+        $counter = 1;
 
+        // Now we see if we have a header class.
         // We have to prepare the row for output.
         foreach ($table->formatedrows as $rowid => $row) {
             $rowarray = [];
+
+            $rowarray['rowid'] = "#$table->uniqueid" . "_r$counter";
 
             // The tableheaderclasses need to be available also within the rows.
             foreach ($table->tableclasses as $key => $value) {
@@ -364,6 +379,7 @@ class table implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         $data = [
             'idstring' => $this->idstring,
+            'uniqueid' => $this->uniqueid,
             'encodedtable' => $this->encodedtable,
             'baseurl' => $this->baseurl,
             'table' => $this->table,

@@ -60,7 +60,7 @@
     }
 }}
 
-<div class="wunderbyte_table_container_{{idstring}} {{#showcomponentstoggle}}wunderbyte_table_filter_on{{/showcomponentstoggle}}">
+<div class="wunderbyte_table_container_{{idstring}} {{#showcomponentstoggle}}wunderbyte_table_filter_on{{/showcomponentstoggle}} {{uniqueid}}">
      <div class="container-fluid">
           <div class="row mb-2">
                <div class="col-md-6">
@@ -78,13 +78,13 @@
      </div>
 
 
-     <div class="wunderbyte_table_container">
+     <div class="wunderbyte_table_container {{uniqueid}}">
           <aside class="wunderbyte_table_components {{^showcomponentstoggle}} inactive {{/showcomponentstoggle}}">
                {{> local_wunderbyte_table/component_sort }}
                {{> local_wunderbyte_table/component_filter }}
                {{> local_wunderbyte_table/component_infinitescroll }}
           </aside>
-          <div class= "wunderbyteTableClass" id='a{{idstring}}'>
+          <div class= "wunderbyteTableClass {{uniqueid}}" id='a{{idstring}}'>
                {{> local_wunderbyte_table/twtable_list }}
           </div>
      </div>
