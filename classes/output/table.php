@@ -215,14 +215,15 @@ class table implements renderable, templatable {
 
         // We need a dedicated rowid. It will work like this:
         // #tableidentifier_rx
-        $counter = 1;
+        $rcounter = 1;
 
         // Now we see if we have a header class.
         // We have to prepare the row for output.
         foreach ($table->formatedrows as $rowid => $row) {
             $rowarray = [];
 
-            $rowarray['rowid'] = "#$table->uniqueid" . "_r$counter";
+            $rowarray['rowid'] = "$table->uniqueid" . "_r$rcounter";
+            $rcounter++;
 
             // The tableheaderclasses need to be available also within the rows.
             foreach ($table->tableclasses as $key => $value) {
