@@ -151,6 +151,13 @@ class wunderbyte_table extends table_sql {
      */
     public $baseurl = null;
 
+    /**
+     * Card sort is a special sort element
+     * Used when there are now table headers displayed.
+     * This can only be determined manually.
+     */
+    public $cardsort = false;
+
 
 
     /**

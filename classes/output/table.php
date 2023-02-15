@@ -166,6 +166,12 @@ class table implements renderable, templatable {
     private $actionbuttons = [];
 
     /**
+     * Display Card sort element
+     * (Depends on the template, if we want this or not)
+     */
+    private $cardsort = false;
+
+    /**
      * Constructor.
      * @param wunderbyte_table $table
      */
@@ -196,6 +202,8 @@ class table implements renderable, templatable {
         $this->tableheight = $table->tableheight;
 
         $this->stickyheader = $table->stickyheader;
+
+        $this->cardsort = $table->cardsort;
 
         $this->set_actionbuttons_array($table->actionbuttons);
 
@@ -410,7 +418,11 @@ class table implements renderable, templatable {
 
         // Only if we want to show the sortelements, we actually add the key.
         if ($this->sort) {
-            $data['sort'] = $this->sort;
+            if (!$this->cardsort) {
+                $data['sort'] = $this->sort;
+            } else {
+                $data['cardsort'] = $this->sort;
+            }
         }
 
         // Only if we want to show the searchfield, we actually add the key.

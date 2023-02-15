@@ -118,6 +118,8 @@ $table->actionbuttons[] = [
 // Work out the sql for the table.
 $table->set_sql('*', "{user}", '1=1');
 
+$table->cardsort = true;
+
 // TODO: set stickyheader to true and tableheight to 500 e.g.
 // TODO: asc and desc used wrong.
 $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
