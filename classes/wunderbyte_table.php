@@ -158,8 +158,6 @@ class wunderbyte_table extends table_sql {
      */
     public $cardsort = false;
 
-
-
     /**
      * @var array array of supplementary column information. Can be used like below.
      * ['cardheader' => [

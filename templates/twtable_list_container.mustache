@@ -72,6 +72,7 @@
 
                </div>
                <div class="col-md-6 text-right align-self-end">
+                    {{> local_wunderbyte_table/component_sort }}
                     {{> local_wunderbyte_table/component_search }}
                </div>
           </div>
@@ -80,7 +81,6 @@
 
      <div class="wunderbyte_table_container {{uniqueid}}">
           <aside class="wunderbyte_table_components {{^showcomponentstoggle}} inactive {{/showcomponentstoggle}}">
-               {{> local_wunderbyte_table/component_sort }}
                {{> local_wunderbyte_table/component_filter }}
                {{> local_wunderbyte_table/component_infinitescroll }}
           </aside>
