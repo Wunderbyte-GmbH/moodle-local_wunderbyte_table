@@ -107,7 +107,7 @@ class wunderbyte_table extends table_sql {
      *
      * @var string Set height of table.
      */
-    public $tableheight = '1000px';
+    public $tableheight = '';
 
     /**
      *
