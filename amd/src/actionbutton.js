@@ -94,16 +94,19 @@ async function showConfirmationModal(button, titleText, bodyText, saveButtonText
 
     // Create an array of ids of the checked boxes.
     checkboxes.forEach(x => {
+
+        // eslint-disable-next-line no-console
+        console.log(x.id, data.labelcolumn);
+
         if (x.checked) {
 
-          // If the key labelcolumn is defined, we use this.
-          if (data.labelcolumn) {
-
+          try {
             const name = container.querySelector('[data-id="' + x.id + '"] [data-label="' + data.labelcolumn + '"]').textContent;
             labelarray.push(name);
-          } else {
+          } catch (e) {
             labelarray.push(x.id);
           }
+
           checkedids.push(x.id);
       }
     });
