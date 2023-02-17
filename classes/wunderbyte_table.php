@@ -1222,11 +1222,13 @@ class wunderbyte_table extends table_sql {
 
                     $filter .= $counter == 1 ? "" : " OR ";
 
-                    $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
-
                     if (is_numeric($value)) {
-                        $this->sql->params[$paramsvaluekey] = "$value";
+
+                        // As we can't know the
+                        $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
+                        $this->sql->params[$paramsvaluekey] = "". $value;
                     } else {
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "%$value%";
                     }
 
