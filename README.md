@@ -2,7 +2,8 @@
 Wunderbyte Table can be used instead of the table_sql class and then supports all the actions via Ajax.
 
 This local plugin was developed to allow the use of the table_sql class within modals and tabs.
-There is no special configuration required. After the installation of the local_wunderbyte_table, you can create an
+There is no special configuration required, BUT with special configuration, your table will be much more powerful.
+After the installation of the local_wunderbyte_table, you can create an
 extended class to wunderbyte_table (instead of table_sql).
 
     class booking_table extends wunderbyte_table {}
@@ -95,6 +96,11 @@ By the way: 'id' will aways be obmitted, as it is not a useful filter in any cas
         ],
     ]);
 
+If the output template you want to use doesn't support clickable headers to sort (eg because you use cards), you might want to use the sort select. Just add
+
+    $table->cardsort = true;
+
+to your wunderbyte_table classs (look in the _container templates to understand how this works).
 
 ### Exploding strings for columns storing multiple values
 The define_filtercolumns function also supports columns with multiple values stored as string with a separator.
@@ -118,7 +124,7 @@ You can define the attribute of the JSON object which should be used for the fil
             'jsonattribute' => 'name', // Replace 'name' with the actual attribute name.
         ],
     ]);
-     
+
 
 ## Lazy loading vs. direct out
 To lazy load wunderbyte table (eg. for loading in tabs or modals) you need to call $table->lazyout() instead of $table->out. While out will return the html to echo, lazyout echos right away. If you want the html of lazyout, use $table->lazyouthtml();
