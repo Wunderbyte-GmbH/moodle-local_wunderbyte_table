@@ -1,3 +1,21 @@
+## Version 1.4.7 (2023022000)
+* Improvement: Fix countlabel string.
+* Improvement: add reloadAllTables function.
+* Improvement: filter js less verbose.
+* Improvement: Add special treatment for JSON objects (e.g. for teachers).
+* Improvement: If there is nothing to filter, we don't show the filter.
+* Improvement: Documentation for explode and JSON features for filters.
+* Improvement: Make sure data-id is present in dom. We need it for a couple of operations.
+* Improvement: Layout - smaller filter column.
+* Improvement: Add a few identifiers for table & rows.
+* Improvement: make actionbutton more robust.
+* Improvement: add cardsort property to hide or unhide special sort element.
+* Bugfix: fix filter with multiple tables on one page.
+* Bugfix: fix row enumerations being correct as well as row ID.
+* Bugfix: small fix to avoid overlapping footer.
+* Bugfix: Fixed and improved sorting.
+* Bugfix: fix filter for int & postgres.
+
 ## Version 1.4.6 (2023012800)
 * New feature: Add the "addcheckboxes functionality" with configurable action.
 
