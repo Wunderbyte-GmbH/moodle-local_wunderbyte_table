@@ -132,6 +132,9 @@ $table->showcountlabel = true;
 $table->showdownloadbutton = true;
 $table->showreloadbutton = true;
 
+$baseurl = new moodle_url('/local/wunderbyte_table/download.php');
+$table->define_baseurl($baseurl);
+
 if (!$table->is_downloading()) {
     $table->out(10, true);
     echo $OUTPUT->footer();

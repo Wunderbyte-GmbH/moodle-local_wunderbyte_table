@@ -43,8 +43,6 @@ $table = new $lib['classname']($lib['uniqueid']);
 
 $table->update_from_json($lib);
 
-$table->define_baseurl("$CFG->wwwroot/local/wunderbyte_table/download.php");
-
 $table->is_downloading($download, 'download', 'download');
 
 $table->printtable(20, true);
