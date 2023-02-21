@@ -352,7 +352,7 @@ class wunderbyte_table extends table_sql {
         }
 
         // At this point, we check if we need to add the checkboxes.
-        if ($this->addcheckboxes) {
+        if ($this->addcheckboxes && !$this->is_downloading()) {
             $columns = array_keys($this->columns);
             $headers = $this->headers;
             array_unshift($columns, 'wbcheckbox');
