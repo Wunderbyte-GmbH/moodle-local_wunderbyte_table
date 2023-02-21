@@ -489,15 +489,17 @@ class wunderbyte_table extends table_sql {
      * @return void
      */
     private function add_classnames_to_classes(&$jsonobject) {
-        // Pass all the variables to new table.
-        foreach ($jsonobject as $key => $value) {
-            if ($value instanceof stdClass) {
-                // We check if this is a coursemodule.
-                if (isset($value->cm)
-                    && isset($value->cm->id)) {
-                        // If so, we need to add the classname to make sure we can instantiate it afterwards.
-                        $classname = get_class($this->{$key});
-                        $value->wbtclassname = $classname;
+        if (!empty($jsonobject)) {
+            // Pass all the variables to new table.
+            foreach ($jsonobject as $key => $value) {
+                if ($value instanceof stdClass) {
+                    // We check if this is a coursemodule.
+                    if (isset($value->cm)
+                        && isset($value->cm->id)) {
+                            // If so, we need to add the classname to make sure we can instantiate it afterwards.
+                            $classname = get_class($this->{$key});
+                            $value->wbtclassname = $classname;
+                    }
                 }
             }
         }
@@ -1223,8 +1225,6 @@ class wunderbyte_table extends table_sql {
                     $filter .= $counter == 1 ? "" : " OR ";
 
                     if (is_numeric($value)) {
-
-                        // As we can't know the
                         $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "". $value;
                     } else {
