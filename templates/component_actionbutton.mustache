@@ -30,12 +30,13 @@
 }}
 {{#showactionbuttons}}
     <span>
-        <a href="#" class="{{class}} wb_action_button "
+        <a href="{{href}}" class="{{class}} wb_action_button "
             data-id="{{id}}"
             data-methodname="{{methodname}}"
             {{#data}}
                 data-{{key}}="{{value}}"
             {{/data}}>
+            <i class="{{iclass}}"></i>
             {{label}}
         </a>
     </span>
