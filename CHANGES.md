@@ -1,3 +1,9 @@
+## Version 1.4.8 (2023022800)
+* Improvement: Icon in front of action button label via template.
+* Improvement: Define baseurl only in test.php (not in download.php).
+* Improvement: No automatic checkboxes during downloading.
+* Bugfix: Fix warning on download if $jsonobject is empty.
+
 ## Version 1.4.7 (2023022000)
 * Improvement: Fix countlabel string.
 * Improvement: add reloadAllTables function.
