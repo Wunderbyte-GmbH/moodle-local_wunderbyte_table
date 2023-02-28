@@ -52,6 +52,10 @@ const SELECTOR = {
             return;
           }
 
+          if (button.dataset.methodname.length === 0) {
+            return;
+          }
+
           button.dataset.initialized = true;
 
           button.addEventListener('click', e => {

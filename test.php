@@ -94,6 +94,7 @@ $table->addcheckboxes = true;
 $table->actionbuttons[] = [
     'label' => get_string('add', 'core'), // Name of your action button.
     'class' => 'btn btn-primary',
+    'href' => '#',
     'id' => -1, // This forces single call execution.
     'formclass' => '', // To open dynamic form, instead of just confirmation modal.
     'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
@@ -105,6 +106,7 @@ $table->actionbuttons[] = [
 $table->actionbuttons[] = [
     'label' => get_string('delete', 'core'), // Name of your action button.
     'class' => 'btn btn-danger',
+    'href' => '#',
     'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
     'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
         'id' => 'id',
