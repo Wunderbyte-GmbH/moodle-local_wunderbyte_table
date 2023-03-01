@@ -1,3 +1,6 @@
+## Version 1.4.9 (2023030100)
+* Improvement: Show error when sql fails.
+
 ## Version 1.4.8 (2023022800)
 * Improvement: Icon in front of action button label via template.
 * Improvement: Define baseurl only in test.php (not in download.php).
