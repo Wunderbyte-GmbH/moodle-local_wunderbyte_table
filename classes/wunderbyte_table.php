@@ -848,7 +848,7 @@ class wunderbyte_table extends table_sql {
             } catch (Exception $e) {
 
                 if ($CFG->debug > 0) {
-                    $this->errormessage .= json_encode($e);
+                    $this->errormessage .= $e->getMessage();
                 } else {
                     $this->errormessage = get_string('somethingwentwrong', 'local_wunderbyte_table');
                 }
