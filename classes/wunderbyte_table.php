@@ -766,6 +766,8 @@ class wunderbyte_table extends table_sql {
      */
     public function query_db_cached($pagesize, $useinitialsbar=true) {
 
+        global $CFG;
+
         // We might run this function twice to generate the filter options.
         // Therefore, we need to store the values we actually want to use temporary.
         $setbackvalues = false;
@@ -845,7 +847,12 @@ class wunderbyte_table extends table_sql {
 
             } catch (Exception $e) {
 
-                $this->errormessage .= json_encode($e);
+                if ($CFG->debug > 0) {
+                    $this->errormessage .= json_encode($e);
+                } else {
+                    $this->errormessage = get_string('somethingwentwrong', 'local_wunderbyte_table');
+                }
+
                 $this->rawdata = [];
             }
 

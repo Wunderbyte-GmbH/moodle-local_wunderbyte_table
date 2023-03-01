@@ -57,3 +57,5 @@ $string['deletedatasubmit'] = 'Delete';
 $string['generictitle'] = 'Do you really want to treat this data?';
 $string['genericbody'] = 'You are about to treat this rows: <br> "{$a->data}"';
 $string['genericsubmit'] = 'Confirm';
+
+$string['somethingwentwrong'] = 'Something went wrong. Please contact your admin.';

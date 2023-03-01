@@ -57,3 +57,5 @@ $string['deletedatasubmit'] = 'Löschen';
 $string['generictitle'] = 'Möchten Sie wirklich diese Daten bearbeiten?';
 $string['genericbody'] = 'Sie sind dabei, diese Zeilen zu bearbeiten: <br> "{$a->data}"';
 $string['genericsubmit'] = 'Bestätigen';
+
+$string['somethingwentwrong'] = 'Etwas ist schiefgelaufen. Melden Sie den Fehler ihrem Admin';
