@@ -172,6 +172,13 @@ class table implements renderable, templatable {
     private $cardsort = false;
 
     /**
+     * Errormessage
+     *
+     * @var string
+     */
+    private $errormessage = '';
+
+    /**
      * Constructor.
      * @param wunderbyte_table $table
      */
@@ -182,6 +189,8 @@ class table implements renderable, templatable {
         $this->idstring = $table->idstring;
 
         $this->uniqueid = $table->uniqueid;
+
+        $this->errormessage = $table->errormessage;
 
         // We don't want the encoded table stable, regardless of previous actions.
         $this->encodedtable = empty($encodedtable) ? $table->return_encoded_table() : $encodedtable;
@@ -409,6 +418,7 @@ class table implements renderable, templatable {
             'infinitescroll' => $this->pagination['infinitescroll'] ?? null,
             'sesskey' => sesskey(),
             'filter' => $this->categories ?? null,
+            'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
         ];
 
         // Only if we want to show the searchfield, we actually add the key.

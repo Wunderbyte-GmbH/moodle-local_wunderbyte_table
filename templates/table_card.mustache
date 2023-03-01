@@ -99,6 +99,12 @@
 
 {{/table}}
 
+{{#errormessage}}
+     <div class="alert alert-danger" role="alert">
+          {{errormessage}}
+     </div>
+{{/errormessage}}
+
 {{> local_wunderbyte_table/component_pagination }}
 
 {{#js}}

@@ -89,6 +89,12 @@
 
 {{/table}}
 
+{{#errormessage}}
+     <div class="alert alert-danger" role="alert">
+          {{errormessage}}
+     </div>
+{{/errormessage}}
+
 {{#js}}
     require(['local_wunderbyte_table/init'], function(init) {
     init.init('{{idstring}}', '{{encodedtable}}');

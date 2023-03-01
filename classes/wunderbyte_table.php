@@ -236,6 +236,13 @@ class wunderbyte_table extends table_sql {
     public $actionbuttons = [];
 
     /**
+     * Errormessage in case of.
+     *
+     * @var string
+     */
+    public $errormessage = '';
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      *
      * @param string $uniqueid
@@ -837,6 +844,8 @@ class wunderbyte_table extends table_sql {
                 $this->query_db($pagesize, $useinitialsbar);
 
             } catch (Exception $e) {
+
+                $this->errormessage .= json_encode($e);
                 $this->rawdata = [];
             }
 
@@ -845,7 +854,12 @@ class wunderbyte_table extends table_sql {
             if ($this->cachecomponent
                 && $this->rawcachename
                 && $cache) {
-                $cache->set($cachekey, $this->rawdata);
+
+                // Only set cachekey when rawdata is bigger than 0.
+                if (count($this->rawdata) > 0) {
+                    $cache->set($cachekey, $this->rawdata);
+                }
+
                 if (isset($this->use_pages)
                             && isset($this->pagesize)
                             && isset($this->totalrows)) {
@@ -1372,6 +1386,9 @@ class wunderbyte_table extends table_sql {
      * @return string
      */
     public function return_encoded_table():string {
+
+        // We don't want errormessage in the encoded table.
+        $this->errormessage = '';
 
         // We have to do a few steps here to make sure we can recreate afterwards.
         $encodedtablelib = json_encode($this);
