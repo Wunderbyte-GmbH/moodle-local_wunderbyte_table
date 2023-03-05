@@ -120,7 +120,7 @@ $table->actionbuttons[] = [
 $table->sort_default_column = 'username';
 
 // Work out the sql for the table.
-$table->set_sql('*, mycahst', "{user}", '1=1');
+$table->set_sql('*', "{user}", '1=1');
 
 $table->cardsort = true;
 
