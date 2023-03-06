@@ -130,7 +130,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
     } else {
 
         // This is what we do when we didn't lazyload.
-        replaceLinksInFrag(idstring, encodedtable, element, null);
+        // replaceLinksInFrag(idstring, encodedtable, element, null);
 
         initializeComponents(idstring, encodedtable);
 
@@ -409,7 +409,7 @@ export const callLoadData = (
                         container = document.querySelector(".wunderbyte_table_container_" + idstring);
                     }
 
-                    replaceLinksInFrag(idstring, encodedtable, container, page);
+                    // replaceLinksInFrag(idstring, encodedtable, container, page);
 
                     // When everything is done, we loaded fine.
                     loadings[idstring] = false;
@@ -561,126 +561,6 @@ function returnHiddenElement(element) {
         }
     }
     return null;
-}
-
-/**
- * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
- * @param {string} idstring
- * @param {string} encodedtable
- * @param {DocumentFragment} frag
- * @param {int} page
- */
-function replaceSortColumnLinks(idstring, encodedtable, frag, page) {
-
-    var arrayOfItems = frag.querySelectorAll("th.header a");
-
-    arrayOfItems.forEach(item => {
-        var sortid = item.getAttribute('data-sortby');
-        var sortorder = item.getAttribute('data-sortorder');
-        var thide = item.getAttribute('data-action') == 'hide' ? item.getAttribute('data-column') : null;
-        var tshow = item.getAttribute('data-action') == 'show' ? item.getAttribute('data-column') : null;
-
-        item.setAttribute('href', '#');
-        item.addEventListener('click', () => {
-            callLoadData(idstring, encodedtable, page, sortid, thide, tshow, sortorder);
-        });
-    });
-}
-
-/**
- * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
- * @param {string} idstring
- * @param {string} encodedtable
- * @param {DocumentFragment} frag
- * @param {int} page
- */
-function replaceResetTableLink(idstring, encodedtable, frag, page) {
-    var arrayOfItems = frag.querySelectorAll("div.resettable");
-
-    if (!arrayOfItems || arrayOfItems.length == 0) {
-        return;
-    }
-    arrayOfItems.forEach(item => {
-        var classofelement = item.getAttribute('class');
-        if (classofelement.indexOf('resettable') >= 0) {
-            let listOfChildren = item.querySelectorAll('a');
-            listOfChildren.forEach(subitem => {
-                subitem.setAttribute('href', '#');
-                subitem.addEventListener('click', () => {
-                    callLoadData(idstring, encodedtable, page, null, null, null, null, 1);
-                });
-            });
-        }
-    });
-}
-
-/**
- * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
- * @param {string} idstring
- * @param {string} encodedtable
- * @param {DocumentFragment} frag
- */
-function replacePaginationLinks(idstring, encodedtable, frag) {
-    var arrayOfPageItems = frag.querySelectorAll(".page-item");
-
-    if (!arrayOfPageItems || arrayOfPageItems.length == 0) {
-        return;
-    }
-    arrayOfPageItems.forEach(item => {
-
-        let pageNumber = item.dataset.pagenumber;
-
-        if (pageNumber) {
-            --pageNumber;
-            item.addEventListener('click', () => {
-                callLoadData(idstring, encodedtable, pageNumber);
-            });
-        }
-    });
-}
-
-/**
- * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
- * @param {string} idstring
- * @param {string} encodedtable
- * @param {DocumentFragment} frag
- */
-function replaceDownloadLink(idstring, encodedtable, frag) {
-
-    var arrayOfItems = frag.querySelectorAll("form");
-
-    arrayOfItems.forEach(item => {
-        if (item.tagName == 'FORM') {
-            item.setAttribute('method', 'POST');
-            let newnode = document.createElement('input');
-            newnode.setAttribute('type', 'hidden');
-            newnode.setAttribute('name', 'encodedtable');
-            newnode.setAttribute('value', encodedtable);
-            item.appendChild(newnode);
-        }
-    });
-}
-
-/**
- *
- * @param {*} idstring
- * @param {*} encodedtable
- * @param {*} frag
- * @param {*} page
- */
-function replaceLinksInFrag(idstring, encodedtable, frag, page = null) {
-
-    if (!page) {
-        const activepage = frag.querySelector('li.page-item active');
-        if (activepage) {
-            page = activepage.getAttribute('data-page-number');
-        }
-    }
-
-    replaceDownloadLink(idstring, encodedtable, frag);
-    replaceResetTableLink(idstring, encodedtable, frag, page);
-    replacePaginationLinks(idstring, encodedtable, frag);
-    replaceSortColumnLinks(idstring, encodedtable, frag, page);
 }
 
 /**
