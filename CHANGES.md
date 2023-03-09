@@ -1,3 +1,7 @@
+## Version 1.5.0 (2023030900)
+* Bugfix: Fix JS error on reloadAllTables.
+* Improvement: Better error message on sql error.
+
 ## Version 1.4.9 (2023030100)
 * Improvement: Show error when sql fails.
 
