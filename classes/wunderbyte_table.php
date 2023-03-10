@@ -968,7 +968,7 @@ class wunderbyte_table extends table_sql {
 
                 $row = (array)$row;
 
-                if (empty($row[$key])) {
+                if ($row[$key] == null) {
                     continue;
                 }
 
