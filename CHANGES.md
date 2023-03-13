@@ -1,3 +1,6 @@
+## Version 1.5.1 (2023031300)
+* Improvement: Allow value "0" as filter option (== null isstead of "empty" check).
+
 ## Version 1.5.0 (2023030900)
 * Bugfix: Fix JS error on reloadAllTables.
 * Improvement: Better error message on sql error.
