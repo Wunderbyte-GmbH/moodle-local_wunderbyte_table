@@ -41,7 +41,7 @@
 }}
 
 {{^nopages}}
-    <nav aria-label="Page navigation example">
+    <nav aria-label="{{#str}} page, core {{/str}}">
     <ul class="pagination">
         <li class="page-item {{disableprevious}}" data-pagenumber="{{previouspage}}">
             <a class="page-link" href="#" aria-label="{{#str}} previous, core {{/str}}">
@@ -51,7 +51,7 @@
         </li>
         {{#pages}}
             {{^ellipsis}}
-                <li class="page-item {{active}}" data-pagenumber="{{pagenumber}}"><a class="page-link" href="#">{{pagenumber}}</a></li>
+                <li class="page-item {{active}}" data-pagenumber="{{pagenumber}}"><a class="page-link" href="#" aria-label="{{#str}} page, core {{/str}} {{pagenumber}}">{{pagenumber}}</a></li>
             {{/ellipsis}}
             {{#ellipsis}}
                 <li class="page-item disabled"><a class="page-link" href="#">…</a></li>
