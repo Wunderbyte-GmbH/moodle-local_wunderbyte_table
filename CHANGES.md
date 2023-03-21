@@ -1,3 +1,6 @@
+## Version 1.5.2 (2023032100)
+* Bugfix: Pagination fixed.
+
 ## Version 1.5.1 (2023031300)
 * Improvement: Allow value "0" as filter option (== null isstead of "empty" check).
 
