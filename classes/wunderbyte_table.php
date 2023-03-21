@@ -968,7 +968,8 @@ class wunderbyte_table extends table_sql {
 
                 $row = (array)$row;
 
-                if (!isset($row[$key]) || $row[$key] === null) {
+                // Do not use empty(...) here because we want to show 0 values.
+                if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
                     continue;
                 }
 
