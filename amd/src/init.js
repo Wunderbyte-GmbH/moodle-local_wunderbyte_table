@@ -43,6 +43,9 @@ var scrollingelement = {};
  */
 export const init = (idstring, encodedtable) => {
 
+    // eslint-disable-next-line no-console
+    console.log('init booking');
+
     if (!queries[idstring]) {
         checkInTable(idstring, encodedtable);
     }
@@ -131,6 +134,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
         // This is what we do when we didn't lazyload.
         // replaceLinksInFrag(idstring, encodedtable, element, null);
+        addLinksToPagination(idstring, encodedtable, element);
 
         initializeComponents(idstring, encodedtable);
 
@@ -409,7 +413,7 @@ export const callLoadData = (
                         container = document.querySelector(".wunderbyte_table_container_" + idstring);
                     }
 
-                    // replaceLinksInFrag(idstring, encodedtable, container, page);
+                    addLinksToPagination(idstring, encodedtable, container);
 
                     // When everything is done, we loaded fine.
                     loadings[idstring] = false;
@@ -561,6 +565,33 @@ function returnHiddenElement(element) {
         }
     }
     return null;
+}
+
+
+
+/**
+ * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
+ * @param {string} idstring
+ * @param {string} encodedtable
+ * @param {DocumentFragment} frag
+ */
+function addLinksToPagination(idstring, encodedtable, frag) {
+    var arrayOfPageItems = frag.querySelectorAll(".page-item");
+
+    if (!arrayOfPageItems || arrayOfPageItems.length == 0) {
+        return;
+    }
+    arrayOfPageItems.forEach(item => {
+
+        let pageNumber = item.dataset.pagenumber;
+
+        if (pageNumber) {
+            --pageNumber;
+            item.addEventListener('click', () => {
+                callLoadData(idstring, encodedtable, pageNumber);
+            });
+        }
+    });
 }
 
 /**
