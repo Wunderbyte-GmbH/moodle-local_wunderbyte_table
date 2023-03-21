@@ -193,7 +193,8 @@
 
 .wunderbyteTableFilter ul {
     overflow-y: auto;
-    max-height: 20.5rem;
+    /* Show all filters without scrollbar. */
+    /* max-height: 20.5rem; */
 }
 
 .wunderbyteTableFilter .collapse-accordion-toggle[aria-expanded=true] span svg:not(:first-child) {
@@ -234,6 +235,7 @@
     width: 20px;
     height: 1.3rem;
     opacity: 0;
+    margin-left: 0;
 }
 
 .wunderbyteTableFilter :checked ~ .form-check-label::before {
@@ -254,7 +256,6 @@
     height: 0.5rem;
     content: "";
     background: 0 0;
-    border-radius: 3px;
     position: absolute;
     z-index: 200000;
 }
@@ -316,7 +317,8 @@ body {
 }
 .wunderbyteTableFilter ul {
     overflow-y: auto;
-    max-height: 20.5rem;
+    /* Show all filters without scrollbar. */
+    /* max-height: 20.5rem; */
 }
 .wunderbyteTableFilter .collapse-accordion-toggle[aria-expanded=true] span svg:not(:first-child) {
     display: none;
@@ -336,22 +338,6 @@ body {
     display: block;
     min-height: 1.6rem;
     padding-left: 2rem;
-}
-.wunderbyteTableFilter .form-check-label {
-    color: #77838f;
-    font-size: 1rem;
-    padding-left: 6px;
-    position: relative;
-    margin-bottom: 0;
-    vertical-align: top;
-}
-.wunderbyteTableFilter .form-check-input {
-    position: absolute;
-    left: 0;
-    z-index: 30000001;
-    width: 20px;
-    height: 1.3rem;
-    opacity: 0;
 }
 .wunderbyteTableFilter :checked ~ .form-check-label::before {
     border-color: #090761;
