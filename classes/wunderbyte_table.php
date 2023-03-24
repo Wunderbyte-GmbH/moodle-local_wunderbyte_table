@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/tablelib.php");
 
+use cache;
 use Exception;
 use local_wunderbyte_table\output\lazytable;
 use local_wunderbyte_table\output\table;
@@ -227,7 +228,7 @@ class wunderbyte_table extends table_sql {
      *
      * @var string
      */
-    public $base64encodedtablelib = '';
+    public $tablecachehash = '';
 
     /**
      *
@@ -329,12 +330,12 @@ class wunderbyte_table extends table_sql {
         $this->downloadhelpbutton = $downloadhelpbutton;
 
         // Retrieve the encoded table.
-        $base64encodedtablelib = $this->return_encoded_table();
+        $tablecachehash = $this->return_encoded_table();
 
-        $this->base64encodedtablelib = $base64encodedtablelib;
+        $this->tablecachehash = $tablecachehash;
         $output = $PAGE->get_renderer('local_wunderbyte_table');
-        $data = new lazytable($this->idstring, $base64encodedtablelib);
-        return [$this->idstring, $base64encodedtablelib, $output->render_lazytable($data)];
+        $data = new lazytable($this->idstring, $tablecachehash);
+        return [$this->idstring, $tablecachehash, $output->render_lazytable($data)];
     }
 
     /**
@@ -344,7 +345,7 @@ class wunderbyte_table extends table_sql {
      * @param [type] $pagesize
      * @param [type] $useinitialsbar
      * @param string $downloadhelpbutton
-     * @return void
+     * @return table
      */
     public function printtable($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
@@ -388,7 +389,7 @@ class wunderbyte_table extends table_sql {
      * data to the table with add_data or add_data_keyed.
      * @param boolean $closeexportclassdoc
      * @param string $encodedtable
-     * @return void
+     * @return table
      */
     public function finish_output($closeexportclassdoc = true, $encodedtable = '') {
         if ($this->exportclass !== null) {
@@ -427,89 +428,6 @@ class wunderbyte_table extends table_sql {
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         $table = new table($this);
         echo $output->render_table($table);
-    }
-
-    /**
-     * The function to update settings from the json. During encoding, arrays & stds get mixed up sometimes.
-     * There, this does the cleaning and attribution.
-     *
-     * @param [type] $lib
-     * @return void
-     */
-    public function update_from_json($lib) {
-        // Pass all the variables to new table.
-        foreach ($lib as $key => $value) {
-
-            if (isset($value['cm'])
-                    && isset($value['cm']['id'])
-                    && isset($value['wbtclassname'])
-                    && class_exists($value['wbtclassname'])) {
-                if ($cm = new $value['wbtclassname']($value['cm']['id'])) {
-                    $this->{$key} = $cm;
-                } else {
-                    // If we couldn't create an instance, we stick to the stdclass.
-                    $this->{$key} = $value;
-                }
-            } else if (in_array($key, ['sql'])) {
-                $this->{$key} = (object)$value;
-            } else if ($key === 'output') { // We don't want to override the output renderer.
-                continue;
-            } else {
-                $this->{$key} = $value;
-            }
-
-            if ($key === 'baseurl') {
-                if (!$value && !empty($lib['baseurlstring'])) {
-                    $this->define_baseurl($lib['baseurlstring']);
-                }
-            }
-        }
-    }
-
-    /**
-     * Function to treat decoding of the encoded talbe we receive via ajax or post.
-     *
-     * @param string $encodedtable
-     * @return object
-     */
-    public static function decode_table_settings(string $encodedtable):array {
-
-        $urldecodedtable = urldecode($encodedtable);
-
-        if (!$decodedlib = base64_decode($urldecodedtable)) {
-            throw new moodle_exception('novalidbase64', 'local_wunderbyte_table', null, null,
-                    'Invalid base64 string');
-        }
-        if (!$lib = json_decode($decodedlib, true)) {
-            throw new moodle_exception('novalidjson', 'local_wunderbyte_table', null, null,
-                    'Invalid json string');
-        }
-
-        return $lib;
-    }
-
-    /**
-     * This function is necessary to add the classname including the path to the json object.
-     * With this information we can reinstantiate the class afterwards.
-     *
-     * @param object $jsonobject
-     * @return void
-     */
-    private function add_classnames_to_classes(&$jsonobject) {
-        if (!empty($jsonobject)) {
-            // Pass all the variables to new table.
-            foreach ($jsonobject as $key => $value) {
-                if ($value instanceof stdClass) {
-                    // We check if this is a coursemodule.
-                    if (isset($value->cm)
-                        && isset($value->cm->id)) {
-                            // If so, we need to add the classname to make sure we can instantiate it afterwards.
-                            $classname = get_class($this->{$key});
-                            $value->wbtclassname = $classname;
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -1398,17 +1316,14 @@ class wunderbyte_table extends table_sql {
         // We don't want errormessage in the encoded table.
         $this->errormessage = '';
 
-        // We have to do a few steps here to make sure we can recreate afterwards.
-        $encodedtablelib = json_encode($this);
-
-        $jsonobject = json_decode($encodedtablelib);
-        $this->add_classnames_to_classes($jsonobject);
-        $encodedtablelib = json_encode($jsonobject);
-
-        $base64encodedtablelib = base64_encode($encodedtablelib);
+        if (empty($this->tablecachehash)) {
+            $cache = cache::make('local_wunderbyte_table', 'encodedtables');
+            $this->tablecachehash = md5(json_encode($this->sql) + time());
+            $cache->set($this->tablecachehash, $this);
+        }
 
         // We need to urlencode everything to make it proof.
-        return urlencode($base64encodedtablelib);
+        return $this->tablecachehash;
     }
 
     /**
@@ -1518,5 +1433,19 @@ class wunderbyte_table extends table_sql {
             'success' => 1,
             'message' => 'Did work',
         ];
+    }
+
+    /**
+     * This returns an instance of wunderbyte table or child class.
+     *
+     * @param string $tablecachehash
+     * @return wunderbyte_table
+     */
+    public static function instantiate_from_tablecashhash(string $tablecachehash) {
+
+        $cache = cache::make('local_wunderbyte_table', 'encodedtables');
+        $class = $cache->get($tablecachehash);
+
+        return $class;
     }
 }
