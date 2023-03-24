@@ -1318,7 +1318,7 @@ class wunderbyte_table extends table_sql {
 
         if (empty($this->tablecachehash)) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
-            $this->tablecachehash = md5(json_encode($this->sql) + time());
+            $this->tablecachehash = md5(json_encode($this->sql) . time());
             $cache->set($this->tablecachehash, $this);
         }
 
