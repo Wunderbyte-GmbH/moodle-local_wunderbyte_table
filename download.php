@@ -37,11 +37,7 @@ $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url('/download.php');
 
-$lib = wunderbyte_table::decode_table_settings($encodedtable);
-
-$table = new $lib['classname']($lib['uniqueid']);
-
-$table->update_from_json($lib);
+$table = wunderbyte_table::instantiate_from_tablecashhash($encodedtable);
 
 $table->is_downloading($download, 'download', 'download');
 

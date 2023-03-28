@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Testfile to see how wunderbyte_table works.
+ * Demofile to see how wunderbyte_table works.
  *
  * @package     local_wunderbyte_table
  * @copyright   2023 Wunderbyte GmbH <info@wunderbyte.at>
@@ -36,12 +36,9 @@ if (!has_capability('moodle/site:config', $syscontext)) {
 
 $context = context_system::instance();
 $PAGE->set_context($context);
-$PAGE->set_url('/local/wunderbyte_table/test.php');
-
-$download = optional_param('download', '', PARAM_ALPHA);
+$PAGE->set_url('/local/wunderbyte_table/demo.php');
 
 $table = new wunderbyte_table('uniqueid');
-$table->is_downloading($download, 'test', 'testing123');
 
 // $table->add_subcolumns('cardbody', ['id', 'username', 'firstname', 'lastname', 'email']);
 $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
@@ -74,15 +71,6 @@ $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'act
 // $table->set_tableclass('listheaderclass', 'card d-none d-md-block');
 // $table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
 // $table->set_tableclass('cardbodyclass', 'card-body row');
-
-if (!$table->is_downloading()) {
-    // Only print headers if not asked to download data
-    // Print the page header.
-    $PAGE->set_title('Testing');
-    $PAGE->set_heading('Testing table class');
-    $PAGE->navbar->add('Testing table class', new moodle_url('/local/wunderbyte_table/test.php'));
-    echo $OUTPUT->header();
-}
 
 $table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
 $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
@@ -120,12 +108,10 @@ $table->actionbuttons[] = [
 $table->sort_default_column = 'username';
 
 // Work out the sql for the table.
-$table->set_sql('*', "{user}", '1=1');
+$table->set_filter_sql('*', "{user}", '1=1', '');
 
 $table->cardsort = true;
 
-// TODO: set stickyheader to true and tableheight to 500 e.g.
-// TODO: asc and desc used wrong.
 $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
 // $table->infinitescroll = 20;
@@ -136,12 +122,10 @@ $table->showcountlabel = true;
 $table->showdownloadbutton = true;
 $table->showreloadbutton = true;
 
-$baseurl = new moodle_url('/local/wunderbyte_table/download.php');
-$table->define_baseurl($baseurl);
+$PAGE->set_title('Testing');
+$PAGE->set_heading('Testing table class');
+$PAGE->navbar->add('Testing table class', new moodle_url('/local/wunderbyte_table/demo.php'));
+echo $OUTPUT->header();
 
-if (!$table->is_downloading()) {
-    $table->out(10, true);
-    echo $OUTPUT->footer();
-} else {
-    $table->out(10, true);
-}
+$table->out(10, true);
+echo $OUTPUT->footer();
