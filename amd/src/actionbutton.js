@@ -35,7 +35,7 @@ const SELECTOR = {
 };
 
 /**
- * Function to add click listener to acton button.
+ * Function to add click listener to action button.
  * @param {string} selector
  * @param {string} idstring
  * @param {string} encodedtable
@@ -174,7 +174,6 @@ function transmitAction(id, methodname, datastring, idstring, encodedtable) {
     done: function(data) {
 
         if (data.success == 1) {
-
           showNotification(data.message, "success");
         } else {
           showNotification(data.message, "danger");
@@ -200,39 +199,50 @@ function transmitAction(id, methodname, datastring, idstring, encodedtable) {
 function getIds(id, idstring, data) {
 
   var checkedids = [];
-  const labelarray = [];
+
+const labelarray = [];
+const container = document.querySelector('#a' + idstring);
 
   // If the id is 0, we return for all checked checkboxes.
   // if not, just for the current one.
   if (id < 1) {
-    const container = document.querySelector('#a' + idstring);
+
     const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOX);
 
     // Create an array of ids of the checked boxes.
     checkboxes.forEach(x => {
 
         if (x.checked) {
-
-          try {
-            const name = container.querySelector('[data-id="' + x.id + '"] [data-label="' + data.labelcolumn + '"]').textContent;
-            labelarray.push(name);
-          } catch (e) {
-            labelarray.push(x.id);
-          }
-
+          labelarray.push(returnLabel(x.id, data.labelcolumn));
           checkedids.push(x.id);
-      }
+        }
     });
 
-    data.checkedids = checkedids;
   } else {
-    checkedids = [id];
+    labelarray.push(returnLabel(id, data.labelcolumn));
+    checkedids.push(id);
   }
-
   return {
     'checkedids': checkedids,
     'labelarray': labelarray,
   };
+
+/**
+ * Function to return label name or id if no name available.
+ * @param {*} id
+ * @param {*} label
+ * @returns {String}
+ */
+  function returnLabel(id, label) {
+    try {
+      const name = container.querySelector('[data-id="' + id + '"] [data-label="' + label + '"]').textContent;
+      return name;
+    } catch (e) {
+      return '' + id;
+    }
+  }
+}
+
 }
 
 /**

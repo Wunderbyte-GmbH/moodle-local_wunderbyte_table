@@ -66,6 +66,22 @@ class demo_table extends wunderbyte_table {
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,
+                'labelcolumn' => 'username',
+            ]
+        ];
+
+        $data[] = [
+            'label' => get_string('add', 'core'), // Name of your action button.
+            'class' => 'btn btn-success',
+            'href' => '#', // You can either use the link, or JS, or both.
+            'iclass' => 'fa fa-edit', // Add an icon before the label.
+            'id' => $values->id,
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'ischeckbox' => true,
+            'checkboxlabel' => 'Checkbox',
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => $values->id,
+                'labelcolumn' => 'username',
             ]
         ];
 

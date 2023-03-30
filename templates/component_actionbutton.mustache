@@ -29,6 +29,7 @@
 
 }}
 {{#showactionbuttons}}
+    {{^ischeckbox}}
     <span>
         <a href="{{href}}" class="{{class}} wb_action_button "
             data-id="{{id}}"
@@ -42,4 +43,11 @@
             {{label}}
         </a>
     </span>
+    {{/ischeckbox}}
+    {{#ischeckbox}}
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="{{id}}">
+            <label class="form-check-label" for="{{id}}">{{checkboxlabel}}</label>
+        </div>
+    {{/ischeckbox}}
 {{/showactionbuttons}}
