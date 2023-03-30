@@ -22,6 +22,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_wunderbyte_table\demo_table;
 use local_wunderbyte_table\wunderbyte_table;
 
 require_once(__DIR__ . '/../../config.php');
@@ -38,7 +39,7 @@ $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url('/local/wunderbyte_table/demo.php');
 
-$table = new wunderbyte_table('uniqueid');
+$table = new demo_table('uniqueid');
 
 // $table->add_subcolumns('cardbody', ['id', 'username', 'firstname', 'lastname', 'email']);
 $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
@@ -86,6 +87,7 @@ $table->actionbuttons[] = [
     'id' => -1, // This forces single call execution.
     'formclass' => '', // To open dynamic form, instead of just confirmation modal.
     'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
+    'nomodal' => true, // If set to true, there is no modal but the method will be called directly.
     'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
         'id' => 'id',
     ],
@@ -96,12 +98,14 @@ $table->actionbuttons[] = [
     'class' => 'btn btn-danger',
     'href' => '#',
     'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+    'nomodal' => false,
     'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
         'id' => 'id',
         'titlestring' => 'deletedatatitle',
         'bodystring' => 'deletedatabody',
         'submitbuttonstring' => 'deletedatasubmit',
         'component' => 'local_wunderbyte_table',
+        'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
     ]
 ];
 

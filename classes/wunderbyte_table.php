@@ -1382,60 +1382,6 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
-     * This handles the colum checkboxes.
-     *
-     * @param stdClass $values
-     * @return void
-     */
-    public function col_action($values) {
-
-        global $OUTPUT;
-
-        $data['showactionbuttons'][] = [
-            'label' => get_string('delete', 'core'), // Name of your action button.
-            'class' => 'btn btn-danger',
-            'href' => '#', // You can either use the link, or JS, or both.
-            'iclass' => 'fa fa-edit', // Add an icon before the label.
-            'id' => $values->id,
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
-                'key' => 'id',
-                'value' => $values->id,
-            ]
-        ];
-
-        $data['showactionbuttons'][] = [
-            'label' => get_string('add', 'core'), // Name of your action button.
-            'class' => 'btn btn-success',
-            'href' => '#', // You can either use the link, or JS, or both.
-            'iclass' => 'fa fa-edit', // Add an icon before the label.
-            'id' => $values->id,
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
-                'key' => 'id',
-                'value' => $values->id,
-            ]
-        ];
-
-        return $OUTPUT->render_from_template('local_wunderbyte_table/component_actionbutton', $data);;
-    }
-
-    /**
-     * Delete item.
-     *
-     * @param integer $id
-     * @param string $data
-     * @return array
-     */
-    public function deleteitem(int $id, string $data):array {
-
-        return [
-            'success' => 1,
-            'message' => 'Did work',
-        ];
-    }
-
-    /**
      * This returns an instance of wunderbyte table or child class.
      *
      * @param string $tablecachehash

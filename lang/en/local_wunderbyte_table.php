@@ -59,3 +59,4 @@ $string['genericbody'] = 'You are about to treat this rows: <br> "{$a->data}"';
 $string['genericsubmit'] = 'Confirm';
 
 $string['somethingwentwrong'] = 'Something went wrong. Please contact your admin.';
+$string['nocheckboxchecked'] = 'No checkbox checked';

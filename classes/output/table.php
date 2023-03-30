@@ -214,7 +214,9 @@ class table implements renderable, templatable {
 
         $this->cardsort = $table->cardsort;
 
-        $this->set_actionbuttons_array($table->actionbuttons);
+        self::transform_actionbuttons_array($table->actionbuttons);
+
+        $this->actionbuttons = $table->actionbuttons;
 
         list($this->totalrecords, $this->filteredrecords) = $table->return_records_count();
 
@@ -479,7 +481,7 @@ class table implements renderable, templatable {
      * @param array $actionbuttons
      * @return void
      */
-    private function set_actionbuttons_array(array $actionbuttons) {
+    public static function transform_actionbuttons_array(array &$actionbuttons) {
         $actionbuttonsarray = [];
         foreach ($actionbuttons as $actionbutton) {
             $datas = $actionbutton['data'];
@@ -494,6 +496,6 @@ class table implements renderable, templatable {
             $actionbutton['id'] = $actionbutton['id'] ?? 0;
             $actionbuttonsarray[] = $actionbutton;
         }
-        $this->actionbuttons = $actionbuttonsarray;
+        $actionbuttons = $actionbuttonsarray;
     }
 }

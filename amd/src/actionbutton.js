@@ -25,7 +25,8 @@ import ModalEvents from 'core/modal_events';
 import Ajax from 'core/ajax';
 import {showNotification} from 'local_wunderbyte_table/notifications';
 import {reloadAllTables} from 'local_wunderbyte_table/reload';
-import {get_strings as getStrings} from 'core/str';
+import {get_strings as getStrings,
+        get_string as getString} from 'core/str';
 
 const SELECTOR = {
   ACTIONBUTTON: '.wb_action_button',
@@ -44,9 +45,6 @@ const SELECTOR = {
       const container = document.querySelector(selector);
       const actionbuttons = container.querySelectorAll(SELECTOR.ACTIONBUTTON);
 
-      // eslint-disable-next-line no-console
-      console.log('initializeActionButton', container, actionbuttons);
-
       actionbuttons.forEach(button => {
           if (button.dataset.initialized) {
             return;
@@ -58,14 +56,14 @@ const SELECTOR = {
 
           button.dataset.initialized = true;
 
-          button.addEventListener('click', e => {
+          button.addEventListener('click', () => {
 
-            const target = e.target;
+            if (button.dataset.nomodal && button.dataset.id > 0) {
 
-            // eslint-disable-next-line no-console
-            console.log('transmit data', target);
-
-            showConfirmationModal(button, 'title', 'body', 'button', idstring, encodedtable);
+              transmitAction(button.dataset.id, button.dataset.methodname, JSON.stringify(button.dataset), idstring, encodedtable);
+            } else {
+              showConfirmationModal(button, idstring, encodedtable);
+            }
           });
       });
 }
@@ -73,57 +71,27 @@ const SELECTOR = {
 /**
  * Shows generic confirmation modal.
  * @param {*} button
- * @param {string} titleText
- * @param {string} bodyText
- * @param {string} saveButtonText
  * @param {string} idstring
  * @param {string} encodedtable
  */
-async function showConfirmationModal(button, titleText, bodyText, saveButtonText, idstring, encodedtable) {
+async function showConfirmationModal(button, idstring, encodedtable) {
 
   const id = button.dataset.id;
   const methodname = button.dataset.methodname;
   const data = button.dataset; // Get all the data of the clicked button.
 
-  var checkedids = [];
-  const labelarray = [];
+  const result = getIds(id, idstring, data);
 
-  // If the id is 0, we return for all checked checkboxes.
-  // if not, just for the current one.
-  if (id < 1) {
-    const container = document.querySelector('#a' + idstring);
-    const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOX);
-    // eslint-disable-next-line no-console
-    console.log(SELECTOR.CHECKBOX, checkboxes);
+  var checkedids = result.checkedids;
+  const labelarray = result.labelarray;
 
-    // Create an array of ids of the checked boxes.
-    checkboxes.forEach(x => {
-
-        // eslint-disable-next-line no-console
-        console.log(x.id, data.labelcolumn);
-
-        if (x.checked) {
-
-          try {
-            const name = container.querySelector('[data-id="' + x.id + '"] [data-label="' + data.labelcolumn + '"]').textContent;
-            labelarray.push(name);
-          } catch (e) {
-            labelarray.push(x.id);
-          }
-
-          checkedids.push(x.id);
-      }
-    });
-
-    data.checkedids = checkedids;
-  } else {
-    checkedids = [id];
+  if (checkedids.length < 1) {
+    const message = await getString('nocheckboxchecked', 'local_wunderbyte_table');
+    showNotification(message, "danger");
+    return;
   }
 
   const datastring = labelarray.join('<br>') ?? '';
-
-  // eslint-disable-next-line no-console
-  console.log(datastring, checkedids);
 
   let strings = [
     {
@@ -144,13 +112,7 @@ async function showConfirmationModal(button, titleText, bodyText, saveButtonText
     },
   ];
 
-  // eslint-disable-next-line no-console
-  console.log(strings);
-
   const localizedstrings = await getStrings(strings);
-
-  // eslint-disable-next-line no-console
-  console.log(localizedstrings);
 
   ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(modal => {
 
@@ -198,8 +160,7 @@ function transmitAction(id, methodname, datastring, idstring, encodedtable) {
     done: function(data) {
 
         if (data.success == 1) {
-          // eslint-disable-next-line no-console
-          console.log('success');
+
           showNotification(data.message, "success");
         } else {
           showNotification(data.message, "danger");
@@ -213,4 +174,49 @@ function transmitAction(id, methodname, datastring, idstring, encodedtable) {
         console.log("ex:" + ex);
     },
 }]);
+}
+
+/**
+ * Function to collect checked idboxes.
+ * @param {*} id
+ * @param {*} idstring
+ * @param {*} data
+ * @returns {object}
+ */
+function getIds(id, idstring, data) {
+
+  var checkedids = [];
+  const labelarray = [];
+
+  // If the id is 0, we return for all checked checkboxes.
+  // if not, just for the current one.
+  if (id < 1) {
+    const container = document.querySelector('#a' + idstring);
+    const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOX);
+
+    // Create an array of ids of the checked boxes.
+    checkboxes.forEach(x => {
+
+        if (x.checked) {
+
+          try {
+            const name = container.querySelector('[data-id="' + x.id + '"] [data-label="' + data.labelcolumn + '"]').textContent;
+            labelarray.push(name);
+          } catch (e) {
+            labelarray.push(x.id);
+          }
+
+          checkedids.push(x.id);
+      }
+    });
+
+    data.checkedids = checkedids;
+  } else {
+    checkedids = [id];
+  }
+
+  return {
+    'checkedids': checkedids,
+    'labelarray': labelarray,
+  };
 }
