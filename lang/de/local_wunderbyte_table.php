@@ -60,4 +60,4 @@ $string['genericsubmit'] = 'Bestätigen';
 
 $string['somethingwentwrong'] = 'Etwas ist schiefgelaufen. Melden Sie den Fehler ihrem Admin';
 $string['nocheckboxchecked'] = 'Keine checkbox ausgewählt';
-
+$string['checkbox'] = 'Checkbox';

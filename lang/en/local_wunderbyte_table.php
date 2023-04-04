@@ -60,3 +60,4 @@ $string['genericsubmit'] = 'Confirm';
 
 $string['somethingwentwrong'] = 'Something went wrong. Please contact your admin.';
 $string['nocheckboxchecked'] = 'No checkbox checked';
+$string['checkbox'] = 'Checkbox';

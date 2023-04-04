@@ -71,7 +71,7 @@ class demo_table extends wunderbyte_table {
         ];
 
         $data[] = [
-            'label' => get_string('checkbox', 'core'), // Name of your action button.
+            'label' => get_string('checkbox', 'local_wunderbyte_table'), // Name of your action button.
             'class' => 'btn btn-success',
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-edit', // Add an icon before the label.
@@ -117,7 +117,7 @@ class demo_table extends wunderbyte_table {
         $dataobject = json_decode($data);
         return [
             'success' => 1,
-            'message' => $dataobject->state ? 'checked' : 'unchecked',
+            'message' => $dataobject->state == 'true' ? 'checked' : 'unchecked',
         ];
     }
 }
