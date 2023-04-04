@@ -71,14 +71,13 @@ class demo_table extends wunderbyte_table {
         ];
 
         $data[] = [
-            'label' => get_string('add', 'core'), // Name of your action button.
+            'label' => get_string('checkbox', 'core'), // Name of your action button.
             'class' => 'btn btn-success',
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-edit', // Add an icon before the label.
             'id' => $values->id,
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'togglecheckbox', // The method needs to be added to your child of wunderbyte_table class.
             'ischeckbox' => true,
-            'checkboxlabel' => 'Checkbox',
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,
                 'labelcolumn' => 'username',
@@ -103,6 +102,22 @@ class demo_table extends wunderbyte_table {
         return [
             'success' => 1,
             'message' => 'Did work',
+        ];
+    }
+
+    /**
+     * Toggle Checkbox
+     *
+     * @param integer $id
+     * @param string $data
+     * @return array
+     */
+     public function togglecheckbox(int $id, string $data):array {
+
+        $dataobject = json_decode($data);
+        return [
+            'success' => 1,
+            'message' => $dataobject->state ? 'checked' : 'unchecked',
         ];
     }
 }
