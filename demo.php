@@ -98,6 +98,7 @@ $table->actionbuttons[] = [
     'class' => 'btn btn-danger',
     'href' => '#',
     'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+    // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
     'nomodal' => false,
     'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
         'id' => 'id',

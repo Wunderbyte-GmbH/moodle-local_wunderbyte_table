@@ -27,6 +27,7 @@ import {showNotification} from 'local_wunderbyte_table/notifications';
 import {reloadAllTables} from 'local_wunderbyte_table/reload';
 import {get_strings as getStrings,
         get_string as getString} from 'core/str';
+import ModalForm from 'core_form/modalform';
 
 const SELECTOR = {
   ACTIONBUTTON: '.wb_action_button',
@@ -45,26 +46,39 @@ const SELECTOR = {
       const container = document.querySelector(selector);
       const actionbuttons = container.querySelectorAll(SELECTOR.ACTIONBUTTON);
 
+      // eslint-disable-next-line no-console
+      console.log('actionbuttons', actionbuttons);
+
       actionbuttons.forEach(button => {
           if (button.dataset.initialized) {
             return;
           }
 
-          if (button.dataset.methodname.length === 0) {
-            return;
-          }
-
           button.dataset.initialized = true;
 
-          button.addEventListener('click', () => {
+          if (button.dataset.methodname && button.dataset.methodname.length > 0) {
+            button.addEventListener('click', e => {
 
-            if (button.dataset.nomodal && button.dataset.id > 0) {
+              const target = e.target;
+              // eslint-disable-next-line no-console
+              console.log('transmit data', target);
+              if (button.dataset.nomodal && button.dataset.id > 0) {
 
-              transmitAction(button.dataset.id, button.dataset.methodname, JSON.stringify(button.dataset), idstring, encodedtable);
-            } else {
-              showConfirmationModal(button, idstring, encodedtable);
-            }
-          });
+                transmitAction(button.dataset.id,
+                  button.dataset.methodname,
+                  JSON.stringify(button.dataset), idstring, encodedtable);
+              } else {
+                showConfirmationModal(button, idstring, encodedtable);
+              }
+            });
+          } else if (button.dataset.formname && button.dataset.formname.length > 0) {
+            button.addEventListener('click', e => {
+              const target = e.target;
+              // eslint-disable-next-line no-console
+              console.log('transmit data', target);
+              showEditFormModal(button, 'title', 'body', 'button', idstring, encodedtable);
+            });
+          }
       });
 }
 
@@ -219,4 +233,50 @@ function getIds(id, idstring, data) {
     'checkedids': checkedids,
     'labelarray': labelarray,
   };
+}
+
+/**
+ *
+ * @param {*} button
+ * @param {*} titleText
+ * @param {*} bodyText
+ * @param {*} saveButtonText
+ * @param {*} idstring
+ * @param {*} encodedtable
+ */
+function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring, encodedtable) {
+
+  // eslint-disable-next-line no-console
+  console.log(button, bodyText, saveButtonText, idstring, encodedtable);
+
+  const formname = button.dataset.formname;
+  let data = button.dataset;
+  data.id = button.dataset.id; // Get all the data of the clicked button.
+
+  // eslint-disable-next-line no-console
+  console.log(data);
+
+  let modalForm = new ModalForm({
+      // Name of the class where form is defined (must extend \core_form\dynamic_form):
+      formClass: formname,
+      // Add as many arguments as you need, they will be passed to the form:
+      args: data,
+      // Pass any configuration settings to the modal dialogue, for example, the title:
+      modalConfig: {title: titleText},
+      // DOM element that should get the focus after the modal dialogue is closed:
+      returnFocus: button,
+  });
+
+  // Listen to events if you want to execute something on form submit.
+  // Event detail will contain everything the process() function returned:
+  modalForm.addEventListener(modalForm.events.FORM_SUBMITTED, (e) => {
+
+    // eslint-disable-next-line no-console
+    console.log(e.detail);
+
+    reloadAllTables();
+  });
+
+  // Show the form.
+  modalForm.show();
 }
