@@ -25,8 +25,10 @@ import ModalEvents from 'core/modal_events';
 import Ajax from 'core/ajax';
 import {showNotification} from 'local_wunderbyte_table/notifications';
 import {reloadAllTables} from 'local_wunderbyte_table/reload';
-import {get_strings as getStrings,
-        get_string as getString} from 'core/str';
+import {
+  get_strings as getStrings,
+  get_string as getString
+} from 'core/str';
 import ModalForm from 'core_form/modalform';
 
 const SELECTOR = {
@@ -41,45 +43,62 @@ const SELECTOR = {
  * @param {string} encodedtable
  * @returns {void}
  */
- export function initializeActionButton(selector, idstring, encodedtable) {
+export function initializeActionButton(selector, idstring, encodedtable) {
 
-      const container = document.querySelector(selector);
-      const actionbuttons = container.querySelectorAll(SELECTOR.ACTIONBUTTON);
+  const container = document.querySelector(selector);
+  const actionbuttons = container.querySelectorAll(SELECTOR.ACTIONBUTTON);
 
-      // eslint-disable-next-line no-console
-      console.log('actionbuttons', actionbuttons);
+  // eslint-disable-next-line no-console
+  console.log('actionbuttons', actionbuttons);
 
-      actionbuttons.forEach(button => {
-          if (button.dataset.initialized) {
-            return;
+  actionbuttons.forEach(button => {
+    if (button.dataset.initialized) {
+      return;
+    }
+
+    button.dataset.initialized = true;
+
+    // First check if we have a valid methodname.
+    if (button.dataset.methodname && button.dataset.methodname.length > 0) {
+
+      // Second check if it's a checkbox, then we need a change listener.
+      if (button.dataset.ischeckbox) {
+        button.addEventListener('change', () => {
+
+          const data = button.dataset;
+          data.state = button.checked;
+
+          // eslint-disable-next-line no-console
+          console.log(data.state);
+
+          transmitAction(button.dataset.id, button.dataset.methodname,
+            JSON.stringify(data), idstring, encodedtable);
+        });
+      } else {
+        // Else it's a button, we attach the click listener.
+        button.addEventListener('click', () => {
+
+          // We don't show the modal when we already know we treat just one row.
+          // Todo: make a one row treatment modal?
+          if (button.dataset.nomodal && button.dataset.id > 0) {
+            transmitAction(button.dataset.id,
+              button.dataset.methodname,
+              JSON.stringify(button.dataset), idstring, encodedtable);
+          } else {
+            showConfirmationModal(button, idstring, encodedtable);
           }
-
-          button.dataset.initialized = true;
-
-          if (button.dataset.methodname && button.dataset.methodname.length > 0) {
-            button.addEventListener('click', e => {
-
-              const target = e.target;
-              // eslint-disable-next-line no-console
-              console.log('transmit data', target);
-              if (button.dataset.nomodal && button.dataset.id > 0) {
-
-                transmitAction(button.dataset.id,
-                  button.dataset.methodname,
-                  JSON.stringify(button.dataset), idstring, encodedtable);
-              } else {
-                showConfirmationModal(button, idstring, encodedtable);
-              }
-            });
-          } else if (button.dataset.formname && button.dataset.formname.length > 0) {
-            button.addEventListener('click', e => {
-              const target = e.target;
-              // eslint-disable-next-line no-console
-              console.log('transmit data', target);
-              showEditFormModal(button, 'title', 'body', 'button', idstring, encodedtable);
-            });
-          }
+        });
+      }
+      // If it's not a methodname, we might have a form name a need to attach the right listener.
+    } else if (button.dataset.formname && button.dataset.formname.length > 0) {
+      button.addEventListener('click', e => {
+        const target = e.target;
+        // eslint-disable-next-line no-console
+        console.log('transmit data', target);
+        showEditFormModal(button, 'title', 'body', 'button', idstring, encodedtable);
       });
+    }
+  });
 }
 
 /**
@@ -128,29 +147,29 @@ async function showConfirmationModal(button, idstring, encodedtable) {
 
   const localizedstrings = await getStrings(strings);
 
-  ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(modal => {
+  ModalFactory.create({ type: ModalFactory.types.SAVE_CANCEL }).then(modal => {
 
     modal.setTitle(localizedstrings[0]);
-        modal.setBody(localizedstrings[1]);
-        modal.setSaveButtonText(localizedstrings[2]);
-        modal.getRoot().on(ModalEvents.save, function() {
+    modal.setBody(localizedstrings[1]);
+    modal.setSaveButtonText(localizedstrings[2]);
+    modal.getRoot().on(ModalEvents.save, function () {
 
-            // If there is only one id, we transmit one call.
-            if (id != 0) {
-              transmitAction(id, methodname, JSON.stringify(data), idstring, encodedtable);
-            } else { // Zero means we want single line execution.
-              // eslint-disable-next-line block-scoped-var
-              checkedids.forEach(cid => {
-                transmitAction(cid, methodname, JSON.stringify(data), idstring, encodedtable);
-              });
-            }
+      // If there is only one id, we transmit one call.
+      if (id != 0) {
+        transmitAction(id, methodname, JSON.stringify(data), idstring, encodedtable);
+      } else { // Zero means we want single line execution.
+        // eslint-disable-next-line block-scoped-var
+        checkedids.forEach(cid => {
+          transmitAction(cid, methodname, JSON.stringify(data), idstring, encodedtable);
         });
+      }
+    });
 
-        modal.show();
-        return modal;
+    modal.show();
+    return modal;
   }).catch(e => {
-      // eslint-disable-next-line no-console
-      console.log(e);
+    // eslint-disable-next-line no-console
+    console.log(e);
   });
 }
 
@@ -166,27 +185,27 @@ function transmitAction(id, methodname, datastring, idstring, encodedtable) {
   Ajax.call([{
     methodname: "local_wunderbyte_table_execute_action",
     args: {
-        'id': parseInt(id),
-        'methodname': methodname,
-        'data': datastring,
-        'encodedtable': encodedtable,
+      'id': parseInt(id),
+      'methodname': methodname,
+      'data': datastring,
+      'encodedtable': encodedtable,
     },
-    done: function(data) {
+    done: function (data) {
 
-        if (data.success == 1) {
-          showNotification(data.message, "success");
-        } else {
-          showNotification(data.message, "danger");
-        }
-        reloadAllTables();
+      if (data.success == 1) {
+        showNotification(data.message, "success");
+      } else {
+        showNotification(data.message, "danger");
+      }
+      reloadAllTables();
 
 
     },
-    fail: function(ex) {
-        // eslint-disable-next-line no-console
-        console.log("ex:" + ex);
+    fail: function (ex) {
+      // eslint-disable-next-line no-console
+      console.log("ex:" + ex);
     },
-}]);
+  }]);
 }
 
 /**
@@ -200,8 +219,8 @@ function getIds(id, idstring, data) {
 
   var checkedids = [];
 
-const labelarray = [];
-const container = document.querySelector('#a' + idstring);
+  const labelarray = [];
+  const container = document.querySelector('#a' + idstring);
 
   // If the id is 0, we return for all checked checkboxes.
   // if not, just for the current one.
@@ -212,10 +231,10 @@ const container = document.querySelector('#a' + idstring);
     // Create an array of ids of the checked boxes.
     checkboxes.forEach(x => {
 
-        if (x.checked) {
-          labelarray.push(returnLabel(x.id, data.labelcolumn));
-          checkedids.push(x.id);
-        }
+      if (x.checked) {
+        labelarray.push(returnLabel(x.id, data.labelcolumn));
+        checkedids.push(x.id);
+      }
     });
 
   } else {
@@ -227,12 +246,12 @@ const container = document.querySelector('#a' + idstring);
     'labelarray': labelarray,
   };
 
-/**
- * Function to return label name or id if no name available.
- * @param {*} id
- * @param {*} label
- * @returns {String}
- */
+  /**
+   * Function to return label name or id if no name available.
+   * @param {*} id
+   * @param {*} label
+   * @returns {String}
+   */
   function returnLabel(id, label) {
     try {
       const name = container.querySelector('[data-id="' + id + '"] [data-label="' + label + '"]').textContent;
@@ -241,8 +260,6 @@ const container = document.querySelector('#a' + idstring);
       return '' + id;
     }
   }
-}
-
 }
 
 /**
@@ -267,14 +284,14 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
   console.log(data);
 
   let modalForm = new ModalForm({
-      // Name of the class where form is defined (must extend \core_form\dynamic_form):
-      formClass: formname,
-      // Add as many arguments as you need, they will be passed to the form:
-      args: data,
-      // Pass any configuration settings to the modal dialogue, for example, the title:
-      modalConfig: {title: titleText},
-      // DOM element that should get the focus after the modal dialogue is closed:
-      returnFocus: button,
+    // Name of the class where form is defined (must extend \core_form\dynamic_form):
+    formClass: formname,
+    // Add as many arguments as you need, they will be passed to the form:
+    args: data,
+    // Pass any configuration settings to the modal dialogue, for example, the title:
+    modalConfig: { title: titleText },
+    // DOM element that should get the focus after the modal dialogue is closed:
+    returnFocus: button,
   });
 
   // Listen to events if you want to execute something on form submit.
