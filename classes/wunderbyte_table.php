@@ -1387,7 +1387,7 @@ class wunderbyte_table extends table_sql {
      * @param string $tablecachehash
      * @return wunderbyte_table
      */
-    public static function instantiate_from_tablecashhash(string $tablecachehash) {
+    public static function instantiate_from_tablecache_hash(string $tablecachehash) {
 
         $cache = cache::make('local_wunderbyte_table', 'encodedtables');
         $class = $cache->get($tablecachehash);

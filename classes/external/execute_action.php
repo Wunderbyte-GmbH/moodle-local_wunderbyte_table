@@ -89,7 +89,7 @@ class execute_action extends external_api {
 
         $params = self::validate_parameters(self::execute_parameters(), $params);
 
-        $table = wunderbyte_table::instantiate_from_tablecashhash($params['encodedtable']);
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
         // Now we can execute the method as expected.
 

@@ -37,7 +37,7 @@ $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url('/download.php');
 
-$table = wunderbyte_table::instantiate_from_tablecashhash($encodedtable);
+$table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
 $table->is_downloading($download, 'download', 'download');
 

@@ -111,7 +111,7 @@ class load_data extends external_api {
 
         $params = self::validate_parameters(self::execute_parameters(), $params);
 
-        $table = wunderbyte_table::instantiate_from_tablecashhash($params['encodedtable']);
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
         if (empty($table->baseurl)) {
 
