@@ -1,3 +1,12 @@
+## Version 1.5.3 (2023040600)
+* New feature: Added new form functionality.
+* New feature: Added new checkbox functionality.
+* Bugfix: Fixed aria-label strings.
+* Bugfix: Use a dot to concatenate (plus sign is JS notation).
+* Bugfix: Fixed action buttons logic (added nomodal flag).
+* Improvement: Use cache instead of encoded table to improve security and performance.
+* Improvement: Renamed function to instantiate_from_tablecache_hash.
+
 ## Version 1.5.2 (2023032100)
 * Bugfix: Pagination fixed.
 
