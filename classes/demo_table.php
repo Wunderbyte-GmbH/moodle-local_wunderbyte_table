@@ -112,12 +112,12 @@ class demo_table extends wunderbyte_table {
      * @param string $data
      * @return array
      */
-     public function togglecheckbox(int $id, string $data):array {
+    public function togglecheckbox(int $id, string $data):array {
 
         $dataobject = json_decode($data);
         return [
-            'success' => 1,
-            'message' => $dataobject->state == 'true' ? 'checked' : 'unchecked',
+           'success' => 1,
+           'message' => $dataobject->state == 'true' ? 'checked' : 'unchecked',
         ];
     }
 }
