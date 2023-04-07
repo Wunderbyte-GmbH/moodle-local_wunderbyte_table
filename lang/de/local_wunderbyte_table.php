@@ -48,6 +48,7 @@ $string['countlabel'] = '{$a->filteredrecords} von {$a->totalrecords} Einträgen
 
 $string['checkallcheckbox'] = "Alles auswählen";
 $string['functiondoesntexist'] = "Funktion des Aktionsbuttons exisitert nicht.";
+$string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheckbox">';
 
 // Test and example strings.
 $string['deletedatatitle'] = 'Möchten Sie diese Daten wirklich löschen?';

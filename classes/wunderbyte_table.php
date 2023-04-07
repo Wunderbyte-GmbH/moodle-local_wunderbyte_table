@@ -364,7 +364,7 @@ class wunderbyte_table extends table_sql {
             $columns = array_keys($this->columns);
             $headers = $this->headers;
             array_unshift($columns, 'wbcheckbox');
-            array_unshift($headers, get_string('checkallcheckbox', 'local_wunderbyte_table'));
+            array_unshift($headers, get_string('tableheadercheckbox', 'local_wunderbyte_table'));
             $this->columns = [];
             $this->define_columns($columns);
             $this->headers = $headers;

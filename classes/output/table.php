@@ -300,11 +300,18 @@ class table implements renderable, templatable {
             foreach ($table->columns as $column => $key) {
 
                 $localized = $table->headers[$key] ?? $column;
-                $this->table['header']['headers'][] = [
+                $item = [
                     'key' => $column,
-                    'localized' => $localized
+                    'localized' => $localized,
                 ];
+
+                if (in_array($column, $table->sortablecolumns)) {
+                    $item['sortable'] = true;
+                }
+
+                $this->table['header']['headers'][] = $item;
             }
+
         }
 
         // Create pagination data.

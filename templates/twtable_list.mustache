@@ -69,8 +69,12 @@
                     <tr>
                          {{#header}}
                               {{#headers}}
-                                   <th class="{{key}} wb-table-column {{sortclass}}" data-columnname="{{key}}">
-                                        {{localized}}
+                                   <th class="{{key}} wb-table-column {{sortclass}}"
+                                   data-columnname="{{key}}"
+                                   {{#sortable}}
+                                   data-sortable="{{sortable}}"
+                                   {{/sortable}}>
+                                        {{{localized}}}
                                    </th>
                               {{/headers}}
                          {{/header}}

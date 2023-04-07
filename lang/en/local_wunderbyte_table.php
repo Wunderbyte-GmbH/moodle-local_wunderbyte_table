@@ -47,6 +47,7 @@ $string['cachedef_cachedfulltable'] = 'Cached full table';
 $string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found';
 
 $string['checkallcheckbox'] = "Check all";
+$string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheckbox">';
 $string['functiondoesntexist'] = "Function of action button doesn\'t exist.";
 
 // Test and example strings.

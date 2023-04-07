@@ -30,6 +30,7 @@ const SELECTOR = {
   TABLECOLUMN: 'th.wb-table-column',
   WBCONTAINER: ".wunderbyte_table_container_",
   CHECKBOXES: 'input.wb-checkbox',
+  TABLEHEADERCHECKBOX: 'input.tableheadercheckbox',
 };
 
 /**
@@ -92,10 +93,13 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
 
       let columnname = element.dataset.columnname;
 
-      let checked = e.target.dataset.checked !== "true" ? true : false;
+      //checking if checkbox in table header is checked
+      let tableheadercheckbox = document.querySelector(SELECTOR.TABLEHEADERCHECKBOX);
+      let checked = tableheadercheckbox.checked;
 
       switch (columnname) {
         case 'wbcheckbox':
+          //applying state of header checkbox to checkboxes in table
           selectAllCheckboxes(idstring, checked);
           e.target.dataset.checked = checked;
           break;
@@ -219,9 +223,6 @@ function selectAllCheckboxes(idstring, checked) {
   const container = document.querySelector('#a' + idstring);
 
   const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOXES);
-
-  // eslint-disable-next-line no-console
-  console.log(idstring, checked);
 
   checkboxes.forEach(x => {
     x.checked = checked;
