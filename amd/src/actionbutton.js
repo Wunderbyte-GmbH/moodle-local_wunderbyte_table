@@ -48,9 +48,6 @@ export function initializeActionButton(selector, idstring, encodedtable) {
   const container = document.querySelector(selector);
   const actionbuttons = container.querySelectorAll(SELECTOR.ACTIONBUTTON);
 
-  // eslint-disable-next-line no-console
-  console.log('actionbuttons', actionbuttons);
-
   actionbuttons.forEach(button => {
     if (button.dataset.initialized) {
       return;
