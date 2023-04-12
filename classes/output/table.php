@@ -145,7 +145,7 @@ class table implements renderable, templatable {
     private $filteredrecords = '';
 
     /**
-     * Tableheight.
+     * Total records.
      *
      * @var int
      */
