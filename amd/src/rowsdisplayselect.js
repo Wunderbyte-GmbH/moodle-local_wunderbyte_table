@@ -17,28 +17,39 @@
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+import {transmitAction} from "local_wunderbyte_table/actionbutton";
 
 const SELECTOR = {
     ROWSELECT: 'select.rowsperpage',
 };
 
-// eslint-disable-next-line no-unused-vars
-const NUMBEROFROWS = 10;
 /**
  * Function getting value of select to choose how many rows will be displayed in table.
  * @param {string} selector
+ * @param {string} idstring
+ * @param {string} encodedtable
  * @returns {void};
  */
-export function initializeRowsSelect(selector) {
+export function initializeRowsSelect(selector, idstring, encodedtable) {
+
 
         const container = document.querySelector(selector);
-        const numberOfRowsSelect = container.querySelector(SELECTOR.ROWSELECT);
+        const selectElements = container.querySelectorAll(SELECTOR.ROWSELECT);
 
-        numberOfRowsSelect.addEventListener('change', () => {
-            const selectedValue = numberOfRowsSelect.value;
-            // eslint-disable-next-line no-console
-            console.log(selectedValue);
-            this.NUMBEROFROWS = selectedValue;
+        selectElements.forEach(selectElement => {
+            if (!selectElement.dataset.initialized) {
+                selectElement.dataset.initialized = true;
+                selectElement.addEventListener('change', () => {
+                    const selectedvalue = selectElement.value;
+                    // eslint-disable-next-line no-console
+                    console.log(selectedvalue);
+                    const data = {
+                        "numberofrowsselect": selectedvalue,
+                    };
+                    transmitAction(0, 'rownumberperpage', JSON.stringify(data), idstring, encodedtable);
+                });
+            }
+
         });
 }
 

@@ -178,6 +178,21 @@ class table implements renderable, templatable {
      */
     private $errormessage = '';
 
+      /**
+     * Number of rows diplayed per page in table.
+     *
+     * @var boolean
+     */
+    public $showrowcountselect = false;
+
+    /**
+     * Pagesize
+     *
+     * @var int
+     */
+    private $pagesize = 10;
+
+
     /**
      * Constructor.
      * @param wunderbyte_table $table
@@ -217,6 +232,10 @@ class table implements renderable, templatable {
         self::transform_actionbuttons_array($table->actionbuttons);
 
         $this->actionbuttons = $table->actionbuttons;
+
+        $this->showrowcountselect = $table->showrowcountselect;
+
+        $this->pagesize = $table->pagesize;
 
         list($this->totalrecords, $this->filteredrecords) = $table->return_records_count();
 
@@ -396,6 +415,37 @@ class table implements renderable, templatable {
         }
         return $printoptions;
     }
+    /**
+     * Function for select to choose number of rows displayed in table.
+     *
+     * @return array
+     */
+    private function showcountselect() {
+
+        if(!$this->showrowcountselect) {
+            return [];
+        }
+
+        $options = [];
+        $counter = 1;
+        while ($counter <= 19) {
+            if ($counter < 11) {
+                $pagenumber = $counter * 10;
+            }
+            else {
+                $pagenumber = ($counter -9) * 100;
+            }
+
+            array_push($options, [
+                'label' => get_string('pagelabel', 'local_wunderbyte_table', $pagenumber),
+                'value' => $pagenumber,
+                'selected' => $pagenumber == $this->pagesize ? 'selected' : '',
+            ]);
+            $counter++;
+        }
+
+        return ['options' => $options];
+    }
 
     /**
      * Prepare data for use in a template
@@ -428,7 +478,8 @@ class table implements renderable, templatable {
             'sesskey' => sesskey(),
             'filter' => $this->categories ?? null,
             'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
-        ];
+            'showrowcountselect' => $this->showcountselect(),
+            ];
 
         // Only if we want to show the searchfield, we actually add the key.
         if ($this->search) {

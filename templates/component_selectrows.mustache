@@ -19,18 +19,28 @@
     * none
     Context variables required for this template:
 
-    Example context:
+    Example context (json):
+    {
+        "options":[
+           {
+              "value": 10,
+              "label": "Show 10 rows"
+           },
+           {
+              "value": 20,
+              "label": "Show 20 rows",
+              "selected": "selected",
+           }
+        ]
+     }
 
-    var options = [
-        {value: 10, label: 'Show 10 rows'},
-        {value: 20, label: 'Show 20 rows'},
-        {value: 50, label: 'Show 50 rows'}
-    ];
 
 }}
 
-<select>
-    {{#options}}
-        <option value="{{value}}">{{label}}</option>
-    {{/options}}
-</select>
+{{#showrowcountselect}}
+    <select class="rowsperpage">
+        {{#options}}
+            <option value={{value}} {{selected}}>{{label}}</option>
+        {{/options}}
+    </select>
+{{/showrowcountselect}}

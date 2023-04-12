@@ -178,7 +178,7 @@ async function showConfirmationModal(button, idstring, encodedtable) {
  * @param {string} idstring
  * @param {string} encodedtable
  */
-function transmitAction(id, methodname, datastring, idstring, encodedtable) {
+export function transmitAction(id, methodname, datastring, idstring, encodedtable) {
   Ajax.call([{
     methodname: "local_wunderbyte_table_execute_action",
     args: {
@@ -195,8 +195,6 @@ function transmitAction(id, methodname, datastring, idstring, encodedtable) {
         showNotification(data.message, "danger");
       }
       reloadAllTables();
-
-
     },
     fail: function (ex) {
       // eslint-disable-next-line no-console

@@ -126,6 +126,7 @@ $table->stickyheader = false;
 $table->showcountlabel = true;
 $table->showdownloadbutton = true;
 $table->showreloadbutton = true;
+$table->showrowcountselect = true;
 
 $PAGE->set_title('Testing');
 $PAGE->set_heading('Testing table class');

@@ -620,7 +620,7 @@ function initializeComponents(idstring, encodedtable) {
     initializeCheckboxes(selector, idstring, encodedtable);
     initializeSearch(selector, idstring, encodedtable);
     initializeSort(selector, idstring, encodedtable);
-    initializeRowsSelect(selector);
+    initializeRowsSelect(selector, idstring, encodedtable);
 
     // A very strange error leads to a failed import from the reloadTable.js under some circumstances.
     // Reload has to be called with this precaution therefore.

@@ -120,4 +120,5 @@ class demo_table extends wunderbyte_table {
            'message' => $dataobject->state == 'true' ? 'checked' : 'unchecked',
         ];
     }
+
 }

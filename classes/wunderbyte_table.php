@@ -236,12 +236,20 @@ class wunderbyte_table extends table_sql {
      */
     public $actionbuttons = [];
 
-    /**
+  /**
      * Errormessage in case of.
      *
      * @var string
      */
     public $errormessage = '';
+
+  /**
+     * Number of rows diplayed per page in table.
+     *
+     * @var boolean
+     */
+    public $showrowcountselect = false;
+
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
@@ -1381,6 +1389,29 @@ class wunderbyte_table extends table_sql {
         return $OUTPUT->render_from_template('local_wunderbyte_table/col_checkbox', $data);;
     }
 
+
+
+    /**
+     * Change number of rows. Uses the transmitaction pattern (actionbutton).
+     *
+     * @param integer $id
+     * @param string $data
+     * @return array
+     */
+    public function rownumberperpage(int $id, string $data):array {
+
+        $jsonobject = json_decode($data);
+        $this->pagesize = $jsonobject->numberofrowsselect;
+
+        // Overwrite cached table object.
+        $cache = cache::make('local_wunderbyte_table', 'encodedtables');
+        $cache->set($this->tablecachehash, $this);
+
+        return [
+            'success' => 1,
+            'message' => 'Did work',
+        ];
+    }
     /**
      * This returns an instance of wunderbyte table or child class.
      *
@@ -1394,4 +1425,6 @@ class wunderbyte_table extends table_sql {
 
         return $class;
     }
+
+
 }
