@@ -12,7 +12,7 @@ If your extended table class contains another class (eg myplugin_class), make su
 
 From 1.1.1 on, wunderbyte_table is loaded only once the corresponding div and none of it's parent is hidden (display:none) and it will add a visbility listener on the next hidden parent element. Unhiding will trigger loading of the table.
 
-The included test.php is only meant to demonstrate the working of the table.
+The included demo.php is only meant to demonstrate the working of the table.
 
 That's all it takes. Switching pages, sorting, hiding columns and downloading will now run via ajax.
 
