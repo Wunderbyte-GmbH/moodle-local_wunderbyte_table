@@ -106,7 +106,7 @@ export function initializeActionButton(selector, idstring, encodedtable) {
  */
 async function showConfirmationModal(button, idstring, encodedtable) {
 
-  const id = button.dataset.id;
+  const id = parseInt(button.dataset.id);
   const methodname = button.dataset.methodname;
   const data = button.dataset; // Get all the data of the clicked button.
 
@@ -153,7 +153,7 @@ async function showConfirmationModal(button, idstring, encodedtable) {
 
       // If there is only one id, we transmit one call.
       if (id != 0) {
-        transmitAction(id, methodname, JSON.stringify(data), idstring, encodedtable);
+        transmitAction(id, methodname, JSON.stringify({...data, checkedids}), idstring, encodedtable);
       } else { // Zero means we want single line execution.
         // eslint-disable-next-line block-scoped-var
         checkedids.forEach(cid => {
