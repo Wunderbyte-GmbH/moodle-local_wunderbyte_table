@@ -86,13 +86,12 @@
                     {{/rows}}
                </tbody>
           </table>
-          {{> local_wunderbyte_table/component_pagination }}
-          {{> local_wunderbyte_table/component_actionbutton }}
      </div>
 </div>
 
 {{/table}}
-
+{{> local_wunderbyte_table/component_pagination }}
+{{> local_wunderbyte_table/component_actionbutton }}
 {{#errormessage}}
      <div class="alert alert-danger" role="alert">
           {{errormessage}}
