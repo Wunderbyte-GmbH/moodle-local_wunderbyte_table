@@ -1,3 +1,6 @@
+## Version 1.5.4 (2023041300)
+* New feature: change number of rows in pagination mode.
+
 ## Version 1.5.3 (2023040600)
 * New feature: Added new form functionality.
 * New feature: Added new checkbox functionality.
