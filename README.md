@@ -51,6 +51,12 @@ The reason is that the js would be added to the page footer via the renderer, bu
 Any JS which is on this labe (corresponding to table.mustache in the wunderbyte_table project), will be executed after the table is correctly rendered.
 You have to make sure to write your js in a way that your can find the necessary variables (eg. the ids of your rows) without being able to pass them directly via the mustache template.
 
+## Sticky Header, Infinite Scroll & Pagination
+If you want to enable scrolling within your table, you can set the stickyheader property to true.
+With infinite scroll, your table will automatically reload additional rows once you scrolled to its bottom. To enable infinite scroll, you can define the number of rows that will be loaded - first on init an later with each reload - in the infinitescroll variable. Sticky Header and Infinite Scroll can be combined.
+If you don't use infinite scroll, pagination options will be displayed at the bottom of your table.
+
+
 ## Action buttons
 You can add a number of action buttons to your table. If you combine them with "$yourtable->addcheckbox = true", you will be able to select single lines and execute your function with it. The methods will need to be implemented in your child class of wunderbyte table and they will be called via ajax. Example:
 
