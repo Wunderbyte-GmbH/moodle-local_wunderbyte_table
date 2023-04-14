@@ -63,7 +63,8 @@
 {{#table}}
 <div class="wunderbyte-table-table">
      {{> local_wunderbyte_table/component_countlabel }}
-     <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}} style="height: {{tableheight}};" {{/tableheight}}>
+     <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}}
+     style="height: {{tableheight}};" {{/tableheight}}>
           <table class="table">
                <thead>
                     <tr>
@@ -88,10 +89,10 @@
           </table>
      </div>
 </div>
-
-{{/table}}
 {{> local_wunderbyte_table/component_pagination }}
 {{> local_wunderbyte_table/component_actionbutton }}
+{{/table}}
+
 {{#errormessage}}
      <div class="alert alert-danger" role="alert">
           {{errormessage}}
