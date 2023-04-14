@@ -108,6 +108,9 @@ If the output template you want to use doesn't support clickable headers to sort
 
 to your wunderbyte_table classs (look in the _container templates to understand how this works).
 
+Each column defined as sortable will display carets in the table header. They have the same functionality as sortcolumn select & changesortorder element displayed in top of table.
+
+
 ### Exploding strings for columns storing multiple values
 The define_filtercolumns function also supports columns with multiple values stored as string with a separator.
 
