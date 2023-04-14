@@ -64,3 +64,12 @@ $string['nocheckboxchecked'] = 'No checkbox checked';
 $string['checkbox'] = 'Checkbox';
 
 $string['pagelabel'] = 'Show {$a} rows';
+
+$string['fullname'] = 'Full Name';
+$string['shortname'] = 'Short Name';
+$string['action'] = 'Action';
+
+$string['table1name'] = 'Table 1';
+$string['table2name'] = 'Table 2';
+$string['table3name'] = 'Table 3';
+$string['id'] = 'ID';
