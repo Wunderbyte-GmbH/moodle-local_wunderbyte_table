@@ -63,7 +63,7 @@ class demo_table extends wunderbyte_table {
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-edit', // Add an icon before the label.
             'id' => $values->id,
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,
                 'labelcolumn' => 'username',
@@ -98,6 +98,21 @@ class demo_table extends wunderbyte_table {
      * @return array
      */
     public function deleteitem(int $id, string $data):array {
+
+        return [
+            'success' => 1,
+            'message' => 'Did work',
+        ];
+    }
+
+    /**
+     * Add item.
+     *
+     * @param integer $id
+     * @param string $data
+     * @return array
+     */
+    public function additem(int $id, string $data):array {
 
         return [
             'success' => 1,
