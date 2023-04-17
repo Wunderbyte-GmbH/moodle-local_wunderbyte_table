@@ -205,14 +205,6 @@
     display: none;
 }
 
-.wunderbyteTableFilter button {
-    border-width: 0;
-    background-color: transparent;
-    width: 100%;
-    /* stylelint-disable-next-line declaration-no-important */
-    outline: 0 !important;
-}
-
 .wunderbyteTableFilter li {
     position: relative;
     display: block;
@@ -250,14 +242,12 @@
 
 .wunderbyteTableFilter .form-check-label::after {
     top: 0.55rem;
-    background-color: #090761;
+    background: 0 0;
     border-radius: 3px;
     left: -1.5rem;
     width: 0.5rem;
     height: 0.5rem;
     content: "";
-    /* stylelint-disable-next-line declaration-block-no-shorthand-property-overrides */
-    background: 0 0;
     position: absolute;
     z-index: 200000;
 }
@@ -351,14 +341,12 @@ body {
 }
 .wunderbyteTableFilter .form-check-label::after {
     top: 0.55rem;
-    background-color: #090761;
+    background: 0 0;
     border-radius: 3px;
     left: -1.5rem;
     width: 0.5rem;
     height: 0.5rem;
     content: "";
-    /* stylelint-disable-next-line declaration-block-no-shorthand-property-overrides */
-    background: 0 0;
     position: absolute;
     z-index: 200000;
 }
