@@ -324,9 +324,13 @@ class table implements renderable, templatable {
                     'localized' => $localized,
                 ];
 
-                if (in_array($column, $table->sortablecolumns)) {
+
+                if (in_array($column, $table->sortablecolumns)
+                    || in_array($column, array_keys($table->sortablecolumns))) {
+
                     $item['sortable'] = true;
-                }
+                };
+
 
                 $this->table['header']['headers'][] = $item;
             }
