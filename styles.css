@@ -46,10 +46,6 @@
         font-size: 1.3em;
     }
 
-    .wb-table-column {
-        z-index: 2;
-    }
-
     .wunderbyte-table-table table thead {
         border: none;
         clip: rect(0 0 0 0);
@@ -394,3 +390,4 @@ body {
 a.changesortorder:hover {
     text-decoration: none;
 }
+.wb-table-column {    z-index: 2;}
