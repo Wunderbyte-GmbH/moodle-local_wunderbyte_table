@@ -69,7 +69,7 @@ class demo implements renderable, templatable {
 
     private function render_table_1() {
 
-        $table = new demo_table('uniqueid');
+        $table = new demo_table('table1');
 
         // $table->add_subcolumns('cardbody', ['id', 'username', 'firstname', 'lastname', 'email']);
         $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
@@ -270,7 +270,7 @@ class demo implements renderable, templatable {
 
     private function render_table_2() {
 
-        $table = new demo_table('uniqueid2');
+        $table = new demo_table('table2');
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
@@ -348,7 +348,7 @@ class demo implements renderable, templatable {
 
     private function render_table_3() {
 
-        $table = new demo_table('uniqueid3');
+        $table = new demo_table('table3');
 
         $table->define_headers(['id', 'course', 'module', 'action']);
         $table->define_columns(['id', 'course', 'module', 'action']);
@@ -415,7 +415,7 @@ class demo implements renderable, templatable {
 
     private function render_table_4() {
 
-        $table = new demo_table('uniqueid4');
+        $table = new demo_table('table4');
 
         $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
         $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
