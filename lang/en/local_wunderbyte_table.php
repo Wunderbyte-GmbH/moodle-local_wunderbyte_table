@@ -69,7 +69,8 @@ $string['fullname'] = 'Full Name';
 $string['shortname'] = 'Short Name';
 $string['action'] = 'Action';
 
-$string['table1name'] = 'Table 1';
-$string['table2name'] = 'Table 2';
-$string['table3name'] = 'Table 3';
+$string['table1name'] = 'Users';
+$string['table2name'] = 'Course';
+$string['table3name'] = 'Course_Modules';
+$string['table4name'] = 'Users InfiniteScroll';
 $string['id'] = 'ID';
