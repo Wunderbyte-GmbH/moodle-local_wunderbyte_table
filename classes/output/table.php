@@ -331,7 +331,6 @@ class table implements renderable, templatable {
                     $item['sortable'] = true;
                 };
 
-
                 $this->table['header']['headers'][] = $item;
             }
 
