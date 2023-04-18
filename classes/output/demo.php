@@ -333,7 +333,7 @@ class demo implements renderable, templatable {
 
         $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-        $table->infinitescroll = 20;
+        $table->infinitescroll = 10;
         $table->pageable(true);
 
         $table->stickyheader = true;
