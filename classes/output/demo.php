@@ -290,7 +290,7 @@ class demo implements renderable, templatable {
 
         $table->define_filtercolumns(array_keys($filtercolumns));
         $table->define_fulltextsearchcolumns(array_keys($filtercolumns));
-        $table->define_sortablecolumns(array_keys($filtercolumns));
+        $table->define_sortablecolumns($filtercolumns);
 
         // When true and action buttons are present, checkboxes will be rendered to every line.
         $table->addcheckboxes = true;
