@@ -34,6 +34,7 @@ use templatable;
 define('TABLE1NAME', get_string('table1name', 'local_wunderbyte_table'));
 define('TABLE2NAME', get_string('table2name', 'local_wunderbyte_table'));
 define('TABLE3NAME', get_string('table3name', 'local_wunderbyte_table'));
+define('TABLE4NAME', get_string('table4name', 'local_wunderbyte_table'));
 
 /**
  * demo class is used to render several demo tables for use in demo template (tabs).
@@ -308,6 +309,91 @@ class demo implements renderable, templatable {
         return $html;
     }
 
+    private function render_table_4() {
+
+        $table = new demo_table('uniqueid4');
+
+        $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
+        $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
+
+        $table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
+        $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
+        $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
+
+        $table->addcheckboxes = true;
+
+        $table->actionbuttons[] = [
+            'label' => 'NoModal, SingleCall', // Name of your action button.
+            'class' => 'btn btn-primary',
+            'href' => '#',
+            'id' => -1, // This forces single call execution.
+            'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
+            'nomodal' => true, // If set to true, there is no modal but the method will be called directly.
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+            ],
+        ];
+
+        $table->actionbuttons[] = [
+            'label' => 'Modal,  MultipleCall', // Name of your action button.
+            'class' => 'btn btn-danger',
+            'href' => '#',
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => false,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'deletedatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+            ]
+        ];
+
+        $table->actionbuttons[] = [
+            'label' => 'Modal,  SingleCall', // Name of your action button.
+            'class' => 'btn btn-warning',
+            'href' => '#',
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => false,
+            'id' => -1,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'deletedatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+            ]
+        ];
+
+
+        $table->sort_default_column = 'username';
+
+        // Work out the sql for the table.
+        $table->set_filter_sql('*', "{user}", '1=1', '');
+
+        $table->cardsort = true;
+
+        $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
+
+        $table->infinitescroll = 7;
+        $table->pageable(true);
+
+        $table->stickyheader = true;
+        $table->showcountlabel = true;
+        $table->showdownloadbutton = true;
+        $table->showreloadbutton = true;
+        $table->showrowcountselect = true;
+
+
+        return $table->outhtml(10, true);
+    }
+
+
     /**
      * Render data for use in template without need of renderer_base
      *
@@ -321,6 +407,8 @@ class demo implements renderable, templatable {
             'tab2_name' => TABLE2NAME,
             'table3' => $this->render_table_3(),
             'tab3_name' => TABLE3NAME,
+            'table4' => $this->render_table_4(),
+            'tab4_name' => TABLE4NAME,
 
         ];
 
