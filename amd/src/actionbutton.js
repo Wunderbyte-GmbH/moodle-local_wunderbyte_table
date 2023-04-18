@@ -73,16 +73,29 @@ export function initializeActionButton(selector, idstring, encodedtable) {
         });
       } else {
         // Else it's a button, we attach the click listener.
-        button.addEventListener('click', () => {
+        button.addEventListener('click', async() => {
 
-          // We don't show the modal when we already know we treat just one row.
-          // Todo: make a one row treatment modal?
-          if (button.dataset.nomodal && button.dataset.id > 0) {
+          // Collect data from selection.
+          // This will either return an object with the ids and labels (as strings) of the selection or an empty array.
+          const selectionresult = await getSelectionData(idstring, button.dataset);
+          // If selection is mandatory and there is no selection, no call will be executed.
+          if (button.dataset.selectionmandatory == "1" && selectionresult.checkedids.length < 1) {
+            showNoCheckboxNotification();
+            return;
+          } else if (button.dataset.nomodal === 'true' || button.dataset.nomodal === "1") {
             transmitAction(button.dataset.id,
               button.dataset.methodname,
               JSON.stringify(button.dataset), idstring, encodedtable);
+                // eslint-disable-next-line no-console
+                console.log("no modal");
+          } else if (button.dataset.id < 0) {
+              // eslint-disable-next-line no-console
+              console.log("modal + singlecall");
+            showSingleExcecutionModal(button, idstring, encodedtable, selectionresult);
           } else {
-            showConfirmationModal(button, idstring, encodedtable);
+            // eslint-disable-next-line no-console
+            console.log("modal + multiple");
+            showConfirmationModal(button, idstring, encodedtable, selectionresult);
           }
         });
       }
@@ -103,25 +116,17 @@ export function initializeActionButton(selector, idstring, encodedtable) {
  * @param {*} button
  * @param {string} idstring
  * @param {string} encodedtable
+ * @param {*} result
  */
-async function showConfirmationModal(button, idstring, encodedtable) {
+async function showConfirmationModal(button, idstring, encodedtable, result) {
 
   const id = parseInt(button.dataset.id);
   const methodname = button.dataset.methodname;
   const data = button.dataset; // Get all the data of the clicked button.
 
-  const result = getIds(id, idstring, data);
-
-  var checkedids = result.checkedids;
-  const labelarray = result.labelarray;
-
-  if (checkedids.length < 1) {
-    const message = await getString('nocheckboxchecked', 'local_wunderbyte_table');
-    showNotification(message, "danger");
-    return;
-  }
-
-  const datastring = labelarray.join('<br>') ?? '';
+  // Try to collect data from selection.
+  var checkedids = result.checkedids ?? [];
+  let datastring = result.labelstring ?? '';
 
   let strings = [
     {
@@ -134,7 +139,7 @@ async function showConfirmationModal(button, idstring, encodedtable) {
       param: {
         // eslint-disable-next-line block-scoped-var
         data: datastring,
-      }
+      },
     },
     {
       key: button.dataset.submitbuttonstring ?? 'genericsubmit',
@@ -144,12 +149,16 @@ async function showConfirmationModal(button, idstring, encodedtable) {
 
   const localizedstrings = await getStrings(strings);
 
-  ModalFactory.create({ type: ModalFactory.types.SAVE_CANCEL }).then(modal => {
+  /*
+  TODO difference between modal for selected items or without selection.
+  */
+
+  ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(modal => {
 
     modal.setTitle(localizedstrings[0]);
     modal.setBody(localizedstrings[1]);
     modal.setSaveButtonText(localizedstrings[2]);
-    modal.getRoot().on(ModalEvents.save, function () {
+    modal.getRoot().on(ModalEvents.save, function() {
 
       // If there is only one id, we transmit one call.
       if (id != 0) {
@@ -169,6 +178,52 @@ async function showConfirmationModal(button, idstring, encodedtable) {
     console.log(e);
   });
 }
+
+
+/**
+ * Function to collect the ids, check if selection of ids is mandatory and prepare a string of selected lables.
+ * @param {*} idstring
+ * @param {*} data //the dataset of the button that triggerd the action.
+ * @returns {object}
+ */
+async function getSelectionData(idstring, data) {
+
+  // First we collect the checked boxes.
+  const result = getIds(data.id, idstring, data);
+  const checkedids = result.checkedids;
+
+  const labelarray = result.labelarray;
+
+  const datastring = labelarray.join('<br>') ?? '';
+
+  return {
+    'checkedids': checkedids,
+    'labelstring': datastring,
+  };
+}
+
+/**
+ *  If no boxes are checked, we will send out a notification.
+ */
+async function showNoCheckboxNotification() {
+  const message = await getString('nocheckboxchecked', 'local_wunderbyte_table');
+  showNotification(message, "danger");
+
+}
+
+/**
+ * Shows confirmation modal for single call execution.
+ * @param {*} button
+ * @param {string} idstring
+ * @param {string} encodedtable
+ * @param {*} selectionresult
+ */
+function showSingleExcecutionModal(button, idstring, encodedtable, selectionresult) {
+  // For the moment we make no difference between a single call and a multiple call modal
+  // therefore we are calling the generic function
+  showConfirmationModal(button, idstring, encodedtable, selectionresult);
+}
+
 
 /**
  * Ajax function to handle action buttons.
