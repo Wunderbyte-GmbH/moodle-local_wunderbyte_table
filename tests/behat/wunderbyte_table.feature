@@ -29,14 +29,33 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | booking  | C1     | My booking | My booking description | teacher1       | Webinar   | All bookings                     | Yes                                                      | New option - Webinar |
 
   @javascript
-  Scenario: Display table correctly
+  Scenario: Display single table
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     Then the following should exist in the "Users" table:
-      | username | firstname | email |
-      | admin | Admin |moodle@example.com |
-      | teacher1 | Teacher | teacher1@example.com |
-      | user1 | Username | user1@example.com |
+      | username | firstname | email                |
+      | admin    | Admin     | moodle@example.com   |
+      | teacher1 | Teacher   | teacher1@example.com |
+      | user1    | Username  | user1@example.com    |
+
+  @javascript
+  Scenario: Display few tables per multiple tabs
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Users"
+    Then the following should exist in the "Users" table:
+      | username | firstname | email              |
+      | admin    | Admin     | moodle@example.com |
+      | user1    | Username  | user1@example.com  |
+    And I follow "Course"
+    Then the following should exist in the "Course" table:
+      | Full Name | Short Name |
+      | Acceptance test site | Acceptance test site |
+      | Course 1 | C1 |
+    And I follow "Course_Modules"
+    Then the following should exist in the "Course_Modules" table:
+      | course | module |
+      | 362000 | 5 |
 
   @javascript
   Scenario: Switch to the next page
