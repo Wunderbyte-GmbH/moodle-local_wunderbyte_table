@@ -209,6 +209,7 @@
     border-width: 0;
     background-color: transparent;
     width: 100%;
+    /* stylelint-disable-next-line declaration-no-important */
     outline: 0 !important;
 }
 
@@ -255,6 +256,7 @@
     width: 0.5rem;
     height: 0.5rem;
     content: "";
+    /* stylelint-disable-next-line declaration-block-no-shorthand-property-overrides */
     background: 0 0;
     position: absolute;
     z-index: 200000;
@@ -355,6 +357,7 @@ body {
     width: 0.5rem;
     height: 0.5rem;
     content: "";
+    /* stylelint-disable-next-line declaration-block-no-shorthand-property-overrides */
     background: 0 0;
     position: absolute;
     z-index: 200000;
@@ -390,4 +393,7 @@ body {
 a.changesortorder:hover {
     text-decoration: none;
 }
-.wb-table-column {    z-index: 2;}
+
+.wb-table-column {
+    z-index: 2;
+}
