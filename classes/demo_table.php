@@ -45,7 +45,8 @@ class demo_table extends wunderbyte_table {
         global $OUTPUT;
 
         $data[] = [
-            'label' => get_string('delete', 'core'), // Name of your action button.
+            //'label' => get_string('delete', 'core'), // Name of your action button.
+            'label' => 'TriggersNoModal', // Name of your action button.
             'class' => 'btn btn-danger',
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-edit', // Add an icon before the label.
@@ -58,7 +59,8 @@ class demo_table extends wunderbyte_table {
         ];
 
         $data[] = [
-            'label' => get_string('add', 'core'), // Name of your action button.
+            //'label' => get_string('add', 'core'), // Name of your action button.
+            'label' => 'TriggersModal', // Name of your action button.
             'class' => 'btn btn-success',
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-edit', // Add an icon before the label.
