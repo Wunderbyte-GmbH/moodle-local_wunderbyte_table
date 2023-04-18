@@ -111,25 +111,129 @@ class demo implements renderable, templatable {
         $table->addcheckboxes = true;
 
         $table->actionbuttons[] = [
-            'label' => get_string('add', 'core'), // Name of your action button.
+            'label' => 'NoModal,  MultipleCall, NoSelection', // Name of your action button.
+            'class' => 'btn btn-success',
+            'href' => '#',
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => true,
+            'selectionmandatory' => false,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'deletedatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+            ]
+        ];
+        $table->actionbuttons[] = [
+            'label' => 'NoModal, SingleCall, NoSelection', // Name of your action button.
             'class' => 'btn btn-primary',
             'href' => '#',
             'id' => -1, // This forces single call execution.
             'formclass' => '', // To open dynamic form, instead of just confirmation modal.
             'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => true, // If set to true, there is no modal but the method will be called directly.
+            'selectionmandatory' => false,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
             ],
         ];
-
         $table->actionbuttons[] = [
-            'label' => get_string('delete', 'core'), // Name of your action button.
+            'label' => 'Modal,  MultipleCall, NoSelection', // Name of your action button.
             'class' => 'btn btn-danger',
             'href' => '#',
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
+            'selectionmandatory' => false,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'deletedatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+            ]
+        ];
+
+        $table->actionbuttons[] = [
+            'label' => 'Modal,  SingleCall, NoSelection', // Name of your action button.
+            'class' => 'btn btn-warning',
+            'href' => '#',
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => false,
+            'id' => -1,
+            'selectionmandatory' => false,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'deletedatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+            ]
+        ];
+
+        $table->actionbuttons[] = [
+            'label' => 'NoModal,  MultipleCall, Selection', // Name of your action button.
+            'class' => 'btn btn-success',
+            'href' => '#',
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => true,
+            'selectionmandatory' => true,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'deletedatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+            ]
+        ];
+        $table->actionbuttons[] = [
+            'label' => 'NoModal, SingleCall, Selection', // Name of your action button.
+            'class' => 'btn btn-primary',
+            'href' => '#',
+            'id' => -1, // This forces single call execution.
+            'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
+            'nomodal' => true, // If set to true, there is no modal but the method will be called directly.
+            'selectionmandatory' => true,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+            ],
+        ];
+        $table->actionbuttons[] = [
+            'label' => 'Modal,  MultipleCall, Selection', // Name of your action button.
+            'class' => 'btn btn-danger',
+            'href' => '#',
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => false,
+            'selectionmandatory' => true,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => 'id',
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'deletedatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+            ]
+        ];
+
+        $table->actionbuttons[] = [
+            'label' => 'Modal,  SingleCall, Selection', // Name of your action button.
+            'class' => 'btn btn-warning',
+            'href' => '#',
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => false,
+            'selectionmandatory' => true,
+            'id' => -1,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
