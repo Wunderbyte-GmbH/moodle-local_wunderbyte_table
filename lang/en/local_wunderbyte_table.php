@@ -72,5 +72,5 @@ $string['action'] = 'Action';
 $string['table1name'] = 'Users';
 $string['table2name'] = 'Course';
 $string['table3name'] = 'Course_Modules';
-$string['table4name'] = 'Users InfiniteScroll';
+$string['table4name'] = 'Users_InfiniteScroll';
 $string['id'] = 'ID';
