@@ -32,6 +32,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
   Scenario: Display single table
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
+    ## Then "2" row "username" column of "Users" table should contain "admin"
     Then the following should exist in the "Users" table:
       | username | firstname | email                |
       | admin    | Admin     | moodle@example.com   |
@@ -49,13 +50,13 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | user1    | Username  | user1@example.com  |
     And I follow "Course"
     Then the following should exist in the "Course" table:
-      | Full Name | Short Name |
+      | Full Name            | Short Name           |
       | Acceptance test site | Acceptance test site |
-      | Course 1 | C1 |
+      | Course 1             | C1                   |
     And I follow "Course_Modules"
     Then the following should exist in the "Course_Modules" table:
       | course | module |
-      | 362000 | 5 |
+      | 362000 | 5      |
 
   @javascript
   Scenario: Switch to the next page
@@ -71,8 +72,8 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I should see "id" in the "th.id.wb-table-column" "css_element"
-    And "2" row "username" column of "Users" table should contain "admin"
-    And I should see "id" in the "th.id.wb-table-column" "css_element"
-    And I click on "id" "text" in the "th.id.wb-table-column" "css_element"
-    And I click on "id" "text" in the "th.id.wb-table-column" "css_element"
-    And I should see "teacher1"
+    ## And I click on "//*[@id='Users']/thead/tr/th[2]" "xpath_element"
+    And I click on "th.id.wb-table-column" "css_element"
+    And I should see "teacher1" in the "#Users_r1" "css_element"
+    And I click on "th.id.wb-table-column.asc" "css_element"
+    And I should see "guest" in the "#Users_r1" "css_element"
