@@ -38,7 +38,7 @@
 }}
 
 {{#showrowcountselect}}
-    <select class="rowsperpage">
+    <select class="rowsperpage" name={{uniqueid}}>
         {{#options}}
             <option value={{value}} {{selected}}>{{label}}</option>
         {{/options}}
