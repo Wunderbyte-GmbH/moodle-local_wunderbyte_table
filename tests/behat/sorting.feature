@@ -111,7 +111,6 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
-    And I wait "5" seconds
     And I should see "Full Name" in the "th.fullname.wb-table-column" "css_element"
     And I click on "th.fullname.wb-table-column" "css_element"
     And I should see "Acceptance test siteer1" in the "#Course_r1" "css_element"

@@ -29,7 +29,7 @@ Feature: Row controls functionality of wunderbyte_table works as expected
       | booking  | C1     | My booking | My booking description | teacher1       | Webinar   | All bookings                     | Yes                                                      | New option - Webinar |
 
   @javascript
-  Scenario: Press TriggersNoModal button in the rows on the deffirent tabs of the table
+  Scenario: Press TriggersNoModal button in the rows on the different tabs of the table
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
@@ -38,7 +38,28 @@ Feature: Row controls functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
     And I follow "Course"
+    And I wait "1" seconds
     Then I should see "Course 1" in the "#Course_r2" "css_element"
     And I click on "TriggersNoModal" "link" in the "#Course_r2" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
+
+  @javascript
+  Scenario: Set checkbox in the rows on the different tabs of the table
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Users"
+    Then I should see "admin" in the "#Users_r1" "css_element"
+    ##And I set the field with xpath "//*[@id='2']" to "checked"
+    And I set the field "row-Users-2" to "checked"
+    ##And I set the field "wb_checkbox_2" to "checked"
+    And I set the field "togglecheckbox-Users-2" to "checked"
+    And I wait "1" seconds
+    And I should see "checked" in the "#user-notifications" "css_element"
+    And I follow "Course"
+    And I wait "1" seconds
+    Then I should see "Course 1" in the "#Course_r2" "css_element"
+    And I set the field "row-Course-362000" to "checked"
+    And I set the field "togglecheckbox-Course-362000" to "checked"
+    And I wait "1" seconds
+    And I should see "checked" in the "#user-notifications" "css_element"
