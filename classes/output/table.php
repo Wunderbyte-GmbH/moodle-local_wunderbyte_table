@@ -325,8 +325,8 @@ class table implements renderable, templatable {
                 ];
 
 
-                if (in_array($column, $table->sortablecolumns)
-                    || in_array($column, array_keys($table->sortablecolumns))) {
+                if (in_array($column, $table->sortablecolumns, true)
+                    || in_array($column, array_keys($table->sortablecolumns), true)) {
 
                     $item['sortable'] = true;
                 };
