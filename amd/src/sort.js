@@ -93,6 +93,9 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
 
       let columnname = element.dataset.columnname;
 
+      // eslint-disable-next-line no-console
+      console.log(columnname);
+
 
       switch (columnname) {
 
@@ -107,9 +110,12 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
           e.target.dataset.checked = checked;
           break;
         default:
+          if (element.dataset.sortable) {
           callSortAjax(columnname, idstring, encodedtable);
+          }
       }
-    });
+    }
+    );
   });
 }
 
