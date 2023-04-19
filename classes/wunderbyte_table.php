@@ -1391,6 +1391,7 @@ class wunderbyte_table extends table_sql {
 
         $data['id'] = $values->id;
         $data['label'] = '';
+        $data['name'] = 'row-'.$this->uniqueid.'-'.$values->id;
         $data['checkboxclass'] = '';
         $data['checked'] = !empty($values->checkbox) ? true : false;
 
