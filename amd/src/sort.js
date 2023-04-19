@@ -93,10 +93,6 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
 
       let columnname = element.dataset.columnname;
 
-      // eslint-disable-next-line no-console
-      console.log(columnname);
-
-
       switch (columnname) {
 
         // In case we are in the checkboxes column...
