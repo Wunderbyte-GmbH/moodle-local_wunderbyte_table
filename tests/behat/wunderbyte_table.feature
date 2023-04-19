@@ -59,7 +59,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | 362000 | 5      |
 
   @javascript
-  Scenario: Switch to the next page
+  Scenario: Navigation - switch to the next page
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
@@ -68,3 +68,17 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I should not see "guest"
     And I click on "1" "link" in the "ul.pagination" "css_element"
     And I should see "guest"
+
+  @javascript
+  Scenario: Navigation - set per page items count
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Users"
+    Then I should see "15 of 15 records found" in the ".Users .wb-records-count-label" "css_element"
+    And the field "selectrowsperpage-Users" matches value "Show 10 rows"
+    And "//nav[@aria-label='Page']" "xpath_element" should exist
+    And I set the field "selectrowsperpage-Users" to "Show 20 rows"
+    And I wait "1" seconds
+    And "//nav[@aria-label='Page']" "xpath_element" should not exist
+    And the field "selectrowsperpage-Users" matches value "Show 20 rows"
+
