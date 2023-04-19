@@ -1,5 +1,5 @@
 @local @local_wunderbyte_table
-Feature: Baisc functionality of wunderbyte_table works as expected
+Feature: Sorting functionality of wunderbyte_table works as expected
 
   Background:
     Given the following "users" exist:
@@ -59,12 +59,49 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | 362000 | 5      |
 
   @javascript
-  Scenario: Switch to the next page
+  Scenario: Sort table using select field
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
-    And "//nav[@aria-label='Page']" "xpath_element" should exist
-    And I click on "2" "link" in the "ul.pagination" "css_element"
-    And I should not see "guest"
-    And I click on "1" "link" in the "ul.pagination" "css_element"
-    And I should see "guest"
+    And I click on "#home a.changesortorder" "css_element"
+    And I click on "#home a.changesortorder" "css_element"
+    And I set the field "Sort by..." to "id"
+    And I should see "guest" in the "#Users_r1" "css_element"
+    And I click on "#home a.changesortorder" "css_element"
+    And I should see "teacher1" in the "#Users_r1" "css_element"
+    And I set the field "#home select.sortcolumn" to "username"
+    And I should see "user9" in the "#Users_r1" "css_element"
+    And I click on "#home a.changesortorder" "css_element"
+    And I should see "admin" in the "#Users_r1" "css_element"
+    And I set the field "#home select.sortcolumn" to "lastname"
+    And I should see "guest" in the "#Users_r1" "css_element"
+    And I click on "#home a.changesortorder" "css_element"
+    And I should see "admin" in the "#Users_r1" "css_element"
+    And I set the field "#home select.sortcolumn" to "firstname"
+    And I should see "user9" in the "#Users_r1" "css_element"
+    And I click on "#home a.changesortorder" "css_element"
+    And I should see "admin" in the "#Users_r1" "css_element"
+
+  @javascript
+  Scenario: Sort table with column id
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I should see "id" in the "th.id.wb-table-column" "css_element"
+    ## And I click on "//*[@id='Users']/thead/tr/th[2]" "xpath_element"
+    And I click on "th.id.wb-table-column" "css_element"
+    And I should see "teacher1" in the "#Users_r1" "css_element"
+    And I click on "th.id.wb-table-column.asc" "css_element"
+    And I should see "guest" in the "#Users_r1" "css_element"
+    ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn" as well
+
+  @javascript
+  Scenario: Sort table with column username
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I should see "username" in the "th.username.wb-table-column" "css_element"
+    ## And I click on "//*[@id='Users']/thead/tr/th[3]" "xpath_element"
+    And I click on "th.username.wb-table-column" "css_element"
+    And I should see "user9" in the "#Users_r1" "css_element"
+    And I click on "th.username.wb-table-column.asc" "css_element"
+    And I should see "admin" in the "#Users_r1" "css_element"
+    ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn" as well
