@@ -397,7 +397,7 @@ class demo implements renderable, templatable {
 
         $table->cardsort = true;
 
-        $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
+        $table->tabletemplate = 'local_wunderbyte_table/table_card';
 
         $table->infinitescroll = 20;
         $table->pageable(true);
