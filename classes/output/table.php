@@ -331,6 +331,16 @@ class table implements renderable, templatable {
                     $item['sortable'] = true;
                 };
 
+                if($column == $table->sort_default_column){
+                    switch ($table->sort_default_order) {
+                        case (3):
+                            $item['sortclass'] = 'asc';
+                        case (4):
+                            $item['sortclass'] = 'desc';
+                    }
+
+                };
+
                 $this->table['header']['headers'][] = $item;
             }
 
