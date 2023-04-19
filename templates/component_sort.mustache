@@ -41,7 +41,7 @@
                 <i class="fa fa-sort-alpha-asc" aria-label="{{#str}} orderdown, local_wunderbyte_table {{/str}}"></i>
             {{/sortdown}}
         </a>
-        <select class="sortcolumn">
+        <select class="sortcolumn" name={{uniqueid}}>
             <option value="" aria-label="{{#str}} sortby, local_wunderbyte_table {{/str}}">{{#str}} sortby, local_wunderbyte_table {{/str}}</option>
             {{#options}}
                 <option value="{{sortid}}">{{key}}</option>
