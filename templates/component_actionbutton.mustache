@@ -32,6 +32,7 @@
     {{^ischeckbox}}
     <span>
         <a href="{{href}}" class="{{class}} wb_action_button "
+            title="{{methodname}}-{{name}}"
             data-id="{{id}}"
             data-methodname="{{methodname}}"
             data-formname="{{formname}}"
@@ -49,6 +50,7 @@
         <div class="form-check">
             <input
             id="wb-checkbox-{{id}}"
+            name="{{methodname}}-{{name}}"
             type="checkbox"
             {{#checked}} checked {{/checked}}
             {{#disabled}} disabled {{/disabled}}
