@@ -57,7 +57,7 @@ Feature: Row controls functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And I should see "checked" in the "#user-notifications" "css_element"
     And I follow "Course"
-    And I wait "1" seconds
+    And I wait "2" seconds
     Then I should see "Course 1" in the "#Course_r2" "css_element"
     And I set the field "row-Course-362000" to "checked"
     And I set the field "togglecheckbox-Course-362000" to "checked"

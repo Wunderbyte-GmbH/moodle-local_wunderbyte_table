@@ -40,46 +40,34 @@ Feature: Sorting functionality of wunderbyte_table works as expected
       | user1    | Username  | user1@example.com    |
 
   @javascript
-  Scenario: Display few tables per multiple tabs
-    Given I log in as "admin"
-    When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Users"
-    Then the following should exist in the "Users" table:
-      | username | firstname | email              |
-      | admin    | Admin     | moodle@example.com |
-      | user1    | Username  | user1@example.com  |
-    And I follow "Course"
-    Then the following should exist in the "Course" table:
-      | Full Name            | Short Name           |
-      | Acceptance test site | Acceptance test site |
-      | Course 1             | C1                   |
-    And I follow "Course_Modules"
-    Then the following should exist in the "Course_Modules" table:
-      | course | module |
-      | 362000 | 5      |
-
-  @javascript
   Scenario: Sort Users tab table using select field
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
     And I set the field "selectsortcolumn-Users" to "id"
-    And I should see "guest" in the "#Users_r1" "css_element"
-    ## And I click on "#home a.changesortorder" "css_element"
-    And I follow "changesortorder-Users"
+    And I wait "1" seconds
     And I should see "teacher1" in the "#Users_r1" "css_element"
-    And I set the field "selectsortcolumn-Users" to "username"
-    And I should see "user9" in the "#Users_r1" "css_element"
     And I follow "changesortorder-Users"
-    And I should see "admin" in the "#Users_r1" "css_element"
-    And I set the field "selectsortcolumn-Users" to "lastname"
+    And I wait "1" seconds
     And I should see "guest" in the "#Users_r1" "css_element"
-    And I follow "changesortorder-Users"
+    And I set the field "selectsortcolumn-Users" to "username"
+    And I wait "1" seconds
     And I should see "admin" in the "#Users_r1" "css_element"
-    And I set the field "selectsortcolumn-Users" to "firstname"
+    And I follow "changesortorder-Users"
+    And I wait "1" seconds
     And I should see "user9" in the "#Users_r1" "css_element"
-    And I follow "changesortorder-Users"
+    And I set the field "selectsortcolumn-Users" to "lastname"
+    And I wait "1" seconds
     And I should see "admin" in the "#Users_r1" "css_element"
+    And I follow "changesortorder-Users"
+    And I wait "1" seconds
+    And I should see "guest" in the "#Users_r1" "css_element"
+    And I set the field "selectsortcolumn-Users" to "firstname"
+    And I wait "1" seconds
+    And I should see "admin" in the "#Users_r1" "css_element"
+    And I follow "changesortorder-Users"
+    And I wait "1" seconds
+    And I should see "user1" in the "#Users_r1" "css_element"
 
   @javascript
   Scenario: Sort Users tab table with column id
@@ -89,8 +77,10 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I should see "id" in the "th.id.wb-table-column" "css_element"
     ## And I click on "//*[@id='Users']/thead/tr/th[2]" "xpath_element"
     And I click on "th.id.wb-table-column" "css_element"
+    And I wait "1" seconds
     And I should see "teacher1" in the "#Users_r1" "css_element"
     And I click on "th.id.wb-table-column.asc" "css_element"
+    And I wait "1" seconds
     And I should see "guest" in the "#Users_r1" "css_element"
     ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn" as well
 
@@ -101,8 +91,10 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I follow "Users"
     And I should see "username" in the "th.username.wb-table-column" "css_element"
     And I click on "th.username.wb-table-column" "css_element"
+    And I wait "1" seconds
     And I should see "user9" in the "#Users_r1" "css_element"
     And I click on "th.username.wb-table-column.asc" "css_element"
+    And I wait "1" seconds
     And I should see "admin" in the "#Users_r1" "css_element"
     ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn" as well
 
@@ -112,8 +104,11 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
     And I should see "Full Name" in the "th.fullname.wb-table-column" "css_element"
-    And I click on "th.fullname.wb-table-column" "css_element"
-    And I should see "Acceptance test siteer1" in the "#Course_r1" "css_element"
-    And I click on "th.fullname.wb-table-column.asc" "css_element"
+    And I should see "Acceptance test site" in the "#Course_r1" "css_element"
+    And I click on "th.fullname.wb-table-column.desc" "css_element"
+    And I wait "1" seconds
     And I should see "Course 1" in the "#Course_r1" "css_element"
+    And I click on "th.fullname.wb-table-column.asc" "css_element"
+    And I wait "1" seconds
+    And I should see "Acceptance test site" in the "#Course_r1" "css_element"
     ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn"

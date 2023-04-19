@@ -49,11 +49,13 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | admin    | Admin     | moodle@example.com |
       | user1    | Username  | user1@example.com  |
     And I follow "Course"
+    And I wait "1" seconds
     Then the following should exist in the "Course" table:
       | Full Name            | Short Name           |
       | Acceptance test site | Acceptance test site |
       | Course 1             | C1                   |
     And I follow "Course_Modules"
+    And I wait "1" seconds
     Then the following should exist in the "Course_Modules" table:
       | course | module |
       | 362000 | 5      |
