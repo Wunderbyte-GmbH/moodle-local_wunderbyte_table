@@ -35,7 +35,6 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     And I follow "Users"
     Then I should see "admin" in the "#Users_r1" "css_element"
     And I click on "NoModal, MultipleCall, NoSelection" "link" in the ".wunderbyteTableClass.Users" "css_element"
-    ##And I click on "deleteitem-" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
     And I wait "1" seconds
@@ -62,6 +61,24 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
     And I set the field with xpath "//*[contains(@id, 'Users_r3')]//*[contains(@name, 'row-Users-')]" to "checked"
     And I click on "NoModal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
+    And I wait "1" seconds
+    And I should see "Did work" in the "#user-notifications" "css_element"
+
+  @javascript
+  Scenario: Press TriggersModal NoSelection buttons for entire table
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Users"
+    Then I should see "admin" in the "#Users_r1" "css_element"
+    And I click on "+Modal, MultipleCall, NoSelection" "link" in the ".wunderbyteTableClass.Users" "css_element"
+    And I should see "Action will be applied!" in the ".show .modal-content" "css_element"
+    And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"
+    And I wait "1" seconds
+    And I should see "Did work" in the "#user-notifications" "css_element"
+    And I wait "1" seconds
+    And I click on "+Modal, SingleCall, NoSelection" "link" in the ".wunderbyteTableClass.Users" "css_element"
+    And I should see "You are about to add a row" in the ".show .modal-content" "css_element"
+    And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
 
