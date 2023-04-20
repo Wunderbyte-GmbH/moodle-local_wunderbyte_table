@@ -142,7 +142,7 @@ class demo implements renderable, templatable {
             ],
         ];
         $table->actionbuttons[] = [
-            'label' => 'Modal, MultipleCall, NoSelection', // Name of your action button.
+            'label' => '+Modal, MultipleCall, NoSelection', // Name of your action button.
             'class' => 'btn btn-danger',
             'href' => '#',
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
@@ -161,7 +161,7 @@ class demo implements renderable, templatable {
         ];
 
         $table->actionbuttons[] = [
-            'label' => 'Modal, SingleCall, NoSelection', // Name of your action button.
+            'label' => '+Modal, SingleCall, NoSelection', // Name of your action button.
             'class' => 'btn btn-warning',
             'href' => '#',
             'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
@@ -211,7 +211,7 @@ class demo implements renderable, templatable {
             ],
         ];
         $table->actionbuttons[] = [
-            'label' => 'Modal, MultipleCall, Selection', // Name of your action button.
+            'label' => '+Modal, MultipleCall, Selection', // Name of your action button.
             'class' => 'btn btn-danger',
             'href' => '#',
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
@@ -229,7 +229,7 @@ class demo implements renderable, templatable {
         ];
 
         $table->actionbuttons[] = [
-            'label' => 'Modal, SingleCall, Selection', // Name of your action button.
+            'label' => '+Modal, SingleCall, Selection', // Name of your action button.
             'class' => 'btn btn-warning',
             'href' => '#',
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
