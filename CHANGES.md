@@ -7,7 +7,6 @@
 * Bugfix: Tableheader highlighting default sortcolumn and sortorder.
 * Bugfix: Tableheader click on columnname triggers sorting only for columnnames defined as sortable.
 
-
 ## Version 1.5.4 (2023041300)
 * New feature: change number of rows in pagination mode.
 
