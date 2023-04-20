@@ -120,12 +120,12 @@ class demo implements renderable, templatable {
             'selectionmandatory' => false, // When set to true, action will only be triggered, if elements are selected.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
-                'titlestring' => 'deletedatatitle',
-                'bodystring' => 'deletedatabody',
-                'submitbuttonstring' => 'deletedatasubmit',
-                'component' => 'local_wunderbyte_table',
+                'titlestring' => 'deletedatatitle', // Will be shown in modal title
+                'bodystring' => 'deletedatabody', // Will be shown in modal body in case elements are selected
                 'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
-                'noselectionbodystring' => 'specialbody', // Will be applied in case no data is selected
+                'noselectionbodystring' => 'specialbody', // Will be displayed in modal bode in case no data is selected
+                'submitbuttonstring' => 'deletedatasubmit', // Modal Button String
+                'component' => 'local_wunderbyte_table', // Localization of strings
             ]
         ];
         $table->actionbuttons[] = [
