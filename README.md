@@ -69,6 +69,40 @@ You can add a number of action buttons to your table. If you combine them with "
         ]
     ];
 
+You can choose if your Action Button needs element(s) to be selected in order to trigger an action.
+If this is set to false, you can trigger actions with or without actions selected.
+
+    $mytable->actionbuttons = [
+        'selectionmandatory' => false,
+    ]
+You can choose if your Action Button triggers a modal with the "nomodal" param:
+
+    $mytable->actionbuttons = [
+        'nomodal' => false,
+    ]
+
+If your Action Button works with or without selected elements, you can choose a different bodystring for the modal it may trigger.
+
+    $mytable->actionbuttons = [
+    'data' => [
+                    'id' => 'id',
+                    'titlestring' => 'deletedatatitle', // Will be shown in modal title
+                    'bodystring' => 'deletedatabody', // Will be shown in modal body in case elements are selected
+                    'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                    'noselectionbodystring' => 'specialbody', // Will be displayed in modal bode in case no data is selected
+                    'submitbuttonstring' => 'deletedatasubmit', // Modal Button String
+                    'component' => 'local_wunderbyte_table', // Localization of strings
+                ]
+    ]
+
+You can choose if your Action Button transmits a single or multiple call(s) in case multiple elements are selected.
+
+    $mytable->actionbuttons = [
+        'id' => -1, // This forces single call execution.
+    ]
+
+
+
 ## Filter, Sort and Search
 WB Table provides direct filter, search and sort functionality.
 
