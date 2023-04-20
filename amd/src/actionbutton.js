@@ -90,13 +90,11 @@ export function initializeActionButton(selector, idstring, encodedtable) {
             // If selection is mandatory and there is no selection, no call will be executed.
             return;
           } else if (button.dataset.nomodal === 'true' || button.dataset.nomodal === "1") {
+            // If nomodal is set true, action will be triggerd immediately.
             chooseActionToTransmit(button, idstring, encodedtable, selectionresult);
-            // eslint-disable-next-line no-console
-            console.log("no modal");
           } else {
-            // eslint-disable-next-line no-console
-            console.log("modal + multiple");
             showConfirmationModal(button, idstring, encodedtable, selectionresult);
+            // Modal will trigger Action to Transmit
           }
         });
       }
@@ -121,8 +119,13 @@ export function initializeActionButton(selector, idstring, encodedtable) {
  */
 async function showConfirmationModal(button, idstring, encodedtable, result) {
 
-  // Try to collect data from selection.
-  let datastring = result.labelstring ?? '';
+  // Checking if we have data from selection result. Otherwise generating default string for body.
+  let datastring = '';
+  if (result.labelstring.length > 0) {
+    datastring = result.labelstring;
+  } else {
+    datastring = await getStrings('noselectionbody');
+  }
 
   let strings = [
     {
@@ -144,10 +147,6 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
   ];
 
   const localizedstrings = await getStrings(strings);
-
-  /*
-  TODO difference between modal for selected items or without selection.
-  */
 
   ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(modal => {
 
