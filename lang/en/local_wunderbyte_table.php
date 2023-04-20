@@ -54,10 +54,12 @@ $string['functiondoesntexist'] = "Function of action button doesn\'t exist.";
 $string['deletedatatitle'] = 'Do you really want to delete this data?';
 $string['deletedatabody'] = 'You are about to submit this data: <br> "{$a->data}"';
 $string['deletedatasubmit'] = 'Delete';
+$string['adddatabody'] = 'You are about to add a row';
 
 $string['generictitle'] = 'Do you really want to treat this data?';
 $string['genericbody'] = 'You are about to treat this rows: <br> "{$a->data}"';
 $string['noselectionbody'] = 'You are about make an action';
+$string['specialbody'] = 'Action will be applied!';
 $string['genericsubmit'] = 'Confirm';
 
 $string['somethingwentwrong'] = 'Something went wrong. Please contact your admin.';

@@ -120,31 +120,43 @@ export function initializeActionButton(selector, idstring, encodedtable) {
 async function showConfirmationModal(button, idstring, encodedtable, result) {
 
   // Checking if we have data from selection result. Otherwise generating default string for body.
-  let datastring = '';
+  let datastring = result.labelstring ?? '';
+  let strings = [];
   if (result.labelstring.length > 0) {
-    datastring = result.labelstring;
-  } else {
-    datastring = await getString('noselectionbody', 'local_wunderbyte_table');
-  }
-
-  let strings = [
-    {
-      key: button.dataset.titlestring ?? 'generictitle',
-      component: button.dataset.component ?? 'local_wunderbyte_table',
-    },
-    {
-      key: button.dataset.bodystring ?? 'genericbody',
-      component: button.dataset.component ?? 'local_wunderbyte_table',
-      param: {
-        // eslint-disable-next-line block-scoped-var
-        data: datastring,
+    strings = [
+      {
+        key: button.dataset.titlestring ?? 'generictitle',
+        component: button.dataset.component ?? 'local_wunderbyte_table',
       },
-    },
-    {
-      key: button.dataset.submitbuttonstring ?? 'genericsubmit',
-      component: button.dataset.component ?? 'local_wunderbyte_table',
-    },
-  ];
+      {
+        key: button.dataset.bodystring ?? 'genericbody',
+        component: button.dataset.component ?? 'local_wunderbyte_table',
+        param: {
+          // eslint-disable-next-line block-scoped-var
+          data: datastring,
+        },
+      },
+      {
+        key: button.dataset.submitbuttonstring ?? 'genericsubmit',
+        component: button.dataset.component ?? 'local_wunderbyte_table',
+      },
+    ];
+  } else {
+    strings = [
+      {
+        key: button.dataset.titlestring ?? 'generictitle',
+        component: button.dataset.component ?? 'local_wunderbyte_table',
+      },
+      {
+        key: button.dataset.noselectionbodystring ?? 'noselectionbody',
+        component: button.dataset.component ?? 'local_wunderbyte_table',
+      },
+      {
+        key: button.dataset.submitbuttonstring ?? 'genericsubmit',
+        component: button.dataset.component ?? 'local_wunderbyte_table',
+      },
+    ];
+  }
 
   const localizedstrings = await getStrings(strings);
 

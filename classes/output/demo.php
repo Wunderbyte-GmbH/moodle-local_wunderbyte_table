@@ -117,7 +117,7 @@ class demo implements renderable, templatable {
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => true,
-            'selectionmandatory' => false,
+            'selectionmandatory' => false, // When set to true, action will only be triggered, if elements are selected.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
@@ -125,6 +125,7 @@ class demo implements renderable, templatable {
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
                 'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                'noselectionbodystring' => 'specialbody', // Will be applied in case no data is selected
             ]
         ];
         $table->actionbuttons[] = [
@@ -134,7 +135,7 @@ class demo implements renderable, templatable {
             'id' => -1, // This forces single call execution.
             'formclass' => '', // To open dynamic form, instead of just confirmation modal.
             'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
-            'nomodal' => true, // If set to true, there is no modal but the method will be called directly.
+            'nomodal' => true, // If set to true, there is no modal and the method will be called directly.
             'selectionmandatory' => false,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
@@ -147,7 +148,7 @@ class demo implements renderable, templatable {
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
-            'selectionmandatory' => false,
+            'selectionmandatory' => false, // You might want to add a 'noselectionbodystring' to data which will be shown in the modal in case there are no elements selected.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
@@ -155,6 +156,7 @@ class demo implements renderable, templatable {
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
                 'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                'noselectionbodystring' => 'specialbody', // Will be applied in case no data is selected
             ]
         ];
 
@@ -162,7 +164,7 @@ class demo implements renderable, templatable {
             'label' => 'Modal,  SingleCall, NoSelection', // Name of your action button.
             'class' => 'btn btn-warning',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'id' => -1,
@@ -170,10 +172,11 @@ class demo implements renderable, templatable {
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
-                'bodystring' => 'deletedatabody',
+                'bodystring' => 'adddatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
                 'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                'noselectionbodystring' => 'adddatabody', // Will be applied in case no data is selected
             ]
         ];
 
