@@ -91,12 +91,8 @@ export function initializeActionButton(selector, idstring, encodedtable) {
             return;
           } else if (button.dataset.nomodal === 'true' || button.dataset.nomodal === "1") {
             chooseActionToTransmit(button, idstring, encodedtable, selectionresult);
-                // eslint-disable-next-line no-console
-                console.log("no modal");
-          } else if (button.dataset.id < 0) {
-              // eslint-disable-next-line no-console
-              console.log("modal + singlecall");
-            showSingleExcecutionModal(button, idstring, encodedtable, selectionresult);
+            // eslint-disable-next-line no-console
+            console.log("no modal");
           } else {
             // eslint-disable-next-line no-console
             console.log("modal + multiple");
@@ -159,18 +155,8 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
     modal.setBody(localizedstrings[1]);
     modal.setSaveButtonText(localizedstrings[2]);
     modal.getRoot().on(ModalEvents.save, function() {
-
-      // If there is only one id, we transmit one call.
-      if (id != 0) {
-        transmitAction(id, methodname, JSON.stringify({...data, checkedids}), idstring, encodedtable);
-      } else { // Zero means we want single line execution.
-        // eslint-disable-next-line block-scoped-var
-        checkedids.forEach(cid => {
-          transmitAction(cid, methodname, JSON.stringify(data), idstring, encodedtable);
-        });
-      }
+      chooseActionToTransmit(button, idstring, encodedtable, result);
     });
-
     modal.show();
     return modal;
   }).catch(e => {
@@ -210,20 +196,6 @@ async function showNoCheckboxNotification() {
   showNotification(message, "danger");
 
 }
-
-/**
- * Shows confirmation modal for single call execution.
- * @param {*} button
- * @param {string} idstring
- * @param {string} encodedtable
- * @param {*} selectionresult
- */
-function showSingleExcecutionModal(button, idstring, encodedtable, selectionresult) {
-  // For the moment we make no difference between a single call and a multiple call modal
-  // therefore we are calling the generic function
-  showConfirmationModal(button, idstring, encodedtable, selectionresult);
-}
-
 
 /**
  * Ajax function to handle action buttons.
