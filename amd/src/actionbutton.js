@@ -125,12 +125,7 @@ export function initializeActionButton(selector, idstring, encodedtable) {
  */
 async function showConfirmationModal(button, idstring, encodedtable, result) {
 
-  const id = parseInt(button.dataset.id);
-  const methodname = button.dataset.methodname;
-  const data = button.dataset; // Get all the data of the clicked button.
-
   // Try to collect data from selection.
-  var checkedids = result.checkedids ?? [];
   let datastring = result.labelstring ?? '';
 
   let strings = [
@@ -372,13 +367,10 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
  */
 function chooseActionToTransmit(button, idstring, encodedtable, selectionresult) {
   const data = button.dataset;
-  const id = button.dataset.id;
+  const id = parseInt(button.dataset.id);
   const methodname = button.dataset.methodname;
-  const checkedids = selectionresult.checkedids;
+  const checkedids = selectionresult.checkedids ?? [];
   // Checkedids will either be ['id1', 'id2', ...] or [] if no selection was made.
-
-  // eslint-disable-next-line no-console
-  console.log(checkedids);
 
   if (checkedids.length === 0) {
     // eslint-disable-next-line no-console
