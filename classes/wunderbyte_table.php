@@ -381,6 +381,14 @@ class wunderbyte_table extends table_sql {
         $this->pagesize = $pagesize;
         $this->setup();
 
+        //function: check optionale params und wenn filter, dann anwenden, genauso wie im webservice load_data
+        //apply filter by url params
+        //mit js jede interaction im filter sollte url anpassen:
+        //check if concerned, check if filter info, anwenden filter
+        // wenn die url lautet http://localhost:58000/local/wunderbyte_table/demo.php?wbid=hellow dann ist $wbid "hellow"
+
+        $wbid = optional_param('wbid', '', PARAM_RAW);
+
         $encodedtable = $this->return_encoded_table();
 
         // First we query without the filter.
