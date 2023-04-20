@@ -1,3 +1,13 @@
+## Version 1.5.5 (2023042000)
+* New feature: Displaying multiple tables in tabs on demo page.
+* New feature: Added selection-mandatory property and function to actionbuttons to define if an actionbutton triggers action without elements selected.
+* New feature: Actionbutton not triggering modal can treat data of selected elements and transmit multiple calls.
+* Bugfix: Tableheader row display with z-index displaying on top level of table.
+* Bugfix: Tableheader icons for sorting changed descending and ascending order.
+* Bugfix: Tableheader highlighting default sortcolumn and sortorder.
+* Bugfix: Tableheader click on columnname triggers sorting only for columnnames defined as sortable.
+
+
 ## Version 1.5.4 (2023041300)
 * New feature: change number of rows in pagination mode.
 
