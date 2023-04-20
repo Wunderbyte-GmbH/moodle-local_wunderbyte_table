@@ -124,7 +124,7 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
   if (result.labelstring.length > 0) {
     datastring = result.labelstring;
   } else {
-    datastring = await getStrings('noselectionbody');
+    datastring = await getString('noselectionbody', 'local_wunderbyte_table');
   }
 
   let strings = [
