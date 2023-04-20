@@ -76,11 +76,18 @@ export function initializeActionButton(selector, idstring, encodedtable) {
         button.addEventListener('click', async() => {
 
           // Collect data from selection.
-          // This will either return an object with the ids and labels (as strings) of the selection or an empty array.
-          const selectionresult = await getSelectionData(idstring, button.dataset);
-          // If selection is mandatory and there is no selection, no call will be executed.
-          if (button.dataset.selectionmandatory == "1" && selectionresult.checkedids.length < 1) {
+          // This will either return an object with the ids (as array) and labels (as string) of the selection or an empty object.
+          var selectionresult = await getSelectionData(idstring, button.dataset);
+          // Button Data will either return as int (1 for true) as bool, or as "true" string. We want all cases to return true.
+          if (button.dataset.selectionmandatory == "1"
+          || button.dataset.selectionmandatory == true
+          || button.dataset.selectionmandatory == "true") {
+            var selectionmandatory = true;
+          }
+          // eslint-disable-next-line block-scoped-var
+          if (selectionmandatory && selectionresult.checkedids.length < 1) {
             showNoCheckboxNotification();
+            // If selection is mandatory and there is no selection, no call will be executed.
             return;
           } else if (button.dataset.nomodal === 'true' || button.dataset.nomodal === "1") {
             chooseActionToTransmit(button, idstring, encodedtable, selectionresult);
