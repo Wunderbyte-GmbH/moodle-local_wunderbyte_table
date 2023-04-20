@@ -52,14 +52,14 @@ Feature: Row controls functionality of wunderbyte_table works as expected
     Then I should see "admin" in the "#Users_r1" "css_element"
     ##And I set the field with xpath "//*[@id='2']" to "checked"
     And I set the field "row-Users-2" to "checked"
-    ##And I set the field "wb_checkbox_2" to "checked"
     And I set the field "togglecheckbox-Users-2" to "checked"
     And I wait "1" seconds
     And I should see "checked" in the "#user-notifications" "css_element"
     And I follow "Course"
     And I wait "2" seconds
     Then I should see "Course 1" in the "#Course_r2" "css_element"
-    And I set the field "row-Course-362000" to "checked"
-    And I set the field "togglecheckbox-Course-362000" to "checked"
+    ## Only xpath useful because IDs have been changed on each update
+    And I set the field with xpath "//*[contains(@id, 'Course_r2')]//*[contains(@name, 'row-Course-')]" to "checked"
+    And I set the field with xpath "//*[contains(@id, 'Course_r2')]//*[contains(@name, 'togglecheckbox-Course-')]" to "checked"
     And I wait "1" seconds
     And I should see "checked" in the "#user-notifications" "css_element"
