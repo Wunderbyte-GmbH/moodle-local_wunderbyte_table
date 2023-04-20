@@ -45,6 +45,29 @@ Feature: Row controls functionality of wunderbyte_table works as expected
     And I should see "Did work" in the "#user-notifications" "css_element"
 
   @javascript
+  Scenario: Press TriggersModal button in the rows of the different tables on the different tabs
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Users"
+    Then I should see "admin" in the "#Users_r1" "css_element"
+    And I click on "TriggersModal" "link" in the "#Users_r1" "css_element"
+    And I wait "1" seconds
+    And I should see "You are about to treat this rows:" in the ".show .modal-content" "css_element"
+    And I should see "admin" in the ".show .modal-content" "css_element"
+    And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"
+    And I wait "1" seconds
+    And I should see "Did work" in the "#user-notifications" "css_element"
+    And I follow "Course"
+    And I wait "1" seconds
+    Then I should see "Course 1" in the "#Course_r2" "css_element"
+    And I click on "TriggersModal" "link" in the "#Course_r2" "css_element"
+    And I should see "You are about to treat this rows:" in the ".show .modal-content" "css_element"
+    ## And I should see "Course 1" in the ".show .modal-content" "css_element"
+    And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"
+    And I wait "1" seconds
+    And I should see "Did work" in the "#user-notifications" "css_element"
+
+  @javascript
   Scenario: Set checkbox in the rows on the different tabs of the table
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
