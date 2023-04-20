@@ -83,9 +83,7 @@ export function initializeActionButton(selector, idstring, encodedtable) {
             showNoCheckboxNotification();
             return;
           } else if (button.dataset.nomodal === 'true' || button.dataset.nomodal === "1") {
-            transmitAction(button.dataset.id,
-              button.dataset.methodname,
-              JSON.stringify(button.dataset), idstring, encodedtable);
+            chooseActionToTransmit(button, idstring, encodedtable, selectionresult);
                 // eslint-disable-next-line no-console
                 console.log("no modal");
           } else if (button.dataset.id < 0) {
@@ -242,7 +240,7 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
       'data': datastring,
       'encodedtable': encodedtable,
     },
-    done: function (data) {
+    done: function(data) {
 
       if (data.success == 1) {
         showNotification(data.message, "success");
@@ -357,3 +355,44 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
   // Show the form.
   modalForm.show();
 }
+
+/**
+ * Case decision between call without selection, single call or multiple call triggering transmit action.
+ * @param {string} button
+ * @param {string} idstring
+ * @param {string} encodedtable
+ * @param {object} selectionresult
+ */
+function chooseActionToTransmit(button, idstring, encodedtable, selectionresult) {
+  const data = button.dataset;
+  const id = button.dataset.id;
+  const methodname = button.dataset.methodname;
+  const checkedids = selectionresult.checkedids;
+  // Checkedids will either be ['id1', 'id2', ...] or [] if no selection was made.
+
+  // eslint-disable-next-line no-console
+  console.log(checkedids);
+
+  if (checkedids.length === 0) {
+    // eslint-disable-next-line no-console
+    console.log("no ids checked");
+    transmitAction(button.dataset.id,
+      button.dataset.methodname,
+      JSON.stringify(button.dataset), idstring, encodedtable);
+      return;
+  }
+
+  if (id != 0) { // -1 means we want single line execution.
+        // eslint-disable-next-line no-console
+        console.log("single call");
+    transmitAction(id, methodname, JSON.stringify({...data, checkedids}), idstring, encodedtable);
+  } else {
+      // eslint-disable-next-line no-console
+      console.log("multiple call");
+    // eslint-disable-next-line block-scoped-var
+    checkedids.forEach(cid => {
+      transmitAction(cid, methodname, JSON.stringify(data), idstring, encodedtable);
+    });
+  }
+}
+
