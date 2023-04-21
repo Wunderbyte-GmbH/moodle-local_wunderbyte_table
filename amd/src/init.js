@@ -369,7 +369,7 @@ export const callLoadData = (
                 jsonobject.table.header.headers.forEach(item => {
                     if (item.key == tsort) {
 
-                        if (tdir == 4) {
+                        if (tdir == 3) {
                             item.sortclass = 'desc';
                         } else {
                             item.sortclass = 'asc';

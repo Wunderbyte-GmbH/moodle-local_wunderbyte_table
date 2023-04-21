@@ -161,10 +161,10 @@ function callSortAjax(event, idstring, encodedtable) {
     // Get the sortorder by the icon and apply it.
     if (className.includes('asc')) {
 
-      sortorder = 4;
+      sortorder = 3;
     } else {
 
-      sortorder = 3;
+      sortorder = 4;
     }
 
   } else {

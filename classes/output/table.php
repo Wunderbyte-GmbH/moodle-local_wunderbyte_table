@@ -199,6 +199,8 @@ class table implements renderable, templatable {
      */
     public function __construct(wunderbyte_table $table, string $encodedtable = '') {
 
+        global $SESSION;
+
         $this->table = [];
 
         $this->idstring = $table->idstring;
@@ -314,6 +316,10 @@ class table implements renderable, templatable {
             }
         }
 
+        // To get the current sortcolum, we need to get the user prefs.
+        $prefs = $SESSION->flextable[$table->uniqueid];
+        $sortcolumns = array_slice($prefs['sortby'], 0, 1);
+
         if (!empty($table->headers)) {
 
             foreach ($table->columns as $column => $key) {
@@ -325,18 +331,22 @@ class table implements renderable, templatable {
                 ];
 
 
+                // Wether there should be up down arrows in the header.
                 if (in_array($column, $table->sortablecolumns, true)
                     || in_array($column, array_keys($table->sortablecolumns), true)) {
 
                     $item['sortable'] = true;
                 };
 
-                if($column == $table->sort_default_column){
-                    switch ($table->sort_default_order) {
-                        case (3):
-                            $item['sortclass'] = 'asc';
+                // Make the up down arrow fat/black when it's actually sorted.
+                if (in_array($column, array_keys($sortcolumns))) {
+                    switch ($sortcolumns[$column]) {
                         case (4):
+                            $item['sortclass'] = 'asc';
+                            break;
+                        case (3):
                             $item['sortclass'] = 'desc';
+                            break;
                     }
 
                 };
