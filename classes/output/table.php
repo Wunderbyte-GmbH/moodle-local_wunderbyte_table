@@ -317,8 +317,8 @@ class table implements renderable, templatable {
         }
 
         // To get the current sortcolum, we need to get the user prefs.
-        $prefs = $SESSION->flextable[$table->uniqueid];
-        $sortcolumns = array_slice($prefs['sortby'], 0, 1);
+        $prefs = $SESSION->flextable[$table->uniqueid] ?? [];
+        $sortcolumns = isset($prefs['sortby']) ? array_slice($prefs['sortby'], 0, 1) : [];
 
         if (!empty($table->headers)) {
 
