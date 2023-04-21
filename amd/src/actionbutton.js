@@ -237,6 +237,8 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
     fail: function (ex) {
       // eslint-disable-next-line no-console
       console.log("ex:" + ex);
+
+      showNotification("row " + id + " was not treated", "danger");
     },
   }]);
 }
