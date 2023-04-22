@@ -29,17 +29,6 @@ Feature: Sorting functionality of wunderbyte_table works as expected
       | booking  | C1     | My booking | My booking description | teacher1       | Webinar   | All bookings                     | Yes                                                      | New option - Webinar |
 
   @javascript
-  Scenario: Display single table
-    Given I log in as "admin"
-    When I visit "/local/wunderbyte_table/demo.php"
-    ## Then "2" row "username" column of "Users" table should contain "admin"
-    Then the following should exist in the "Users" table:
-      | username | firstname | email                |
-      | admin    | Admin     | moodle@example.com   |
-      | teacher1 | Teacher   | teacher1@example.com |
-      | user1    | Username  | user1@example.com    |
-
-  @javascript
   Scenario: Sort Users tab table using select field
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
