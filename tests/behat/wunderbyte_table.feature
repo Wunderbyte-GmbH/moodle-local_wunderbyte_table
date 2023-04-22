@@ -78,9 +78,8 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I follow "Users"
     Then I should see "15 of 15 records found" in the ".Users .wb-records-count-label" "css_element"
     And the field "selectrowsperpage-Users" matches value "Show 10 rows"
-    And "//nav[@aria-label='Page']" "xpath_element" should exist
+    And "//*[contains(@id, 'home')]//nav[@aria-label='Page']" "xpath_element" should exist
     And I set the field "selectrowsperpage-Users" to "Show 20 rows"
     And I wait "1" seconds
-    And "//nav[@aria-label='Page']" "xpath_element" should not exist
+    And "//*[contains(@id, 'home')]//nav[@aria-label='Page']" "xpath_element" should not exist
     And the field "selectrowsperpage-Users" matches value "Show 20 rows"
-

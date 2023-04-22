@@ -78,10 +78,10 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     ## And I click on "//*[@id='Users']/thead/tr/th[2]" "xpath_element"
     And I click on "th.id.wb-table-column" "css_element"
     And I wait "1" seconds
-    And I should see "teacher1" in the "#Users_r1" "css_element"
+    And I should see "guest" in the "#Users_r1" "css_element"
     And I click on "th.id.wb-table-column.asc" "css_element"
     And I wait "1" seconds
-    And I should see "guest" in the "#Users_r1" "css_element"
+    And I should see "teacher1" in the "#Users_r1" "css_element"
     ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn" as well
 
   @javascript
@@ -93,7 +93,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I click on "th.username.wb-table-column" "css_element"
     And I wait "1" seconds
     And I should see "user9" in the "#Users_r1" "css_element"
-    And I click on "th.username.wb-table-column.asc" "css_element"
+    And I click on "th.username.wb-table-column.desc" "css_element"
     And I wait "1" seconds
     And I should see "admin" in the "#Users_r1" "css_element"
     ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn" as well
@@ -105,10 +105,10 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I follow "Course"
     And I should see "Full Name" in the "th.fullname.wb-table-column" "css_element"
     And I should see "Acceptance test site" in the "#Course_r1" "css_element"
-    And I click on "th.fullname.wb-table-column.desc" "css_element"
+    And I click on "th.fullname.wb-table-column.asc" "css_element"
     And I wait "1" seconds
     And I should see "Course 1" in the "#Course_r1" "css_element"
-    And I click on "th.fullname.wb-table-column.asc" "css_element"
+    And I click on "th.fullname.wb-table-column.desc" "css_element"
     And I wait "1" seconds
     And I should see "Acceptance test site" in the "#Course_r1" "css_element"
     ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn"
