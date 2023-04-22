@@ -29,7 +29,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
       | booking  | C1     | My booking | My booking description | teacher1       | Webinar   | All bookings                     | Yes                                                      | New option - Webinar |
 
   @javascript
-  Scenario: Filter tables on different tabs using select field
+  Scenario: Filter tables on different tabs using input field
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"

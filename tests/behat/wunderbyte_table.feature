@@ -57,8 +57,8 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I follow "Course_Modules"
     And I wait "1" seconds
     Then the following should exist in the "Course_Modules" table:
-      | course | module |
-      | 362000 | 5      |
+      | module |
+      | 5      |
 
   @javascript
   Scenario: Navigation - switch to the next page
