@@ -285,12 +285,14 @@ class demo implements renderable, templatable {
             'shortname' => get_string('shortname', 'local_wunderbyte_table'),
         ];
 
+        $fulltextsearchcolumns = $filtercolumns;
+        array_shift($fulltextsearchcolumns);
 
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
 
         $table->define_filtercolumns(array_keys($filtercolumns));
-        $table->define_fulltextsearchcolumns(array_keys($filtercolumns));
+        $table->define_fulltextsearchcolumns(array_keys($fulltextsearchcolumns));
         $table->define_sortablecolumns($filtercolumns);
 
         // When true and action buttons are present, checkboxes will be rendered to every line.
