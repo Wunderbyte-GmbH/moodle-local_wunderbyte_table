@@ -34,12 +34,12 @@
 {{#cardsort}}
     <span class="wunderbyteTableSelect mr-3">
         <a href="#" title="changesortorder-{{uniqueid}}" class="changesortorder" aria-label="{{#str}} changesortorder, local_wunderbyte_table {{/str}}">
-            {{#sortup}}
-                <i class="fa fa-sort-alpha-desc" aria-label="{{#str}} orderup, local_wunderbyte_table {{/str}}"></i>
-            {{/sortup}}
             {{#sortdown}}
-                <i class="fa fa-sort-alpha-asc" aria-label="{{#str}} orderdown, local_wunderbyte_table {{/str}}"></i>
+                <i class="fa fa-sort-alpha-desc sortdown" aria-label="{{#str}} orderup, local_wunderbyte_table {{/str}}"></i>
             {{/sortdown}}
+            {{#sortup}}
+                <i class="fa fa-sort-alpha-asc sortup" aria-label="{{#str}} orderdown, local_wunderbyte_table {{/str}}"></i>
+            {{/sortup}}
         </a>
         <select class="sortcolumn" name="selectsortcolumn-{{uniqueid}}">
             <option value="" aria-label="{{#str}} sortby, local_wunderbyte_table {{/str}}">{{#str}} sortby, local_wunderbyte_table {{/str}}</option>

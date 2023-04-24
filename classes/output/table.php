@@ -343,9 +343,13 @@ class table implements renderable, templatable {
                     switch ($sortcolumns[$column]) {
                         case (4):
                             $item['sortclass'] = 'asc';
+                            $this->sort['sortup'] = true;
+                            $this->sort['sortdown'] = false;
                             break;
                         case (3):
                             $item['sortclass'] = 'desc';
+                            $this->sort['sortdown'] = true;
+                            $this->sort['sortup'] = false;
                             break;
                     }
 
