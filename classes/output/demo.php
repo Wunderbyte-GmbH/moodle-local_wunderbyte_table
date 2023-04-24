@@ -256,10 +256,10 @@ class demo implements renderable, templatable {
 
         $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-        // $table->infinitescroll = 20;
+        $table->infinitescroll = 20;
         $table->pageable(true);
 
-        $table->stickyheader = false;
+        $table->stickyheader = true;
         $table->showcountlabel = true;
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
@@ -400,20 +400,7 @@ class demo implements renderable, templatable {
 
         $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-
-                //$table->infinitescroll = 7;
-                $table->pageable(true);
-
-                $table->stickyheader = false;
-                $table->showcountlabel = true;
-                $table->showdownloadbutton = true;
-                $table->showreloadbutton = true;
-                $table->showrowcountselect = true;
-
-
-                return $table->outhtml(10, true);
-        /*
-        $table->infinitescroll = 20;
+        $table->infinitescroll = 10;
         $table->pageable(true);
 
         $table->stickyheader = true;
@@ -425,7 +412,7 @@ class demo implements renderable, templatable {
         list($idstring, $encodedtable, $html) = $table->lazyouthtml(10, true);
 
         return $html;
-        */
+
     }
 
     private function render_table_4() {
@@ -499,7 +486,7 @@ class demo implements renderable, templatable {
 
         $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-        //$table->infinitescroll = 7;
+        $table->infinitescroll = 7;
         $table->pageable(true);
 
         $table->stickyheader = false;
