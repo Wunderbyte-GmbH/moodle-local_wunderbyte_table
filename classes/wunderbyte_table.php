@@ -392,7 +392,7 @@ class wunderbyte_table extends table_sql {
         $encodedtable = $this->return_encoded_table();
 
         // First we query without the filter.
-        $this->query_db_cached($pagesize, $useinitialsbar);
+        $this->query_db_cached($this->pagesize, $useinitialsbar);
 
         $this->build_table();
         $this->close_recordset();
@@ -1329,13 +1329,20 @@ class wunderbyte_table extends table_sql {
      */
     public function return_encoded_table():string {
 
+        global $USER;
+
         // We don't want errormessage in the encoded table.
         $this->errormessage = '';
 
         if (empty($this->tablecachehash)) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
-            $this->tablecachehash = md5(json_encode($this->sql) . time() . $this->idstring);
-            $cache->set($this->tablecachehash, $this);
+            $this->tablecachehash = md5($USER->id . $this->idstring);
+
+            if ($cashedtable = $cache->get($this->tablecachehash)) {
+                $this->pagesize = $cashedtable->pagesize;
+            } else {
+                $cache->set($this->tablecachehash, $this);
+            }
         }
 
         // We need to urlencode everything to make it proof.
