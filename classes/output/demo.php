@@ -267,8 +267,6 @@ class demo implements renderable, templatable {
 
 
         return $table->outhtml(10, true);
-
-
     }
 
     private function render_table_2() {

@@ -356,6 +356,16 @@ export const callLoadData = (
             if (!componentscontainer) {
                 // If the componentscontainer is not yet rendered, we render the container. else, only the table.
                 rendertemplate = rendertemplate + '_container';
+            } else {
+                const sortselector = '.wunderbyteTableSelect';
+                Templates.renderForPromise('local_wunderbyte_table/component_sort', jsonobject).then(({html, js}) => {
+                    const element = container.querySelector(sortselector);
+                    Templates.replaceNode(element, html, js);
+                    return true;
+                }).catch(ex => {
+                    // eslint-disable-next-line no-console
+                    console.log(ex);
+                });
             }
 
             let frag = container.querySelector(".wunderbyteTableClass");

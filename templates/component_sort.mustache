@@ -44,7 +44,7 @@
         <select class="sortcolumn" name="selectsortcolumn-{{uniqueid}}">
             <option value="" aria-label="{{#str}} sortby, local_wunderbyte_table {{/str}}">{{#str}} sortby, local_wunderbyte_table {{/str}}</option>
             {{#options}}
-                <option value="{{sortid}}">{{key}}</option>
+                <option value="{{sortid}}" {{selected}}>{{key}}</option>
             {{/options}}
         </select>
     </span>

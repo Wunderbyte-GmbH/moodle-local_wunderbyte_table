@@ -381,12 +381,6 @@ class wunderbyte_table extends table_sql {
         $this->pagesize = $pagesize;
         $this->setup();
 
-        //function: check optionale params und wenn filter, dann anwenden, genauso wie im webservice load_data
-        //apply filter by url params
-        //mit js jede interaction im filter sollte url anpassen:
-        //check if concerned, check if filter info, anwenden filter
-        // wenn die url lautet http://localhost:58000/local/wunderbyte_table/demo.php?wbid=hellow dann ist $wbid "hellow"
-
         $wbid = optional_param('wbid', '', PARAM_RAW);
 
         $encodedtable = $this->return_encoded_table();
@@ -1051,43 +1045,6 @@ class wunderbyte_table extends table_sql {
         }
 
         return json_encode($filterjson);
-    }
-
-
-    /**
-     * Return the array for rendering the mustache template.
-     *
-     * @return array
-     */
-    public function return_sort_columns() {
-
-        global $SESSION;
-
-        if (empty($this->sortablecolumns )) {
-            return null;
-        }
-
-        $sortarray['options'] = [];
-        foreach ($this->sortablecolumns as $key => $value) {
-
-            // If we have an assoziative array, we have localized values.
-            // Else, we need to use the same value twice.
-            if (!isset($this->columns[$key])) {
-                $key = $value;
-            }
-
-            $item['sortid'] = $key;
-            $item['key'] = $value;
-
-            $sortarray['options'][] = $item;
-        }
-        if ($this->return_current_sortorder() == 3) {
-            $sortarray['sortup'] = true;
-        } else {
-            $sortarray['sortdown'] = true;
-        }
-
-        return $sortarray;
     }
 
     /**

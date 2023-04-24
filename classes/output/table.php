@@ -74,6 +74,13 @@ class table implements renderable, templatable {
      */
     private $table = [];
 
+       /**
+     * Table is the array used for output.
+     *
+     * @var wunderbyte_table
+     */
+    private $wbtable;
+
     /**
      * Pagination is the array used for output.
      *
@@ -203,6 +210,8 @@ class table implements renderable, templatable {
 
         $this->table = [];
 
+        $this->wbtable = $table;
+
         $this->idstring = $table->idstring;
 
         $this->uniqueid = $table->uniqueid;
@@ -246,7 +255,11 @@ class table implements renderable, templatable {
             $this->search = true;
         }
 
-        $this->sort = $table->return_sort_columns();
+        // To get the current sortcolum, we need to get the user prefs.
+        $prefs = $SESSION->flextable[$table->uniqueid] ?? [];
+        $sortcolumns = isset($prefs['sortby']) ? array_slice($prefs['sortby'], 0, 1) : [];
+
+        $this->sort = $this->return_sort_columns($sortcolumns);
 
         // Now we create the Table with all necessary columns.
         foreach ($table->tableclasses as $key => $value) {
@@ -315,10 +328,6 @@ class table implements renderable, templatable {
                 $this->table['header'] = $rowarray;
             }
         }
-
-        // To get the current sortcolum, we need to get the user prefs.
-        $prefs = $SESSION->flextable[$table->uniqueid] ?? [];
-        $sortcolumns = isset($prefs['sortby']) ? array_slice($prefs['sortby'], 0, 1) : [];
 
         if (!empty($table->headers)) {
 
@@ -582,5 +591,47 @@ class table implements renderable, templatable {
             $actionbuttonsarray[] = $actionbutton;
         }
         $actionbuttons = $actionbuttonsarray;
+    }
+
+    /**
+     * Return the array for rendering the mustache template.
+     *
+     * @return array
+     */
+    public function return_sort_columns($sortcolumns) {
+
+        global $SESSION;
+
+        if (empty($this->wbtable->sortablecolumns )) {
+            return null;
+        }
+
+        $sortarray['options'] = [];
+        foreach ($this->wbtable->sortablecolumns as $key => $value) {
+
+            // If we have an assoziative array, we have localized values.
+            // Else, we need to use the same value twice.
+            if (!isset($this->wbtable->columns[$key])) {
+                $key = $value;
+            }
+
+            $item['sortid'] = $key;
+            $item['key'] = $value;
+            $item['selected'] = '';
+
+
+            if (in_array($key, array_keys($sortcolumns))) {
+                $item['selected'] = 'selected';
+            }
+
+            $sortarray['options'][] = $item;
+        }
+        if ($this->wbtable->return_current_sortorder() == 3) {
+            $sortarray['sortup'] = true;
+        } else {
+            $sortarray['sortdown'] = true;
+        }
+
+        return $sortarray;
     }
 }
