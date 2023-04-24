@@ -53,7 +53,7 @@ You have to make sure to write your js in a way that your can find the necessary
 
 ## Sticky Header, Infinite Scroll & Pagination
 If you want to enable scrolling within your table, you can set the stickyheader property to true.
-With infinite scroll, your table will automatically reload additional rows once you scrolled to its bottom. To enable infinite scroll, you can define the number of rows that will be loaded - first on init an later with each reload - in the infinitescroll variable. Sticky Header and Infinite Scroll can be combined.
+With infinite scroll, your table will automatically reload additional rows once you scrolled to its bottom. To enable infinite scroll, you can define the number of rows that will be loaded - first on init and later with each reload - in the infinitescroll variable. Sticky Header and Infinite Scroll can be combined.
 If you don't use infinite scroll, pagination options will be displayed at the bottom of your table.
 
 
