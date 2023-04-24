@@ -1,3 +1,9 @@
+## Version 1.5.6 (2023042400)
+* New feature: Keeping last (current) sorting on reload.
+* New feature: Sortorder button and sorting select synchronized with tableheader sorting.
+* New feature: Keeping value for number of rows displayed in select on table reload.
+* New feature: Tablehash-cash unique for each user and tableid.
+
 ## Version 1.5.5 (2023042000)
 * New feature: Displaying multiple tables in tabs on demo page.
 * New feature: Added selection-mandatory property and function to actionbuttons to define if an actionbutton triggers action without elements selected.
