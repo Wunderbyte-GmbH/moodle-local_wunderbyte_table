@@ -203,7 +203,7 @@ function callSortAjax(event, idstring, encodedtable) {
 }
 
 /**
- * Function to read the searchstring from the input leement.
+ * Function to read the searchstring from the input element.
  * @param {*} idstring
  * @returns {null|string}
  */
