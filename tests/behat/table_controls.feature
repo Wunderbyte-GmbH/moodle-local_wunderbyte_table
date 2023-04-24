@@ -51,14 +51,21 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     And I click on "NoModal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I wait "1" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
+    ## Fix for "Element is not clickable ... because another element .... obscures it"
+    And I follow "Users"
     And I set the field with xpath "//*[contains(@id, 'Users_r2')]//*[contains(@name, 'row-Users-')]" to "checked"
     And I click on "NoModal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
     And I wait "1" seconds
+    ## Fix for "Element is not clickable ... because another element .... obscures it"
+    And I follow "Users"
+    And I set the field with xpath "//*[contains(@id, 'Users_r2')]//*[contains(@name, 'row-Users-')]" to ""
     And I click on "NoModal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I wait "1" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
+    ## Fix for "Element is not clickable ... because another element .... obscures it"
+    And I follow "Users"
     And I set the field with xpath "//*[contains(@id, 'Users_r3')]//*[contains(@name, 'row-Users-')]" to "checked"
     And I click on "NoModal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I wait "1" seconds
@@ -91,6 +98,8 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     And I click on "+Modal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I wait "1" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
+    ## Fix for "Element is not clickable ... because another element .... obscures it"
+    And I follow "Users"
     And I set the field with xpath "//*[contains(@id, 'Users_r2')]//*[contains(@name, 'row-Users-')]" to "checked"
     And I click on "+Modal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I should see "You are about to submit this data:" in the ".show .modal-content" "css_element"
@@ -99,9 +108,14 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
     And I wait "1" seconds
+    ## Fix for "Element is not clickable ... because another element .... obscures it"
+    And I follow "Users"
+    And I set the field with xpath "//*[contains(@id, 'Users_r2')]//*[contains(@name, 'row-Users-')]" to ""
     And I click on "+Modal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I wait "1" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
+    ## Fix for "Element is not clickable ... because another element .... obscures it"
+    And I follow "Users"
     And I set the field with xpath "//*[contains(@id, 'Users_r3')]//*[contains(@name, 'row-Users-')]" to "checked"
     And I click on "+Modal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.Users" "css_element"
     And I should see "You are about to submit this data:" in the ".show .modal-content" "css_element"
