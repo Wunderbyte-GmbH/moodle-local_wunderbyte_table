@@ -372,26 +372,6 @@ export const callLoadData = (
 
             let frag = container.querySelector(".wunderbyteTableClass");
 
-            // We add the sortclass, if necessary.
-            if (tsort
-                && 'table' in jsonobject
-                && 'header' in jsonobject.table
-                && 'headers' in jsonobject.table.header) {
-
-                jsonobject.table.header.headers.forEach(item => {
-                    if (item.key == tsort) {
-
-                        if (tdir == 3) {
-                            item.sortclass = 'desc';
-                        } else {
-                            item.sortclass = 'asc';
-                        }
-                    } else {
-                        delete item.sortclass;
-                    }
-                });
-            }
-
             // If we called a sorting and the result is an empty array, we don't need to render.
             let rows = jsonobject.table.rows;
             if (tsort && (!rows || rows.length < 1)) {
