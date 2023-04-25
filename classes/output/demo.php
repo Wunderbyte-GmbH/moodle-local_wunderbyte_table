@@ -493,8 +493,7 @@ class demo implements renderable, templatable {
         $table->showcountlabel = true;
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
-        $table->showrowcountselect = true;
-
+        $table->showrowcountselect = false;
 
         return $table->outhtml(10, true);
     }
