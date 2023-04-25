@@ -441,9 +441,6 @@ export const callLoadData = (
             const x = await promises[0];
             // eslint-disable-next-line no-unused-vars
             const y = await promises[1];
-
-            // eslint-disable-next-line no-console
-            console.log('promises executed');
         },
         fail: function(err) {
             // If we have an error, resetting the table might be enough. we do that.
