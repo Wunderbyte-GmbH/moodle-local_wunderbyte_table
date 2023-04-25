@@ -16,6 +16,15 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | user10   | Username  | 10       |
       | user11   | Username  | 11       |
       | user12   | Username  | 12       |
+      | user13   | Username  | 13       |
+      | user14   | Username  | 14       |
+      | user15   | Username  | 15       |
+      | user16   | Username  | 16       |
+      | user17   | Username  | 17       |
+      | user18   | Username  | 18       |
+      | user19   | Username  | 19       |
+      | user20   | Username  | 20       |
+      | user21   | Username  | 21       |
       | teacher1 | Teacher   | 1        |
     And the following "courses" exist:
       | fullname | shortname |
@@ -76,10 +85,30 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
-    Then I should see "15 of 15 records found" in the ".Users .wb-records-count-label" "css_element"
+    Then I should see "24 of 24 records found" in the ".Users .wb-records-count-label" "css_element"
     And the field "selectrowsperpage-Users" matches value "Show 10 rows"
     And "//*[contains(@id, 'home')]//nav[@aria-label='Page']" "xpath_element" should exist
-    And I set the field "selectrowsperpage-Users" to "Show 20 rows"
+    And I set the field "selectrowsperpage-Users" to "Show 30 rows"
     And I wait "1" seconds
     And "//*[contains(@id, 'home')]//nav[@aria-label='Page']" "xpath_element" should not exist
-    And the field "selectrowsperpage-Users" matches value "Show 20 rows"
+    And the field "selectrowsperpage-Users" matches value "Show 30 rows"
+
+  @javascript
+  Scenario: Navigation - infinite scroll
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Users_InfiniteScroll"
+    And I should see "user10" in the "#Users_InfiniteScroll_r5" "css_element"
+    And "//*[contains(@id, 'settings-tab')]//tr[@id, 'Users_InfiniteScroll_r20']" "xpath_element" should not exist
+    ## And I hover "additem-" "link"
+    ## And I hover "NoModal, SingleCall" "icon"
+    ## And I hover "//a[@class='btn btn-primary wb_action_button' and contains(.,'NoModal, SingleCall')]" "xpath_element"
+    ## And I click on "NoModal, SingleCall" "link" in the ".wunderbyteTableClass.Users_InfiniteScroll" "css_element"
+    ## And I wait "1" seconds
+    ## Then I should see "Did work" in the "#user-notifications" "css_element"    
+    And I click on "TriggersNoModal" "link" in the "#Users_r19" "css_element"
+    And I wait "1" seconds
+    And I should see "Did work" in the "#user-notifications" "css_element"
+    ##And I hover over the "TriggersNoModal" "link" in the "#Users_r19" "css_element"
+    And I wait "1" seconds
+    And I should see "user20" in the "#Users_InfiniteScroll_r20" "css_element"
