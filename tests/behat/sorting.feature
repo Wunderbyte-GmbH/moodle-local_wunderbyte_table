@@ -16,6 +16,15 @@ Feature: Sorting functionality of wunderbyte_table works as expected
       | user10   | Username  | 10       |
       | user11   | Username  | 11       |
       | user12   | Username  | 12       |
+      | user13   | Username  | 13       |
+      | user14   | Username  | 14       |
+      | user15   | Username  | 15       |
+      | user16   | Username  | 16       |
+      | user17   | Username  | 17       |
+      | user18   | Username  | 18       |
+      | user19   | Username  | 19       |
+      | user20   | Username  | 20       |
+      | user21   | Username  | 21       |
       | teacher1 | Teacher   | 1        |
     And the following "courses" exist:
       | fullname | shortname |
@@ -41,10 +50,10 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I should see "guest" in the "#Users_r1" "css_element"
     And I set the field "selectsortcolumn-Users" to "username"
     And I wait "1" seconds
-    And I should see "admin" in the "#Users_r1" "css_element"
+    And I should see "user9" in the "#Users_r1" "css_element"
     And I follow "changesortorder-Users"
     And I wait "1" seconds
-    And I should see "user9" in the "#Users_r1" "css_element"
+    And I should see "admin" in the "#Users_r1" "css_element"
     And I set the field "selectsortcolumn-Users" to "lastname"
     And I wait "1" seconds
     And I should see "admin" in the "#Users_r1" "css_element"
@@ -53,10 +62,10 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I should see "guest" in the "#Users_r1" "css_element"
     And I set the field "selectsortcolumn-Users" to "firstname"
     And I wait "1" seconds
-    And I should see "admin" in the "#Users_r1" "css_element"
+    And I should see "user1" in the "#Users_r1" "css_element"
     And I follow "changesortorder-Users"
     And I wait "1" seconds
-    And I should see "user1" in the "#Users_r1" "css_element"
+    And I should see "admin" in the "#Users_r1" "css_element"
 
   @javascript
   Scenario: Sort Users tab table with column id

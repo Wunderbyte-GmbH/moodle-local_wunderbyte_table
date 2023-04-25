@@ -16,6 +16,15 @@ Feature: Table controls functionality of wunderbyte_table works as expected
       | user10   | Username  | 10       |
       | user11   | Username  | 11       |
       | user12   | Username  | 12       |
+      | user13   | Username  | 13       |
+      | user14   | Username  | 14       |
+      | user15   | Username  | 15       |
+      | user16   | Username  | 16       |
+      | user17   | Username  | 17       |
+      | user18   | Username  | 18       |
+      | user19   | Username  | 19       |
+      | user20   | Username  | 20       |
+      | user21   | Username  | 21       |
       | teacher1 | Teacher   | 1        |
     And the following "courses" exist:
       | fullname | shortname |
