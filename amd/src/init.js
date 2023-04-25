@@ -30,7 +30,7 @@ import {initializeReload} from 'local_wunderbyte_table/reload';
 import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 import {initializeRowsSelect} from './rowsdisplayselect';
 
-// All these variables will be objects with the idstringso their tables as identifiers.
+// All these variables will be objects with the idstring so their tables as identifiers.
 var loadings = {};
 export var queries = {};
 var scrollpages = {};
@@ -273,7 +273,7 @@ export const callLoadData = (
             'filterobjects': filterobjects,
             'searchtext': searchtext
         },
-        done: function(res) {
+        done: async function(res) {
 
             let jsonobject = JSON.parse(res.content);
             let rendertemplate = res.template;
@@ -353,19 +353,21 @@ export const callLoadData = (
 
             }
 
+            const promises = [];
             if (!componentscontainer) {
                 // If the componentscontainer is not yet rendered, we render the container. else, only the table.
                 rendertemplate = rendertemplate + '_container';
             } else {
                 const sortselector = '.wunderbyteTableSelect';
-                Templates.renderForPromise('local_wunderbyte_table/component_sort', jsonobject).then(({html, js}) => {
+                // eslint-disable-next-line no-unused-vars
+                promises.push(Templates.renderForPromise('local_wunderbyte_table/component_sort', jsonobject).then(({html, js}) => {
                     const element = container.querySelector(sortselector);
                     Templates.replaceNode(element, html, js);
                     return true;
                 }).catch(ex => {
                     // eslint-disable-next-line no-console
                     console.log(ex);
-                });
+                }));
             }
 
             let frag = container.querySelector(".wunderbyteTableClass");
@@ -405,7 +407,7 @@ export const callLoadData = (
 
             } else {
                 // We render the html with the right template.
-                Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
+                promises.push(Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
 
                     if (componentscontainer) {
                         // Now we clean the existing table.
@@ -451,9 +453,17 @@ export const callLoadData = (
                         message: 'failed rendering ' + ex,
                         type: "danger"
                     });
-                });
+                }));
             }
 
+            // We excecute the promises from the array one after the other.
+            // eslint-disable-next-line no-unused-vars
+            const x = await promises[0];
+            // eslint-disable-next-line no-unused-vars
+            const y = await promises[1];
+
+            // eslint-disable-next-line no-console
+            console.log('promises executed');
         },
         fail: function(err) {
             // If we have an error, resetting the table might be enough. we do that.
