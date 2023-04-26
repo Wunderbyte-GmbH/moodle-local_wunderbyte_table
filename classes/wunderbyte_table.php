@@ -1126,7 +1126,7 @@ class wunderbyte_table extends table_sql {
         foreach ($filterobject as $categorykey => $categoryvalue) {
 
             if (!empty($categoryvalue)) {
-
+                // For the first filter in a category we append AND.
                 $filter .= " AND ( ";
                 $paramcounter = 1;
                 $categorycounter =1;
@@ -1134,6 +1134,7 @@ class wunderbyte_table extends table_sql {
                 foreach ($categoryvalue as $key => $value) {
                     // We use the while function to find a param we can actually use.
                     $paramsvaluekey = $paramkey . $paramcounter;
+                    // If there are more than one filters per category they will be concatenated via OR.
                     $filter .= $categorycounter == 1 ? "" : " OR ";
                     while (isset($this->sql->params[$paramkey . $paramcounter])) {
                         $paramcounter++;
