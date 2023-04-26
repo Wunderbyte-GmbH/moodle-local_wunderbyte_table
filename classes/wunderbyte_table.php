@@ -740,12 +740,29 @@ class wunderbyte_table extends table_sql {
                 FROM {$this->sql->from}
                 WHERE {$this->sql->where}
                 {$sort}"
-                . json_encode($this->sql->params)
+                // . json_encode($this->sql->params)
                 . $pagesize
                 . $useinitialsbar
                 . $this->download
                 . $this->currpage
                 . $this->use_pages;
+
+        // We might run a truncated sql which does not use all the params.
+        // To use caching in this case, we need to exclude all params not used in this sql.
+        $params = $this->sql->params;
+
+        foreach ($params as $key => $value) {
+            // If the key is an int, we can't run this.
+            if (!is_int($key)) {
+                // We only exclude it when we are sure that it's really there.
+                if (!strpos($sql, ':'. $key . ' ')
+                    && !strpos($sql, ':'. $key . ')')) {
+                        unset($params[$key]);
+                }
+            }
+        }
+
+        $sql .= json_encode($params);
 
         // Now that we have the string, we hash it with a very fast method.
         $cachekey = crc32($sql);
