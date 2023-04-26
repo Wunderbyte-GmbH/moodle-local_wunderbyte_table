@@ -70,12 +70,23 @@
         text-align: right;
     }
 
-    .wunderbyte-table-table table td::before {
+    .wunderbyte-table-table table td:not(.wbcheckbox)::before {
         /*
         * aria-label has no advantage, it won't be read inside a table
         content: attr(aria-label);
         */
         content: attr(data-localized) ":";
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .wunderbyte-table-table table td.wbcheckbox::before {
+        /*
+        * aria-label has no advantage, it won't be read inside a table
+        content: attr(aria-label);
+        */
+        content: "✓";
         float: left;
         font-weight: bold;
         text-transform: uppercase;
