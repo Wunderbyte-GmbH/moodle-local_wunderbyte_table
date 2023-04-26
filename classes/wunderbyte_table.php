@@ -1121,21 +1121,24 @@ class wunderbyte_table extends table_sql {
         }
 
         $filter = '';
+        $paramkey = 'param';
 
         foreach ($filterobject as $categorykey => $categoryvalue) {
 
             if (!empty($categoryvalue)) {
 
                 $filter .= " AND ( ";
-                $counter = 1;
+                $paramcounter = 1;
+                $categorycounter =1;
+
                 foreach ($categoryvalue as $key => $value) {
                     // We use the while function to find a param we can actually use.
-                    $paramsvaluekey = 'param';
-                    while (isset($this->sql->params[$paramsvaluekey])) {
-                        $paramsvaluekey .= '1'; // Not elegant, but effecitve.
+                    $paramsvaluekey = $paramkey . $paramcounter;
+                    $filter .= $categorycounter == 1 ? "" : " OR ";
+                    while (isset($this->sql->params[$paramkey . $paramcounter])) {
+                        $paramcounter++;
+                        $paramsvaluekey = $paramkey . $paramcounter;
                     }
-
-                    $filter .= $counter == 1 ? "" : " OR ";
 
                     if (is_numeric($value)) {
                         $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
@@ -1147,8 +1150,7 @@ class wunderbyte_table extends table_sql {
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "$value";
                     }
-
-                    $counter++;
+                    $categorycounter++;
                 }
                 $filter .= " ) ";
             }
