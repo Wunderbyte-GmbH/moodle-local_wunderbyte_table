@@ -111,6 +111,29 @@ var checked = {};
     null,
     filterobjects,
     searchstring);
+
+    updateUrl(filterobjects, searchstring, sort);
+}
+
+/**
+ * Generating and displaying filterparams in URL.
+ * @param {string} filterobjects
+ * @param {string} searchstring
+ * @param {string} sort
+ */
+function updateUrl(filterobjects, searchstring, sort) {
+
+  let url = new URL(window.location.href);
+
+  url.searchParams.delete('wbtfilter');
+  url.searchParams.delete('wbtsearch');
+  url.searchParams.delete('wbtsort');
+
+  url.searchParams.append('wbtfilter', filterobjects);
+  url.searchParams.append('wbtsearch', searchstring);
+  url.searchParams.append('wbtsort', sort);
+
+  window.history.pushState(null, null, url.toString());
 }
 
   /**
