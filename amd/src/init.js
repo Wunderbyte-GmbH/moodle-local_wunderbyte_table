@@ -29,6 +29,7 @@ import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
 import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 import {initializeRowsSelect} from './rowsdisplayselect';
+import { updateUrl } from './filter';
 
 // All these variables will be objects with the idstring so their tables as identifiers.
 var loadings = {};
@@ -203,10 +204,11 @@ export const callLoadData = (
     searchtext = null,
     replacerow = false) => {
 
+    updateUrl(filterobjects, searchtext, tsort, tdir);
+
     if (loadings[idstring] && !replacerow) {
         return;
     }
-
     // We reset scrollpage with 0 when we come from the filter.
     if (page !== null) {
 

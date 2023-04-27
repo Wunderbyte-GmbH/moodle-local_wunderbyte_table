@@ -111,8 +111,6 @@ var checked = {};
     null,
     filterobjects,
     searchstring);
-
-    updateUrl(filterobjects, searchstring, sort);
 }
 
 /**
@@ -120,18 +118,21 @@ var checked = {};
  * @param {string} filterobjects
  * @param {string} searchstring
  * @param {string} sort
+ * @param {*} dir
  */
-function updateUrl(filterobjects, searchstring, sort) {
+export function updateUrl(filterobjects, searchstring, sort, dir) {
 
   let url = new URL(window.location.href);
 
   url.searchParams.delete('wbtfilter');
   url.searchParams.delete('wbtsearch');
   url.searchParams.delete('wbtsort');
+  url.searchParams.delete('wbtsortdir', dir);
 
   url.searchParams.append('wbtfilter', filterobjects);
   url.searchParams.append('wbtsearch', searchstring);
   url.searchParams.append('wbtsort', sort);
+  url.searchParams.append('wbtsortdir', dir);
 
   window.history.pushState(null, null, url.toString());
 }
