@@ -21,7 +21,7 @@
  */
 
 import {callLoadData} from 'local_wunderbyte_table/init';
-import {getFilterOjects} from 'local_wunderbyte_table/filter';
+import {getFilterObjects} from 'local_wunderbyte_table/filter';
 import {getSearchInput} from 'local_wunderbyte_table/search';
 
 const SELECTOR = {
@@ -186,7 +186,7 @@ function callSortAjax(event, idstring, encodedtable) {
     sortcolumn = sortColumnElement.selectedOptions[0].value;
   }
 
-   const filterobjects = getFilterOjects(idstring);
+   const filterobjects = getFilterObjects(idstring);
    const searchstring = getSearchInput(idstring);
 
 
