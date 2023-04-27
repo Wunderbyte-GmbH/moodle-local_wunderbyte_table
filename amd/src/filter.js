@@ -95,7 +95,7 @@ var checked = {};
 
   // Reload the filtered elements via ajax.
 
-  const filterobjects = getFilterOjects(idstring);
+  const filterobjects = getFilterObjects(idstring);
   const searchstring = getSearchInput(idstring);
   const sort = getSortSelection(idstring);
 
@@ -138,7 +138,7 @@ var checked = {};
  * @param {*} idstring
  * @returns {string}
  */
-export function getFilterOjects(idstring) {
+export function getFilterObjects(idstring) {
 
   if (!(idstring in checked)) {
     return '';

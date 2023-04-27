@@ -23,7 +23,7 @@
 import Templates from 'core/templates';
 import {callLoadData} from 'local_wunderbyte_table/init';
 
-import {getFilterOjects} from 'local_wunderbyte_table/filter';
+import {getFilterObjects} from 'local_wunderbyte_table/filter';
 import {getSortSelection} from 'local_wunderbyte_table/sort';
 
 var lastsearchinputs = {};
@@ -91,7 +91,7 @@ var lastsearchinputs = {};
           if (lastsearchinputs[idstring] === now
               && searchstring !== null) {
 
-            const filterobjects = getFilterOjects(idstring);
+            const filterobjects = getFilterObjects(idstring);
             const sort = getSortSelection(idstring);
 
             callLoadData(idstring,
