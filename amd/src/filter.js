@@ -120,7 +120,7 @@ var checked = {};
  * @param {string} sort
  * @param {*} dir
  */
-export function updateUrl(filterobjects, searchstring, sort, dir) {
+export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort, dir) {
 
   let url = new URL(window.location.href);
 

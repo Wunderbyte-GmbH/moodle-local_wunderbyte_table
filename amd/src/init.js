@@ -29,7 +29,7 @@ import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
 import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 import {initializeRowsSelect} from './rowsdisplayselect';
-import { updateUrl } from './filter';
+import {updateUrlWithFilterSearchSort} from './filter';
 
 // All these variables will be objects with the idstring so their tables as identifiers.
 var loadings = {};
@@ -204,7 +204,8 @@ export const callLoadData = (
     searchtext = null,
     replacerow = false) => {
 
-    updateUrl(filterobjects, searchtext, tsort, tdir);
+    updateUrlWithTableId(idstring);
+    updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
 
     if (loadings[idstring] && !replacerow) {
         return;
@@ -694,4 +695,19 @@ function checkInTable(
         searchtext,
         replacerow: false // Replace row is always false.
     };
+}
+/**
+ * Adding ID String to URL
+ * @param {string} idstring
+ */
+function updateUrlWithTableId(idstring) {
+
+    let url = new URL(window.location.href);
+
+    url.searchParams.delete('wbtableid');
+
+    url.searchParams.append('wbtableid', idstring);
+
+    window.history.pushState(null, null, url.toString());
+
 }
