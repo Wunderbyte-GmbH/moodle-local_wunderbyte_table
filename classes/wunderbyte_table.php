@@ -328,16 +328,22 @@ class wunderbyte_table extends table_sql {
  * @return void
  */
     private function apply_filter_and_search_from_url() {
-        $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
-        $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
+        $tableid = optional_param('wbtableid', '', PARAM_RAW);
 
-        if (!empty($wbtfilter)) {
-            $this->apply_filter($wbtfilter);
-        }
+        if ($tableid === $this->idstring) {
+            $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
+            $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
 
-        if (!empty($wbtsearch)) {
-            $this->apply_searchtext($wbtsearch);
-        }
+            if (!empty($wbtfilter)) {
+                $this->apply_filter($wbtfilter);
+            }
+
+            if (!empty($wbtsearch)) {
+                $this->apply_searchtext($wbtsearch);
+            }
+        };
+
+
     }
 
     /**
