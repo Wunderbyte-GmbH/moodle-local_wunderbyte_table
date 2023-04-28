@@ -21,7 +21,7 @@
  */
 
 import {callLoadData, queries} from 'local_wunderbyte_table/init';
-import {getFilterOjects} from 'local_wunderbyte_table/filter';
+import {getFilterObjects} from 'local_wunderbyte_table/filter';
 import {getSearchInput} from 'local_wunderbyte_table/search';
 import {getSortSelection} from 'local_wunderbyte_table/sort';
 
@@ -60,7 +60,7 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
   // We need to trim the first character. We use the a to make sure no number is in first place due to random generation.
   const idstring = idstringplusa.substring(1);
 
-  let filterobjects = getFilterOjects(idstring);
+  let filterobjects = getFilterObjects(idstring);
 
   // If we have a rowid, we add the rowid to the filter.
   if (rowid > 0) {
