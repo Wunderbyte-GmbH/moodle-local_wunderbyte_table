@@ -264,8 +264,9 @@ class wunderbyte_table extends table_sql {
 
         // This is a fallback for the downloading function. A different baseurl can be defined later in the process.
         $this->define_baseurl(new moodle_url('/local/wunderbyte_table/download.php'));
-    }
 
+
+    }
 
     /**
      * New lazyout function just stores the settings as json in base64 format and creates a table.
@@ -319,6 +320,24 @@ class wunderbyte_table extends table_sql {
         $tableobject = $this->printtable($pagesize, $useinitialsbar);
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         return $output->render_table($tableobject, $component . "/" . $template);
+    }
+
+/**
+ * If we have filter or search params in the URL, they will be applied.
+ *
+ * @return void
+ */
+    private function apply_filter_and_search_from_url() {
+        $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
+        $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
+
+        if (!empty($wbtfilter)) {
+            $this->apply_filter($wbtfilter);
+        }
+
+        if (!empty($wbtsearch)) {
+            $this->apply_searchtext($wbtsearch);
+        }
     }
 
     /**
@@ -381,7 +400,7 @@ class wunderbyte_table extends table_sql {
         $this->pagesize = $pagesize;
         $this->setup();
 
-        $wbid = optional_param('wbid', '', PARAM_RAW);
+        $this->apply_filter_and_search_from_url();
 
         $encodedtable = $this->return_encoded_table();
 
@@ -392,7 +411,6 @@ class wunderbyte_table extends table_sql {
         $this->close_recordset();
         return $this->finish_output(true, $encodedtable);
     }
-
 
     /**
      * You should call this to finish outputting the table data after adding

@@ -366,7 +366,6 @@ class table implements renderable, templatable {
 
                 $this->table['header']['headers'][] = $item;
             }
-
         }
 
         // Create pagination data.

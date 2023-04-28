@@ -126,13 +126,13 @@ export function updateUrl(filterobjects, searchstring, sort, dir) {
 
   url.searchParams.delete('wbtfilter');
   url.searchParams.delete('wbtsearch');
-  url.searchParams.delete('wbtsort');
-  url.searchParams.delete('wbtsortdir', dir);
+  url.searchParams.delete('tsort');
+  url.searchParams.delete('tdir', dir);
 
   url.searchParams.append('wbtfilter', filterobjects);
   url.searchParams.append('wbtsearch', searchstring);
-  url.searchParams.append('wbtsort', sort);
-  url.searchParams.append('wbtsortdir', dir);
+  url.searchParams.append('tsort', sort);
+  url.searchParams.append('tdir', dir);
 
   window.history.pushState(null, null, url.toString());
 }
