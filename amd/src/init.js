@@ -23,7 +23,7 @@ import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
 
-import {initializeCheckboxes, getFilterOjects} from 'local_wunderbyte_table/filter';
+import {initializeCheckboxes, getFilterObjects} from 'local_wunderbyte_table/filter';
 import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
@@ -221,7 +221,7 @@ export const callLoadData = (
 
     // We always have to see if we need to apply a filter. Reload might come from scroll, but filter has to be applied nevertheless.
     if (filterobjects === null) {
-        filterobjects = getFilterOjects(idstring);
+        filterobjects = getFilterObjects(idstring);
     }
     // We always have to see if we need to apply a serachtextfilter.
     if (searchtext === null) {
