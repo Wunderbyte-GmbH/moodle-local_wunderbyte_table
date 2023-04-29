@@ -72,4 +72,4 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And "//*[contains(@id, 'Users')]//tr[@id, 'Users_r2']" "xpath_element" should not exist
     And I set the field "guest" in the "#id_collapse_username" "css_element" to ""
     And I wait "1" seconds
-    And I should see "15 of 15 records found" in the "#home.active .wb-records-count-label" "css_element"
+    And I should see "15 of 15 records found" in the "#Users.active .wb-records-count-label" "css_element"
