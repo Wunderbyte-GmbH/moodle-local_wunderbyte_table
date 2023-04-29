@@ -268,7 +268,13 @@ class table implements renderable, templatable {
 
         // We need a dedicated rowid. It will work like this:
         // #tableidentifier_rx
-        $rcounter = 1;
+        if ($table->infinitescroll) {
+            // The rowid has to be continuous in case of infinitescroll:
+            $rcounter = $table->currpage * $table->infinitescroll + 1;
+        } else {
+            // The rowid has to be restarted in case of pagination:
+            $rcounter = 1;
+        }
 
         // Now we see if we have a header class.
         // We have to prepare the row for output.
