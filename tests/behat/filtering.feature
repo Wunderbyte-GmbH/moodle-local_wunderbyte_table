@@ -55,6 +55,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
+    And I should see "guest" in the "#Users_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
     And I should see "admin" in the "#id_collapse_username" "css_element"
     And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
@@ -73,3 +74,32 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I set the field "guest" in the "#id_collapse_username" "css_element" to ""
     And I wait "1" seconds
     And I should see "15 of 15 records found" in the "#Users.active .wb-records-count-label" "css_element"
+
+  @javascript
+  Scenario: Filter multiple tables consequently using sidebar filter controls
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Users"
+    And I should see "guest" in the "#Users_r2" "css_element"
+    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
+    And I should see "admin" in the "#id_collapse_username" "css_element"
+    And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
+    And I wait "1" seconds
+    And I should see "admin" in the "#Users_r1" "css_element"
+    And "//*[contains(@id, 'Users')]//tr[@id, 'Users_r2']" "xpath_element" should not exist
+    And I follow "Course"
+    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I click on "[aria-controls=\"id_collapse_fullname\"]" "css_element"
+    And I should see "Course 1" in the "#id_collapse_fullname" "css_element"
+    And I set the field "Course 1" in the "#id_collapse_fullname" "css_element" to "checked"
+    And I wait "1" seconds
+    And I should see "Course 1" in the "#Course_r1" "css_element"
+    And "//*[contains(@id, 'Course')]//tr[@id, 'Course_r2']" "xpath_element" should not exist
+    And I follow "Users_InfiniteScroll"
+    And I should see "Teacher" in the "#Users_InfiniteScroll_r3" "css_element"
+    And I click on ".Users_InfiniteScroll [aria-controls=\"id_collapse_firstname\"]" "css_element"
+    And I should see "Teacher" in the ".Users_InfiniteScroll #id_collapse_firstname" "css_element"
+    And I set the field "Teacher" in the ".Users_InfiniteScroll #id_collapse_firstname" "css_element" to "checked"
+    And I wait "1" seconds
+    And I should see "Teacher" in the "#Users_InfiniteScroll_r1" "css_element"
+    And "//*[contains(@id, 'Users_InfiniteScroll')]//tr[@id, 'Users_InfiniteScroll_r2']" "xpath_element" should not exist
