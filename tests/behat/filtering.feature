@@ -25,8 +25,8 @@ Feature: Filtering functionality of wunderbyte_table works as expected
       | user1    | C1     | student        |
       | teacher1 | C1     | editingteacher |
     And the following "activities" exist:
-      | activity | course | name       | intro                  | bookingmanager | eventtype | Default view for booking options | Activate e-mails (confirmations, notifications and more) | Booking option name  |
-      | booking  | C1     | My booking | My booking description | teacher1       | Webinar   | All bookings                     | Yes                                                      | New option - Webinar |
+      | activity | name       | intro      | course | idnumber |
+      | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
 
   @javascript
   Scenario: Filter tables on different tabs using input field
