@@ -98,17 +98,14 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users_InfiniteScroll"
-    And I should see "user10" in the "#Users_InfiniteScroll_r5" "css_element"
-    And "//*[contains(@id, 'settings-tab')]//tr[@id, 'Users_InfiniteScroll_r20']" "xpath_element" should not exist
-    ## And I hover "additem-" "link"
-    ## And I hover "NoModal, SingleCall" "icon"
-    ## And I hover "//a[@class='btn btn-primary wb_action_button' and contains(.,'NoModal, SingleCall')]" "xpath_element"
-    ## And I click on "NoModal, SingleCall" "link" in the ".wunderbyteTableClass.Users_InfiniteScroll" "css_element"
-    ## And I wait "1" seconds
-    ## Then I should see "Did work" in the "#user-notifications" "css_element"    
-    And I click on "TriggersNoModal" "link" in the "#Users_r19" "css_element"
+    And I should see "user12" in the "#Users_InfiniteScroll_r7" "css_element"
+    And "//*[contains(@id, 'Users_InfiniteScroll')]//tr[@id, 'Users_InfiniteScroll_r16']" "xpath_element" should not exist
+    And I click on "TriggersNoModal" "link" in the "#Users_InfiniteScroll_r7" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
-    ##And I hover over the "TriggersNoModal" "link" in the "#Users_r19" "css_element"
+    And I should see "user19" in the "#Users_InfiniteScroll_r14" "css_element"
+    And "//*[contains(@id, 'Users_InfiniteScroll')]//tr[@id, 'Users_InfiniteScroll_r16']" "xpath_element" should not exist
+    And I click on "TriggersNoModal" "link" in the "#Users_InfiniteScroll_r14" "css_element"
     And I wait "1" seconds
-    And I should see "user20" in the "#Users_InfiniteScroll_r20" "css_element"
+    And I should see "Did work" in the "#user-notifications" "css_element"
+    And I should see "user20" in the "#Users_InfiniteScroll_r16" "css_element"
