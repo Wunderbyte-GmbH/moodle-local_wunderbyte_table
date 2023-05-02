@@ -238,7 +238,6 @@ export const callLoadData = (
         updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
     }
 
-    updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
     let table = document.getElementById('a' + idstring);
 
     // This is now the individual spinner from the wunderbyte table template.

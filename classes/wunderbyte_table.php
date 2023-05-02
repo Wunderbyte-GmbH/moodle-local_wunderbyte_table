@@ -328,9 +328,6 @@ class wunderbyte_table extends table_sql {
  * @return void
  */
     private function apply_filter_and_search_from_url() {
-        $tableid = optional_param('wbtableid', '', PARAM_RAW);
-
-        if ($tableid === $this->idstring) {
             $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
             $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
 
@@ -341,9 +338,6 @@ class wunderbyte_table extends table_sql {
             if (!empty($wbtsearch)) {
                 $this->apply_searchtext($wbtsearch);
             }
-        };
-
-
     }
 
     /**
