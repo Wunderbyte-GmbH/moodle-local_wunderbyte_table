@@ -127,12 +127,24 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
   url.searchParams.delete('wbtfilter');
   url.searchParams.delete('wbtsearch');
   url.searchParams.delete('tsort');
-  url.searchParams.delete('tdir', dir);
+  url.searchParams.delete('tdir');
 
-  url.searchParams.append('wbtfilter', filterobjects);
-  url.searchParams.append('wbtsearch', searchstring);
-  url.searchParams.append('tsort', sort);
-  url.searchParams.append('tdir', dir);
+  if (filterobjects !== "" &&
+  filterobjects !== null) {
+    url.searchParams.append('wbtfilter', filterobjects);
+  }
+  if (searchstring !== "" &&
+  searchstring !== null) {
+    url.searchParams.append('wbtsearch', searchstring);
+  }
+  if (sort !== "" &&
+  sort !== null) {
+    url.searchParams.append('tsort', sort);
+  }
+  if (dir !== null &&
+    dir > 0) {
+    url.searchParams.append('tdir', dir);
+  }
 
   window.history.pushState(null, null, url.toString());
 }

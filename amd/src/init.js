@@ -38,6 +38,8 @@ var scrollpages = {};
 var tablejss = {};
 var scrollingelement = {};
 
+var moreThanOneTable = false;
+
 /**
  * Gets called from mustache template.
  * @param {string} idstring
@@ -49,6 +51,7 @@ export const init = (idstring, encodedtable) => {
     console.log('init booking');
 
     if (!queries[idstring]) {
+        moreThanOneTable = true;
         checkInTable(idstring, encodedtable);
     }
 
@@ -63,7 +66,6 @@ export const init = (idstring, encodedtable) => {
             }
 
         }
-
         respondToVisibility(idstring, encodedtable, callLoadData);
     }
 };
@@ -204,9 +206,6 @@ export const callLoadData = (
     searchtext = null,
     replacerow = false) => {
 
-    updateUrlWithTableId(idstring);
-    updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
-
     if (loadings[idstring] && !replacerow) {
         return;
     }
@@ -233,6 +232,13 @@ export const callLoadData = (
         tsort = getSortSelection(idstring);
     }
 
+    if (moreThanOneTable !== true) {
+        // eslint-disable-next-line no-console
+        console.log(this.moreThanOneTable);
+        updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
+    }
+
+    updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
     let table = document.getElementById('a' + idstring);
 
     // This is now the individual spinner from the wunderbyte table template.
@@ -695,19 +701,4 @@ function checkInTable(
         searchtext,
         replacerow: false // Replace row is always false.
     };
-}
-/**
- * Adding ID String to URL
- * @param {string} idstring
- */
-function updateUrlWithTableId(idstring) {
-
-    let url = new URL(window.location.href);
-
-    url.searchParams.delete('wbtableid');
-
-    url.searchParams.append('wbtableid', idstring);
-
-    window.history.pushState(null, null, url.toString());
-
 }
