@@ -122,15 +122,12 @@ var checked = {};
  */
 export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort, dir) {
 
-  let url = new URL(window.location.href);
+  const url = new URL(window.location.href);
 
-  url.searchParams.delete('wbtfilter');
-  url.searchParams.delete('wbtsearch');
-  url.searchParams.delete('tsort');
-  url.searchParams.delete('tdir');
+  url.search = "";
+  history.replaceState(null, '', url);
 
-  if (filterobjects !== "" &&
-  filterobjects !== null) {
+  if (filterobjects) {
     url.searchParams.append('wbtfilter', filterobjects);
   }
   if (searchstring !== "" &&
@@ -177,6 +174,19 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
 export function getFilterObjects(idstring) {
 
   if (!(idstring in checked)) {
+    return '';
+  }
+
+  let hasvalues = false;
+  // eslint-disable-next-line no-unused-vars
+  for (const [key, value] of Object.entries(checked[idstring])) {
+
+    if (value.length > 0) {
+      hasvalues = true;
+    }
+  }
+
+  if (!hasvalues) {
     return '';
   }
 
