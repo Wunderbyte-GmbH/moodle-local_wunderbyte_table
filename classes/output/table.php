@@ -224,7 +224,7 @@ class table implements renderable, templatable {
         $this->baseurl = $table->baseurl->out(false);
 
         // If we have filtercolumns defined, we add the filter key to the output.
-        $this->categories = json_decode($table->filterjson, true);
+        $this->categories = $this->applyfilterselection($table);
 
         $this->printoptions = $this->return_dataformat_selector();
 
@@ -633,4 +633,62 @@ class table implements renderable, templatable {
 
         return $sortarray;
     }
+
+    /**
+     * Make actual filter params checked in table filter display.
+     *
+     * @param wunderbyte_table $table
+     * @return object
+     */
+    function applyfilterselection(wunderbyte_table $table) {
+
+        $categories = json_decode($table->filterjson, true);
+        $tableobject = $categories['categories'];
+
+        // Only if we have filterobjects defined, we try to apply them.
+        $filterparam = optional_param('wbtfilter', "", PARAM_TEXT);
+        if ($filterparam) {
+            $filterobjects = (array)json_decode($filterparam);
+
+            // For all the potential filtercolumns...
+            foreach ($tableobject as $tokey => $potentialfiltercolumn) {
+                $tempfiltercolumn = $potentialfiltercolumn['name'];
+                $filterkeys = array_keys($filterobjects);
+                // ...we check if the name is part of the actual filter.
+                foreach ($filterkeys as $fkey => $arraykey) {
+                    if ($tempfiltercolumn === $arraykey) {
+                        // If this is the case, we know our actual searchfilter.
+                        foreach ($filterobjects[$arraykey] as $sfkey => $filter) {
+                            // So we can now check all the entries in the filterobject...
+                            // ...to see if we find the concrete filter at the right place (values) in the tableobject.
+                            foreach ($potentialfiltercolumn['values'] as $vkey => $value) {
+                                if ($value['key'] === $filter) {
+                                    // If we find the filter, we add the checked value and key to the initial tableobject array at the right place.
+                                    $tableobject[$tokey]['values'][$vkey]['checked'] = 'checked';
+                                    // Expand the filter area
+                                    $tableobject[$tokey]['show'] = 'show';
+                                    $tableobject[$tokey]['collapsed'] = '';
+                                    $tableobject[$tokey]['expanded'] = 'true';
+
+
+                                    continue;
+                                    // Then we check for the next filterparam.
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // Return the modified tableobject to
+            $categories['categories'] = $tableobject;
+            return $categories;
+        } else {
+
+            return json_decode($table->filterjson, true);
+        }
+
+    }
+
+
+
 }

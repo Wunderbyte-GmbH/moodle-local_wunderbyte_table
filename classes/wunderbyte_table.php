@@ -997,7 +997,8 @@ class wunderbyte_table extends table_sql {
             $categoryobject = [
                 'name' => $localizedname, // Localized name.
                 'columnname' => $key, // The column name.
-                'values' => []
+                'values' => [],
+                'collapsed' => 'collapsed',
             ];
 
             // We have to check if we have a sortarray for this filtercolumn.
@@ -1321,7 +1322,12 @@ class wunderbyte_table extends table_sql {
             if ($cashedtable = $cache->get($this->tablecachehash)) {
                 $this->pagesize = $cashedtable->pagesize;
             } else {
+
+                // Make sure that we don't use old filter params.
+                $filter = $this->sql->filter;
+                $this->sql->filter = '';
                 $cache->set($this->tablecachehash, $this);
+                $this->sql->filter = $filter;
             }
         }
 

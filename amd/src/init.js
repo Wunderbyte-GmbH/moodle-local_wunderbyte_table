@@ -278,7 +278,7 @@ export const callLoadData = (
             'tshow': tshow,
             'tdir': tdir,
             'treset': treset,
-            'filterobjects': filterobjects,
+            'wbtfilter': filterobjects,
             'searchtext': searchtext
         },
         done: async function(res) {

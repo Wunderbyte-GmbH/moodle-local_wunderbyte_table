@@ -159,8 +159,10 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
     const wbTable = document.querySelector(selector);
 
     checked[idstring][name] = Array.from(
-      wbTable.querySelectorAll("input[name=" + name + "]:checked")
-    ).map(function(el) {
+      wbTable.querySelectorAll("input[name=" + name + "]")
+    ).filter(function(el) {
+      return el.checked;
+    }).map(function(el) {
       return el.value;
     });
 

@@ -63,7 +63,7 @@ class load_data extends external_api {
             'tshow'   => new external_value(PARAM_RAW, 'show value', VALUE_REQUIRED),
             'tdir'    => new external_value(PARAM_INT, 'dir value', VALUE_REQUIRED),
             'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_REQUIRED),
-            'filterobjects'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
+            'wbtfilter'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
             'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
             )
         );
@@ -105,7 +105,7 @@ class load_data extends external_api {
                 'tshow' => $tshow,
                 'tdir' => $tdir,
                 'treset' => $treset,
-                'filterobjects' => $filterobjects,
+                'wbtfilter' => $filterobjects,
                 'searchtext' => $searchtext
         );
 
@@ -128,8 +128,8 @@ class load_data extends external_api {
             $_POST[$key] = $value;
         }
 
-        if (!empty($params['filterobjects'])) {
-            $table->apply_filter($params['filterobjects']);
+        if (!empty($params['wbtfilter'])) {
+            $table->apply_filter($params['wbtfilter']);
         }
         if (!empty($params['searchtext'])) {
             $table->apply_searchtext($params['searchtext']);
