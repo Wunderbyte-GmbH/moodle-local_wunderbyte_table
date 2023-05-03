@@ -322,24 +322,6 @@ class wunderbyte_table extends table_sql {
         return $output->render_table($tableobject, $component . "/" . $template);
     }
 
-/**
- * If we have filter or search params in the URL, they will be applied.
- *
- * @return void
- */
-    private function apply_filter_and_search_from_url() {
-            $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
-            $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
-
-            if (!empty($wbtfilter)) {
-                $this->apply_filter($wbtfilter);
-            }
-
-            if (!empty($wbtsearch)) {
-                $this->apply_searchtext($wbtsearch);
-            }
-    }
-
     /**
      * A version of the out function which does not actually echo but just returns the html plus the idnumber.
      * This is only used for lazy loading.
@@ -958,7 +940,7 @@ class wunderbyte_table extends table_sql {
 
                     $explodedarray = explode($separator, $keytoexplode);
 
-                    // Onoy if we have more than one item, we unset key and insert all the new keys we got.
+                    // Only if we have more than one item, we unset key and insert all the new keys we got.
                     if (count($explodedarray) > 1) {
                         // Run through all the keys.
                         foreach ($explodedarray as $explodeditem) {
@@ -1439,6 +1421,24 @@ class wunderbyte_table extends table_sql {
 
         return $class;
     }
+
+    /**
+     * If we have filter or search params in the URL, they will be applied.
+     *
+     * @return void
+     */
+    private function apply_filter_and_search_from_url() {
+        $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
+        $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
+
+        if (!empty($wbtfilter)) {
+            $this->apply_filter($wbtfilter);
+        }
+
+        if (!empty($wbtsearch)) {
+            $this->apply_searchtext($wbtsearch);
+        }
+}
 
 
 }
