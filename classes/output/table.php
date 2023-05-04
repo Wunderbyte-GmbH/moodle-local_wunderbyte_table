@@ -643,6 +643,10 @@ class table implements renderable, templatable {
     function applyfilterselection(wunderbyte_table $table) {
 
         $categories = json_decode($table->filterjson, true);
+
+        if (!isset($categories['categories'])) {
+            return (object)[];
+        }
         $tableobject = $categories['categories'];
 
         // Only if we have filterobjects defined, we try to apply them.
