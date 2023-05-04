@@ -166,6 +166,10 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
       return el.value;
     });
 
+    // If there are no checked boxes, we unset the key alltogether.
+    if (checked[idstring][name].length < 1) {
+      delete checked[idstring][name];
+    }
   }
 
   /**
