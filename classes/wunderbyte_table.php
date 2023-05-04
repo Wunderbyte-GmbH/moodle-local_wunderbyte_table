@@ -1325,7 +1325,7 @@ class wunderbyte_table extends table_sql {
             } else {
 
                 // Make sure that we don't use old filter params.
-                $filter = $this->sql->filter;
+                $filter = $this->sql->filter ?? '';
                 $this->sql->filter = '';
                 $cache->set($this->tablecachehash, $this);
                 $this->sql->filter = $filter;
