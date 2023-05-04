@@ -144,6 +144,12 @@ to your wunderbyte_table classs (look in the _container templates to understand 
 
 Each column defined as sortable will display carets in the table header. They have the same functionality as sortcolumn select & changesortorder element displayed in top of table.
 
+Filter, search and sort params selection triggers URL update. These params can also be applied to table on load via URL. These functions are not available if more than one table is displayed per page (multitable display).
+
+### Multitable Display
+
+Using tabs to display more than one table per page.
+
 
 ### Exploding strings for columns storing multiple values
 The define_filtercolumns function also supports columns with multiple values stored as string with a separator.
