@@ -756,7 +756,8 @@ class wunderbyte_table extends table_sql {
             if (!is_int($key)) {
                 // We only exclude it when we are sure that it's really there.
                 if (!strpos($sql, ':'. $key . ' ')
-                    && !strpos($sql, ':'. $key . ')')) {
+                    && !strpos($sql, ':'. $key . ')')
+                    && !strpos($sql, ':'. $key . PHP_EOL)) {
                         unset($params[$key]);
                 }
             }
