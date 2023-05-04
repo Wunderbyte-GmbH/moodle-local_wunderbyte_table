@@ -553,7 +553,7 @@ class table implements renderable, templatable {
             $data['printoptions'] = $this->printoptions;
         }
 
-        if ($this->categories) {
+        if (!empty($this->categories)) {
             $data['showcomponentstoggle'] = true;
         }
 
@@ -638,14 +638,14 @@ class table implements renderable, templatable {
      * Make actual filter params checked in table filter display.
      *
      * @param wunderbyte_table $table
-     * @return object
+     * @return object|null
      */
     function applyfilterselection(wunderbyte_table $table) {
 
         $categories = json_decode($table->filterjson, true);
 
         if (!isset($categories['categories'])) {
-            return (object)[];
+            return null;
         }
         $tableobject = $categories['categories'];
 
