@@ -80,7 +80,13 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I click on "th.id.wb-table-column.asc" "css_element"
     And I wait "1" seconds
     And I should see "teacher1" in the "#Users_r1" "css_element"
-    ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn" as well
+    ## When clicking column header in table (for sorting) - sync value with the select "selectsortcolumn"
+    And the field "selectsortcolumn-Users" matches value "id"
+    ## Check if sorting preserved on page reloading
+    And I reload the page
+    And I wait "1" seconds
+    And I should see "teacher1" in the "#Users_r1" "css_element"
+    And the field "selectsortcolumn-Users" matches value "id"
 
   @javascript
   Scenario: Sort Users tab table with column username
@@ -94,7 +100,13 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I click on "th.username.wb-table-column.desc" "css_element"
     And I wait "1" seconds
     And I should see "admin" in the "#Users_r1" "css_element"
-    ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn" as well
+    ## When clicking column header in table (for sorting) - sync value with the select "selectsortcolumn"
+    And the field "selectsortcolumn-Users" matches value "username"
+    ## Check if sorting preserved on page reloading
+    And I reload the page
+    And I wait "1" seconds
+    And I should see "admin" in the "#Users_r1" "css_element"
+    And the field "selectsortcolumn-Users" matches value "username"
 
   @javascript
   Scenario: Sort Course tab table with column Full Name
@@ -109,4 +121,10 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I click on "th.fullname.wb-table-column.desc" "css_element"
     And I wait "1" seconds
     And I should see "Acceptance test site" in the "#Course_r1" "css_element"
-    ## TODO: when clicking column header in table (for sorting) - sync value in the elect class="sortcolumn"
+    ## When clicking column header in table (for sorting) - sync value with the select "selectsortcolumn"
+    And the field "selectsortcolumn-Course" matches value "Full Name"
+    ## Check if sorting preserved on page reloading
+    And I reload the page
+    And I wait "1" seconds
+    And I should see "Acceptance test site" in the "#Course_r1" "css_element"
+    And the field "selectsortcolumn-Course" matches value "Full Name"
