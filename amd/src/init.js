@@ -48,11 +48,14 @@ var moreThanOneTable = false;
 export const init = (idstring, encodedtable) => {
 
     // eslint-disable-next-line no-console
-    console.log('init booking');
+    console.log('init booking ' + idstring);
 
     if (!queries[idstring]) {
-        moreThanOneTable = true;
         checkInTable(idstring, encodedtable);
+    }
+
+    if (Object.keys(queries).length > 1) {
+        moreThanOneTable = true;
     }
 
     if (idstring && encodedtable) {
@@ -233,8 +236,6 @@ export const callLoadData = (
     }
 
     if (moreThanOneTable !== true) {
-        // eslint-disable-next-line no-console
-        console.log(this.moreThanOneTable);
         updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
     }
 
