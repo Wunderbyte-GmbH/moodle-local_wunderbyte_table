@@ -663,6 +663,22 @@ class table implements renderable, templatable {
 
         $tableobject = $categories['categories'];
 
+        $now = usertime(time());
+
+        // Check if the value for date and time picker is defined as "now".
+        foreach ($tableobject as $tokey => $column) {
+            if (isset($column['datepicker'])) {
+                foreach ($column['datepicker']['datepickers'] as $vkey => $value) {
+                    if ($value['timestamp'] === 'now') {
+                        $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = date('Y-m-d', $now);
+                        $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = date('h:i', $now);
+                        continue;
+                    }
+                }
+            }
+        }
+
+
         // Only if we have filterobjects defined, we try to apply them.
         $filterparam = optional_param('wbtfilter', "", PARAM_TEXT);
         if ($filterparam) {
@@ -695,8 +711,8 @@ class table implements renderable, templatable {
             $categories['categories'] = $tableobject;
             return $categories;
         } else {
-
-            return json_decode($table->filterjson, true);
+            $categories['categories'] = $tableobject;
+            return $categories;
         }
 
     }

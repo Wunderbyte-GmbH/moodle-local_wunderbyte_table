@@ -161,6 +161,15 @@ You can define the separator like this:
             'localizedname' => get_string('mystring', 'mod_myplugin'),
             'explode' => ',', // In this example, a comma is the separator, you might need another one.
         ],
+        'mytimestampcolumn' => [
+            'localizedname' => get_string('mystring', 'mod_myplugin'),
+            'datepicker' => [
+                'label' => [ // Can be localized and like "Courses starting after:".
+                    'operator' => '<',
+                    'defaultvalue' => '1680130800', // Can also be string "now".
+                ]
+            ]
+        ],
     ]);
 
 ### Handle JSON objects
