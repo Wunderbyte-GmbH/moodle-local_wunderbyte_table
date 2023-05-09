@@ -277,21 +277,52 @@ class demo implements renderable, templatable {
             'id' => get_string('id', 'local_wunderbyte_table'),
             'fullname' => get_string('fullname', 'local_wunderbyte_table'),
             'shortname' => get_string('shortname', 'local_wunderbyte_table'),
-            'action' => get_string('action', 'local_wunderbyte_table')];
+            'action' => get_string('action', 'local_wunderbyte_table'),
+            'startdate' => get_string('startdate', 'local_wunderbyte_table'),
+            'enddate' => get_string('enddate', 'local_wunderbyte_table'),
+        ];
 
         $filtercolumns = [
-            'id' => get_string('id', 'local_wunderbyte_table'),
-            'fullname' => get_string('fullname', 'local_wunderbyte_table'),
-            'shortname' => get_string('shortname', 'local_wunderbyte_table'),
+            'id' => [
+                'localizedname' => get_string('id', 'local_wunderbyte_table')
+            ],
+            'fullname' => [
+                'localizedname' => get_string('fullname', 'local_wunderbyte_table')
+            ],
+            'shortname' =>  [
+                'localizedname' => get_string('shortname', 'local_wunderbyte_table')
+            ],
+            'startdate' => [
+                'localizedname' => get_string('startdate', 'local_wunderbyte_table'),
+                'datepicker' => [
+                    'from time' => [ // Can be localized and like "Courses starting after:".
+                        'operator' => '<',
+                        'defaultvalue' => 'now', // Can also be string "now".
+                    ],
+                    'end time' => [ // Can be localized and like "Courses starting after:".
+                        'operator' => '>',
+                        'defaultvalue' => '1670999000', // Can also be string "now".
+                    ]
+                ]
+            ],
+            'enddate' => [
+                'localizedname' => get_string('enddate', 'local_wunderbyte_table'),
+                'datepicker' => [
+                    'label' => [ // Can be localized and like "Courses starting after:".
+                        'operator' => '>',
+                        'defaultvalue' => '1680130800', // Can also be string "now".
+                    ]
+                ]
+            ],
         ];
 
 
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
 
-        $table->define_filtercolumns(array_keys($filtercolumns));
+        $table->define_filtercolumns($filtercolumns);
         $table->define_fulltextsearchcolumns(array_keys($filtercolumns));
-        $table->define_sortablecolumns($filtercolumns);
+        $table->define_sortablecolumns($columns);
 
         // When true and action buttons are present, checkboxes will be rendered to every line.
         $table->addcheckboxes = true;

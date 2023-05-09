@@ -264,8 +264,6 @@ class wunderbyte_table extends table_sql {
 
         // This is a fallback for the downloading function. A different baseurl can be defined later in the process.
         $this->define_baseurl(new moodle_url('/local/wunderbyte_table/download.php'));
-
-
     }
 
     /**
@@ -904,7 +902,13 @@ class wunderbyte_table extends table_sql {
         foreach ($this->subcolumns['datafields'] as $key => $value) {
 
             // We won't generate a filter for the id column, but it will be present because we need it as dataset.
-            if ($key == 'id') {
+
+            if (strtolower($key) == 'id') {
+                continue;
+            }
+
+            if (isset($value['datepicker'])) {
+                $filtercolumns[$key] = 'datepicker';
                 continue;
             }
 
@@ -928,138 +932,157 @@ class wunderbyte_table extends table_sql {
 
         $filterjson = ['categories' => array()];
 
-        foreach ($filtercolumns as $key => $values) {
-
-            // We might need to explode values, because of a multi-field.
-            if (isset($this->subcolumns['datafields'][$key]['explode'])
-                || self::check_if_multi_customfield($key)) {
-
-                // We run through the array of values and explode each item.
-                foreach ($values as $keytoexplode => $valuetoexplode) {
-
-                    $separator = $this->subcolumns['datafields'][$key]['explode'] ?? ',';
-
-                    $explodedarray = explode($separator, $keytoexplode);
-
-                    // Only if we have more than one item, we unset key and insert all the new keys we got.
-                    if (count($explodedarray) > 1) {
-                        // Run through all the keys.
-                        foreach ($explodedarray as $explodeditem) {
-
-                            // Make sure we don't have any empty values.
-                            $explodeditem = trim($explodeditem);
-
-                            if (empty($explodeditem)) {
-                                continue;
-                            }
-
-                            $values[$explodeditem] = true;
-                        }
-                        // We make sure the strings with more than one values are not treated anymore.
-                        unset($values[$keytoexplode]);
-                    }
-                }
-
-                unset($this->subcolumns['datafields'][$key]['explode']);
-            }
-
-            // If we have JSON, we need special treatment.
-            if (!empty($this->subcolumns['datafields'][$key]['jsonattribute'])) {
-                $valuescopy = $values;
-                $values = [];
-
-                // We run through the array of values containing the JSON strings.
-                foreach ($valuescopy as $jsonstring => $boolvalue) {
-                    // Convert into an array, so we can handle items with multiple objects.
-                    $jsonstring = '[' . $jsonstring . ']';
-                    $jsonarray = json_decode($jsonstring);
-
-                    foreach ($jsonarray as $jsonobj) {
-                        if (empty($jsonobj)) {
-                            continue;
-                        }
-                        // We only want to show the attribute of the JSON which is relevant for the filter.
-                        $searchattribute = $jsonobj->{$this->subcolumns['datafields'][$key]['jsonattribute']};
-                        $values[$searchattribute] = true;
-                    }
-                }
-
-                unset($this->subcolumns['datafields'][$key]['json']);
-            }
+        foreach ($filtercolumns as $fckey => $values) {
 
             // Special treatment for key localizedname.
-            if (isset($this->subcolumns['datafields'][$key]['localizedname'])) {
-                $localizedname = $this->subcolumns['datafields'][$key]['localizedname'];
-                unset($this->subcolumns['datafields'][$key]['localizedname']);
+            if (isset($this->subcolumns['datafields'][$fckey]['localizedname'])) {
+                $localizedname = $this->subcolumns['datafields'][$fckey]['localizedname'];
+                unset($this->subcolumns['datafields'][$fckey]['localizedname']);
             } else {
                 $localizedname = $key;
             }
 
             $categoryobject = [
                 'name' => $localizedname, // Localized name.
-                'columnname' => $key, // The column name.
-                'values' => [],
+                'columnname' => $fckey, // The column name.
                 'collapsed' => 'collapsed',
             ];
 
-            // We have to check if we have a sortarray for this filtercolumn.
-            if (isset($this->subcolumns['datafields'][$key])
-                        && count($this->subcolumns['datafields'][$key]) > 0) {
+            if (is_string($values) && $values === 'datepicker') {
 
-                                $sortarray = $this->subcolumns['datafields'][$key];
-            } else {
-                $sortarray = null;
-            }
+                $datepickerarray = $this->subcolumns['datafields'][$fckey];
 
-            // First we create our sortedarray and add all values in the right order.
-            if ($sortarray != null) {
-                $sortedarray = [];
-                foreach ($sortarray as $sortkey => $sortvalue) {
-                    if (isset($values[$sortkey])) {
-                        $sortedarray[$sortvalue] = $sortkey;
+                foreach ($datepickerarray['datepicker'] as $labelkey => $object) {
 
-                        unset($values[$sortkey]);
-                    }
+                    $defaulttimestamp = $datepickerarray['datepicker'][$labelkey]['defaultvalue'];
+
+                    $datepickerobject = [
+                        'label' => $labelkey,
+                        'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
+                        'timestamp' => $defaulttimestamp,
+                        'datereadable' => $defaulttimestamp === 'now' ? 'now': date('Y-m-d', $defaulttimestamp),
+                        'timereadable' => $defaulttimestamp === 'now' ? 'now': date('H:i', $defaulttimestamp),
+                    ];
+
+                    $categoryobject['datepicker']['datepickers'][] = $datepickerobject;
                 }
 
-                // Now we make sure we havent forgotten any values.
-                // If so, we sort them and add them at the end.
-                if (count($values) > 0) {
-                    // First sort the values first.
-                    ksort($values);
+            } else if (is_array($values)){
+                // We might need to explode values, because of a multi-field.
+                if (isset($this->subcolumns['datafields'][$fckey]['explode'])
+                    || self::check_if_multi_customfield($fckey)) {
 
-                    foreach ($values as $unsortedkey => $unsortedvalue) {
-                        $sortedarray[$unsortedkey] = true;
+                    // We run through the array of values and explode each item.
+                    foreach ($values as $keytoexplode => $valuetoexplode) {
+
+                        $separator = $this->subcolumns['datafields'][$fckey]['explode'] ?? ',';
+
+                        $explodedarray = explode($separator, $keytoexplode);
+
+                        // Only if we have more than one item, we unset key and insert all the new keys we got.
+                        if (count($explodedarray) > 1) {
+                            // Run through all the keys.
+                            foreach ($explodedarray as $explodeditem) {
+
+                                // Make sure we don't have any empty values.
+                                $explodeditem = trim($explodeditem);
+
+                                if (empty($explodeditem)) {
+                                    continue;
+                                }
+
+                                $values[$explodeditem] = true;
+                            }
+                            // We make sure the strings with more than one values are not treated anymore.
+                            unset($values[$keytoexplode]);
+                        }
                     }
+
+                    unset($this->subcolumns['datafields'][$fckey]['explode']);
                 }
 
-                // Finally, we pass the sorted array to the values back.
-                $values = $sortedarray;
+                // If we have JSON, we need special treatment.
+                if (!empty($this->subcolumns['datafields'][$fckey]['jsonattribute'])) {
+                    $valuescopy = $values;
+                    $values = [];
+
+                    // We run through the array of values containing the JSON strings.
+                    foreach ($valuescopy as $jsonstring => $boolvalue) {
+                        // Convert into an array, so we can handle items with multiple objects.
+                        $jsonstring = '[' . $jsonstring . ']';
+                        $jsonarray = json_decode($jsonstring);
+
+                        foreach ($jsonarray as $jsonobj) {
+                            if (empty($jsonobj)) {
+                                continue;
+                            }
+                            // We only want to show the attribute of the JSON which is relevant for the filter.
+                            $searchattribute = $jsonobj->{$this->subcolumns['datafields'][$fckey]['jsonattribute']};
+                            $values[$searchattribute] = true;
+                        }
+                    }
+
+                    unset($this->subcolumns['datafields'][$fckey]['json']);
+                }
+
+                // We have to check if we have a sortarray for this filtercolumn.
+                if (isset($this->subcolumns['datafields'][$fckey])
+                            && count($this->subcolumns['datafields'][$fckey]) > 0) {
+
+                                    $sortarray = $this->subcolumns['datafields'][$fckey];
+                } else {
+                    $sortarray = null;
+                }
+
+                // First we create our sortedarray and add all values in the right order.
+                if ($sortarray != null) {
+                    $sortedarray = [];
+                    foreach ($sortarray as $sortkey => $sortvalue) {
+                        if (isset($values[$sortkey])) {
+                            $sortedarray[$sortvalue] = $sortkey;
+
+                            unset($values[$sortkey]);
+                        }
+                    }
+
+                    // Now we make sure we havent forgotten any values.
+                    // If so, we sort them and add them at the end.
+                    if (count($values) > 0) {
+                        // First sort the values first.
+                        ksort($values);
+
+                        foreach ($values as $unsortedkey => $unsortedvalue) {
+                            $sortedarray[$unsortedkey] = true;
+                        }
+                    }
+
+                    // Finally, we pass the sorted array to the values back.
+                    $values = $sortedarray;
+                }
+
+                foreach ($values as $valuekey => $valuevalue) {
+
+                    $itemobject = [
+                        'key' => $valuekey,
+                        'value' => $valuevalue === true ? $valuekey : $valuevalue,
+                        'category' => $fckey
+                    ];
+
+                    $categoryobject['default']['values'][$valuekey] = $itemobject;
+                }
+
+                if (count($categoryobject['default']['values']) == 0) {
+                    continue;
+                }
+
+                if ($sortarray == null) {
+                    // If we didn't sort otherwise, we do it now.
+                    ksort($categoryobject['default']['values']);
+                }
+
+                // Make the arrays mustache ready, we have to jump through loops.
+                $categoryobject['default']['values'] = array_values($categoryobject['default']['values']);
             }
-
-            foreach ($values as $valuekey => $valuevalue) {
-
-                $itemobject = [
-                    'key' => $valuekey,
-                    'value' => $valuevalue === true ? $valuekey : $valuevalue,
-                    'category' => $key
-                ];
-
-                $categoryobject['values'][$valuekey] = $itemobject;
-            }
-
-            if (count($categoryobject['values']) == 0) {
-                continue;
-            }
-
-            if ($sortarray == null) {
-                // If we didn't sort otherwise, we do it now.
-                ksort($categoryobject['values']);
-            }
-
-            // Make the arrays mustache ready, we have to jump through loops.
-            $categoryobject['values'] = array_values($categoryobject['values']);
-
             $filterjson['categories'][] = $categoryobject;
         }
 

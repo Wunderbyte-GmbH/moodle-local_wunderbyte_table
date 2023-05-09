@@ -68,6 +68,7 @@
         </h4>
         </div>
             <div class="collapse mt-2 {{show}}" id="id_collapse_{{columnname}}">
+                {{#default}}
                 <ul class="wunderbyterFilterList pt-2">
                 {{#values}}
                     {{#.}}
@@ -80,6 +81,19 @@
                     {{/.}}
                 {{/values}}
                 </ul>
+                {{/default}}
+                {{#datepicker}}
+                    {{#datepickers}}
+                        <form>
+                            <div>{{label}}</div>
+                            <label for="datepicker {{label}}"></label>
+                            <input type="date" id="datepicker {{label}}" value="{{datereadable}}" data-timestamp="{{timestamp}}" >
+                            <label for="timepicker {{label}}"></label>
+                            <input type="time" id="timepicker {{label}}" name="timepicker {{label}}" value="{{timereadable}}">
+                            <input type="submit">
+                        </form>
+                    {{/datepickers}}
+                {{/datepicker}}
             </div>
         </div>
         {{/categories}}

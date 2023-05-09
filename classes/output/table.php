@@ -649,6 +649,22 @@ class table implements renderable, templatable {
         }
         $tableobject = $categories['categories'];
 
+        // Check if the value for date and time picker is defined as "now".
+        foreach ($tableobject as $tokey => $column) {
+            if (isset($column['datepicker'])) {
+                foreach ($column['datepicker']['datepickers'] as $vkey => $value) {
+                    if ($value['timestamp'] === 'now') {
+                        date_default_timezone_set("Europe/Vienna");
+                        // TODO Put timezone set to right place - should it become an output demo param?
+                        $now = time();
+                        $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = date('Y-m-d', $now);
+                        $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = date('h:i', $now);
+                        continue;
+                    }
+                }
+            }
+        }
+
         // Only if we have filterobjects defined, we try to apply them.
         $filterparam = optional_param('wbtfilter', "", PARAM_TEXT);
         if ($filterparam) {
@@ -656,7 +672,7 @@ class table implements renderable, templatable {
 
             // For all the potential filtercolumns...
             foreach ($tableobject as $tokey => $potentialfiltercolumn) {
-                $tempfiltercolumn = $potentialfiltercolumn['name'];
+                $tempfiltercolumn = $potentialfiltercolumn['columnname'];
                 $filterkeys = array_keys($filterobjects);
                 // ...we check if the name is part of the actual filter.
                 foreach ($filterkeys as $fkey => $arraykey) {
@@ -665,16 +681,14 @@ class table implements renderable, templatable {
                         foreach ($filterobjects[$arraykey] as $sfkey => $filter) {
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
-                            foreach ($potentialfiltercolumn['values'] as $vkey => $value) {
+                            foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {
                                 if ($value['key'] === $filter) {
                                     // If we find the filter, we add the checked value and key to the initial tableobject array at the right place.
-                                    $tableobject[$tokey]['values'][$vkey]['checked'] = 'checked';
+                                    $tableobject[$tokey]['default']['values'][$vkey]['checked'] = 'checked';
                                     // Expand the filter area
                                     $tableobject[$tokey]['show'] = 'show';
                                     $tableobject[$tokey]['collapsed'] = '';
                                     $tableobject[$tokey]['expanded'] = 'true';
-
-
                                     continue;
                                     // Then we check for the next filterparam.
                                 }
@@ -687,8 +701,8 @@ class table implements renderable, templatable {
             $categories['categories'] = $tableobject;
             return $categories;
         } else {
-
-            return json_decode($table->filterjson, true);
+            $categories['categories'] = $tableobject;
+            return $categories;
         }
 
     }
