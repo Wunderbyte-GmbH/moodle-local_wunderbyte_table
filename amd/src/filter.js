@@ -43,8 +43,6 @@ var checked = {};
     return;
   }
 
-  const allCheckboxes = filterContainer.querySelectorAll("input[type=checkbox]");
-
   const filterElements = filterContainer.querySelectorAll("input[class^='filterelement']");
 
   if (!filterElements) {
@@ -55,16 +53,6 @@ var checked = {};
   if (!checked.hasOwnProperty(idstring)) {
     checked[idstring] = {};
   }
-
-  // filterContainer.querySelectorAll(".form-group").forEach(e => {
-
-  //     if (!categories || !categories.hasOwnProperty(idstring)) {
-  //       categories[idstring] = [];
-  //     }
-
-  //     categories[idstring].push(e.getAttribute("name"));
-  //     getChecked(e.getAttribute("name"), selector, idstring);
-  // });
 
   filterElements.forEach(el => {
 
@@ -132,10 +120,9 @@ var checked = {};
 export function getDates(e, selector, idstring) {
 
       // We might have more than one Table, therefore we first have to get all tables.
-      const wbTable = document.querySelector(selector);
+      const wbTableFilter = document.querySelector(selector);
 
-      // Check if element is a checkbox
-
+      // Check if element is a checkbox (or date/time picker).
       if (e.target.type == "checkbox") {
         // eslint-disable-next-line no-console
         console.log ("its a checkbox");
@@ -143,10 +130,33 @@ export function getDates(e, selector, idstring) {
         // eslint-disable-next-line no-console
         console.log ("NOT a checkbox");
       }
+      //let name = e.target.name;
+      let filtername = e.target.dataset.filtername;
 
-      let name = e.target.name;
+      // eslint-disable-next-line no-console
+      console.log(filtername);
+
+      let filtercheckbox = wbTableFilter.querySelector('input[type="checkbox"][id^="' + filtername + '"]');
+
+      // eslint-disable-next-line no-console
+      console.log(filtercheckbox);
+
+      // eslint-disable-next-line no-console
+      console.log("filterbox checked " + filtercheckbox.checked);
+
+      if (filtercheckbox.checked) {
+        // eslint-disable-next-line no-console
+        console.log("no true");
+        // eslint-disable-next-line no-console
+        console.log(getDateAndTimePickerDataAsUnix(filtercheckbox, idstring));
+      }
+
+
+              // eslint-disable-next-line no-console
+              console.log("function end");
+      /*
       let dates = Array.from(
-        wbTable.querySelectorAll("input[name=" + name + "]")
+        wbTableFilter.querySelectorAll('input[type="checkbox"][id^="' + filtername + '"]')
       ).filter(function(el) {
         return el.checked;
       }).map(function(el) {
@@ -154,8 +164,15 @@ export function getDates(e, selector, idstring) {
         return {[el.dataset.operator]: unixcode};
       });
 
-    checked[idstring][name] = dates;
+        // eslint-disable-next-line no-console
+        console.log(dates);
 
+    checked[idstring][name] = [];
+    checked[idstring][name][filtername] = dates;
+    // eslint-disable-next-line no-console
+    console.log(checked);
+
+    */
 
     //checked[idstring].push(dates);
       // eslint-disable-next-line no-console
@@ -192,7 +209,6 @@ export function getDateAndTimePickerDataAsUnix(el, idstring) {
   //wenn change und datepicker element (checkbox, picker..) -> check if checkbox is true, schreiben in array
 
   let filterContainer = document.querySelector(selector + SELECTORS.FILTER);
-
 
   const allDatepicker = filterContainer.querySelectorAll("input[type=date]");
   const allTimepicker = filterContainer.querySelectorAll("input[type=time]");
