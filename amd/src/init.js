@@ -39,6 +39,10 @@ var tablejss = {};
 var scrollingelement = {};
 
 var moreThanOneTable = false;
+export const SELECTORS = {
+    CONTAINER: ".wunderbyte_table_container_",
+    FILTER: " .wunderbyteTableFilter",
+};
 
 /**
  * Gets called from mustache template.
