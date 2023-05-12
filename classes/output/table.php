@@ -678,7 +678,6 @@ class table implements renderable, templatable {
             }
         }
 
-
         // Only if we have filterobjects defined, we try to apply them.
         $filterparam = optional_param('wbtfilter', "", PARAM_TEXT);
         if ($filterparam) {
@@ -707,16 +706,10 @@ class table implements renderable, templatable {
                     }
                 }
             }
-            // Return the modified tableobject to
-            $categories['categories'] = $tableobject;
-            return $categories;
-        } else {
-            $categories['categories'] = $tableobject;
-            return $categories;
+
         }
 
+        $categories['categories'] = $tableobject;
+        return $categories;
     }
-
-
-
 }
