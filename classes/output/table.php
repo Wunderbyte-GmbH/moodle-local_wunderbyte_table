@@ -648,42 +648,44 @@ class table implements renderable, templatable {
      */
     function applyfilterselection(wunderbyte_table $table) {
 
+        global $PAGE;
+
         $categories = json_decode($table->filterjson, true);
 
         if (!isset($categories['categories'])) {
             return null;
         }
+
+        // We only need to run this, when we are not in webservice mode.
+        if ($PAGE->url === null) {
+            return null;
+        }
+
         $tableobject = $categories['categories'];
 
         // Only if we have filterobjects defined, we try to apply them.
         $filterparam = optional_param('wbtfilter', "", PARAM_TEXT);
         if ($filterparam) {
             $filterobjects = (array)json_decode($filterparam);
-
             // For all the potential filtercolumns...
             foreach ($tableobject as $tokey => $potentialfiltercolumn) {
-                $tempfiltercolumn = $potentialfiltercolumn['name'];
-                $filterkeys = array_keys($filterobjects);
-                // ...we check if the name is part of the actual filter.
-                foreach ($filterkeys as $fkey => $arraykey) {
-                    if ($tempfiltercolumn === $arraykey) {
-                        // If this is the case, we know our actual searchfilter.
-                        foreach ($filterobjects[$arraykey] as $sfkey => $filter) {
-                            // So we can now check all the entries in the filterobject...
-                            // ...to see if we find the concrete filter at the right place (values) in the tableobject.
-                            foreach ($potentialfiltercolumn['values'] as $vkey => $value) {
-                                if ($value['key'] === $filter) {
-                                    // If we find the filter, we add the checked value and key to the initial tableobject array at the right place.
-                                    $tableobject[$tokey]['values'][$vkey]['checked'] = 'checked';
-                                    // Expand the filter area
-                                    $tableobject[$tokey]['show'] = 'show';
-                                    $tableobject[$tokey]['collapsed'] = '';
-                                    $tableobject[$tokey]['expanded'] = 'true';
+                $tempfiltercolumn = $potentialfiltercolumn['columnname'];
 
+                if (isset($filterobjects[$tempfiltercolumn])) {
+                    foreach ($filterobjects[$tempfiltercolumn] as $sfkey => $filter) {
+                        // So we can now check all the entries in the filterobject...
+                        // ...to see if we find the concrete filter at the right place (values) in the tableobject.
+                        foreach ($potentialfiltercolumn['values'] as $vkey => $value) {
+                            if ($value['key'] === $filter) {
+                                // If we find the filter, we add the checked value and key to the initial tableobject array at the right place.
+                                $tableobject[$tokey]['values'][$vkey]['checked'] = 'checked';
+                                // Expand the filter area
+                                $tableobject[$tokey]['show'] = 'show';
+                                $tableobject[$tokey]['collapsed'] = '';
+                                $tableobject[$tokey]['expanded'] = 'true';
 
-                                    continue;
-                                    // Then we check for the next filterparam.
-                                }
+                                continue;
+                                // Then we check for the next filterparam.
                             }
                         }
                     }
