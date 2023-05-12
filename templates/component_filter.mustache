@@ -72,7 +72,7 @@
                 <ul class="wunderbyterFilterList pt-2">
                     {{#values}}
                         <li class="form-check">
-                                <input class="form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
+                                <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
                                 <label class="form-check-label" for="{{key}}{{idstring}}">
                                     {{key}}
                                 </label>
@@ -84,14 +84,14 @@
                     {{#datepickers}}
                         <form>
                             <div>{{label}}</div>
-                            <input type="checkbox" id="{{label}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-datecheckbox="datecheckbox" data-filtername="{{label}}" data-operator="{{operator}}">
+                            <input class="filterelement" type="checkbox" id="{{label}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-dateelement = "dateelement" data-filtername="{{label}}" data-operator="{{operator}}">
 
-                            <label for="{{label}}{{idstring}}">Apply Filter</label>
-                            <label for="datepicker {{label}}"></label>
-                            <input type="date" id="{{label}}{{idstring}}" value="{{datereadable}}" data-timestamp="{{timestamp}}" name="{{label}}" >
-                            <label for="timepicker {{label}}"></label>
-                            <input type="time" id="{{label}}{{idstring}}" name="{{label}}" value="{{timereadable}}">
-                            <input type="submit">
+                            <label class="filterelement" for="{{label}}{{idstring}}">Apply Filter</label>
+                            <label class="filterelement" for="datepicker {{label}}"></label>
+                            <input class="filterelement" type="date" id="{{label}}{{idstring}}" value="{{datereadable}}" data-timestamp="{{timestamp}}" name="{{label}}" data-dateelement = "dateelement">
+                            <label class="filterelement" for="timepicker {{label}}"></label>
+                            <input class="filterelement" type="time" id="{{label}}{{idstring}}" name="{{label}}" value="{{timereadable}}" data-dateelement = "dateelement">
+                            <!--input type="submit"-->
                         </form>
                         <div> {{operator}}</div>
                         <div> {{timestamp}}</div>
