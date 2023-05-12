@@ -969,7 +969,7 @@ class wunderbyte_table extends table_sql {
                     $categoryobject['datepicker']['datepickers'][] = $datepickerobject;
                 }
 
-            } else if (is_array($values)){
+            } else if (is_array($values)) {
                 // We might need to explode values, because of a multi-field.
                 if (isset($this->subcolumns['datafields'][$fckey]['explode'])
                     || self::check_if_multi_customfield($fckey)) {
@@ -1073,7 +1073,7 @@ class wunderbyte_table extends table_sql {
                     $categoryobject['default']['values'][$valuekey] = $itemobject;
                 }
 
-                if (count($categoryobject['default']['values']) == 0) {
+                if (!isset($categoryobject['default']) || count($categoryobject['default']['values']) == 0) {
                     continue;
                 }
 
