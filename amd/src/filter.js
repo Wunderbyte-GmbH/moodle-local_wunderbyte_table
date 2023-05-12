@@ -126,7 +126,7 @@ export function getDates(e, selector, idstring) {
 
   let dates = {};
   if (filtercheckbox.checked) {
-    dates[e.target.dataset.operator] = getDateAndTimePickerDataAsUnix(filtername);
+    dates[e.target.dataset.operator] = getDateAndTimePickerDataAsUnix(name, filtername, selector);
     // eslint-disable-next-line no-console
     console.log(getDateAndTimePickerDataAsUnix(filtername));
   }
@@ -158,19 +158,19 @@ export function getDates(e, selector, idstring) {
 
 /**
  * Checking Date and Timepicker for corresponding element and returning Unix Code.
- * @param {string} filter
+ * @param {string} name
+ * @param {string} filtername
+ * @param {string} selector
  * @returns {string}
  */
-export function getDateAndTimePickerDataAsUnix(filter) {
+export function getDateAndTimePickerDataAsUnix(name, filtername, selector) {
 
-  //hier das element übergeben
+  const wbTable = document.querySelector(selector);
 
-  // wbTable selector
-
-  //falls anderer table, filter name mehrmals etc
-  let datepicker = document.querySelector('input[type="date"][id^="' + filter + '"]');
+  let datepicker = wbTable.querySelector('input[type="date"][id^="' + filtername + '"][name="' + name + '"]');
   let date = new Date(datepicker.value);
-  let timepicker = document.querySelector('input[type="time"][id^="' + filter + '"]');
+
+  let timepicker = wbTable.querySelector('input[type="time"][id^="' + filtername + '"][name="' + name + '"]');
   let time = timepicker.value;
 
   let dateTimeString = date.toISOString().split('T')[0] + 'T' + time + ':00.000Z';
