@@ -45,7 +45,9 @@ var checked = {};
 
   const allCheckboxes = filterContainer.querySelectorAll("input[type=checkbox]");
 
-  if (!allCheckboxes) {
+  const filterElements = filterContainer.querySelectorAll("input[class^='filterelement']");
+
+  if (!filterElements) {
       return;
   }
 
@@ -64,15 +66,16 @@ var checked = {};
   //     getChecked(e.getAttribute("name"), selector, idstring);
   // });
 
-  allCheckboxes.forEach(el => {
+  filterElements.forEach(el => {
 
       if (!el.dataset.idstring) {
         el.dataset.idstring = idstring;
       } else {
         el.dataset.idstring2 = idstring;
       }
-
-      el.addEventListener("change", (e) => toggleCheckbox(e, selector, idstring, encodedtable));
+      // eslint-disable-next-line no-console
+      console.log("filterelementToggle");
+      el.addEventListener("change", (e) => toggleFilterelement(e, selector, idstring, encodedtable));
   });
 
   filterContainer.dataset.initialized = true;
@@ -86,13 +89,13 @@ var checked = {};
  * @param {*} idstring
  * @param {*} encodedtable
  */
- export function toggleCheckbox(e, selector, idstring, encodedtable) {
+ export function toggleFilterelement(e, selector, idstring, encodedtable) {
 
   e.stopPropagation();
   e.preventDefault();
 
   // Check if Checkbox corresponds to datepicker
-  if (e.target.dataset.datecheckbox == 'datecheckbox') {
+  if (e.target.dataset.dateelement == 'dateelement') {
     getDates(e, selector, idstring);
   } else {
     getChecked(e.target.name, selector, idstring);
@@ -130,6 +133,16 @@ export function getDates(e, selector, idstring) {
 
       // We might have more than one Table, therefore we first have to get all tables.
       const wbTable = document.querySelector(selector);
+
+      // Check if element is a checkbox
+
+      if (e.target.type == "checkbox") {
+        // eslint-disable-next-line no-console
+        console.log ("its a checkbox");
+      } else {
+        // eslint-disable-next-line no-console
+        console.log ("NOT a checkbox");
+      }
 
       let name = e.target.name;
       let dates = Array.from(
