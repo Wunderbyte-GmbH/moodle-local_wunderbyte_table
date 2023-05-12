@@ -61,8 +61,6 @@ var checked = {};
       } else {
         el.dataset.idstring2 = idstring;
       }
-      // eslint-disable-next-line no-console
-      console.log("filterelementToggle");
       el.addEventListener("change", (e) => toggleFilterelement(e, selector, idstring, encodedtable));
   });
 
@@ -112,124 +110,70 @@ var checked = {};
 
 
 /**
- * Get the data from datepicker and timepicker
+ * Check if the checkbox of the filterparam is checked and if so write values from date- and timepicker into checked variable.
  * @param {*} e
  * @param {*} selector
  * @param {*} idstring
  */
 export function getDates(e, selector, idstring) {
 
-      // We might have more than one Table, therefore we first have to get all tables.
-      const wbTableFilter = document.querySelector(selector);
+  // We might have more than one Table, therefore we first have to get all tables.
+  const wbTableFilter = document.querySelector(selector);
 
-      // Check if element is a checkbox (or date/time picker).
-      if (e.target.type == "checkbox") {
-        // eslint-disable-next-line no-console
-        console.log ("its a checkbox");
-      } else {
-        // eslint-disable-next-line no-console
-        console.log ("NOT a checkbox");
-      }
-      //let name = e.target.name;
-      let filtername = e.target.dataset.filtername;
+  let name = e.target.name;
+  let filtername = e.target.dataset.filtername;
+  let filtercheckbox = wbTableFilter.querySelector('input[type="checkbox"][id^="' + filtername + '"]');
 
-      // eslint-disable-next-line no-console
-      console.log(filtername);
-
-      let filtercheckbox = wbTableFilter.querySelector('input[type="checkbox"][id^="' + filtername + '"]');
-
-      // eslint-disable-next-line no-console
-      console.log(filtercheckbox);
-
-      // eslint-disable-next-line no-console
-      console.log("filterbox checked " + filtercheckbox.checked);
-
-      if (filtercheckbox.checked) {
-        // eslint-disable-next-line no-console
-        console.log("no true");
-        // eslint-disable-next-line no-console
-        console.log(getDateAndTimePickerDataAsUnix(filtercheckbox, idstring));
-      }
-
-
-              // eslint-disable-next-line no-console
-              console.log("function end");
-      /*
-      let dates = Array.from(
-        wbTableFilter.querySelectorAll('input[type="checkbox"][id^="' + filtername + '"]')
-      ).filter(function(el) {
-        return el.checked;
-      }).map(function(el) {
-        let unixcode = getDateAndTimePickerDataAsUnix(el, idstring);
-        return {[el.dataset.operator]: unixcode};
-      });
-
-        // eslint-disable-next-line no-console
-        console.log(dates);
-
-    checked[idstring][name] = [];
-    checked[idstring][name][filtername] = dates;
+  let dates = {};
+  if (filtercheckbox.checked) {
+    dates[e.target.dataset.operator] = getDateAndTimePickerDataAsUnix(filtername);
     // eslint-disable-next-line no-console
-    console.log(checked);
+    console.log(getDateAndTimePickerDataAsUnix(filtername));
+  }
 
-    */
+  // eslint-disable-next-line no-console
+  console.log(dates);
 
-    //checked[idstring].push(dates);
-      // eslint-disable-next-line no-console
-      //console.log(checked);
+  // We prepare the array.
+  if (!checked[idstring][name]) {
+    checked[idstring][name] = [];
+  }
+  // Set the date params.
+  checked[idstring][name][filtername] = dates;
 
-
-  //schauen welche column
-  //schauen welcher elemente angewählt sind
-  //von den angewählten: auslesen date und time -> konvertieren in unix
-  //in array schreiben: dates[colname][operator][unixtime]
+  /*
+  // Clean up array if filter params deleted.
+  if (checked[idstring][name][filtername].length < 1) {
+    delete checked[idstring][name][filtername];
+  }
+  if (checked[idstring][name].length < 1) {
+    delete checked[idstring][name];
+  }
+  */
+  // eslint-disable-next-line no-console
+  console.log(checked);
 
 
 }
 
 /**
  * Checking Date and Timepicker for corresponding element and returning Unix Code.
- * @param {*} el
- * @param {string} idstring
+ * @param {string} filter
  * @returns {string}
  */
-export function getDateAndTimePickerDataAsUnix(el, idstring) {
+export function getDateAndTimePickerDataAsUnix(filter) {
 
-  if (!el) {
-    return '';
-  }
+  //hier das element übergeben
 
-  let selector = SELECTORS.CONTAINER + idstring;
+  // wbTable selector
 
-  //filtercontainer sollte schon mal nur der coloumname sein
-  //alle elemente (checkbox, picker) mit selben attribut ansprechen zB class
-  //dann nur eine foreach
+  //falls anderer table, filter name mehrmals etc
+  let datepicker = document.querySelector('input[type="date"][id^="' + filter + '"]');
+  let date = new Date(datepicker.value);
+  let timepicker = document.querySelector('input[type="time"][id^="' + filter + '"]');
+  let time = timepicker.value;
 
-  //change listenere checkbox auch über picker drüber
-  //wenn change und datepicker element (checkbox, picker..) -> check if checkbox is true, schreiben in array
-
-  let filterContainer = document.querySelector(selector + SELECTORS.FILTER);
-
-  const allDatepicker = filterContainer.querySelectorAll("input[type=date]");
-  const allTimepicker = filterContainer.querySelectorAll("input[type=time]");
-
-  let filtername = el.dataset.filtername;
-  var dates = {};
-
-  allDatepicker.forEach(node => {
-    if (node.name == filtername) {
-      dates['date'] = new Date(node.value);
-    }
-  });
-
-  allTimepicker.forEach(node => {
-    if (node.name == filtername) {
-    dates['time'] = node.value;
-    }
-  });
-
-  // eslint-disable-next-line no-undef
-  let dateTimeString = dates['date'].toISOString().split('T')[0] + 'T' + dates['time'] + ':00.000Z';
+  let dateTimeString = date.toISOString().split('T')[0] + 'T' + time + ':00.000Z';
   let unixTimestamp = Date.parse(dateTimeString) / 1000;
   return unixTimestamp;
 }
@@ -247,6 +191,9 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
 
   url.search = "";
   history.replaceState(null, '', url);
+
+      // eslint-disable-next-line no-console
+      console.log("filter ", filterobjects);
 
   if (filterobjects) {
     url.searchParams.append('wbtfilter', filterobjects);
@@ -311,7 +258,7 @@ export function getFilterObjects(idstring) {
   // eslint-disable-next-line no-unused-vars
   for (const [key, value] of Object.entries(checked[idstring])) {
 
-    if (value.length > 0) {
+    if (value.length > 0 || Object.keys(value).length > 0) {
       hasvalues = true;
     }
   }
