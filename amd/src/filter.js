@@ -127,40 +127,34 @@ export function getDates(e, selector, idstring) {
   let dates = {};
   if (filtercheckbox.checked) {
     dates[e.target.dataset.operator] = getDateAndTimePickerDataAsUnix(name, filtername, selector);
-    // eslint-disable-next-line no-console
-    console.log(getDateAndTimePickerDataAsUnix(filtername));
   }
 
   // eslint-disable-next-line no-console
   console.log(dates);
 
-  // We prepare the array.
-  if (!checked[idstring][name]) {
-    checked[idstring][name] = [];
+  if (name && filtername) {
+    let filterarray = new Array();
+    filterarray.push(dates);
+    checked[idstring][name] = {};
+    checked[idstring][name][filtername] = dates;
   }
-  // Set the date params.
-  checked[idstring][name][filtername] = dates;
 
-  /*
-  // Clean up array if filter params deleted.
-  if (checked[idstring][name][filtername].length < 1) {
+  if (Object.keys(checked[idstring][name][filtername]).length < 1) {
     delete checked[idstring][name][filtername];
   }
-  if (checked[idstring][name].length < 1) {
+  if (Object.keys(checked[idstring][name]).length < 1) {
     delete checked[idstring][name];
   }
-  */
+
   // eslint-disable-next-line no-console
   console.log(checked);
-
-
 }
 
 /**
  * Checking Date and Timepicker for corresponding element and returning Unix Code.
  * @param {string} name
- * @param {string} filtername
- * @param {string} selector
+ * @param {*} filtername
+ * @param {*} selector
  * @returns {string}
  */
 export function getDateAndTimePickerDataAsUnix(name, filtername, selector) {
@@ -234,9 +228,6 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
       return el.value;
     });
 
-    // eslint-disable-next-line no-console
-    console.log("checked[idstring][name] " + checked[idstring][name]);
-
     // If there are no checked boxes, we unset the key alltogether.
     if (checked[idstring][name].length < 1) {
       delete checked[idstring][name];
@@ -256,7 +247,8 @@ export function getFilterObjects(idstring) {
 
   let hasvalues = false;
   // eslint-disable-next-line no-unused-vars
-  for (const [key, value] of Object.entries(checked[idstring])) {
+
+  for (const [, value] of Object.entries(checked[idstring])) {
 
     if (value.length > 0 || Object.keys(value).length > 0) {
       hasvalues = true;
@@ -266,7 +258,6 @@ export function getFilterObjects(idstring) {
   if (!hasvalues) {
     return '';
   }
-
   return JSON.stringify(checked[idstring]);
 }
 
