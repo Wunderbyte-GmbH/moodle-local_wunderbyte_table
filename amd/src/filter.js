@@ -190,7 +190,7 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
       console.log("filter ", filterobjects);
 
   if (filterobjects) {
-    url.searchParams.append('wbtfilter', filterobjects);
+    url.searchParams.append('wbtfilter', encodeURIComponent(JSON.stringify(filterobjects)));
   }
   if (searchstring !== "" &&
   searchstring !== null) {

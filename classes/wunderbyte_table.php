@@ -1478,7 +1478,10 @@ class wunderbyte_table extends table_sql {
         $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
 
         if (!empty($wbtfilter)) {
-            $this->apply_filter($wbtfilter);
+            if (!$jsonfilterobject = json_decode($wbtfilter)) {
+                $jsonfilterobject = json_decode(urldecode($wbtfilter));
+            }
+            $this->apply_filter($jsonfilterobject);
         }
 
         if (!empty($wbtsearch)) {
