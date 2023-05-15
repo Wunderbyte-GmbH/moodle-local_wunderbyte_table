@@ -1174,24 +1174,38 @@ class wunderbyte_table extends table_sql {
                 $filter .= " AND ( ";
                 $paramcounter = 1;
                 $categorycounter =1;
+                
+                // We check if we are applying a timestamp comparison which is stored in an object.
+                $datecomparison = false;
+                if (is_object($categoryvalue)) {
+                    $datecomparison = true;}
 
                 foreach ($categoryvalue as $key => $value) {
                     // We use the while function to find a param we can actually use.
                     $paramsvaluekey = $paramkey . $paramcounter;
-                    // If there are more than one filters per category they will be concatenated via OR.
-                    $filter .= $categorycounter == 1 ? "" : " OR ";
+
+                    if ($datecomparison == false) {
+                        // If there are more than one filter per category they will be concatenated via OR.
+                        $filter .= $categorycounter == 1 ? "" : " OR ";
+                    } else {
+                        // Except if we filter for time values, in which case they will be concatenated via AND.
+                        $filter .= $categorycounter == 1 ? "" : " AND ";
+                    }
+
                     while (isset($this->sql->params[$paramkey . $paramcounter])) {
                         $paramcounter++;
                         $paramsvaluekey = $paramkey . $paramcounter;
                     }
 
-                    if (is_numeric($value)) {
+                    if ($datecomparison == true) {
+                        $filter .= $categorykey . ' ' . key($value) . ' ' . current($value);
+                    } else if (is_numeric($value)) {
                         $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "". $value;
                     } else if (isset($this->subcolumns['datafields'][$categorykey]['explode'])) {
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "%$value%";
-                    } else {
+                    }  else {
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "$value";
                     }
