@@ -698,6 +698,20 @@ class table implements renderable, templatable {
                 if (isset($filterarray[$tempfiltercolumn])) {
                     foreach ($filterarray[$tempfiltercolumn] as $sfkey => $filter) {
 
+                        if (is_object($filter)) {
+                            $unixcode = current($filter);
+                            $date = date('Y-m-d', $unixcode);
+                            $time = date('H-i-s', $unixcode);
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = $date;
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = $time;
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['checked'] = 'checked';
+                            $tableobject[$tokey]['show'] = 'show';
+                            $tableobject[$tokey]['collapsed'] = '';
+                            $tableobject[$tokey]['expanded'] = 'true';
+                            continue;
+                            // Then we check for the next filterparam.
+                        } else {
+
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
                             foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {
@@ -713,32 +727,12 @@ class table implements renderable, templatable {
                                     // Then we check for the next filterparam.
                                 }
                             }
+                        }
                     }
-                } else if (isset($filterobject->$tempfiltercolumn)) {
-
-                    // Das stimmt hier noch nicht!!!
-
-                    $unixcode = current($filter);
-                    $date = date('Y-m-d', $unixcode);
-                    $time = date('H-i-s', $unixcode);
-                    $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = date('Y-m-d', $unixcode);
-                    $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = date('H-i-s', $unixcode);
-                    $tableobject[$tokey]['values'][$vkey]['checked'] = 'checked';
-                    $tableobject[$tokey]['show'] = 'show';
-                    $tableobject[$tokey]['collapsed'] = '';
-                    $tableobject[$tokey]['expanded'] = 'true';
-
-                    // Then we check for the next filterparam.
-                    continue;
                 }
-
             }
         }
-
-        }
-
         $categories['categories'] = $tableobject;
         return $categories;
     }
 }
-
