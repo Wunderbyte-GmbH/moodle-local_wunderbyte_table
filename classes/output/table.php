@@ -681,31 +681,23 @@ class table implements renderable, templatable {
         // Only if we have filterobjects defined, we try to apply them.
         $filterparam = optional_param('wbtfilter', "", PARAM_TEXT);
         if ($filterparam) {
-            if (!$filterobjects = (array)json_decode($filterparam)) {
-                $filterobjects = json_decode(urldecode($filterparam));
-                //hier stimmt das format noch nicht ganz das rauskommt, wenn es über die url kommt
+
+            // We check if we are getting an array or an object
+            if (is_array(json_decode($filterparam)) == false) {
+                $filterstring = json_decode(urldecode($filterparam));
+                $filterobject = json_decode($filterstring);
+            } else {
+                $filterarray = (array)json_decode($filterparam);
             }
+
+
             // For all the potential filtercolumns...
             foreach ($tableobject as $tokey => $potentialfiltercolumn) {
                 $tempfiltercolumn = $potentialfiltercolumn['columnname'];
 
-                if (isset($filterobjects[$tempfiltercolumn])) {
-                    foreach ($filterobjects[$tempfiltercolumn] as $sfkey => $filter) {
-                        if (is_object($filter)) {
-                            $unixcode = current($filter);
-                            $date = date('Y-m-d', $unixcode);
-                            $time = date('H-i-s', $unixcode);
-                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = date('Y-m-d', $unixcode);
-                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = date('H-i-s', $unixcode);
-                            $tableobject[$tokey]['values'][$vkey]['checked'] = 'checked';
-                            $tableobject[$tokey]['show'] = 'show';
-                            $tableobject[$tokey]['collapsed'] = '';
-                            $tableobject[$tokey]['expanded'] = 'true';
+                if (isset($filterarray[$tempfiltercolumn])) {
+                    foreach ($filterarray[$tempfiltercolumn] as $sfkey => $filter) {
 
-                            continue;
-                            // Then we check for the next filterparam.
-
-                        } else {
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
                             foreach ($potentialfiltercolumn['values'] as $vkey => $value) {
@@ -721,10 +713,27 @@ class table implements renderable, templatable {
                                     // Then we check for the next filterparam.
                                 }
                             }
-                        }
                     }
+                } else if (isset($filterobject->$tempfiltercolumn)) {
+
+                    // Das stimmt hier noch nicht!!!
+
+                    $unixcode = current($filter);
+                    $date = date('Y-m-d', $unixcode);
+                    $time = date('H-i-s', $unixcode);
+                    $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = date('Y-m-d', $unixcode);
+                    $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = date('H-i-s', $unixcode);
+                    $tableobject[$tokey]['values'][$vkey]['checked'] = 'checked';
+                    $tableobject[$tokey]['show'] = 'show';
+                    $tableobject[$tokey]['collapsed'] = '';
+                    $tableobject[$tokey]['expanded'] = 'true';
+
+                    // Then we check for the next filterparam.
+                    continue;
                 }
+
             }
+        }
 
         }
 
@@ -732,3 +741,4 @@ class table implements renderable, templatable {
         return $categories;
     }
 }
+
