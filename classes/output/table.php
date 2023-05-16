@@ -685,7 +685,7 @@ class table implements renderable, templatable {
             // We check if we are getting an array or an object
             if (is_array(json_decode($filterparam)) == false) {
                 $filterstring = json_decode(urldecode($filterparam));
-                $filterobject = json_decode($filterstring);
+                $filterarray = (array)json_decode($filterstring);
             } else {
                 $filterarray = (array)json_decode($filterparam);
             }
@@ -700,10 +700,10 @@ class table implements renderable, templatable {
 
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
-                            foreach ($potentialfiltercolumn['values'] as $vkey => $value) {
+                            foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {
                                 if ($value['key'] === $filter) {
                                     // If we find the filter, we add the checked value and key to the initial tableobject array at the right place.
-                                    $tableobject[$tokey]['values'][$vkey]['checked'] = 'checked';
+                                    $tableobject[$tokey]['default']['values'][$vkey]['checked'] = 'checked';
                                     // Expand the filter area
                                     $tableobject[$tokey]['show'] = 'show';
                                     $tableobject[$tokey]['collapsed'] = '';
