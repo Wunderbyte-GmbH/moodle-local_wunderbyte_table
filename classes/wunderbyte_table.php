@@ -939,7 +939,7 @@ class wunderbyte_table extends table_sql {
                 $localizedname = $this->subcolumns['datafields'][$fckey]['localizedname'];
                 unset($this->subcolumns['datafields'][$fckey]['localizedname']);
             } else {
-                $localizedname = $key;
+                $localizedname = $fckey;
             }
 
             $categoryobject = [
