@@ -122,11 +122,11 @@ export function getDates(e, selector, idstring) {
 
   let name = e.target.name;
   let filtername = e.target.dataset.filtername;
-  let filtercheckbox = wbTableFilter.querySelector('input[type="checkbox"][id^="' + filtername + '"]');
+  let filtercheckbox = wbTableFilter.querySelector('input[type="checkbox"][id^="' + filtername + '"][name="' + name + '"]');
 
   let dates = {};
   if (filtercheckbox.checked) {
-    dates[e.target.dataset.operator] = getDateAndTimePickerDataAsUnix(name, filtername, selector);
+    dates[filtercheckbox.dataset.operator] = getDateAndTimePickerDataAsUnix(name, filtername, selector);
   }
 
   // eslint-disable-next-line no-console
@@ -135,7 +135,9 @@ export function getDates(e, selector, idstring) {
   if (name && filtername) {
     let filterarray = new Array();
     filterarray.push(dates);
-    checked[idstring][name] = {};
+    if (!checked[idstring][name]) {
+      checked[idstring][name] = {};
+    }
     checked[idstring][name][filtername] = dates;
   }
 
@@ -186,11 +188,8 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
   url.search = "";
   history.replaceState(null, '', url);
 
-      // eslint-disable-next-line no-console
-      console.log("filter ", filterobjects);
-
   if (filterobjects) {
-    url.searchParams.append('wbtfilter', encodeURIComponent(JSON.stringify(filterobjects)));
+    url.searchParams.append('wbtfilter', filterobjects);
   }
   if (searchstring !== "" &&
   searchstring !== null) {

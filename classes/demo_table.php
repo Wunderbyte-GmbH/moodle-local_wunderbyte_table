@@ -35,6 +35,26 @@ use stdClass;
 class demo_table extends wunderbyte_table {
 
     /**
+     * Decodes the Unix Timestamp
+     *
+     * @param stdClass $values
+     * @return void
+     */
+    public function col_startdate($values) {
+        return userdate($values->startdate);
+    }
+
+    /**
+     * Decodes the Unix Timestamp
+     *
+     * @param stdClass $values
+     * @return void
+     */
+    public function col_enddate($values) {
+        return userdate($values->enddate);
+    }
+
+    /**
      * This handles the colum checkboxes.
      *
      * @param stdClass $values

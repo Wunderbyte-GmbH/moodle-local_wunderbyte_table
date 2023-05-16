@@ -296,11 +296,11 @@ class demo implements renderable, templatable {
                 'localizedname' => get_string('startdate', 'local_wunderbyte_table'),
                 'datepicker' => [
                     'from time' => [ // Can be localized and like "Courses starting after:".
-                        'operator' => '<',
+                        'operator' => '>',
                         'defaultvalue' => 'now', // Can also be string "now".
                     ],
                     'end time' => [ // Can be localized and like "Courses starting after:".
-                        'operator' => '>',
+                        'operator' => '<',
                         'defaultvalue' => '1670999000', // Can also be string "now".
                     ]
                 ]
@@ -309,7 +309,7 @@ class demo implements renderable, templatable {
                 'localizedname' => get_string('enddate', 'local_wunderbyte_table'),
                 'datepicker' => [
                     'label' => [ // Can be localized and like "Courses starting after:".
-                        'operator' => '>',
+                        'operator' => '<',
                         'defaultvalue' => '1680130800', // Can also be string "now".
                     ]
                 ]

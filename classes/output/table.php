@@ -679,18 +679,9 @@ class table implements renderable, templatable {
         }
 
         // Only if we have filterobjects defined, we try to apply them.
-        $filterparam = optional_param('wbtfilter', "", PARAM_TEXT);
+        $filterparam = optional_param('wbtfilter', "", PARAM_RAW);
         if ($filterparam) {
-
-            // We check if we are getting an array or an object
-            if (is_array(json_decode($filterparam)) == false) {
-                $filterstring = json_decode(urldecode($filterparam));
-                $filterarray = (array)json_decode($filterstring);
-            } else {
-                $filterarray = (array)json_decode($filterparam);
-            }
-
-
+            $filterarray = (array)json_decode($filterparam);
             // For all the potential filtercolumns...
             foreach ($tableobject as $tokey => $potentialfiltercolumn) {
                 $tempfiltercolumn = $potentialfiltercolumn['columnname'];
@@ -701,10 +692,18 @@ class table implements renderable, templatable {
                         if (is_object($filter)) {
                             $unixcode = current($filter);
                             $date = date('Y-m-d', $unixcode);
-                            $time = date('H-i-s', $unixcode);
-                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = $date;
-                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = $time;
-                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['checked'] = 'checked';
+                            $time = date('H:i', $unixcode);
+                            
+                            // We check which filter of the column is checked and apply the values.
+                            foreach($tableobject[$tokey]['datepicker']['datepickers'] as $dkey => $dvalues) {
+                                if ($dvalues['label'] == $sfkey) {
+                                    $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['datereadable'] = $date;
+                                    $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['timereadable'] = $time;
+                                    $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['checked'] = 'checked';
+                                    continue;
+                                }
+                            }
+
                             $tableobject[$tokey]['show'] = 'show';
                             $tableobject[$tokey]['collapsed'] = '';
                             $tableobject[$tokey]['expanded'] = 'true';
