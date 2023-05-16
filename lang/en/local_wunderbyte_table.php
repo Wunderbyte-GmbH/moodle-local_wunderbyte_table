@@ -68,12 +68,6 @@ $string['checkbox'] = 'Checkbox';
 
 $string['pagelabel'] = 'Show {$a} rows';
 
-$string['fullname'] = 'Full Name';
-$string['shortname'] = 'Short Name';
-$string['action'] = 'Action';
-$string['startdate'] = 'Start Date';
-$string['enddate'] = 'End Date';
-
 $string['table1name'] = 'Users';
 $string['table2name'] = 'Course';
 $string['table3name'] = 'Course_Modules';
