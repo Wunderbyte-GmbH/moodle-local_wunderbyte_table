@@ -71,9 +71,20 @@ class demo implements renderable, templatable {
 
         $table = new demo_table(TABLE1NAME);
 
+        $columns = [
+            'id' => get_string('id', 'local_wunderbyte_table'),
+            'username' => get_string('username'),
+            'firstname' => get_string('firstname'),
+            'lastname' => get_string('lastname'),
+            'email' => get_string('email'),
+            'action' => get_string('action'),
+
+        ];
+
+
         // $table->add_subcolumns('cardbody', ['id', 'username', 'firstname', 'lastname', 'email']);
-        $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
-        $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
+        $table->define_headers(array_values($columns));
+        $table->define_columns(array_keys($columns));
 
         // Here you can use add_subcolumns with 'cardfooter" to show content in cardfooter.
 
@@ -103,7 +114,25 @@ class demo implements renderable, templatable {
         // $table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
         // $table->set_tableclass('cardbodyclass', 'card-body row');
 
-        $table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
+        $filtercolumns = [
+            'id' => [
+                'localizedname' => get_string('id', 'local_wunderbyte_table')
+            ],
+            'username' => [
+                'localizedname' => get_string('username')
+            ],
+            'firstname' => [
+                'localizedname' => get_string('firstname')
+            ],
+            'lastname' => [
+                'localizedname' => get_string('lastname')
+            ],
+            'email' => [
+                'localizedname' => get_string('email')
+            ],
+        ];
+
+        $table->define_filtercolumns($filtercolumns);
         $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 
@@ -275,11 +304,11 @@ class demo implements renderable, templatable {
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
-            'fullname' => get_string('fullname', 'local_wunderbyte_table'),
-            'shortname' => get_string('shortname', 'local_wunderbyte_table'),
-            'action' => get_string('action', 'local_wunderbyte_table'),
-            'startdate' => get_string('startdate', 'local_wunderbyte_table'),
-            'enddate' => get_string('enddate', 'local_wunderbyte_table'),
+            'fullname' => get_string('fullname'),
+            'shortname' => get_string('shortname'),
+            'action' => get_string('action'),
+            'startdate' => get_string('startdate'),
+            'enddate' => get_string('enddate'),
         ];
 
         $filtercolumns = [
@@ -287,13 +316,13 @@ class demo implements renderable, templatable {
                 'localizedname' => get_string('id', 'local_wunderbyte_table')
             ],
             'fullname' => [
-                'localizedname' => get_string('fullname', 'local_wunderbyte_table')
+                'localizedname' => get_string('fullname')
             ],
             'shortname' =>  [
-                'localizedname' => get_string('shortname', 'local_wunderbyte_table')
+                'localizedname' => get_string('shortname')
             ],
             'startdate' => [
-                'localizedname' => get_string('startdate', 'local_wunderbyte_table'),
+                'localizedname' => get_string('startdate'),
                 'datepicker' => [
                     'from time' => [ // Can be localized and like "Courses starting after:".
                         'operator' => '>',
@@ -306,7 +335,7 @@ class demo implements renderable, templatable {
                 ]
             ],
             'enddate' => [
-                'localizedname' => get_string('enddate', 'local_wunderbyte_table'),
+                'localizedname' => get_string('enddate'),
                 'datepicker' => [
                     'label' => [ // Can be localized and like "Courses starting after:".
                         'operator' => '<',
