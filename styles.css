@@ -396,3 +396,8 @@ a.changesortorder:hover {
 .wb-table-column {
     z-index: 2;
 }
+
+.wunderbyteTableFilter .datepickerform {
+    margin: 20px;
+    padding: 10px;
+}
