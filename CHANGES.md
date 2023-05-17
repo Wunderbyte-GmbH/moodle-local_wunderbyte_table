@@ -1,3 +1,11 @@
+## Version 1.5.7 (2023051700)
+* New feature: Filter for columns with Unix timestamp.
+* New feature: Applying filter, search and sort params via URL.
+* New feature: Improved caching, especially for filters.
+* Bugfix: Tableheadercheckbox selecting all checkboxes in multiple table.
+* Bugfix: Infinitescroll.
+* Bugfix: Checkbox in card display.
+
 ## Version 1.5.6 (2023042400)
 * New feature: Keeping last (current) sorting on reload.
 * New feature: Sortorder button and sorting select synchronized with tableheader sorting.
