@@ -136,6 +136,24 @@ By the way: 'id' will aways be obmitted, as it is not a useful filter in any cas
         ],
     ]);
 
+For columns that contain date and time values (as Unix timestamp) you can enable a datepicker to allow users to filter the values:
+
+    $table->define_filtercolumns([
+                'startdate' => [ // Columns containing Unix timestamps can be filtered.
+                    'localizedname' => get_string('startdate'),
+                    'datepicker' => [  
+                        'from time' => [ // Can be localized and like "Courses starting after:".
+                            'operator' => '>', // Must be defined, can be any SQL comparison operator.
+                            'defaultvalue' => 'now', // Can also be Unix timestamp or string "now".
+                        ],
+                        'end time' => [ // Can be localized and like "Courses starting after:".
+                            'operator' => '<',
+                            'defaultvalue' => '1670999000', // Can also be Unix timestamp or string "now".
+                        ]
+                    ]
+                ],
+    ]);
+
 If the output template you want to use doesn't support clickable headers to sort (eg because you use cards), you might want to use the sort select. Just add
 
     $table->cardsort = true;
@@ -146,10 +164,21 @@ Each column defined as sortable will display carets in the table header. They ha
 
 Filter, search and sort params selection triggers URL update. These params can also be applied to table on load via URL. These functions are not available if more than one table is displayed per page (multitable display).
 
-### Multitable Display
+### Display
+If you want to display multiple tables on one page, tabs can be enabled in templates.
 
-Using tabs to display more than one table per page.
+For the display of localized names in tableheaders, use the define_headers function.
 
+    $columns = [
+                'id' => get_string('id', 'local_wunderbyte_table'),
+                'username' => get_string('username'),
+                'firstname' => get_string('firstname'),
+                'lastname' => get_string('lastname'),
+                'email' => get_string('email'),
+                'action' => get_string('action'),
+            ];
+    $table->define_headers(array_values($columns));
+    $table->define_columns(array_keys($columns));
 
 ### Exploding strings for columns storing multiple values
 The define_filtercolumns function also supports columns with multiple values stored as string with a separator.
