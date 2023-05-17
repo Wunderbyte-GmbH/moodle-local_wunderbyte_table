@@ -1425,6 +1425,7 @@ class wunderbyte_table extends table_sql {
         $data['name'] = 'row-'.$this->uniqueid.'-'.$values->id;
         $data['checkboxclass'] = '';
         $data['checked'] = !empty($values->checkbox) ? true : false;
+        $data['tableid'] = $this->idstring;
 
         return $OUTPUT->render_from_template('local_wunderbyte_table/col_checkbox', $data);;
     }

@@ -94,12 +94,10 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
       let columnname = element.dataset.columnname;
 
       switch (columnname) {
-
         // In case we are in the checkboxes column...
         case 'wbcheckbox':
-
           // Checking if checkbox in table header is checked.
-          var checked = document.querySelector(SELECTOR.TABLEHEADERCHECKBOX).checked;
+          var checked = container.querySelector(SELECTOR.TABLEHEADERCHECKBOX).checked;
 
           // Applying state of header checkbox to checkboxes in table.
           selectAllCheckboxes(idstring, checked);
@@ -219,7 +217,7 @@ export function getSortSelection(idstring) {
 }
 
 /**
- *
+ * Selection all checkboxes in tablerows with table id.
  * @param {string} idstring
  * @param {bool} checked
  */
@@ -230,6 +228,9 @@ function selectAllCheckboxes(idstring, checked) {
   const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOXES);
 
   checkboxes.forEach(x => {
-    x.checked = checked;
+    // Applying status of tableheadercheckbox to all checkboxes.
+    if (x.dataset.tableid == idstring) {
+      x.checked = checked;
+    }
   });
 }
