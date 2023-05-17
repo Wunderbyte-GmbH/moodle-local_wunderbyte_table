@@ -322,14 +322,17 @@ class demo implements renderable, templatable {
             ],
             'startdate' => [ // Columns containing Unix timestamps can be filtered.
                 'localizedname' => get_string('startdate'),
+                
                 'datepicker' => [  
-                    'from time' => [ // Can be localized and like "Courses starting after:".
+                    'Starting from' => [ // Can be localized and like "Courses starting after:".
                         'operator' => '>', // Must be defined, can be any SQL comparison operator.
                         'defaultvalue' => 'now', // Can also be Unix timestamp or string "now".
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
                     ],
-                    'end time' => [ // Can be localized and like "Courses starting after:".
+                    'Ending by' => [ // Can be localized and like "Courses starting after:".
                         'operator' => '<',
                         'defaultvalue' => '1670999000', // Can also be Unix timestamp or string "now".
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
                     ]
                 ]
             ],
@@ -339,6 +342,7 @@ class demo implements renderable, templatable {
                     'label' => [ // Can be localized and like "Courses starting after:".
                         'operator' => '<',
                         'defaultvalue' => '1680130800', // Can also be string "now".
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
                     ]
                 ]
             ],

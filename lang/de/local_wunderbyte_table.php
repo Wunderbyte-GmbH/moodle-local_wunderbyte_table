@@ -63,6 +63,7 @@ $string['somethingwentwrong'] = 'Etwas ist schiefgelaufen. Melden Sie den Fehler
 $string['nocheckboxchecked'] = 'Keine checkbox ausgewählt';
 $string['checkbox'] = 'Checkbox';
 $string['module'] = 'Modul';
+$string['apply_filter'] = 'Filter anwenden';
 
 $string['pagelabel'] = 'Zeige {$a} Zeilen';
 

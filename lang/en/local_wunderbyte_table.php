@@ -66,7 +66,7 @@ $string['somethingwentwrong'] = 'Something went wrong. Please contact your admin
 $string['nocheckboxchecked'] = 'No checkbox checked';
 $string['checkbox'] = 'Checkbox';
 $string['module'] = 'Module';
-
+$string['apply_filter'] = 'Apply Filter';
 
 $string['pagelabel'] = 'Show {$a} rows';
 

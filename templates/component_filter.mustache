@@ -83,15 +83,13 @@
                 {{#datepicker}}
                     {{#datepickers}}
                         <form>
-                            <div>{{label}}</div>
                             <input class="filterelement" type="checkbox" id="{{label}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-dateelement = "dateelement" data-filtername="{{label}}" data-operator="{{operator}}">
-
-                            <label class="filterelement" for="{{label}}{{columnname}}{{idstring}}">Apply Filter</label>
+                            <label class="filterelement" for="{{label}}{{columnname}}{{idstring}}">{{checkboxlabel}}</label>
+                            <div>{{label}}</div>
                             <label class="filterelement" for="datepicker {{label}}"></label>
                             <input class="filterelement" type="date" id="{{label}}{{columnname}}{{idstring}}" value="{{datereadable}}" data-timestamp="{{timestamp}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}">
                             <label class="filterelement" for="timepicker {{label}}"></label>
                             <input class="filterelement" type="time" id="{{label}}{{columnname}}{{idstring}}" name="{{columnname}}" value="{{timereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}">
-                            <!--input type="submit"-->
                         </form>
                     {{/datepickers}}
                 {{/datepicker}}

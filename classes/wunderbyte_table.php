@@ -962,6 +962,7 @@ class wunderbyte_table extends table_sql {
                         'timestamp' => $defaulttimestamp,
                         'datereadable' => $defaulttimestamp === 'now' ? 'now': date('Y-m-d', $defaulttimestamp),
                         'timereadable' => $defaulttimestamp === 'now' ? 'now': date('H:i', $defaulttimestamp),
+                        'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
                     ];
 
                     $categoryobject['datepicker']['datepickers'][] = $datepickerobject;
