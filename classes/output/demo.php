@@ -81,7 +81,6 @@ class demo implements renderable, templatable {
 
         ];
 
-
         // $table->add_subcolumns('cardbody', ['id', 'username', 'firstname', 'lastname', 'email']);
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
@@ -321,16 +320,16 @@ class demo implements renderable, templatable {
             'shortname' =>  [
                 'localizedname' => get_string('shortname')
             ],
-            'startdate' => [
+            'startdate' => [ // Columns containing Unix timestamps can be filtered.
                 'localizedname' => get_string('startdate'),
-                'datepicker' => [
+                'datepicker' => [  
                     'from time' => [ // Can be localized and like "Courses starting after:".
-                        'operator' => '>',
-                        'defaultvalue' => 'now', // Can also be string "now".
+                        'operator' => '>', // Must be defined, can be any SQL comparison operator.
+                        'defaultvalue' => 'now', // Can also be Unix timestamp or string "now".
                     ],
                     'end time' => [ // Can be localized and like "Courses starting after:".
                         'operator' => '<',
-                        'defaultvalue' => '1670999000', // Can also be string "now".
+                        'defaultvalue' => '1670999000', // Can also be Unix timestamp or string "now".
                     ]
                 ]
             ],
@@ -413,11 +412,30 @@ class demo implements renderable, templatable {
 
         $table = new demo_table(TABLE3NAME);
 
-        $table->define_headers(['id', 'course', 'module', 'action']);
-        $table->define_columns(['id', 'course', 'module', 'action']);
+        $columns = [
+            'id' => get_string('id', 'local_wunderbyte_table'),
+            'course' => get_string('course'),
+            'module' => get_string('module', 'local_wunderbyte_table'),
+            'action' => get_string('action'),
+        ];
 
-        $table->define_filtercolumns(['id', 'course', 'module']);
-        $table->define_fulltextsearchcolumns(['id', 'course', 'module']);
+        $table->define_headers(array_values($columns));
+        $table->define_columns(array_keys($columns));
+
+        $filtercolumns = [
+            'id' => [
+                'localizedname' => get_string('id', 'local_wunderbyte_table')
+            ],
+            'course' => [
+                'localizedname' => get_string('course')
+            ],
+            'module' => [
+                'localizedname' => get_string('module', 'local_wunderbyte_table')
+            ],
+        ];
+
+        $table->define_filtercolumns($filtercolumns);
+        $table->define_fulltextsearchcolumns(array_keys($filtercolumns));
         $table->define_sortablecolumns(['id', 'course', 'module']);
 
         // When true and action buttons are present, checkboxes will be rendered to every line.

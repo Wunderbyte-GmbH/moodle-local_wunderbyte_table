@@ -665,7 +665,7 @@ class table implements renderable, templatable {
 
         $now = usertime(time());
 
-        // Check if the value for date and time picker is defined as "now".
+        // Check if the value for date and time picker is defined as "now". If so apply current date and time from user.
         foreach ($tableobject as $tokey => $column) {
             if (isset($column['datepicker'])) {
                 foreach ($column['datepicker']['datepickers'] as $vkey => $value) {
@@ -689,11 +689,11 @@ class table implements renderable, templatable {
                 if (isset($filterarray[$tempfiltercolumn])) {
                     foreach ($filterarray[$tempfiltercolumn] as $sfkey => $filter) {
 
+                        // Apply filter for date and time value.
                         if (is_object($filter)) {
                             $unixcode = current($filter);
                             $date = date('Y-m-d', $unixcode);
                             $time = date('H:i', $unixcode);
-                            
                             // We check which filter of the column is checked and apply the values.
                             foreach($tableobject[$tokey]['datepicker']['datepickers'] as $dkey => $dvalues) {
                                 if ($dvalues['label'] == $sfkey) {
@@ -703,7 +703,7 @@ class table implements renderable, templatable {
                                     continue;
                                 }
                             }
-
+                            // If a filter is selected, filter buttons will be expanded. Right checkbox will be checked.
                             $tableobject[$tokey]['show'] = 'show';
                             $tableobject[$tokey]['collapsed'] = '';
                             $tableobject[$tokey]['expanded'] = 'true';

@@ -1430,11 +1430,8 @@ class wunderbyte_table extends table_sql {
         return $OUTPUT->render_from_template('local_wunderbyte_table/col_checkbox', $data);;
     }
 
-
-
     /**
      * Change number of rows. Uses the transmitaction pattern (actionbutton).
-     *
      * @param integer $id
      * @param string $data
      * @return array

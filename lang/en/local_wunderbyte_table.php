@@ -65,6 +65,8 @@ $string['genericsubmit'] = 'Confirm';
 $string['somethingwentwrong'] = 'Something went wrong. Please contact your admin.';
 $string['nocheckboxchecked'] = 'No checkbox checked';
 $string['checkbox'] = 'Checkbox';
+$string['module'] = 'Module';
+
 
 $string['pagelabel'] = 'Show {$a} rows';
 
