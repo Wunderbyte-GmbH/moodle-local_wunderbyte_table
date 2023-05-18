@@ -840,10 +840,14 @@ class wunderbyte_table extends table_sql {
         // It might exist already in our DB. We have to create this from all data, without filter applied.
 
         if (isset($this->subcolumns['datafields']) && !$this->filterjson) {
-            if (!$this->filterjson = $cache->get($cachekey . '_filterjson')) {
+
+            // We meed to localize the filter for every user.
+            $lang = current_language();
+
+            if (!$this->filterjson = $cache->get($cachekey . $lang . '_filterjson')) {
                 // Now we create the filter json from the unfiltered json.
                 $this->filterjson = $this->return_filterjson();
-                $cache->set($cachekey . '_filterjson', $this->filterjson);
+                $cache->set($cachekey . $lang .'_filterjson', $this->filterjson);
             }
         }
 
