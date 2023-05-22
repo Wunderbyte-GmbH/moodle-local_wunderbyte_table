@@ -1,3 +1,6 @@
+## Version 1.5.8 (2023052200)
+* New feature: Localized Filter
+
 ## Version 1.5.7 (2023051700)
 * New feature: Filter for columns with Unix timestamp.
 * New feature: Applying filter, search and sort params via URL.
