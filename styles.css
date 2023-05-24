@@ -400,4 +400,30 @@ a.changesortorder:hover {
 .wunderbyteTableFilter .datepickerform {
     margin: 20px;
     padding: 10px;
+    position: relative;
+    display: block;
+    min-height: 1.6rem;
+    padding-left: 2rem;
+}
+
+.wunderbyteTableFilter .datepicker-label {
+
+    color: #77838f;
+    font-size: 1rem;
+    padding-top: 6px;
+    padding-left: 6px;
+    position: relative;
+    margin-bottom: 6px;
+    vertical-align: top;
+}
+
+.wunderbyteTableFilter .datepicker-input {
+
+    color: #77838f;
+    padding-left: 6px;
+    border: #77838f;
+}
+
+.wunderbyteTableFilter .datepicker-input:hover {
+    box-shadow: 0 0 1px 1px #77838f;
 }
