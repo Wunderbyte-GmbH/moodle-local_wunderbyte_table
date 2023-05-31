@@ -1206,6 +1206,8 @@ class wunderbyte_table extends table_sql {
                     // We use the while function to find a param we can actually use.
                     $paramsvaluekey = $paramkey . $paramcounter;
 
+                    // datecomp == true
+
                     if ($datecomparison == false) {
                         // If there are more than one filter per category they will be concatenated via OR.
                         $filter .= $categorycounter == 1 ? "" : " OR ";

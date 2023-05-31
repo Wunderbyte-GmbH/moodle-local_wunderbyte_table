@@ -42,7 +42,7 @@ var checked = {};
   if (!filterContainer || filterContainer.dataset.initialized) {
     return;
   }
-
+  const selects = filterContainer.querySelectorAll("select[id^='filteroperationselect']");
   const filterElements = filterContainer.querySelectorAll("input[class^='filterelement']");
 
   if (!filterElements) {
@@ -63,6 +63,15 @@ var checked = {};
       }
       el.addEventListener("change", (e) => toggleFilterelement(e, selector, idstring, encodedtable));
   });
+  selects.forEach(el => {
+
+    if (!el.dataset.idstring) {
+      el.dataset.idstring = idstring;
+    } else {
+      el.dataset.idstring2 = idstring;
+    }
+    el.addEventListener("change", (e) => toggleFilterelement(e, selector, idstring, encodedtable));
+});
 
   filterContainer.dataset.initialized = true;
 }
@@ -82,6 +91,8 @@ var checked = {};
 
   // Check if Checkbox corresponds to datepicker
   if (e.target.dataset.dateelement == 'dateelement') {
+    // eslint-disable-next-line no-console
+    console.log("dateelement");
     getDates(e, selector, idstring);
   } else {
     getChecked(e.target.name, selector, idstring);
@@ -117,60 +128,110 @@ var checked = {};
  */
 export function getDates(e, selector, idstring) {
 
-  // We might have more than one Table, therefore we first have to get all tables.
-  const wbTableFilter = document.querySelector(selector);
-
   let name = e.target.name;
+  let filtercontainer = e.target.closest(".datepickerform");
   let filtername = e.target.dataset.filtername;
-  let filtercheckbox = wbTableFilter.querySelector('input[type="checkbox"][id^="' + filtername + '"][name="' + name + '"]');
+  let filtercheckbox = filtercontainer.querySelector('input[type="checkbox"][id^="' + filtername + '"][name="' + name + '"]');
 
   let dates = {};
   if (filtercheckbox.checked) {
-    dates[filtercheckbox.dataset.operator] = getDateAndTimePickerDataAsUnix(name, filtername, selector);
-  }
+    // Check how many date- and timepicker are there
+    if (filtercheckbox.dataset.timespan === "true") {
+      // Getting all the values we need for the filter.
+      // Selector defined the operators.
+      let select = filtercontainer.querySelector('select[id^="filteroperationselect"][name="' + name + '"]');
+      let operator = select.value;
 
-  // eslint-disable-next-line no-console
-  console.log(dates);
+      // First Column to apply the filter to
+      let startdatepicker = filtercontainer.querySelector('input[id^="startdate"]');
+      let firstcolumn = startdatepicker.dataset.applytocolumn;
+      let firstoperator = "";
+      let firstColumnValues = {};
 
-  if (name && filtername) {
-    let filterarray = new Array();
-    filterarray.push(dates);
-    if (!checked[idstring][name]) {
-      checked[idstring][name] = {};
+      // Second Column to apply the filter to
+      let enddatepicker = filtercontainer.querySelector('input[id^="enddate"]');
+      let secondcolumn = enddatepicker.dataset.applytocolumn;
+      let secondoperator = "";
+      let secondColumnValues = {};
+
+      switch (operator) {
+        case "within":
+          // eslint-disable-next-line no-console
+          console.log("within switch operator");
+          firstoperator = "<";
+          secondoperator = ">";
+        break;
+
+        default: break;
+      }
+      firstColumnValues[firstoperator] = getDateAndTimePickerDataAsUnix(filtercontainer, "startdate");
+      secondColumnValues[secondoperator] = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate");
+
+      // eslint-disable-next-line no-console
+      console.log(firstColumnValues);
+
+      // Setting values for first columns.
+      // Check if key is set in array, otherwise set new key.
+      if (firstcolumn && filtername) {
+        if (!checked[idstring][firstcolumn]) {
+          checked[idstring][firstcolumn] = {};
+        }
+        checked[idstring][firstcolumn][filtername] = firstColumnValues;
+      }
+      if (Object.keys(checked[idstring][firstcolumn][filtername]).length < 1) {
+        delete checked[idstring][firstcolumn][filtername];
+      }
+      if (Object.keys(checked[idstring][firstcolumn]).length < 1) {
+        delete checked[idstring][firstcolumn];
+      }
+
+      // eslint-disable-next-line max-len
+      // TODO: unsetting firstcolumn funktioniert noch nicht, setzen zweites, alles fälle im switch, schauen ob angewendet, frage ob labes als key überhaupt sinnvoll?
+
+          // eslint-disable-next-line no-console
+          console.log(secondcolumn);
+        //checked[idstring][secondcolumn][filtername] = secondColumnValues;
+
+    } else {
+
+      dates[filtercheckbox.dataset.operator] = getDateAndTimePickerDataAsUnix(filtercontainer, "datefilter");
+
+      // Check if key is set in array, otherwise set new key.
+      if (name && filtername) {
+        if (!checked[idstring][name]) {
+          checked[idstring][name] = {};
+        }
+        checked[idstring][name][filtername] = dates;
+      }
+      if (Object.keys(checked[idstring][name][filtername]).length < 1) {
+        delete checked[idstring][name][filtername];
+      }
+      if (Object.keys(checked[idstring][name]).length < 1) {
+        delete checked[idstring][name];
+      }
     }
-    checked[idstring][name][filtername] = dates;
   }
-
-  if (Object.keys(checked[idstring][name][filtername]).length < 1) {
-    delete checked[idstring][name][filtername];
-  }
-  if (Object.keys(checked[idstring][name]).length < 1) {
-    delete checked[idstring][name];
-  }
-
   // eslint-disable-next-line no-console
   console.log(checked);
 }
 
 /**
  * Checking Date and Timepicker for corresponding element and returning Unix Code.
- * @param {string} name
- * @param {*} filtername
- * @param {*} selector
+ * @param {*} filtercontainer
+ * @param {string} id
  * @returns {string}
  */
-export function getDateAndTimePickerDataAsUnix(name, filtername, selector) {
+export function getDateAndTimePickerDataAsUnix(filtercontainer, id = '') {
 
-  const wbTable = document.querySelector(selector);
-
-  let datepicker = wbTable.querySelector('input[type="date"][id^="' + filtername + '"][name="' + name + '"]');
+  let datepicker = filtercontainer.querySelector('input[type="date"][id*="' + id + '"]');
   let date = new Date(datepicker.value);
 
-  let timepicker = wbTable.querySelector('input[type="time"][id^="' + filtername + '"][name="' + name + '"]');
+  let timepicker = filtercontainer.querySelector('input[type="time"][id*="' + id + '"]');
   let time = timepicker.value;
 
   let dateTimeString = date.toISOString().split('T')[0] + 'T' + time + ':00.000Z';
   let unixTimestamp = Date.parse(dateTimeString) / 1000;
+
   return unixTimestamp;
 }
 
