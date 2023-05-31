@@ -960,16 +960,33 @@ class wunderbyte_table extends table_sql {
 
                 foreach ($datepickerarray['datepicker'] as $labelkey => $object) {
 
-                    $defaulttimestamp = $datepickerarray['datepicker'][$labelkey]['defaultvalue'];
+                    if (!isset($object['columntimestart'])) {
+                        $defaulttimestamp = $datepickerarray['datepicker'][$labelkey]['defaultvalue'];
 
-                    $datepickerobject = [
-                        'label' => $labelkey,
-                        'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
-                        'timestamp' => $defaulttimestamp,
-                        'datereadable' => $defaulttimestamp === 'now' ? 'now': date('Y-m-d', $defaulttimestamp),
-                        'timereadable' => $defaulttimestamp === 'now' ? 'now': date('H:i', $defaulttimestamp),
-                        'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
-                    ];
+                        $datepickerobject = [
+                            'label' => $labelkey,
+                            'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
+                            'timestamp' => $defaulttimestamp,
+                            'datereadable' => $defaulttimestamp === 'now' ? 'now': date('Y-m-d', $defaulttimestamp),
+                            'timereadable' => $defaulttimestamp === 'now' ? 'now': date('H:i', $defaulttimestamp),
+                            'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
+                        ];
+
+                    } else { // Inbetween Filter applied.
+                        $datepickerobject = [
+                            'label' => $labelkey,
+                            //'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
+                            'startcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimestart'],
+                            'starttimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
+                            'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ? 'now': date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
+                            'starttimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ? 'now': date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
+                            'endcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimeend'],
+                            'endtimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
+                            'enddatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ? 'now': date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
+                            'endtimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ? 'now': date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
+                            'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
+                        ];
+                    }
 
                     $categoryobject['datepicker']['datepickers'][] = $datepickerobject;
                 }

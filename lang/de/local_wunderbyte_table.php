@@ -72,3 +72,14 @@ $string['table2name'] = 'Course';
 $string['table3name'] = 'Course_Modules';
 $string['table4name'] = 'Users_InfiniteScroll';
 $string['id'] = 'ID';
+
+// Filter for timespan
+$string['filteroperation'] = 'Filter wählen';
+$string['within'] = 'Innerhalb Zeitspanne';
+$string['overlap'] = 'Überlappt die Zeitspanne';
+$string['overlapboth'] = 'Überlappt Anfang und Ende';
+$string['overlapstart'] = 'Überlappt Anfang';
+$string['overlapend'] = 'Überlappt Ende';
+$string['notwithin'] = 'Nicht innerhalb der Zeitspanne';
+$string['startvalue'] = 'Anfang';
+$string['endvalue'] = 'Ende';

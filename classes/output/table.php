@@ -669,10 +669,23 @@ class table implements renderable, templatable {
         foreach ($tableobject as $tokey => $column) {
             if (isset($column['datepicker'])) {
                 foreach ($column['datepicker']['datepickers'] as $vkey => $value) {
-                    if ($value['timestamp'] === 'now') {
-                        $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = date('Y-m-d', $now);
-                        $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = date('h:i', $now);
-                        continue;
+                    if (isset($value['timestamp'])) {
+                        if (isset($value['timestamp']) && ($value['timestamp'] === 'now')) {
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['datereadable'] = date('Y-m-d', $now);
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['timereadable'] = date('h:i', $now);
+                            continue;
+                        }
+                    } else {
+                        if (isset($value['starttimestamp']) && ($value['starttimestamp'] === 'now')) {
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['startdatereadable'] = date('Y-m-d', $now);
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['starttimereadable'] = date('h:i', $now);
+                            continue;
+                        }
+                        if (isset($value['endtimestamp']) && ($value['endtimestamp'] === 'now')) {
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['enddatereadable'] = date('Y-m-d', $now);
+                            $tableobject[$tokey]['datepicker']['datepickers'][$vkey]['endtimereadable'] = date('h:i', $now);
+                            continue;
+                        }
                     }
                 }
             }

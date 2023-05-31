@@ -333,8 +333,19 @@ class demo implements renderable, templatable {
                         'operator' => '<',
                         'defaultvalue' => '1670999000', // Can also be Unix timestamp or string "now".
                         'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
+                    ],
+                    'In between' => [ // Can be localized and like "Courses starting after:".
+                        //'operator' => 'within', // Defines default value for select. Options are within, overlap, overlapstart, overlapend, notwithin
+                        'columntimestart' => 'startdate',
+                        'columntimeend' => 'enddate',
+                        'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
+                        'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
+                        'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
+                        'defaultvalueend' => 'now', // Can also be Unix timestamp or string "now".
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
                     ]
                 ]
+                
             ],
             'enddate' => [
                 'localizedname' => get_string('enddate'),
