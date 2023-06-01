@@ -322,8 +322,8 @@ class demo implements renderable, templatable {
             ],
             'startdate' => [ // Columns containing Unix timestamps can be filtered.
                 'localizedname' => get_string('startdate'),
-                
-                'datepicker' => [  
+
+                'datepicker' => [
                     'Starting from' => [ // Can be localized and like "Courses starting after:".
                         'operator' => '>', // Must be defined, can be any SQL comparison operator.
                         'defaultvalue' => 'now', // Can also be Unix timestamp or string "now".
@@ -334,8 +334,7 @@ class demo implements renderable, templatable {
                         'defaultvalue' => '1670999000', // Can also be Unix timestamp or string "now".
                         'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
                     ],
-                    'In between' => [ // Can be localized and like "Courses starting after:".
-                        //'operator' => 'within', // Defines default value for select. Options are within, overlap, overlapstart, overlapend, notwithin
+                    'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
                         'columntimestart' => 'startdate',
                         'columntimeend' => 'enddate',
                         'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
@@ -345,7 +344,7 @@ class demo implements renderable, templatable {
                         'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
                     ]
                 ]
-                
+
             ],
             'enddate' => [
                 'localizedname' => get_string('enddate'),

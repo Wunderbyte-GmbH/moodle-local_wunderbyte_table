@@ -975,7 +975,6 @@ class wunderbyte_table extends table_sql {
                     } else { // Inbetween Filter applied.
                         $datepickerobject = [
                             'label' => $labelkey,
-                            //'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
                             'startcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimestart'],
                             'starttimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
                             'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ? 'now': date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
@@ -1196,7 +1195,7 @@ class wunderbyte_table extends table_sql {
                 $filter .= " AND ( ";
                 $paramcounter = 1;
                 $categorycounter =1;
-                
+
                 // We check if we are applying a timestamp comparison which is stored in an object.
                 $datecomparison = false;
                 if (is_object($categoryvalue)) {
