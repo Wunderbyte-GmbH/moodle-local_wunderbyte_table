@@ -54,18 +54,21 @@ var checked = {};
     checked[idstring] = {};
   }
 
-  filterElements.forEach(el => {
+  applyChangelistener(filterElements, selector, idstring, encodedtable);
+  applyChangelistener(selects, selector, idstring, encodedtable);
 
-      if (!el.dataset.idstring) {
-        el.dataset.idstring = idstring;
-      } else {
-        el.dataset.idstring2 = idstring;
-      }
-      el.addEventListener("change", (e) => toggleFilterelement(e, selector, idstring, encodedtable));
-  });
-
-  if (selects) {
-    selects.forEach(el => {
+  filterContainer.dataset.initialized = true;
+}
+/**
+ * Apply change listener to list of nodes.
+ * @param {*} nodelist
+ * @param {*} selector
+ * @param {*} idstring
+ * @param {*} encodedtable
+ */
+function applyChangelistener(nodelist, selector, idstring, encodedtable) {
+  if (nodelist) {
+    nodelist.forEach(el => {
 
       if (!el.dataset.idstring) {
         el.dataset.idstring = idstring;
@@ -75,10 +78,7 @@ var checked = {};
       el.addEventListener("change", (e) => toggleFilterelement(e, selector, idstring, encodedtable));
     });
   }
-
-  filterContainer.dataset.initialized = true;
 }
-
 
 /**
  * Eventhandler
@@ -94,16 +94,12 @@ var checked = {};
 
   // Check if Checkbox corresponds to datepicker
   if (e.target.dataset.dateelement == 'dateelement') {
-    // eslint-disable-next-line no-console
-    console.log("dateelement");
-    getDates(e, selector, idstring);
+    getDates(e, idstring);
   } else {
     getChecked(e.target.name, selector, idstring);
   }
 
-
   // Reload the filtered elements via ajax.
-
   const filterobjects = getFilterObjects(idstring);
   const searchstring = getSearchInput(idstring);
   const sort = getSortSelection(idstring);
@@ -122,14 +118,12 @@ var checked = {};
     searchstring);
 }
 
-
 /**
  * Check if the checkbox of the filterparam is checked and if so write values from date- and timepicker into checked variable.
  * @param {*} e
- * @param {*} selector
  * @param {*} idstring
  */
-export function getDates(e, selector, idstring) {
+export function getDates(e, idstring) {
 
   let name = e.target.name;
   let filtercontainer = e.target.closest(".datepickerform");
@@ -137,8 +131,11 @@ export function getDates(e, selector, idstring) {
   let filtercheckbox = filtercontainer.querySelector('input[type="checkbox"][id^="' + filtername + '"][name="' + name + '"]');
 
   let dates = {};
+  if (filtercheckbox.dataset.timespan === "true") {
+    compareDateValues(e, filtercontainer);
+  }
   if (filtercheckbox.checked) {
-    // Check how many date- and timepicker are there
+    // Check if we have a timespan filter or a single one.
     if (filtercheckbox.dataset.timespan === "true") {
       setTimespanFilter(filtercontainer, filtername, idstring, name);
     } else {
@@ -150,11 +147,47 @@ export function getDates(e, selector, idstring) {
         }
         checked[idstring][name][filtername] = dates;
       }
-      unsetCheckedObject(name, filtername, idstring);
+      unsetEmptyFieldsInCheckedObject(name, filtername, idstring);
     }
+  } else { // If checkbox of filter is unchecked: unset values in checked object.
+    resetCheckedObject(idstring, name, filtername);
+    unsetEmptyFieldsInCheckedObject(name, null, idstring);
+    // Vorher noch ein if exists etc.
+    Object.keys(checked[idstring]).forEach(function(key) {
+        Object.keys(checked[idstring][key]).forEach(function(okey) {
+            if (okey == filtername) {
+              resetCheckedObject(idstring, key, filtername);
+              unsetEmptyFieldsInCheckedObject(key, null, idstring);
+            }
+          }
+        );
+      }
+    );
   }
+
   // eslint-disable-next-line no-console
   console.log(checked);
+}
+
+/**
+ * Check if date and time value set in first timepicker is before second timepicker.
+ * @param {*} e // The element that triggerd the change.
+ * @param {*} filtercontainer
+ */
+function compareDateValues(e, filtercontainer) {
+  let startdate = getDateAndTimePickerDataAsUnix(filtercontainer, "startdate");
+  let enddate = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate");
+
+  if (startdate > enddate) {
+    // TODO change value in datepicker
+
+    // eslint-disable-next-line no-console
+    console.error("starttime should be before endtime");
+    if (e.target.dataset.picker == "picker") {
+      // eslint-disable-next-line no-console
+      console.error("check value of: " + e);
+    }
+  }
 }
 
 /**
@@ -165,110 +198,113 @@ export function getDates(e, selector, idstring) {
  * @param {string} name
  */
 function setTimespanFilter(filtercontainer, filtername, idstring, name) {
+  // Selector defined the operators.
+  let select = filtercontainer.querySelector('select[id^="filteroperationselect"][name="' + name + '"]');
+  let operator = select.value;
 
-      // Selector defined the operators.
-      let select = filtercontainer.querySelector('select[id^="filteroperationselect"][name="' + name + '"]');
-      let operator = select.value;
+  // First Column to apply the filter to
+  let startdatepicker = filtercontainer.querySelector('input[id^="startdate"]');
+  let firstcolumn = startdatepicker.dataset.applytocolumn;
+  let firstoperator = "";
+  let additionalFirstColumnValues = {};
+  let valuefirstcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "startdate");
 
-      // First Column to apply the filter to
-      let startdatepicker = filtercontainer.querySelector('input[id^="startdate"]');
-      let firstcolumn = startdatepicker.dataset.applytocolumn;
-      let firstoperator = "";
-      let firstColumnValues = {};
-      let additionalFirstColumnValues = {};
-      let valuefirstcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "startdate");
+  // Second Column to apply the filter to
+  let enddatepicker = filtercontainer.querySelector('input[id^="enddate"]');
+  let secondcolumn = enddatepicker.dataset.applytocolumn;
+  let secondoperator = "";
+  let additionalSecondColumnValues = {};
+  let valuesecondcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate");
 
-      // Second Column to apply the filter to
-      let enddatepicker = filtercontainer.querySelector('input[id^="enddate"]');
-      let secondcolumn = enddatepicker.dataset.applytocolumn;
-      let secondoperator = "";
-      let secondColumnValues = {};
-      let additionalSecondColumnValues = {};
-      let valuesecondcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate");
+  // Unset the values of the span filter in checked object.
+  resetCheckedObject(idstring, firstcolumn, filtername);
+  resetCheckedObject(idstring, secondcolumn, filtername);
 
-      // If we applied this timespan filter before, unset it.
-      if (checked.hasOwnProperty(filtername)) {
-        unsetCheckedObject(firstcolumn, filtername, idstring);
-        unsetCheckedObject(secondcolumn, filtername, idstring);
+  switch (operator) {
+    case "within":
+      firstoperator = ">=";
+      secondoperator = "<=";
+      break;
+    case "overlapboth":
+      firstoperator = "<=";
+      secondoperator = ">=";
+      break;
+    case "overlapstart":
+      firstoperator = "<=";
+      additionalFirstColumnValues[">="] = valuesecondcolumn;
+      secondoperator = "<=";
+      break;
+    case "overlapend":
+      firstoperator = "<=";
+      secondoperator = "<=";
+      additionalSecondColumnValues["<="] = valuefirstcolumn;
+      break;
+    case "before":
+      firstoperator = "<";
+      additionalFirstColumnValues["<="] = valuesecondcolumn;
+      break;
+    case "after":
+      secondoperator = ">=";
+      additionalSecondColumnValues[">"] = valuesecondcolumn;
+      break;
+    default:
+    // eslint-disable-next-line no-console
+    console.error("Value of selection not readable");
+    break;
+  }
+  applySpanfilter(firstcolumn, valuefirstcolumn, filtername, firstoperator, additionalFirstColumnValues, idstring);
+  applySpanfilter(secondcolumn, valuesecondcolumn, filtername, secondoperator, additionalSecondColumnValues, idstring);
+
+  // Unsetting the timespan filter if empty
+  if (firstcolumn && filtername) {
+    unsetEmptyFieldsInCheckedObject(firstcolumn, filtername, idstring);
+  }
+  if (secondcolumn && filtername) {
+    unsetEmptyFieldsInCheckedObject(secondcolumn, filtername, idstring);
+  }
+}
+
+/**
+ *  Check if filter object already exisits and unset values.
+ * @param {string} idstring
+ * @param {string} column
+ * @param {string} filtername
+ */
+function resetCheckedObject(idstring, column, filtername) {
+  if (checked[idstring].hasOwnProperty(column)) {
+    if (checked[idstring][column].hasOwnProperty(filtername)) {
+      delete checked[idstring][column][filtername];
+    }
+    if (checked[idstring][column].hasOwnProperty(filtername + 'a')) {
+      delete checked[idstring][column][filtername + 'a'];
+    }
+  }
+}
+
+/**
+ *  Check if object already exisits and set values.
+ * @param {string} column
+ * @param {*} value
+ * @param {string} filtername
+ * @param {string} operator
+ * @param {*} additionalvaluesObject
+ * @param {string} idstring
+ */
+function applySpanfilter(column, value, filtername, operator, additionalvaluesObject, idstring) {
+  if (operator.length >= 1) {
+    if (column && filtername) {
+      if (!checked[idstring][column]) {
+        checked[idstring][column] = {};
       }
-
-      switch (operator) {
-        case "within":
-          // eslint-disable-next-line no-console
-          console.log("within switch operator");
-          firstoperator = ">=";
-          secondoperator = "<=";
-          break;
-        case "overlapboth":
-          // eslint-disable-next-line no-console
-          console.log("overlap both switch operator");
-          firstoperator = "<=";
-          secondoperator = ">=";
-          break;
-        case "overlapstart":
-          // eslint-disable-next-line no-console
-          console.log("overlap start switch operator");
-          firstoperator = "<=";
-          additionalFirstColumnValues[">="] = valuesecondcolumn;
-          secondoperator = "<=";
-          break;
-        case "overlapend":
-          // eslint-disable-next-line no-console
-          console.log("overlap end switch operator");
-          firstoperator = "<=";
-          secondoperator = "<=";
-          additionalSecondColumnValues["<="] = valuefirstcolumn;
-          break;
-        case "before":
-          // eslint-disable-next-line no-console
-          console.log("before switch operator");
-          firstoperator = "<";
-          additionalFirstColumnValues["<="] = valuesecondcolumn;
-          break;
-        case "after":
-          // eslint-disable-next-line no-console
-          console.log("after end switch operator");
-          secondoperator = "<=";
-          additionalSecondColumnValues[">"] = valuesecondcolumn;
-          break;
-        default:
-        // eslint-disable-next-line no-console
-        console.error("Value of selection not readable");
-        break;
+      if (!checked[idstring][column][filtername]) {
+        checked[idstring][column][filtername] = {};
       }
-
-      if (firstoperator.length >= 1) {
-        firstColumnValues[firstoperator] = valuefirstcolumn;
+      checked[idstring][column][filtername][operator] = value;
+      if (Object.keys(additionalvaluesObject).length > 0) {
+        checked[idstring][column][filtername + 'a'] = additionalvaluesObject;
       }
-      if (secondoperator.length >= 1) {
-        secondColumnValues[secondoperator] = valuesecondcolumn;
-      }
-      // Setting values for first columns.
-      // Check if key is set in array, otherwise set new key.
-      if (firstcolumn && filtername) {
-        if (!checked[idstring][firstcolumn]) {
-          checked[idstring][firstcolumn] = {};
-        }
-        checked[idstring][firstcolumn][filtername] = new Array(firstColumnValues);
-        if (Object.keys(additionalFirstColumnValues).length > 0) {
-          checked[idstring][firstcolumn][filtername].push(additionalFirstColumnValues);
-        }
-      }
-
-      // Setting values for second columns.
-      // Check if key is set in array, otherwise set new key.
-      if (secondcolumn && filtername) {
-        if (!checked[idstring][secondcolumn]) {
-          checked[idstring][secondcolumn] = {};
-        }
-        checked[idstring][secondcolumn][filtername] = new Array(secondColumnValues);
-        if (Object.keys(additionalSecondColumnValues).length > 0) {
-          checked[idstring][secondcolumn][filtername].push(additionalSecondColumnValues);
-        }
-      }
-      // Unsetting the timespan filter if empty
-      unsetCheckedObject(firstcolumn, filtername, idstring);
-      unsetCheckedObject(secondcolumn, filtername, idstring);
+    }
+  }
 }
 
 /**
@@ -277,19 +313,19 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
  * @param {*} key2
  * @param {string} idstring
  */
-function unsetCheckedObject(key1, key2, idstring) {
-
-  if (Array.isArray(Object.values(checked[idstring][key1][key2]))) {
-    if (Object.values(checked[idstring][key1][key2]['0']).length < 1) {
-    delete checked[idstring][key1][key2]['0'];
+function unsetEmptyFieldsInCheckedObject(key1, key2, idstring) {
+  if (checked[idstring][key1]) {
+    if (checked[idstring][key1][key2]) {
+      if (Object.keys(checked[idstring][key1][key2]).length < 1) {
+        delete checked[idstring][key1][key2];
+      }
     }
   }
 
-  if (Object.keys(checked[idstring][key1][key2]).length < 1) {
-    delete checked[idstring][key1][key2];
-  }
-  if (Object.keys(checked[idstring][key1]).length < 1) {
-    delete checked[idstring][key1];
+  if (checked[idstring][key1]) {
+    if (Object.keys(checked[idstring][key1]).length < 1) {
+      delete checked[idstring][key1];
+    }
   }
 }
 
@@ -372,7 +408,7 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
     }
   }
 
-  /**
+/**
  * Returns json of active filters as json.
  * @param {*} idstring
  * @returns {string}
