@@ -97,11 +97,11 @@
                                 <label for="filteroperationselect {{label}}{{columnname}}{{idstring}}" class="datepicker-label">{{#str}} filteroperation, local_wunderbyte_table {{/str}}</label> 
                                 <select class="form-control filterelement" id="filteroperationselect {{label}}{{columnname}}{{idstring}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}">
                                     <option value="within">{{#str}} within, local_wunderbyte_table {{/str}}</option>
-                                    <option value="operlap">{{#str}} overlap, local_wunderbyte_table {{/str}}</option>
                                     <option value="overlapstart">{{#str}} overlapstart, local_wunderbyte_table {{/str}}</option>
                                     <option value="overlapend">{{#str}} overlapend, local_wunderbyte_table {{/str}}</option>
                                     <option value="overlapboth">{{#str}} overlapboth, local_wunderbyte_table {{/str}}</option>
-                                    <option value="notwithin">{{#str}} notwithin, local_wunderbyte_table {{/str}}</option>
+                                    <option value="before">{{#str}} beforetimespan, local_wunderbyte_table {{/str}}</option>
+                                    <option value="after">{{#str}} aftertimespan, local_wunderbyte_table {{/str}}</option>
                                 </select>
                                 <div class="datepicker-label">{{#str}} startvalue, local_wunderbyte_table {{/str}}</div>
                                 <input class="filterelement datepicker-input" type="date" id="startdate {{startcolumn}}{{label}}{{columnname}}{{idstring}}" value="{{startdatereadable}}" data-timestamp="{{starttimestamp}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{startcolumn}}">

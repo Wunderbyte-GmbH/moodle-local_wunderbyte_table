@@ -76,10 +76,10 @@ $string['id'] = 'ID';
 // Filter for timespan
 $string['filteroperation'] = 'Filter wählen';
 $string['within'] = 'Innerhalb Zeitspanne';
-$string['overlap'] = 'Überlappt die Zeitspanne';
 $string['overlapboth'] = 'Überlappt Anfang und Ende';
 $string['overlapstart'] = 'Überlappt Anfang';
 $string['overlapend'] = 'Überlappt Ende';
-$string['notwithin'] = 'Nicht innerhalb der Zeitspanne';
+$string['beforetimespan'] = 'Vor der Zeitspanne';
+$string['aftertimespan'] = 'Nach der Zeitspanne';
 $string['startvalue'] = 'Anfang';
 $string['endvalue'] = 'Ende';
