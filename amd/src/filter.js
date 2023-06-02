@@ -338,13 +338,12 @@ function unsetEmptyFieldsInCheckedObject(key1, key2, idstring) {
 export function getDateAndTimePickerDataAsUnix(filtercontainer, id = '') {
 
   let datepicker = filtercontainer.querySelector('input[type="date"][id*="' + id + '"]');
-  let date = new Date(datepicker.value);
+  let date = datepicker.value;
 
   let timepicker = filtercontainer.querySelector('input[type="time"][id*="' + id + '"]');
   let time = timepicker.value;
 
-  let dateTimeString = date.toISOString().split('T')[0] + 'T' + time + ':00.000Z';
-  let unixTimestamp = Date.parse(dateTimeString) / 1000;
+  let unixTimestamp = Date.parse(date + ' ' + time);
 
   return unixTimestamp;
 }
