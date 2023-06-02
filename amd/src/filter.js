@@ -179,15 +179,28 @@ function compareDateValues(e, filtercontainer) {
   let enddate = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate");
 
   if (startdate > enddate) {
-    // TODO change value in datepicker
-
     // eslint-disable-next-line no-console
     console.error("starttime should be before endtime");
-    if (e.target.dataset.picker == "picker") {
-      // eslint-disable-next-line no-console
-      console.error("check value of: " + e);
-    }
+    // Apply change.
+    setDateAndTimePickerDataFromUnix(filtercontainer, 'startdate', enddate);
   }
+}
+
+/**
+ * Checking Date and Timepicker for corresponding element and returning Unix Code.
+ * @param {*} filtercontainer
+ * @param {string} id // Id of the date- and timepicker, the value should be applied to.
+ * @param {integer} timestamp
+ */
+export function setDateAndTimePickerDataFromUnix(filtercontainer, id = '', timestamp) {
+
+  let dateobject = new Date(timestamp);
+
+  let datepicker = filtercontainer.querySelector('input[type="date"][id*="' + id + '"]');
+  datepicker.value = dateobject.toISOString().split('T')[0];
+
+  let timepicker = filtercontainer.querySelector('input[type="time"][id*="' + id + '"]');
+  timepicker.value = dateobject.toLocaleTimeString();
 }
 
 /**
