@@ -77,12 +77,13 @@ $string['table4name'] = 'Users_InfiniteScroll';
 $string['id'] = 'ID';
 
 // Filter for timespan
-$string['filteroperation'] = 'Choose your filter';
-$string['within'] = 'Within timespan';
-$string['overlapboth'] = 'Overlap beginning and ending';
-$string['overlapstart'] = 'Overlap beginning only';
-$string['overlapend'] = 'Overlap ending only';
-$string['beforetimespan'] = 'Before timespan';
-$string['aftertimespan'] = 'After timespan';
+$string['displayrecords'] = 'Display records';
+$string['within'] = 'within';
+$string['overlapboth'] = 'overlap';
+$string['overlapstart'] = 'overlap beginning';
+$string['overlapend'] = 'overlap ending';
+$string['before'] = 'before';
+$string['after'] = 'after';
 $string['startvalue'] = 'Start';
 $string['endvalue'] = 'End';
+$string['selectedtimespan'] = 'selected timespan';

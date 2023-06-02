@@ -973,6 +973,13 @@ class wunderbyte_table extends table_sql {
                         ];
 
                     } else { // Inbetween Filter applied.
+                        // Prepare the array for output
+                        if (empty($datepickerarray['datepicker'][$labelkey]['possibleoperations'])) {
+                            $datepickerarray['datepicker'][$labelkey]['possibleoperations'] = ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'];
+                        }
+                        $operationsarray = array_map(fn($y) => ['operator' => $y, 'label' => get_string($y, 'local_wunderbyte_table')], $datepickerarray['datepicker'][$labelkey]['possibleoperations']);
+
+                        
                         $datepickerobject = [
                             'label' => $labelkey,
                             'startcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimestart'],
@@ -984,6 +991,7 @@ class wunderbyte_table extends table_sql {
                             'enddatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ? 'now': date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
                             'endtimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ? 'now': date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
                             'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
+                            'possibleoperations' => $operationsarray, // Array
                         ];
                     }
 

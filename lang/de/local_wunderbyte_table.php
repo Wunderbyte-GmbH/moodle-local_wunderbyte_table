@@ -74,12 +74,13 @@ $string['table4name'] = 'Users_InfiniteScroll';
 $string['id'] = 'ID';
 
 // Filter for timespan
-$string['filteroperation'] = 'Filter wählen';
-$string['within'] = 'Innerhalb Zeitspanne';
-$string['overlapboth'] = 'Überlappt Anfang und Ende';
-$string['overlapstart'] = 'Überlappt Anfang';
-$string['overlapend'] = 'Überlappt Ende';
-$string['beforetimespan'] = 'Vor der Zeitspanne';
-$string['aftertimespan'] = 'Nach der Zeitspanne';
+$string['displayrecords'] = 'Zeige Daten';
+$string['within'] = 'innerhalb';
+$string['overlapboth'] = 'überlappend mit';
+$string['overlapstart'] = 'Beginn überlappend';
+$string['overlapend'] = 'Ende überlappend';
+$string['before'] = 'vor';
+$string['after'] = 'nach';
 $string['startvalue'] = 'Anfang';
 $string['endvalue'] = 'Ende';
+$string['selectedtimespan'] = 'gewählter Zeitspanne';

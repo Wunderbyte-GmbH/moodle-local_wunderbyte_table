@@ -335,6 +335,7 @@ class demo implements renderable, templatable {
                         'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
                     ],
                     'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
+                        'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'], // Will be displayed in select to choose from.
                         'columntimestart' => 'startdate',
                         'columntimeend' => 'enddate',
                         'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
