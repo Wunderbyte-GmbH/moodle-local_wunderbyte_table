@@ -841,16 +841,14 @@ class wunderbyte_table extends table_sql {
 
         if (isset($this->subcolumns['datafields']) && !$this->filterjson) {
 
-            // We need to localize the filter for every user.
+            // We meed to localize the filter for every user.
             $lang = current_language();
 
-            $this->filterjson = $this->return_filterjson();
-            /*
-            if (!$this->filterjson = $cache->get($cachekey . '_filterjson')) {
+            if (!$this->filterjson = $cache->get($cachekey . $lang . '_filterjson')) {
                 // Now we create the filter json from the unfiltered json.
-                $cache->set($cachekey . '_filterjson', $this->filterjson);
+                $this->filterjson = $this->return_filterjson();
+                $cache->set($cachekey . $lang .'_filterjson', $this->filterjson);
             }
-            */
         }
 
         // If we have chosen this value above, we want to run the code again.
