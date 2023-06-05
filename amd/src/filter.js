@@ -234,11 +234,11 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
   resetCheckedObject(idstring, secondcolumn, filtername);
 
   switch (operator) {
-    case "overlapboth":
+    case "within":
       firstoperator = ">=";
       secondoperator = "<=";
       break;
-    case "within":
+    case "overlapboth":
       firstoperator = "<=";
       secondoperator = ">=";
       break;
@@ -248,9 +248,9 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
       secondoperator = "<=";
       break;
     case "overlapstart":
-      firstoperator = "<=";
+      firstoperator = ">=";
       secondoperator = "<=";
-      additionalSecondColumnValues["<="] = valuefirstcolumn;
+      additionalSecondColumnValues["<="] = valuesecondcolumn;
       break;
     case "after":
       firstoperator = "<";
