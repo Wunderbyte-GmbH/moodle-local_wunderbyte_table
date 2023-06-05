@@ -112,6 +112,10 @@ WB Table provides direct filter, search and sort functionality.
 
 In order for them to work, you must obey some rules: Filter basically just add another 'where' to the sql. The column name must therefor be like the filtercolumn. If the "WHERE columnname like '%myname%'" doesn't work, because you would need to write "WHERE s1.columnname like '%myname%'", then the filter will not work. You would need to wrap your SQL so to eliminate the need for the columnname prefix.
 
+Filter, search and sort params selection triggers URL update. These params can also be applied to table on load via URL. These functions are not available if more than one table is displayed per page (multitable display).
+
+## Filter
+
 As for the filter, you have these further functionalities:
 - localize labels and results
 - sort possible results in the filter panel (eg to have weekdays in order)
@@ -154,6 +158,24 @@ For columns that contain date and time values (as Unix timestamp) you can enable
                 ],
     ]);
 
+A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'. 
+"Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan. 
+The possibleoperations array is containing a whitelist, if none specified, all are applied. 
+    'datepicker' => [  
+                    'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
+                        'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'], // Will be displayed in select to choose from.
+                        'columntimestart' => 'startdate', // Columnname as is query with lower value.
+                        'columntimeend' => 'enddate', // Columnname as is query with higher value.
+                        'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
+                        'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
+                        'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
+                        'defaultvalueend' => 'now', // Can also be Unix timestamp or string "now".
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
+                        ]
+                    ]
+
+## Sorting
+
 If the output template you want to use doesn't support clickable headers to sort (eg because you use cards), you might want to use the sort select. Just add
 
     $table->cardsort = true;
@@ -162,7 +184,6 @@ to your wunderbyte_table classs (look in the _container templates to understand 
 
 Each column defined as sortable will display carets in the table header. They have the same functionality as sortcolumn select & changesortorder element displayed in top of table.
 
-Filter, search and sort params selection triggers URL update. These params can also be applied to table on load via URL. These functions are not available if more than one table is displayed per page (multitable display).
 
 ### Display
 If you want to display multiple tables on one page, tabs can be enabled in templates.

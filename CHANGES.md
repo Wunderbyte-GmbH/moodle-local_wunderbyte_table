@@ -1,3 +1,7 @@
+
+## Version 1.5.9 (2023060500)
+* New feature: Filter for timespan, comparing two selected values (timespan) to two values of a record (i.e. startdate, enddate).
+
 ## Version 1.5.8 (2023052200)
 * New feature: Localized Filter
 
