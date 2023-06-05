@@ -178,7 +178,7 @@ function compareDateValues(e, filtercontainer) {
   let startdate = getDateAndTimePickerDataAsUnix(filtercontainer, "startdate");
   let enddate = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate");
 
-  if (startdate > enddate) {
+  if ((enddate / 1000 > 1577836800) && (startdate > enddate)) {
     // eslint-disable-next-line no-console
     console.error("starttime should be before endtime");
     // Apply change.
@@ -200,7 +200,7 @@ export function setDateAndTimePickerDataFromUnix(filtercontainer, id = '', times
   datepicker.value = dateobject.toISOString().split('T')[0];
 
   let timepicker = filtercontainer.querySelector('input[type="time"][id*="' + id + '"]');
-  timepicker.value = dateobject.toLocaleTimeString();
+  timepicker.value = dateobject.toLocaleTimeString().slice(0, 5);
 }
 
 /**
@@ -220,14 +220,14 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
   let firstcolumn = startdatepicker.dataset.applytocolumn;
   let firstoperator = "";
   let additionalFirstColumnValues = {};
-  let valuefirstcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "startdate");
+  let valuefirstcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "startdate") / 1000;
 
   // Second Column to apply the filter to
   let enddatepicker = filtercontainer.querySelector('input[id^="enddate"]');
   let secondcolumn = enddatepicker.dataset.applytocolumn;
   let secondoperator = "";
   let additionalSecondColumnValues = {};
-  let valuesecondcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate");
+  let valuesecondcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate") / 1000;
 
   // Unset the values of the span filter in checked object.
   resetCheckedObject(idstring, firstcolumn, filtername);
@@ -359,7 +359,7 @@ export function getDateAndTimePickerDataAsUnix(filtercontainer, id = '') {
   let time = timepicker.value;
 
   let unixTimestamp = Date.parse(date + ' ' + time);
-  let tenDigitTimestamp = unixTimestamp / 1000;
+  let tenDigitTimestamp = unixTimestamp;
 
   return tenDigitTimestamp;
 }
