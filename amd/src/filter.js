@@ -164,9 +164,6 @@ export function getDates(e, idstring) {
       }
     );
   }
-
-  // eslint-disable-next-line no-console
-  console.log(checked);
 }
 
 /**
@@ -178,6 +175,7 @@ function compareDateValues(e, filtercontainer) {
   let startdate = getDateAndTimePickerDataAsUnix(filtercontainer, "startdate");
   let enddate = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate");
 
+  // We make sure the entered enddate is after 2020, to avoid triggering change while date setting is not finished yet.
   if ((enddate / 1000 > 1577836800) && (startdate > enddate)) {
     // eslint-disable-next-line no-console
     console.error("starttime should be before endtime");
