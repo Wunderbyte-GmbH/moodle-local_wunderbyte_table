@@ -242,23 +242,25 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
       firstoperator = "<=";
       secondoperator = ">=";
       break;
-    case "overlapend":
-      firstoperator = "<=";
-      additionalFirstColumnValues[">="] = valuesecondcolumn;
-      secondoperator = "<=";
-      break;
     case "overlapstart":
-      firstoperator = ">=";
+      firstoperator = "<=";
+      additionalSecondColumnValues[">="] = valuefirstcolumn;
       secondoperator = "<=";
-      additionalSecondColumnValues["<="] = valuesecondcolumn;
       break;
-    case "after":
-      firstoperator = "<";
+    case "overlapend":
+      firstoperator = ">=";
+      secondoperator = ">=";
       additionalFirstColumnValues["<="] = valuesecondcolumn;
       break;
     case "before":
+      firstoperator = "<";
+      additionalSecondColumnValues["<="] = valuefirstcolumn;
+      secondoperator = "<";
+      break;
+    case "after":
       secondoperator = ">=";
-      additionalSecondColumnValues[">"] = valuesecondcolumn;
+      additionalFirstColumnValues[">="] = valuesecondcolumn;
+      firstoperator = ">";
       break;
     default:
     // eslint-disable-next-line no-console
@@ -357,8 +359,9 @@ export function getDateAndTimePickerDataAsUnix(filtercontainer, id = '') {
   let time = timepicker.value;
 
   let unixTimestamp = Date.parse(date + ' ' + time);
+  let tenDigitTimestamp = unixTimestamp / 1000;
 
-  return unixTimestamp;
+  return tenDigitTimestamp;
 }
 
 /**
