@@ -227,6 +227,10 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
   let additionalSecondColumnValues = {};
   let valuesecondcolumn = getDateAndTimePickerDataAsUnix(filtercontainer, "enddate") / 1000;
 
+  if (!Number.isInteger(valuefirstcolumn) || !Number.isInteger(valuefirstcolumn)) {
+    return;
+  }
+
   // Unset the values of the span filter in checked object.
   resetCheckedObject(idstring, firstcolumn, filtername);
   resetCheckedObject(idstring, secondcolumn, filtername);
