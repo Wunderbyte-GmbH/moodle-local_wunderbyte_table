@@ -671,7 +671,7 @@ class wunderbyte_table extends table_sql {
 
             foreach ($searchcolumns as $key => $value) {
 
-                $searchcolumns[$key] = "COALESCE(" . $value . ", ' ')";
+                $searchcolumns[$key] = "COALESCE(" . $DB->sql_cast_to_char($value) . ", ' ')";
 
             }
 
