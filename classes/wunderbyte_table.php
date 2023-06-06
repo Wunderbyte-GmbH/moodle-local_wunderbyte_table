@@ -236,14 +236,14 @@ class wunderbyte_table extends table_sql {
      */
     public $actionbuttons = [];
 
-  /**
+    /**
      * Errormessage in case of.
      *
      * @var string
      */
     public $errormessage = '';
 
-  /**
+    /**
      * Number of rows diplayed per page in table.
      *
      * @var boolean
@@ -738,7 +738,8 @@ class wunderbyte_table extends table_sql {
                 FROM {$this->sql->from}
                 WHERE {$this->sql->where}
                 {$sort}"
-                // . json_encode($this->sql->params)
+                // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
+                /* . json_encode($this->sql->params) */
                 . $pagesize
                 . $useinitialsbar
                 . $this->download
@@ -965,31 +966,38 @@ class wunderbyte_table extends table_sql {
                             'label' => $labelkey,
                             'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
                             'timestamp' => $defaulttimestamp,
-                            'datereadable' => $defaulttimestamp === 'now' ? 'now': date('Y-m-d', $defaulttimestamp),
-                            'timereadable' => $defaulttimestamp === 'now' ? 'now': date('H:i', $defaulttimestamp),
+                            'datereadable' => $defaulttimestamp === 'now' ? 'now' : date('Y-m-d', $defaulttimestamp),
+                            'timereadable' => $defaulttimestamp === 'now' ? 'now' : date('H:i', $defaulttimestamp),
                             'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
                         ];
 
                     } else { // Inbetween Filter applied.
-                        // Prepare the array for output
+                        // Prepare the array for output.
                         if (empty($datepickerarray['datepicker'][$labelkey]['possibleoperations'])) {
-                            $datepickerarray['datepicker'][$labelkey]['possibleoperations'] = ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'];
+                            $datepickerarray['datepicker'][$labelkey]['possibleoperations'] =
+                                ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'];
                         }
-                        $operationsarray = array_map(fn($y) => ['operator' => $y, 'label' => get_string($y, 'local_wunderbyte_table')], $datepickerarray['datepicker'][$labelkey]['possibleoperations']);
+                        $operationsarray = array_map(fn($y) => [
+                            'operator' => $y,
+                            'label' => get_string($y, 'local_wunderbyte_table')
+                        ], $datepickerarray['datepicker'][$labelkey]['possibleoperations']);
 
-                        
                         $datepickerobject = [
                             'label' => $labelkey,
                             'startcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimestart'],
                             'starttimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
-                            'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ? 'now': date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
-                            'starttimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ? 'now': date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
+                            'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ?
+                                'now' : date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
+                            'starttimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ?
+                                'now' : date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
                             'endcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimeend'],
                             'endtimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
-                            'enddatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ? 'now': date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
-                            'endtimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ? 'now': date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
+                            'enddatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ?
+                                'now' : date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
+                            'endtimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ?
+                                'now' : date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
                             'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
-                            'possibleoperations' => $operationsarray, // Array
+                            'possibleoperations' => $operationsarray, // Array.
                         ];
                     }
 
@@ -1200,18 +1208,17 @@ class wunderbyte_table extends table_sql {
                 // For the first filter in a category we append AND.
                 $filter .= " AND ( ";
                 $paramcounter = 1;
-                $categorycounter =1;
+                $categorycounter = 1;
 
                 // We check if we are applying a timestamp comparison which is stored in an object.
                 $datecomparison = false;
                 if (is_object($categoryvalue)) {
-                    $datecomparison = true;}
+                    $datecomparison = true;
+                }
 
                 foreach ($categoryvalue as $key => $value) {
                     // We use the while function to find a param we can actually use.
                     $paramsvaluekey = $paramkey . $paramcounter;
-
-                    // datecomp == true
 
                     if ($datecomparison == false) {
                         // If there are more than one filter per category they will be concatenated via OR.
@@ -1231,7 +1238,7 @@ class wunderbyte_table extends table_sql {
                     } else if (is_numeric($value)) {
                         $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "". $value;
-                    } else if (isset($this->subcolumns['datafields'][$categorykey]['explode']) 
+                    } else if (isset($this->subcolumns['datafields'][$categorykey]['explode'])
                     || isset($this->subcolumns['datafields'][$categorykey]['jsonattribute'])) {
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "%$value%";
@@ -1512,7 +1519,5 @@ class wunderbyte_table extends table_sql {
         if (!empty($wbtsearch)) {
             $this->apply_searchtext($wbtsearch);
         }
-}
-
-
+    }
 }
