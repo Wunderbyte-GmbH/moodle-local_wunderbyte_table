@@ -320,33 +320,6 @@ class demo implements renderable, templatable {
             'shortname' =>  [
                 'localizedname' => get_string('shortname')
             ],
-            'startdate' => [ // Columns containing Unix timestamps can be filtered.
-                'localizedname' => get_string('startdate'),
-
-                'datepicker' => [
-                    'Starting from' => [ // Can be localized and like "Courses starting after:".
-                        'operator' => '>', // Must be defined, can be any SQL comparison operator.
-                        'defaultvalue' => 'now', // Can also be Unix timestamp or string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
-                    ],
-                    'Ending by' => [ // Can be localized and like "Courses starting after:".
-                        'operator' => '<',
-                        'defaultvalue' => '1670999000', // Can also be Unix timestamp or string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
-                    ],
-                    'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
-                        'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'], // Will be displayed in select to choose from.
-                        'columntimestart' => 'startdate', // Columnname as is DB query with lower value.
-                        'columntimeend' => 'enddate', // Columnname as is DB query with higher value.
-                        'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'),
-                        'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
-                        'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'), 
-                        'defaultvalueend' => 'now', // Can also be Unix timestamp or string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
-                    ]
-                ]
-
-            ],
             'enddate' => [
                 'localizedname' => get_string('enddate'),
                 'datepicker' => [
@@ -356,6 +329,23 @@ class demo implements renderable, templatable {
                         'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
                     ]
                 ]
+            ],
+            'startdate' => [ // Columns containing Unix timestamps can be filtered.
+                'localizedname' => get_string('timespan', 'local_wunderbyte_table'),
+
+                'datepicker' => [
+                    'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
+                        'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'], // Will be displayed in select to choose from.
+                        'columntimestart' => 'startdate', // Columnname as is DB query with lower value.
+                        'columntimeend' => 'enddate', // Columnname as is DB query with higher value.
+                        'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'),
+                        'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
+                        'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'),
+                        'defaultvalueend' => 'now', // Can also be Unix timestamp or string "now".
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
+                    ]
+                ]
+
             ],
         ];
 
@@ -601,14 +591,14 @@ class demo implements renderable, templatable {
      */
     public function return_as_array():array {
         $data = [
-            'table1' => $this->render_table_1(),
-            'tab1_name' => TABLE1NAME,
+        //    'table1' => $this->render_table_1(),
+        //    'tab1_name' => TABLE1NAME,
             'table2' => $this->render_table_2(),
             'tab2_name' => TABLE2NAME,
-            'table3' => $this->render_table_3(),
-            'tab3_name' => TABLE3NAME,
-            'table4' => $this->render_table_4(),
-            'tab4_name' => TABLE4NAME,
+        //    'table3' => $this->render_table_3(),
+        //    'tab3_name' => TABLE3NAME,
+        //    'table4' => $this->render_table_4(),
+        //    'tab4_name' => TABLE4NAME,
 
         ];
 

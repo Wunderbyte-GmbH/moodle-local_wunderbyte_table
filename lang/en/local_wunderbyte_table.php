@@ -87,3 +87,4 @@ $string['after'] = 'after';
 $string['startvalue'] = 'Start';
 $string['endvalue'] = 'End';
 $string['selectedtimespan'] = 'selected timespan';
+$string['timespan'] = 'Timespan';
