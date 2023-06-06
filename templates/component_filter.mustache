@@ -91,23 +91,27 @@
                                 <input class="filterelement datepicker-input" type="time" id="{{label}}{{columnname}}{{idstring}}datefilter" name="{{columnname}}" value="{{timereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}">
                             {{/timestamp}}
                             {{#startcolumn}}
+
                                 <input class="filterelement form-check-input" type="checkbox" id="{{label}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-dateelement = "dateelement" data-filtername="{{label}}" data-operator="{{operator}}" data-timespan="true">
                                 <label class="filterelement form-check-label" for="{{label}}{{columnname}}{{idstring}}">{{checkboxlabel}}</label>
-                                <div class="datepicker-label">{{label}}</div>
-                                <label for="filteroperationselect {{label}}{{columnname}}{{idstring}}" class="datepicker-label">{{#str}} displayrecords, local_wunderbyte_table {{/str}}</label> 
+                                <div class="filtertimespan">
+                                    <div class="datepicker-label">{{#str}} startvalue, local_wunderbyte_table {{/str}}</div>
+                                    <input class="filterelement datepicker-input" type="date" id="startdate {{startcolumn}}{{label}}{{columnname}}{{idstring}}" value="{{startdatereadable}}" data-timestamp="{{starttimestamp}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{startcolumn}}">
+                                    <input class="filterelement datepicker-input" type="time" id="startdate {{startcolumn}}{{label}}{{columnname}}{{idstring}}" name="{{columnname}}" value="{{starttimereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{startcolumn}}">
+                                    <div class="datepicker-label">{{#str}} endvalue, local_wunderbyte_table {{/str}}</div>
+                                    <input class="filterelement datepicker-input" type="date" id="enddate {{endcolumn}}{{label}}{{columnname}}{{idstring}}" value="{{enddatereadable}}" data-timestamp="{{endtimestamp}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{endcolumn}}">
+                                    <input class="filterelement datepicker-input" type="time" id="enddate {{endcolumn}}{{label}}{{columnname}}{{idstring}}" name="{{columnname}}" value="{{endtimereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{endcolumn}}">
+                                </div>
+                                <div>
+                                    <label for="filteroperationselect {{label}}{{columnname}}{{idstring}}" class="datepicker-label">{{#str}} displayrecords, local_wunderbyte_table {{/str}}</label>
+                                    <select class="form-control filterelement" id="filteroperationselect {{label}}{{columnname}}{{idstring}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}">
+                                        {{#possibleoperations}}
+                                            <option value="{{operator}}">{{label}}</option>
+                                        {{/possibleoperations}}
+                                    </select>
+                                    <div class="datepicker-label">{{#str}} selectedtimespan, local_wunderbyte_table {{/str}}</div>
+                                </div>
 
-                                <select class="form-control filterelement" id="filteroperationselect {{label}}{{columnname}}{{idstring}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}">
-                                    {{#possibleoperations}}
-                                    <option value="{{operator}}">{{label}}</option>
-                                    {{/possibleoperations}}
-                                </select>
-                                <div class="datepicker-label">{{#str}} selectedtimespan, local_wunderbyte_table {{/str}}</div>
-                                <div class="datepicker-label">{{#str}} startvalue, local_wunderbyte_table {{/str}}</div>
-                                <input class="filterelement datepicker-input" type="date" id="startdate {{startcolumn}}{{label}}{{columnname}}{{idstring}}" value="{{startdatereadable}}" data-timestamp="{{starttimestamp}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{startcolumn}}">
-                                <input class="filterelement datepicker-input" type="time" id="startdate {{startcolumn}}{{label}}{{columnname}}{{idstring}}" name="{{columnname}}" value="{{starttimereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{startcolumn}}">
-                                <div class="datepicker-label">{{#str}} endvalue, local_wunderbyte_table {{/str}}</div>
-                                <input class="filterelement datepicker-input" type="date" id="enddate {{endcolumn}}{{label}}{{columnname}}{{idstring}}" value="{{enddatereadable}}" data-timestamp="{{endtimestamp}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{endcolumn}}">
-                                <input class="filterelement datepicker-input" type="time" id="enddate {{endcolumn}}{{label}}{{columnname}}{{idstring}}" name="{{columnname}}" value="{{endtimereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-applytocolumn="{{endcolumn}}">
                             {{/startcolumn}}
                         </form>
                     {{/datepickers}}
