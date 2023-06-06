@@ -48,3 +48,23 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I should see "Course 1" in the "#Course_r1" "css_element"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "within"
     And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
+
+@javascript
+  Scenario: Filter course table in wb_table by timespan for within
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Course"
+    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
+    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-11"
+    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-19"
+    And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "within"
+    ## And I set the following fields to these values:
+    ##  | date-startdate | ## 18 days ago ## |
+    ##  | date-enddate | ## 12 days ago ## |
+    ##  | Display records | overlap |
+    And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
+    And I wait "1" seconds
+    And I should see "Course 1" in the "#Course_r1" "css_element"
+    And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlap"
+    And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
