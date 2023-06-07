@@ -125,7 +125,7 @@ function applyChangelistener(nodelist, selector, idstring, encodedtable) {
  */
 export function getDates(e, idstring) {
 
-  let name = e.target.name;
+  let name = e.target.dataset.columnname;
   let filtercontainer = e.target.closest(".datepickerform");
   let filtername = e.target.dataset.filtername;
   let filtercheckbox = filtercontainer.querySelector('input[type="checkbox"][id^="' + filtername + '"][name="' + name + '"]');
@@ -139,7 +139,7 @@ export function getDates(e, idstring) {
     if (filtercheckbox.dataset.timespan === "true") {
       setTimespanFilter(filtercontainer, filtername, idstring, name);
     } else {
-      dates[filtercheckbox.dataset.operator] = getDateAndTimePickerDataAsUnix(filtercontainer, "datefilter");
+      dates[filtercheckbox.operator] = getDateAndTimePickerDataAsUnix(filtercontainer, "datefilter");
       // Check if key is set in array, otherwise set new key.
       if (name && filtername) {
         if (!checked[idstring][name]) {
