@@ -63,6 +63,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
     And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I should see "Course 2" in the "#Course_r3" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-11"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-19"
@@ -74,6 +75,29 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-11"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-19"
+    And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
+    And I wait "1" seconds
+    Then I should see "Course 2" in the "#Course_r1" "css_element"
+    And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
+
+@javascript
+  Scenario: Filter course table in wb_table by timespan for before and after
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Course"
+    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I should see "Course 2" in the "#Course_r3" "css_element"
+    And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
+    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-10"
+    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-11"
+    And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "before"
+    And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
+    And I wait "1" seconds
+    Then I should see "Acceptance test site" in the "#Course_r1" "css_element"
+    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
+    And I wait "1" seconds
+    And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "after"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
     Then I should see "Course 2" in the "#Course_r1" "css_element"
