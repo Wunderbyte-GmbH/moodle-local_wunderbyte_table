@@ -72,7 +72,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
-    And I should see "id" in the "th.id.wb-table-column" "css_element"
+    And I should see "ID" in the "th.id.wb-table-column" "css_element"
     ## And I click on "//*[@id='Users']/thead/tr/th[2]" "xpath_element"
     And I click on "th.id.wb-table-column" "css_element"
     And I wait "1" seconds
@@ -93,7 +93,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
-    And I should see "username" in the "th.username.wb-table-column" "css_element"
+    And I should see "Username" in the "th.username.wb-table-column" "css_element"
     And I click on "th.username.wb-table-column" "css_element"
     And I wait "1" seconds
     And I should see "user9" in the "#Users_r1" "css_element"
@@ -109,11 +109,11 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And the field "selectsortcolumn-Users" matches value "username"
 
   @javascript
-  Scenario: Sort Course tab table with column Full Name
+  Scenario: Sort Course tab table with column Full name
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
-    And I should see "Full Name" in the "th.fullname.wb-table-column" "css_element"
+    And I should see "Full name" in the "th.fullname.wb-table-column" "css_element"
     And I should see "Acceptance test site" in the "#Course_r1" "css_element"
     And I click on "th.fullname.wb-table-column.asc" "css_element"
     And I wait "1" seconds
@@ -122,9 +122,9 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And I should see "Acceptance test site" in the "#Course_r1" "css_element"
     ## When clicking column header in table (for sorting) - sync value with the select "selectsortcolumn"
-    And the field "selectsortcolumn-Course" matches value "Full Name"
+    And the field "selectsortcolumn-Course" matches value "Full name"
     ## Check if sorting preserved on page reloading
     And I reload the page
     And I wait "1" seconds
     And I should see "Acceptance test site" in the "#Course_r1" "css_element"
-    And the field "selectsortcolumn-Course" matches value "Full Name"
+    And the field "selectsortcolumn-Course" matches value "Full name"

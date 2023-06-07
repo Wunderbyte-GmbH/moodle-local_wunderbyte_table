@@ -38,39 +38,39 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
 
   @javascript
-  Scenario: Display single table
+  Scenario: WB_Table: Display single table
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     ## Then "2" row "username" column of "Users" table should contain "admin"
     Then the following should exist in the "Users" table:
-      | username | firstname | email                |
-      | admin    | Admin     | moodle@example.com   |
-      | teacher1 | Teacher   | teacher1@example.com |
-      | user1    | Username  | user1@example.com    |
+      | Username | First name | Email address        |
+      | admin    | Admin      | moodle@example.com   |
+      | teacher1 | Teacher    | teacher1@example.com |
+      | user1    | Username   | user1@example.com    |
 
   @javascript
-  Scenario: Display few tables per multiple tabs
+  Scenario: WB_Table: Display few tables per multiple tabs
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
     Then the following should exist in the "Users" table:
-      | username | firstname | email              |
-      | admin    | Admin     | moodle@example.com |
-      | user1    | Username  | user1@example.com  |
+      | Username | First name | Email address      |
+      | admin    | Admin      | moodle@example.com |
+      | user1    | Username   | user1@example.com  |
     And I follow "Course"
     And I wait "1" seconds
     Then the following should exist in the "Course" table:
-      | Full Name            | Short Name           |
+      | Full name            | Short name           |
       | Acceptance test site | Acceptance test site |
       | Course 1             | C1                   |
     And I follow "Course_Modules"
     And I wait "1" seconds
     Then the following should exist in the "Course_Modules" table:
-      | module |
+      | Module |
       | 5      |
 
   @javascript
-  Scenario: Navigation - switch to the next page
+  Scenario: WB_Table navigation: switch to the next page
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
@@ -81,7 +81,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I should see "guest"
 
   @javascript
-  Scenario: Navigation - set per page items count
+  Scenario: WB_Table navigation: set per page items count
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users"
@@ -94,7 +94,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And the field "selectrowsperpage-Users" matches value "Show 30 rows"
 
   @javascript
-  Scenario: Navigation - infinite scroll
+  Scenario: WB_Table navigation: infinite scroll
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users_InfiniteScroll"
