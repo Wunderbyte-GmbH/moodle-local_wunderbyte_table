@@ -20,7 +20,8 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And the following "courses" exist:
       | fullname | shortname | startdate  | enddate    |
       | Course 1 | C1        | 1652317261 | 1652835661 |
-
+      | Course 2 | C2        | 1683853261 | 1684371661 |
+    ## C1 - 12-18 May 2022, C2 - 12-18 May 2023
     And the following "course enrolments" exist:
       | user     | course | role           |
       | user1    | C1     | student        |
@@ -28,6 +29,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And the following "activities" exist:
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
+      | page     | PageName2  | PageDesc2  | C2     | PAGE2    |
 
 @javascript
   Scenario: Filter course table in wb_table by timespan for overlaping
@@ -45,8 +47,14 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     ##  | Display records | overlap |
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    And I should see "Course 1" in the "#Course_r1" "css_element"
-    And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "within"
+    Then I should see "Course 1" in the "#Course_r1" "css_element"
+    And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
+    And I wait "1" seconds
+    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-13"
+    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-17"
+    And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
+    And I wait "1" seconds
+    Then I should see "Course 2" in the "#Course_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
 
 @javascript
@@ -59,12 +67,14 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-11"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-19"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "within"
-    ## And I set the following fields to these values:
-    ##  | date-startdate | ## 18 days ago ## |
-    ##  | date-enddate | ## 12 days ago ## |
-    ##  | Display records | overlap |
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    And I should see "Course 1" in the "#Course_r1" "css_element"
-    And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlap"
+    Then I should see "Course 1" in the "#Course_r1" "css_element"
+    And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
+    And I wait "1" seconds
+    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-11"
+    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-19"
+    And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
+    And I wait "1" seconds
+    Then I should see "Course 2" in the "#Course_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
