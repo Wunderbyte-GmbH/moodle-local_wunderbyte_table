@@ -1,3 +1,5 @@
+## Version 1.6.0 (2023060800)
+* Bugfix: Fix problem with fulltextsearch when adding bigint columns.
 
 ## Version 1.5.9 (2023060500)
 * New feature: Filter for timespan, comparing two selected values (timespan) to two values of a record (i.e. startdate, enddate).
