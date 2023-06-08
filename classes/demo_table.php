@@ -21,6 +21,7 @@
  * @copyright 2023 Wunderbyte Gmbh <info@wunderbyte.at>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+// phpcs:ignoreFile
 
 namespace local_wunderbyte_table;
 
