@@ -1,3 +1,6 @@
+## Version 1.6.1 (2023060801)
+* Bugfix: Fix bugs regarding labels for modals
+
 ## Version 1.6.0 (2023060800)
 * Bugfix: Fix problem with fulltextsearch when adding bigint columns.
 
