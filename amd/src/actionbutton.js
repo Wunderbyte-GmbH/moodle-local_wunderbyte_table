@@ -276,7 +276,7 @@ function getIds(id, idstring, data) {
         const id = x.closest('tr').dataset.id;
 
         labelarray.push(returnLabel(id, data.labelcolumn, container));
-        checkedids.push(x.id);
+        checkedids.push(id);
       }
     });
 

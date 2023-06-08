@@ -388,7 +388,7 @@ class demo implements renderable, templatable {
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
-                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                'labelcolumn' => 'fullname', // The Labelcolumn is important because it will be picked for human verification in the modal.
             ]
         ];
 
@@ -472,7 +472,7 @@ class demo implements renderable, templatable {
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
-                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                'labelcolumn' => 'fullname', // The Labelcolumn is important because it will be picked for human verification in the modal.
             ]
         ];
 
