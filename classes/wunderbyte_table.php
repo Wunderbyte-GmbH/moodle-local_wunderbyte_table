@@ -673,7 +673,11 @@ class wunderbyte_table extends table_sql {
 
                 // This fix is only for bigger than 4.1.
 
-                $valuestring = $CFG->version > 2022112800 ? $DB->sql_cast_to_char($value) : $value;
+                if ($CFG->version > 2022112800) {
+                    $valuestring = $DB->sql_cast_to_char($value);
+                } else {
+                    $valuestring = 'CAST(' . $value . ' AS VARCHAR)';
+                }
 
                 $searchcolumns[$key] = "COALESCE(" . $valuestring . ", ' ')";
 
