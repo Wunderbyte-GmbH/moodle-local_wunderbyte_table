@@ -74,7 +74,7 @@ class table implements renderable, templatable {
      */
     private $table = [];
 
-       /**
+    /**
      * Table is the array used for output.
      *
      * @var wunderbyte_table
@@ -185,7 +185,7 @@ class table implements renderable, templatable {
      */
     private $errormessage = '';
 
-      /**
+    /**
      * Number of rows diplayed per page in table.
      *
      * @var boolean
@@ -266,13 +266,12 @@ class table implements renderable, templatable {
             $this->table[$key] = $value;
         }
 
-        // We need a dedicated rowid. It will work like this:
-        // #tableidentifier_rx
+        // We need a dedicated rowid. It will work like this: #tableidentifier_rx .
         if ($table->infinitescroll) {
-            // The rowid has to be continuous in case of infinitescroll:
+            // The rowid has to be continuous in case of infinitescroll.
             $rcounter = $table->currpage * $table->infinitescroll + 1;
         } else {
-            // The rowid has to be restarted in case of pagination:
+            // The rowid has to be restarted in case of pagination.
             $rcounter = 1;
         }
 
@@ -344,7 +343,6 @@ class table implements renderable, templatable {
                     'key' => $column,
                     'localized' => $localized,
                 ];
-
 
                 // Wether there should be up down arrows in the header.
                 if (in_array($column, $table->sortablecolumns, true)
@@ -463,7 +461,7 @@ class table implements renderable, templatable {
      */
     private function showcountselect() {
 
-        if(!$this->showrowcountselect) {
+        if (!$this->showrowcountselect) {
             return [];
         }
 
@@ -472,9 +470,8 @@ class table implements renderable, templatable {
         while ($counter <= 19) {
             if ($counter < 11) {
                 $pagenumber = $counter * 10;
-            }
-            else {
-                $pagenumber = ($counter -9) * 100;
+            } else {
+                $pagenumber = ($counter - 9) * 100;
             }
 
             array_push($options, [
@@ -624,7 +621,6 @@ class table implements renderable, templatable {
             $item['key'] = $value;
             $item['selected'] = '';
 
-
             if (in_array($key, array_keys($sortcolumns))) {
                 $item['selected'] = 'selected';
             }
@@ -646,7 +642,7 @@ class table implements renderable, templatable {
      * @param wunderbyte_table $table
      * @return object|null
      */
-    function applyfilterselection(wunderbyte_table $table) {
+    private function applyfilterselection(wunderbyte_table $table) {
 
         global $PAGE;
 
@@ -708,7 +704,7 @@ class table implements renderable, templatable {
                             $date = date('Y-m-d', $unixcode);
                             $time = date('H:i', $unixcode);
                             // We check which filter of the column is checked and apply the values.
-                            foreach($tableobject[$tokey]['datepicker']['datepickers'] as $dkey => $dvalues) {
+                            foreach ($tableobject[$tokey]['datepicker']['datepickers'] as $dkey => $dvalues) {
                                 if ($dvalues['label'] == $sfkey) {
                                     $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['datereadable'] = $date;
                                     $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['timereadable'] = $time;
@@ -728,9 +724,10 @@ class table implements renderable, templatable {
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
                             foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {
                                 if ($value['key'] === $filter) {
-                                    // If we find the filter, we add the checked value and key to the initial tableobject array at the right place.
+                                    // If we find the filter, we add the checked value...
+                                    // ...and key to the initial tableobject array at the right place.
                                     $tableobject[$tokey]['default']['values'][$vkey]['checked'] = 'checked';
-                                    // Expand the filter area
+                                    // Expand the filter area.
                                     $tableobject[$tokey]['show'] = 'show';
                                     $tableobject[$tokey]['collapsed'] = '';
                                     $tableobject[$tokey]['expanded'] = 'true';

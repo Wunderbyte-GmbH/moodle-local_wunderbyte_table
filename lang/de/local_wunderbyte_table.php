@@ -73,7 +73,7 @@ $string['table3name'] = 'Course_Modules';
 $string['table4name'] = 'Users_InfiniteScroll';
 $string['id'] = 'ID';
 
-// Filter for timespan
+// Filter for timespan.
 $string['displayrecords'] = 'Zeige Daten';
 $string['within'] = 'innerhalb';
 $string['overlapboth'] = 'überlappend mit';
