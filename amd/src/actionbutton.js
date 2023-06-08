@@ -259,6 +259,9 @@ function getIds(id, idstring, data) {
 
   // If the id is 0, we return for all checked checkboxes.
   // if not, just for the current one.
+
+  // Make sure we treat id as int.
+  id = parseInt(id);
   if (id < 1) {
 
     const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOX);
@@ -267,13 +270,18 @@ function getIds(id, idstring, data) {
     checkboxes.forEach(x => {
 
       if (x.checked) {
-        labelarray.push(returnLabel(x.id, data.labelcolumn));
+
+        // We don't need the id of the checkbox, but the data-id of the row.
+
+        const id = x.closest('tr').dataset.id;
+
+        labelarray.push(returnLabel(id, data.labelcolumn, container));
         checkedids.push(x.id);
       }
     });
 
   } else {
-    labelarray.push(returnLabel(id, data.labelcolumn));
+    labelarray.push(returnLabel(id, data.labelcolumn, container));
     checkedids.push(id);
   }
   return {
@@ -285,9 +293,10 @@ function getIds(id, idstring, data) {
    * Function to return label name or id if no name available.
    * @param {*} id
    * @param {*} label
+   * @param {*} container
    * @returns {String}
    */
-  function returnLabel(id, label) {
+  function returnLabel(id, label, container) {
     try {
       const name = container.querySelector('[data-id="' + id + '"] [data-label="' + label + '"]').textContent;
       return name;
