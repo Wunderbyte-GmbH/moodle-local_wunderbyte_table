@@ -46,8 +46,8 @@ class renderer extends plugin_renderer_base {
     }
 
     /** Function to render the cards table
-     * @param any $data
-     * @param string $data
+     * @param mixed $data
+     * @param string $templatename
      * @return string
      */
     public function render_table($data, string $templatename) {

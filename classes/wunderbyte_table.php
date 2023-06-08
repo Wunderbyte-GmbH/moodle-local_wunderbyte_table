@@ -156,6 +156,7 @@ class wunderbyte_table extends table_sql {
      * Card sort is a special sort element
      * Used when there are now table headers displayed.
      * This can only be determined manually.
+     * @var bool special sort element.
      */
     public $cardsort = false;
 
@@ -638,6 +639,8 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Define the columns for the fulltext search. This does not have to be rendered, so we don't add it als subcolumn.
+     * @param array $fulltextsearchcolumns
+     *
      * @return void
      */
     public function define_fulltextsearchcolumns(array $fulltextsearchcolumns) {
@@ -648,6 +651,8 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Define the columns for the sorting.
+     * @param array $sortablecolumns
+     *
      * @return void
      */
     public function define_sortablecolumns(array $sortablecolumns) {
@@ -1159,8 +1164,6 @@ class wunderbyte_table extends table_sql {
         return $sortorder;
     }
 
-
-
     /**
      * Save the filter sortoder here.
      *
@@ -1176,11 +1179,13 @@ class wunderbyte_table extends table_sql {
      *      SELECT $fields FROM $from WHERE $where
      * Of course you can use sub-queries, JOINS etc. by putting them in the
      * appropriate clause of the query.
+     *
      * @param string $fields
      * @param string $from
      * @param string $where
-     * @param array $params
      * @param string $filter
+     * @param array $params
+     *
      * @return void
      */
     public function set_filter_sql(string $fields, string $from, string $where, string $filter, array $params = array()) {
@@ -1267,7 +1272,7 @@ class wunderbyte_table extends table_sql {
      * Applies the searchtext we got via webservice as jsonobject to the sql object.
      * This code actually adds a created fulltext searchcolumn to the sql. we need to encapsulate it to make it searchable.
      *
-     * @param string $filter
+     * @param string $searchtext
      * @return void
      */
     public function apply_searchtext(string $searchtext) {
@@ -1475,7 +1480,7 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Change number of rows. Uses the transmitaction pattern (actionbutton).
-     * @param integer $id
+     * @param int $id
      * @param string $data
      * @return array
      */

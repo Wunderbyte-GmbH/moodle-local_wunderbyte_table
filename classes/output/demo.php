@@ -61,13 +61,17 @@ class demo implements renderable, templatable {
     /**
      * Constructor.
      *
-     * @param string $idstring
-     * @param string $encodedtable
      */
     public function __construct() {
 
     }
 
+    /**
+     * Renders demo table 1.
+     *
+     * @return demo_table
+     *
+     */
     private function render_table_1() {
 
         $table = new demo_table(TABLE1NAME);
@@ -298,6 +302,12 @@ class demo implements renderable, templatable {
         return $table->outhtml(10, true);
     }
 
+    /**
+     * Renders demo table 2.
+     *
+     * @return demo_table
+     *
+     */
     private function render_table_2() {
 
         $table = new demo_table(TABLE2NAME);
@@ -414,6 +424,12 @@ class demo implements renderable, templatable {
         return $table->outhtml(10, true);
     }
 
+    /**
+     * Renders demo table 3.
+     *
+     * @return demo_table
+     *
+     */
     private function render_table_3() {
 
         $table = new demo_table(TABLE3NAME);
@@ -501,6 +517,12 @@ class demo implements renderable, templatable {
 
     }
 
+    /**
+     * Renders demo table 4.
+     *
+     * @return demo_table
+     *
+     */
     private function render_table_4() {
 
         $table = new demo_table(TABLE4NAME);

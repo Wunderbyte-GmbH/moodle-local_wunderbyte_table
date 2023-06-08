@@ -175,6 +175,8 @@ class table implements renderable, templatable {
     /**
      * Display Card sort element
      * (Depends on the template, if we want this or not)
+     *
+     * @var bool
      */
     private $cardsort = false;
 
@@ -202,7 +204,10 @@ class table implements renderable, templatable {
 
     /**
      * Constructor.
+     *
      * @param wunderbyte_table $table
+     * @param string $encodedtable
+     *
      */
     public function __construct(wunderbyte_table $table, string $encodedtable = '') {
 
@@ -441,6 +446,12 @@ class table implements renderable, templatable {
     }
 
 
+    /**
+     * Returns dataformat selector.
+     *
+     * @return array
+     *
+     */
     private function return_dataformat_selector() {
         $formats = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
         $printoptions = array();
@@ -597,10 +608,11 @@ class table implements renderable, templatable {
 
     /**
      * Return the array for rendering the mustache template.
+     * @param array $sortcolumns
      *
-     * @return array
+     * @return ?array
      */
-    public function return_sort_columns($sortcolumns) {
+    public function return_sort_columns(array $sortcolumns) {
 
         global $SESSION;
 

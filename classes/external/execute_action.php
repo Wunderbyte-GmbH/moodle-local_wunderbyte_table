@@ -67,7 +67,14 @@ class execute_action extends external_api {
 
     /**
      * Execute this webservice.
+     *
+     * @param string $methodname
+     * @param string $encodedtable
+     * @param int $id
+     * @param string $data
+     *
      * @return external_function_parameters
+     *
      */
     public static function execute(
         string $methodname,

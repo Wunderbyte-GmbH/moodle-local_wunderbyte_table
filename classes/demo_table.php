@@ -119,7 +119,7 @@ class demo_table extends wunderbyte_table {
     /**
      * Delete item.
      *
-     * @param integer $id
+     * @param int $id
      * @param string $data
      * @return array
      */
@@ -134,7 +134,7 @@ class demo_table extends wunderbyte_table {
     /**
      * Add item.
      *
-     * @param integer $id
+     * @param int $id
      * @param string $data
      * @return array
      */
@@ -149,7 +149,7 @@ class demo_table extends wunderbyte_table {
     /**
      * Toggle Checkbox
      *
-     * @param integer $id
+     * @param int $id
      * @param string $data
      * @return array
      */
