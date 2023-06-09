@@ -26,10 +26,24 @@
 
     Example context (json):
     {
-       "idstring": "sdkjafjlsadjflasjdklf",
-       "encodedtable": "fdaskjfdjalsdjfkldsjflsajflksdjfklasdjflkdasjljkdfsalkjfoweijfoeisjgdklyjglky"
+        "print": {
+            "baseurl": "https://example.com/print",
+            "sesskey": "your_sesskey_value",
+            "idstring": "your_idstring_value",
+            "encodedtable": "your_encodedtable_value",
+            "printoptions": [
+            {
+                "value": "option1",
+                "label": "Option 1"
+            },
+            {
+                "value": "option2",
+                "label": "Option 2"
+            }
+            ],
+            "str": "Print"
+        }
     }
-
 }}
 
 {{#print}}

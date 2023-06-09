@@ -22,11 +22,51 @@
 
     Example context (json):
     {
-       "idstring": "sdkjafjlsadjflasjdklf",
-       "encodedtable": "fdaskjfdjalsdjfkldsjflsajflksdjfklasdjflkdasjljkdfsalkjfoweijfoeisjgdklyjglky",
-       "label": "mylabel"
+    "showactionbuttons": [
+        {
+        "ischeckbox": false,
+        "href": "https://example.com",
+        "class": "button-class",
+        "methodname": "method1",
+        "name": "name1",
+        "id": "button1",
+        "nomodal": false,
+        "selectionmandatory": true,
+        "data": [
+            {
+            "key": "data1",
+            "value": "value1"
+            },
+            {
+            "key": "data2",
+            "value": "value2"
+            }
+        ],
+        "iclass": "fa fa-icon",
+        "label": "Button 1 Label"
+        },
+        {
+        "ischeckbox": true,
+        "id": "checkbox1",
+        "methodname": "method2",
+        "name": "name2",
+        "checked": true,
+        "disabled": false,
+        "class": "checkbox-class",
+        "data": [
+            {
+            "key": "data3",
+            "value": "value3"
+            },
+            {
+            "key": "data4",
+            "value": "value4"
+            }
+        ],
+        "label": "Checkbox 1 Label"
+        }
+    ]
     }
-
 }}
 {{#showactionbuttons}}
     {{^ischeckbox}}
