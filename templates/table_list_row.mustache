@@ -26,46 +26,32 @@
 
     Example context (json):
     {
-       "listheaderclass" : "listheaderclass",
-       "cardheaderclass" : "cardheaderclass",
-       "cardfooterclass" : "cardfooterclass",
-       "cardimageclass" : "cardimageclass",
-       "cardheader": [
-          {
-            "columnclass" : "columnclass",
-            "columnkeyclass" : "columnkeyclass",
-            "key" : "columnname",
-            "keystring" : "localized column name",
-            "columnvalueclass" : "columnvalueclass",
-            "value" : "value"
-          }
-       ],
-       "cardbody": [
-          {
-            "columnclass" : "columnclass",
-            "columnkeyclass" : "columnkeyclass",
-            "key" : "columnname",
-            "keystring" : "localized column name",
-            "columnvalueclass" : "columnvalueclass",
-            "value" : "value"
-          }
-       ],
-       "cardfooter": [
-          {
-            "columnclass" : "columnclass",
-            "columnkeyclass" : "columnkeyclass",
-            "key" : "columnname",
-            "keystring" : "localized column name",
-            "columnvalueclass" : "columnvalueclass",
-            "value" : "value"
-          }
-       ],
-       "cardimage": [
-          {
-            "value" : "value"
-          }
-       ]
+      "datafields": [
+        {
+          "key": "dfield1",
+          "value": "dvalue1"
+        },
+        {
+          "key": "dfield2",
+          "value": "dvalue2"
+        }
+      ],
+      "cardbody": [
+        {
+          "columnclass": "columnclass1",
+          "value": "Column 1 Value",
+          "columnkeyclass": "columnkeyclass1",
+          "columnvalueclass": "columnvalueclass1"
+        },
+        {
+          "columnclass": "columnclass2",
+          "value": "Column 2 Value",
+          "columnkeyclass": "columnkeyclass2",
+          "columnvalueclass": "columnvalueclass2"
+        }
+      ]
     }
+
 }}
 
 <tr class="table row"
@@ -97,4 +83,4 @@
           </span>
         {{#columnclass}}</td>{{/columnclass}}
       {{/cardbody}}
-    </tr>
+</tr>

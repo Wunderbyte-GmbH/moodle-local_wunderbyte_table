@@ -26,8 +26,109 @@
 
     Example context (json):
     {
-       "idstring": "sdkjafjlsadjflasjdklf",
-       "encodedtable": "fdaskjfdjalsdjfkldsjflsajflksdjfklasdjflkdasjljkdfsalkjfoweijfoeisjgdklyjglky"
+    "filter": {
+        "categories": [
+        {
+            "collapsed": "collapsed",
+            "uniqueid": "12345",
+            "expanded": true,
+            "name": "Category1",
+            "columnname": "tablecolumn1",
+            "default": true,
+            "values": [
+            {
+                "value": "value1",
+                "key": "Value1",
+                "checked": "checked"
+            },
+            {
+                "value": "value2",
+                "key": "Value2",
+                "checked": ""
+            }
+            ],
+            "datepicker": false
+        },
+        {
+            "collapsed": "",
+            "uniqueid": "67890",
+            "idstring": "sdkjafjlsadjflasjdklf",
+            "expanded": false,
+            "name": "Category2",
+            "columnname": "tablecolumn2",
+            "default": false,
+            "values": [
+            {
+                "value": "value4",
+                "key": "Value4",
+                "checked": ""
+            },
+            {
+                "value": "value5",
+                "key": "Value5",
+                "checked": "checked"
+            }
+            ],
+            "datepicker": true,
+            "datepickers": [
+            {
+                "timestamp": true,
+                "label": "DatePicker1",
+                "checkboxlabel": "Enable Date Picker 1",
+                "datereadable": "2023-05-17",
+                "timereadable": "09:30",
+                "operator": "greater",
+                "columnname": "column1",
+                "startcolumn": "",
+                "endcolumn": "",
+                "starttimestamp": "",
+                "startdatereadable": "",
+                "starttimereadable": "",
+                "endtimestamp": "",
+                "enddatereadable": "",
+                "endtimereadable": "",
+                "possibleoperations": [
+                {
+                    "operator": "greater",
+                    "label": "Greater than"
+                },
+                {
+                    "operator": "less",
+                    "label": "Less than"
+                }
+                ]
+            },
+            {
+                "timestamp": false,
+                "label": "DatePicker2",
+                "checkboxlabel": "Enable Date Picker 2",
+                "datereadable": "",
+                "timereadable": "",
+                "operator": "",
+                "columnname": "column2",
+                "startcolumn": "startcolumn",
+                "endcolumn": "endcolumn",
+                "starttimestamp": "123456",
+                "startdatereadable": "2023-05-15",
+                "starttimereadable": "12:00",
+                "endtimestamp": "789012",
+                "enddatereadable": "2023-05-19",
+                "endtimereadable": "18:00",
+                "possibleoperations": [
+                {
+                    "operator": "equals",
+                    "label": "Equals"
+                },
+                {
+                    "operator": "between",
+                    "label": "Between"
+                }
+                ]
+            }
+            ]
+        }
+        ]
+    }
     }
 
 }}
