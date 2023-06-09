@@ -31,7 +31,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
       | page     | PageName2  | PageDesc2  | C2     | PAGE2    |
 
-@javascript
+  @javascript
   Scenario: Filter course table in wb_table by timespan for overlaping
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -57,7 +57,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Then I should see "Course 2" in the "#Course_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
 
-@javascript
+  @javascript
   Scenario: Filter course table in wb_table by timespan for within
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -80,7 +80,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Then I should see "Course 2" in the "#Course_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
 
-@javascript
+  @javascript
   Scenario: Filter course table in wb_table by timespan for before and after
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -103,7 +103,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Then I should see "Course 2" in the "#Course_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
 
-@javascript
+  @javascript
   Scenario: Filter course table in wb_table by timespan for overlap beginning
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -125,7 +125,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Then I should see "Course 2" in the "#Course_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
 
-@javascript
+  @javascript
   Scenario: Filter course table in wb_table by timespan for overlap ending
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
