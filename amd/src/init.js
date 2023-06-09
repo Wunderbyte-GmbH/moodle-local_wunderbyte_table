@@ -580,7 +580,6 @@ function returnHiddenElement(element) {
 }
 
 
-
 /**
  * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.
  * @param {string} idstring

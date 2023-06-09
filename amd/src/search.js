@@ -29,9 +29,9 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
 var lastsearchinputs = {};
 
 /**
-   * Render the checkboxes for the filer.
-   * @param {string} idstring
-   */
+ * Render the checkboxes for the filer.
+ * @param {string} idstring
+ */
  export const renderSearchbox = (idstring) => {
 
     const selector = ".wunderbyte_table_container_" + idstring;
@@ -61,7 +61,6 @@ var lastsearchinputs = {};
  * @param {*} containerselector
  * @param {*} idstring
  * @param {*} encodedtable
- * @returns {*}
  */
  export function initializeSearch(containerselector, idstring, encodedtable) {
 

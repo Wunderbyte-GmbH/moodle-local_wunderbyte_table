@@ -234,7 +234,7 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
       }
       reloadAllTables();
     },
-    fail: function (ex) {
+    fail: function(ex) {
       // eslint-disable-next-line no-console
       console.log("ex:" + ex);
 
@@ -333,7 +333,7 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
     // Add as many arguments as you need, they will be passed to the form:
     args: data,
     // Pass any configuration settings to the modal dialogue, for example, the title:
-    modalConfig: { title: titleText },
+    modalConfig: {title: titleText},
     // DOM element that should get the focus after the modal dialogue is closed:
     returnFocus: button,
   });
