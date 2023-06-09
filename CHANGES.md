@@ -1,3 +1,6 @@
+## Version 1.6.2 (2023060900)
+* Bugfix: Fix bugs regarding URL searchParams on page which uses filter.
+
 ## Version 1.6.1 (2023060801)
 * Bugfix: Fix bugs regarding labels for modals
 
