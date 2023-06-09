@@ -139,7 +139,7 @@ export function getDates(e, idstring) {
     if (filtercheckbox.dataset.timespan === "true") {
       setTimespanFilter(filtercontainer, filtername, idstring, name);
     } else {
-      dates[filtercheckbox.operator] = getDateAndTimePickerDataAsUnix(filtercontainer, "datefilter");
+      dates[filtercheckbox.dataset.operator] = getDateAndTimePickerDataAsUnix(filtercontainer, "datefilter");
       // Check if key is set in array, otherwise set new key.
       if (name && filtername) {
         if (!checked[idstring][name]) {
