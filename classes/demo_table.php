@@ -71,7 +71,7 @@ class demo_table extends wunderbyte_table {
             'class' => 'btn btn-danger',
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-edit', // Add an icon before the label.
-            'id' => $values->id,
+            'id' => $values->id.'-'.$this->uniqueid,
             'name' => $this->uniqueid.'-'.$values->id,
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => true,
@@ -86,7 +86,7 @@ class demo_table extends wunderbyte_table {
             'class' => 'btn btn-success',
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-edit', // Add an icon before the label.
-            'id' => $values->id,
+            'id' => $values->id.'-'.$this->uniqueid,
             'name' => $this->uniqueid.'-'.$values->id,
             'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
@@ -100,7 +100,7 @@ class demo_table extends wunderbyte_table {
             'class' => 'btn btn-success',
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-edit', // Add an icon before the label.
-            'id' => $values->id,
+            'id' => $values->id.'-'.$this->uniqueid,
             'name' => $this->uniqueid.'-'.$values->id,
             'methodname' => 'togglecheckbox', // The method needs to be added to your child of wunderbyte_table class.
             'ischeckbox' => true,
