@@ -377,8 +377,15 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
 
   const url = new URL(window.location.href);
 
-  url.search = "";
-  history.replaceState(null, '', url);
+  let params = url.searchParams;
+
+  // We don't actually want to delete all url params, only those we don't use for searching.
+  params.delete('wbtfilter');
+  params.delete('wbtsearch');
+  params.delete('tsort');
+  params.delete('tdir');
+
+  window.history.replaceState(null, '', url);
 
   if (filterobjects) {
     url.searchParams.append('wbtfilter', filterobjects);
