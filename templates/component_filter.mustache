@@ -189,8 +189,8 @@
                                 <input class="filterelement form-check-input" type="checkbox" id="{{label}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-dateelement = "dateelement" data-filtername="{{label}}" data-operator="{{operator}}" data-columnname="{{columnname}}">
                                 <label class="filterelement form-check-label" for="{{label}}{{columnname}}{{idstring}}">{{checkboxlabel}}</label>
                                 <div class="datepicker-label">{{label}}</div>
-                                <input class="filterelement datepicker-input" type="date" id="{{label}}{{columnname}}{{idstring}}datefilter_date" value="{{datereadable}}" data-timestamp="{{timestamp}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
-                                <input class="filterelement datepicker-input" type="time" id="{{label}}{{columnname}}{{idstring}}datefilter_time" name="{{columnname}}" value="{{timereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
+                                <input class="filterelement datepicker-input" type="date" id="{{label}}{{columnname}}{{idstring}}datefilter_date" value="{{datereadable}}" data-timestamp="{{timestamp}}" name="{{columnname}}_single-date" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
+                                <input class="filterelement datepicker-input" type="time" id="{{label}}{{columnname}}{{idstring}}datefilter_time" name="{{columnname}}_single-time" value="{{timereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
                             {{/timestamp}}
                             {{#startcolumn}}
 
