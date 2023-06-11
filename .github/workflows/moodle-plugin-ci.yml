@@ -86,6 +86,7 @@ jobs:
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
+          MUSTACHE_IGNORE_NAMES: 'component_filter.mustache,table_list_row.mustache,twtable_list_row.mustache'
 
       - name: PHP Lint
         if: ${{ always() }}
