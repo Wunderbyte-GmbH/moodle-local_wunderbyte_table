@@ -146,3 +146,15 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     Then I should see "Course 2" in the "#Course_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
+
+  @javascript
+  Scenario: Filter course table in wb_table ended before the exact end date
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Course"
+    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I click on "[aria-controls=\"id_collapse_enddate\"]" "css_element"
+    And I set the field "enddate_single-date" in the "#id_collapse_enddate" "css_element" to "2023-05-13"
+    And I set the field "enddate" in the "#id_collapse_enddate" "css_element" to "checked"
+    And I wait "1" seconds
+    And I should not see "Course 2" in the ".wunderbyteTableClass.Course" "css_element"
