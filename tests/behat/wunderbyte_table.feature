@@ -98,14 +98,18 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Users_InfiniteScroll"
+    # Ensure of available / not yet loaded records:
     And I should see "user12" in the "#Users_InfiniteScroll_r7" "css_element"
     And "//*[contains(@id, 'Users_InfiniteScroll')]//tr[@id, 'Users_InfiniteScroll_r16']" "xpath_element" should not exist
-    And I click on "TriggersNoModal" "link" in the "#Users_InfiniteScroll_r7" "css_element"
+    ## Call pagedown twice to ensure actual bottom of page will be reached.
+    And I press the pagedown key
+    And I press the pagedown key
     And I wait "1" seconds
-    And I should see "Did work" in the "#user-notifications" "css_element"
     And I should see "user19" in the "#Users_InfiniteScroll_r14" "css_element"
+    ## Call pagedown twice to ensure actual bottom of page will be reached.
+    And I press the pagedown key
+    And I press the pagedown key
+    # Ensure of available / not yet loaded records:
     And "//*[contains(@id, 'Users_InfiniteScroll')]//tr[@id, 'Users_InfiniteScroll_r16']" "xpath_element" should not exist
-    And I click on "TriggersNoModal" "link" in the "#Users_InfiniteScroll_r14" "css_element"
     And I wait "1" seconds
-    And I should see "Did work" in the "#user-notifications" "css_element"
     And I should see "user20" in the "#Users_InfiniteScroll_r16" "css_element"
