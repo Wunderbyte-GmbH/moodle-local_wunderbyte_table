@@ -98,3 +98,5 @@ $string['nmmcys'] = 'NoModal, MultipleCall, Selection';
 $string['nmscys'] = 'NoModal, SingleCall, Selection';
 $string['ymmcys'] = '+Modal, MultipleCall, Selection';
 $string['ymscys'] = '+Modal, SingleCall, Selection';
+
+$string['change'] = 'Change';
