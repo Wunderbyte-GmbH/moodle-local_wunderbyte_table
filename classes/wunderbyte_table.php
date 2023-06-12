@@ -251,6 +251,13 @@ class wunderbyte_table extends table_sql {
      */
     public $showrowcountselect = false;
 
+    /**
+     * Inactive filter display on load.
+     *
+     * @var boolean
+     */
+    public $filteronloadinactive = false;
+
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
@@ -1130,6 +1137,7 @@ class wunderbyte_table extends table_sql {
                 $categoryobject['default']['values'] = array_values($categoryobject['default']['values']);
             }
             $filterjson['categories'][] = $categoryobject;
+            $filterjson['filterinactive'] = $this->filteronloadinactive;
         }
 
         return json_encode($filterjson);

@@ -298,6 +298,7 @@ class demo implements renderable, templatable {
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
+        $table->filteronloadinactive = true;
 
 
         return $table->outhtml(10, true);
@@ -527,6 +528,7 @@ class demo implements renderable, templatable {
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
+        $table->filteronloadinactive = true;
 
         // To lazy load wunderbyte table (eg. for loading in tabs or modals) 
         // you need to call $table->lazyout() instead of $table->out. 
