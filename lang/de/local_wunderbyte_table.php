@@ -85,3 +85,13 @@ $string['startvalue'] = 'Anfang';
 $string['endvalue'] = 'Ende';
 $string['selectedtimespan'] = 'gewählter Zeitspanne';
 $string['timespan'] = 'Zeitspanne';
+
+// Action Buttons demo names.
+$string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';
+$string['nmscns'] = 'NoModal, SingleCall, NoSelection';
+$string['ymmcns'] = '+Modal, MultipleCall, NoSelection';
+$string['ymscns'] = '+Modal, SingleCall, NoSelection';
+$string['nmmcys'] = 'NoModal, MultipleCall, Selection';
+$string['nmscys'] = 'NoModal, SingleCall, Selection';
+$string['ymmcys'] = '+Modal, MultipleCall, Selection';
+$string['ymscys'] = '+Modal, SingleCall, Selection';

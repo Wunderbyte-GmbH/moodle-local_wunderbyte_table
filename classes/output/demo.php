@@ -67,7 +67,7 @@ class demo implements renderable, templatable {
     }
 
     /**
-     * Renders demo table 1.
+     * Renders demo table 1. Table 1 displays pagination and all types of demo action buttons.
      *
      * @return demo_table
      *
@@ -140,143 +140,145 @@ class demo implements renderable, templatable {
         $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 
-        // When true and action buttons are present, checkboxes will be rendered to every line.
+        // When true and action buttons are present, checkboxes will be rendered to every line / record.
         $table->addcheckboxes = true;
 
+        // Add action buttons to bottom of table. Demo of all defined types.
+        // Define if it triggers a modal, if records need to be selected 
+        // and if a single call for all records or multiple calls (one for each selected record) are triggered.
         $table->actionbuttons[] = [
-            'label' => 'NoModal, MultipleCall, NoSelection', // Name of your action button.
-            'class' => 'btn btn-success',
+            'label' => get_string('nmmcns', 'local_wunderbyte_table'), // 'NoModal, MultipleCall, NoSelection'-> Name of your action button.
+            'class' => 'btn btn-success', // Example colors bootstrap 4 classes.
             'href' => '#',
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
-            // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
-            'nomodal' => true,
+            'nomodal' => true, // If set to true, there is no modal and the method will be called directly.
             'selectionmandatory' => false, // When set to true, action will only be triggered, if elements are selected.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle', // Will be shown in modal title
                 'bodystring' => 'deletedatabody', // Will be shown in modal body in case elements are selected
                 'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
-                'noselectionbodystring' => 'specialbody', // Will be displayed in modal bode in case no data is selected
+                'noselectionbodystring' => 'specialbody', // Will be displayed in modal body in case no data is selected
                 'submitbuttonstring' => 'deletedatasubmit', // Modal Button String
                 'component' => 'local_wunderbyte_table', // Localization of strings
             ]
         ];
         $table->actionbuttons[] = [
-            'label' => 'NoModal, SingleCall, NoSelection', // Name of your action button.
+            'label' => get_string('nmscns', 'local_wunderbyte_table'), // 'NoModal, SingleCall, NoSelection'
             'class' => 'btn btn-primary',
             'href' => '#',
             'id' => -1, // This forces single call execution.
-            'formclass' => '', // To open dynamic form, instead of just confirmation modal.
-            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
-            'nomodal' => true, // If set to true, there is no modal and the method will be called directly.
+            //'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+            'methodname' => 'additem',
+            'nomodal' => true,
             'selectionmandatory' => false,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
             ],
         ];
         $table->actionbuttons[] = [
-            'label' => '+Modal, MultipleCall, NoSelection', // Name of your action button.
+            'label' => get_string('ymmcns', 'local_wunderbyte_table'),// '+Modal, MultipleCall, NoSelection'
             'class' => 'btn btn-danger',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'deleteitem', 
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
-            'selectionmandatory' => false, // You might want to add a 'noselectionbodystring' to data which will be shown in the modal in case there are no elements selected.
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+            'selectionmandatory' => false, 
+            'data' => [
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
-                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
-                'noselectionbodystring' => 'specialbody', // Will be applied in case no data is selected
+                'labelcolumn' => 'firstname', 
+                'noselectionbodystring' => 'specialbody', 
             ]
         ];
 
         $table->actionbuttons[] = [
-            'label' => '+Modal, SingleCall, NoSelection', // Name of your action button.
+            'label' => get_string('ymscns', 'local_wunderbyte_table'), // '+Modal, SingleCall, NoSelection'
             'class' => 'btn btn-warning',
             'href' => '#',
-            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'additem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'id' => -1,
             'selectionmandatory' => false,
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+            'data' => [
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'adddatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
-                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
-                'noselectionbodystring' => 'adddatabody', // Will be applied in case no data is selected
+                'labelcolumn' => 'firstname',
+                'noselectionbodystring' => 'adddatabody',
             ]
         ];
 
         $table->actionbuttons[] = [
-            'label' => 'NoModal, MultipleCall, Selection', // Name of your action button.
+            'label' => get_string('nmmcys', 'local_wunderbyte_table'), // 'NoModal, MultipleCall, Selection'
             'class' => 'btn btn-success',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'deleteitem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => true,
             'selectionmandatory' => true,
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+            'data' => [
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
-                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                'labelcolumn' => 'firstname',
             ]
         ];
         $table->actionbuttons[] = [
-            'label' => 'NoModal, SingleCall, Selection', // Name of your action button.
+            'label' => get_string('nmscys', 'local_wunderbyte_table'), // 'NoModal, SingleCall, Selection'
             'class' => 'btn btn-primary',
             'href' => '#',
-            'id' => -1, // This forces single call execution.
+            'id' => -1,
             'formclass' => '', // To open dynamic form, instead of just confirmation modal.
-            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
-            'nomodal' => true, // If set to true, there is no modal but the method will be called directly.
+            'methodname' => 'additem',
+            'nomodal' => true,
             'selectionmandatory' => true,
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+            'data' => [
                 'id' => 'id',
             ],
         ];
         $table->actionbuttons[] = [
-            'label' => '+Modal, MultipleCall, Selection', // Name of your action button.
+            'label' => get_string('ymmcys', 'local_wunderbyte_table'), // '+Modal, MultipleCall, Selection',
             'class' => 'btn btn-danger',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'deleteitem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+            'data' => [ 
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
-                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                'labelcolumn' => 'firstname',
             ]
         ];
 
         $table->actionbuttons[] = [
-            'label' => '+Modal, SingleCall, Selection', // Name of your action button.
+            'label' => get_string('ymscys', 'local_wunderbyte_table'), // '+Modal, SingleCall, Selection'.
             'class' => 'btn btn-warning',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'deleteitem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
             'id' => -1,
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+            'data' => [
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
-                'labelcolumn' => 'firstname', // The Labelcolumn is important because it will be picked for human verification in the modal.
+                'labelcolumn' => 'firstname',
             ]
         ];
 
@@ -289,7 +291,6 @@ class demo implements renderable, templatable {
 
         $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-        //$table->infinitescroll = 20;
         $table->pageable(true);
 
         $table->stickyheader = true;
@@ -303,7 +304,7 @@ class demo implements renderable, templatable {
     }
 
     /**
-     * Renders demo table 2.
+     * Renders demo table 2. With records including timecode, demo of filter for time and timespan.
      *
      * @return demo_table
      *
@@ -331,17 +332,17 @@ class demo implements renderable, templatable {
             'shortname' =>  [
                 'localizedname' => get_string('shortname')
             ],
-            'enddate' => [
+            'enddate' => [ // Columns containing Unix timestamps can be filtered.
                 'localizedname' => get_string('enddate'),
                 'datepicker' => [
                     'label' => [ // Can be localized and like "Courses starting after:".
                         'operator' => '<',
                         'defaultvalue' => '1680130800', // Can also be string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the filter checkbox (ie 'apply filter').
                     ]
                 ]
             ],
-            'startdate' => [ // Columns containing Unix timestamps can be filtered.
+            'startdate' => [ 
                 'localizedname' => get_string('timespan', 'local_wunderbyte_table'),
 
                 'datepicker' => [
@@ -353,7 +354,7 @@ class demo implements renderable, templatable {
                         'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
                         'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'),
                         'defaultvalueend' => 'now', // Can also be Unix timestamp or string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), 
                     ]
                 ]
 
@@ -411,7 +412,6 @@ class demo implements renderable, templatable {
 
         $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-        //$table->infinitescroll = 10;
         $table->pageable(true);
 
         $table->stickyheader = false;
@@ -420,12 +420,11 @@ class demo implements renderable, templatable {
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
 
-
         return $table->outhtml(10, true);
     }
 
     /**
-     * Renders demo table 3.
+     * Renders demo table 3. A table with infite scroll and sticky header. 
      *
      * @return demo_table
      *
@@ -502,7 +501,7 @@ class demo implements renderable, templatable {
 
         $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-        $table->infinitescroll = 10;
+        $table->infinitescroll = 10; // Infinite scroll enabled
         $table->pageable(true);
 
         $table->stickyheader = true;
