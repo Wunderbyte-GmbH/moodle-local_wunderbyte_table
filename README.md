@@ -174,6 +174,8 @@ The possibleoperations array is containing a whitelist, if none specified, all a
                         ]
                     ]
 
+By default filters are displayed next to the table and can be hidden with the filterbutton. If you want them to be hidden on load, set filteronloadinactive = true in the instance of your table.
+
 ## Sorting
 
 If the output template you want to use doesn't support clickable headers to sort (eg because you use cards), you might want to use the sort select. Just add

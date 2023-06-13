@@ -568,6 +568,7 @@ class table implements renderable, templatable {
         }
 
         if (!empty($this->categories)) {
+            // If there there is a filterobject, we check if on load filters should be hidden or displayed (default).
             if ($this->categories['filterinactive'] == true) {
                 $data['showcomponentstoggle'] = false;
                 $data['showfilterbutton'] = true;

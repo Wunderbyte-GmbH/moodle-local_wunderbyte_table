@@ -1137,6 +1137,7 @@ class wunderbyte_table extends table_sql {
                 $categoryobject['default']['values'] = array_values($categoryobject['default']['values']);
             }
             $filterjson['categories'][] = $categoryobject;
+            // Check if filter display should be hidden on load.
             $filterjson['filterinactive'] = $this->filteronloadinactive;
         }
 
