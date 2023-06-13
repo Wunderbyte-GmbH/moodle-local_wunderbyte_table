@@ -570,8 +570,10 @@ class table implements renderable, templatable {
         if (!empty($this->categories)) {
             if ($this->categories['filterinactive'] == true) {
                 $data['showcomponentstoggle'] = false;
+                $data['showfilterbutton'] = true;
             } else {
                 $data['showcomponentstoggle'] = true;
+                $data['showfilterbutton'] = true;
             }
             
         }
