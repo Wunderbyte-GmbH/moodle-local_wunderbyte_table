@@ -28,12 +28,24 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - php: 8.1
+            moodle-branch: MOODLE_402_STABLE
+            database: pgsql
+          - php: 8.1
+            moodle-branch: MOODLE_402_STABLE
+            database: mariadb
           - php: 8.0
             moodle-branch: MOODLE_402_STABLE
             database: pgsql
           - php: 8.0
             moodle-branch: MOODLE_402_STABLE
             database: mariadb
+          - php: 8.1
+            moodle-branch: MOODLE_401_STABLE
+            database: pgsql
+          - php: 8.1
+            moodle-branch: MOODLE_401_STABLE
+            database: mariadb
           - php: 8.0
             moodle-branch: MOODLE_401_STABLE
             database: pgsql
@@ -45,18 +57,6 @@ jobs:
             database: pgsql
           - php: 7.4
             moodle-branch: MOODLE_401_STABLE
-            database: mariadb
-          - php: 8.0
-            moodle-branch: MOODLE_311_STABLE
-            database: pgsql
-          - php: 8.0
-            moodle-branch: MOODLE_311_STABLE
-            database: mariadb
-          - php: 7.4
-            moodle-branch: MOODLE_311_STABLE
-            database: pgsql
-          - php: 7.4
-            moodle-branch: MOODLE_311_STABLE
             database: mariadb
 
     steps:
