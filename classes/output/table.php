@@ -666,6 +666,11 @@ class table implements renderable, templatable {
 
         global $PAGE;
 
+        // To be compatible with php 8.1.
+        if (empty($table->filterjson)) {
+            return null;
+        }
+
         $categories = json_decode($table->filterjson, true);
 
         if (!isset($categories['categories'])) {
