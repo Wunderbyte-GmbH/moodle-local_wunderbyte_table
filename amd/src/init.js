@@ -168,12 +168,28 @@ function getScrollParent(node) {
     if (node === null) {
         return null;
     }
-
     if (node.scrollHeight > node.clientHeight) {
-        return node;
+        if (doublecheckScrollable(node)) {
+            // In some cases (lazyouthtml table), we need to doublecheck if the element is scrollable.
+            return node;
+        } else {
+            return getScrollParent(node.parentNode);
+        }
     } else {
         return getScrollParent(node.parentNode);
     }
+}
+
+/**
+ * Function to check if element is scrollable by checking overflow.
+ * @param {*} node
+ * @returns {boolean}
+ */
+function doublecheckScrollable(node) {
+    const styles = window.getComputedStyle(node);
+    const isScrollable = styles.overflow === 'scroll' || styles.overflow === 'auto';
+
+    return isScrollable;
 }
 
 /**
@@ -532,8 +548,6 @@ function addScrollFunctionality(idstring, encodedtable, element) {
  * @returns {void}
  */
 function scrollListener(element, idstring, encodedtable) {
-
-
     // We only want to scroll, if the element is visible.
     // So, if we find a hidden element in the parent, we don't scroll.
     if (returnHiddenElement(element)) {
