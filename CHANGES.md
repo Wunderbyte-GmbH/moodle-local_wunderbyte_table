@@ -1,3 +1,9 @@
+## Version 1.6.3 (2023061500)
+* New feature: Possibility to hide filter buttons on initial load (filteronloadinactive).
+* New feature: Displaying action buttons on top of table in case of infinite scroll.
+* Bugfix: Infinitescroll now working on lazyout table.
+* Bugfix: Datefilter query (Bug in 1.6.2.).
+
 ## Version 1.6.2 (2023060900)
 * Bugfix: Fix bugs regarding URL searchParams on page which uses filter.
 
