@@ -426,7 +426,7 @@ class demo implements renderable, templatable {
     }
 
     /**
-     * Renders demo table 3. A lazy load table with sticky header.
+     * Renders demo table 3. A lazy load table with sticky header and infinitescroll.
      *
      * @return demo_table
      *
@@ -524,6 +524,7 @@ class demo implements renderable, templatable {
 
         $table->pageable(true);
 
+        $table->infinitescroll = 10; // Triggering reload of records when scrolling to bottom of table. Define the number of records being loaded.
         $table->stickyheader = false;
         $table->showcountlabel = true;
         $table->showdownloadbutton = true;
@@ -533,7 +534,6 @@ class demo implements renderable, templatable {
         // To lazy load wunderbyte table (eg. for loading in tabs or modals) 
         // you need to call $table->lazyout() instead of $table->out. 
         // While out will return the html to echo, lazyout echos right away. 
-        // Infinite scroll is not enabled for lazyout tables.
         list($idstring, $encodedtable, $html) = $table->lazyouthtml(10, true);
 
         return $html;
@@ -619,9 +619,9 @@ class demo implements renderable, templatable {
 
         $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
-        $table->infinitescroll = 7;
         $table->pageable(true);
 
+        $table->infinitescroll = 7; // Triggering reload of records when scrolling to bottom of table. Define the number of records being loaded.
         $table->stickyheader = false;
         $table->showcountlabel = true;
         $table->showdownloadbutton = true;

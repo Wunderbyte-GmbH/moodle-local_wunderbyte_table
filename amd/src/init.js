@@ -558,6 +558,11 @@ function scrollListener(element, idstring, encodedtable) {
     const elementheight = element.getBoundingClientRect().height;
     const screenheight = document.body.scrollHeight;
 
+    // Double check if we have infinitescroll enabled.
+    if (scrollpages[idstring] < 0 && infinitescrollEnabled(idstring)) {
+        scrollpages[idstring] = 0;
+    }
+
     if (!loadings[idstring] && scrollpages[idstring] >= 0) {
         if (elementtop + elementheight - screenheight < 0) {
             scrollpages[idstring] = scrollpages[idstring] + 1;
