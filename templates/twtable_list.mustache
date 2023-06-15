@@ -69,6 +69,11 @@
 }}
 
 {{#table}}
+{{#infinitescroll}}
+     <div>
+     {{> local_wunderbyte_table/component_actionbutton }}
+     </div>
+{{/infinitescroll}}
 <div class="wunderbyte-table-table">
      {{> local_wunderbyte_table/component_countlabel }}
      <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}}
@@ -100,6 +105,10 @@
 <div class="float-right">{{> local_wunderbyte_table/component_selectrows }}</div>
 {{/table}}
 
+{{^infinitescroll}}
+     {{> local_wunderbyte_table/component_pagination }}
+     {{> local_wunderbyte_table/component_actionbutton }}
+{{/infinitescroll}}
 {{#errormessage}}
      <div class="alert alert-danger" role="alert">
           {{errormessage}}
