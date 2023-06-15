@@ -576,7 +576,6 @@ class table implements renderable, templatable {
                 $data['showcomponentstoggle'] = true;
                 $data['showfilterbutton'] = true;
             }
-            
         }
 
         if (!empty($this->actionbuttons)) {
