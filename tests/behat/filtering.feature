@@ -88,6 +88,8 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "admin" in the "#Users_r1" "css_element"
     And "//*[contains(@id, 'Users')]//tr[@id, 'Users_r2']" "xpath_element" should not exist
     And I follow "Course"
+    ## Filter panel being hidden by default on the Course tab
+    And I press "asidecollapse-Course"
     And I should see "Course 1" in the "#Course_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_fullname\"]" "css_element"
     And I should see "Course 1" in the "#id_collapse_fullname" "css_element"
@@ -96,6 +98,8 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "Course 1" in the "#Course_r1" "css_element"
     And "//*[contains(@id, 'Course')]//tr[@id, 'Course_r2']" "xpath_element" should not exist
     And I follow "Users_InfiniteScroll"
+    ## Filter panel being hidden by default on the Infinite Scroll tab
+    And I press "asidecollapse-Users_InfiniteScroll"
     And I should see "Teacher" in the "#Users_InfiniteScroll_r3" "css_element"
     And I click on ".Users_InfiniteScroll [aria-controls=\"id_collapse_firstname\"]" "css_element"
     And I should see "Teacher" in the ".Users_InfiniteScroll #id_collapse_firstname" "css_element"

@@ -36,6 +36,8 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
+    ## Filter panel being hidden by default on the Course tab
+    And I press "asidecollapse-Course"
     And I should see "Course 1" in the "#Course_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
@@ -62,6 +64,8 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
+    ## Filter panel being hidden by default on the Course tab
+    And I press "asidecollapse-Course"
     And I should see "Course 1" in the "#Course_r2" "css_element"
     And I should see "Course 2" in the "#Course_r3" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
@@ -85,6 +89,8 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
+    ## Filter panel being hidden by default on the Course tab
+    And I press "asidecollapse-Course"
     And I should see "Course 1" in the "#Course_r2" "css_element"
     And I should see "Course 2" in the "#Course_r3" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
@@ -108,6 +114,8 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
+    ## Filter panel being hidden by default on the Course tab
+    And I press "asidecollapse-Course"
     And I should see "Course 1" in the "#Course_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
@@ -130,6 +138,8 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
+    ## Filter panel being hidden by default on the Course tab
+    And I press "asidecollapse-Course"
     And I should see "Course 1" in the "#Course_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-10"
@@ -152,6 +162,8 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
+    ## Filter panel being hidden by default on the Course tab
+    And I press "asidecollapse-Course"
     And I should see "Course 1" in the "#Course_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_enddate\"]" "css_element"
     And I set the field "enddate_single-date" in the "#id_collapse_enddate" "css_element" to "2023-05-13"
