@@ -1252,7 +1252,7 @@ class wunderbyte_table extends table_sql {
                     }
 
                     if ($datecomparison == true) {
-                        $filter .= $categorykey . ' ' . key($value) . ' ' . current($value);
+                        $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
                     } else if (is_numeric($value)) {
                         $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "". $value;

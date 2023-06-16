@@ -724,7 +724,7 @@ class table implements renderable, templatable {
 
                         // Apply filter for date and time value.
                         if (is_object($filter)) {
-                            $unixcode = current($filter);
+                            $unixcode = current((array) $filter);
                             $date = date('Y-m-d', $unixcode);
                             $time = date('H:i', $unixcode);
                             // We check which filter of the column is checked and apply the values.
