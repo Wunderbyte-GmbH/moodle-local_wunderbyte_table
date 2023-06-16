@@ -1,3 +1,7 @@
+## Version 1.6.4 (2023061600)
+* Improvement: Behat test - adjust scenarios to support hidden by default filter panel on the "course" and "Infinite scroll"  tabs.
+* Improvement: GitHub Code Checker: fix linting.
+
 ## Version 1.6.3 (2023061500)
 * New feature: Possibility to hide filter buttons on initial load (filteronloadinactive).
 * New feature: Displaying action buttons on top of table in case of infinite scroll.
