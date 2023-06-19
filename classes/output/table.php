@@ -475,7 +475,6 @@ class table implements renderable, templatable {
         if (!$this->showrowcountselect) {
             return [];
         }
-
         $options = [];
         $counter = 1;
         while ($counter <= 19) {

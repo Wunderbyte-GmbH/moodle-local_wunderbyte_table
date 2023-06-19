@@ -31,8 +31,6 @@ const SELECTOR = {
  * @returns {void};
  */
 export function initializeRowsSelect(selector, idstring, encodedtable) {
-
-
         const container = document.querySelector(selector);
         const selectElements = container.querySelectorAll(SELECTOR.ROWSELECT);
 
@@ -41,15 +39,12 @@ export function initializeRowsSelect(selector, idstring, encodedtable) {
                 selectElement.dataset.initialized = true;
                 selectElement.addEventListener('change', () => {
                     const selectedvalue = selectElement.value;
-                    // eslint-disable-next-line no-console
-                    console.log(selectedvalue);
                     const data = {
                         "numberofrowsselect": selectedvalue,
                     };
                     transmitAction(0, 'rownumberperpage', JSON.stringify(data), idstring, encodedtable);
                 });
             }
-
         });
 }
 
