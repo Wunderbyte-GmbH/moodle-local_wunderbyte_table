@@ -1211,12 +1211,44 @@ class wunderbyte_table extends table_sql {
      * @param string $filter
      * @return void
      */
-    public function apply_filter(string $filter) {
+    public function apply_filter(string $filter, string &$searchtext = '') {
 
         global $DB;
 
         if (!$filterobject = json_decode($filter)) {
             throw new moodle_exception('invalidfilterjson', 'local_wunderbyte_table');
+        }
+
+        if (!$searchtext == '') {
+            $regex = '/(?<key>\w+):(?:"(?<quotedValue>[^"]+)"|(?<nonQuotedValue>[^,\s]+))/';
+
+            $remainingstring = $searchtext;
+            $columnname = '';
+            $value = '';
+            preg_match_all($regex, $searchtext, $matches, PREG_SET_ORDER);
+
+            foreach ($matches as $match) {
+                $columnname = $match["key"];
+                $quotedvalue = $match["quotedValue"];
+                $nonquotedvalue = $match["nonQuotedValue"];
+                $value = $quotedvalue ? $quotedvalue : $nonquotedvalue;
+
+                // TODO: Check if key is a column name - validation!
+                // Check if it's a column and if it exists in filtercolumns (localized and unlocalized)
+                if (property_exists($filterobject, $columnname)) {
+                    if (!in_array($value, $filterobject->$columnname)) {
+                        $filterobject->$columnname[] = $value;
+                    }
+                } else {
+                    $filterobject->$columnname[] = $value;
+                }
+
+                // Check if there is a string remaining after getting key and value
+                $matchedstring = $match[0];
+                $lastIndex = $match["0"] + strlen($matchedstring);
+                $remainingstring = substr($remainingstring, $lastIndex);
+            }
+            $searchtext .= trim($remainingstring);
         }
 
         $filter = '';
@@ -1532,8 +1564,8 @@ class wunderbyte_table extends table_sql {
         $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
         $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
 
-        if (!empty($wbtfilter)) {
-            $this->apply_filter($wbtfilter);
+        if (!empty($wbtfilter) || !empty($wbtsearch)) {
+            $this->apply_filter($wbtfilter, $wbtsearch);
         }
 
         if (!empty($wbtsearch)) {
