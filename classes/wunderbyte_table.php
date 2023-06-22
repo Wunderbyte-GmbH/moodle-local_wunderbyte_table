@@ -1254,7 +1254,9 @@ class wunderbyte_table extends table_sql {
                     }
                 }
 
-                if (!$quotedvalue && !filter_var($value, FILTER_VALIDATE_INT)) { // Value is unquoted and not a number.
+                if (!$quotedvalue && // Value is unquoted
+                !filter_var($value, FILTER_VALIDATE_INT) && // And not a number.
+                !filter_var($value, FILTER_VALIDATE_FLOAT)) {
                     $value = "%" . $value . "%"; // Add wildcards.
                 } else { // If value is an integer
                 }
