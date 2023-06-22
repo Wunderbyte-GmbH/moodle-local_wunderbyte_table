@@ -79,7 +79,7 @@
     }
 }}
 
-<div class="wunderbyte_table_container_{{idstring}} {{#showfilterbutton}}wunderbyte_table_filter_on{{/showfilterbutton}} {{uniqueid}} {{^showcomponentstoggle}} inactivefilter {{/showcomponentstoggle}}">
+<div class="wunderbyte_table_container_{{idstring}} {{#showfilterbutton}}wunderbyte_table_filter_on{{/showfilterbutton}} {{uniqueid}} {{#filterdeactivated}} inactivefilter {{/filterdeactivated}} {{#nofilteratall}}{{/nofilteratall}}">
      <div class="container-fluid mw-100">
           <div class="row mb-2">
                <div class="col-md-6">
