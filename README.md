@@ -186,6 +186,11 @@ to your wunderbyte_table classs (look in the _container templates to understand 
 
 Each column defined as sortable will display carets in the table header. They have the same functionality as sortcolumn select & changesortorder element displayed in top of table.
 
+## Sort
+
+The fulltext search is triggerd when more than 3 characters are typed into the searchfield. Fulltext search is checking values from all columns defined in $table->define_fulltextsearchcolumns(["column1", "column2"]). 
+If you want to look for values in a specific column, use columnname:searchterm. This can be applied for numerous queries and combined with regular fulltext search. Combinations are seperated via whitespace and/or comma. If you want to use values containing whitespaces, use double (or single) quotes ie. "Localized Column":"value including whitespace". Searchterms will be used like wildcards, while quoted values and numbers trigger exact search (no wildcard).
+
 
 ### Display
 If you want to display multiple tables on one page, tabs can be enabled in templates.
