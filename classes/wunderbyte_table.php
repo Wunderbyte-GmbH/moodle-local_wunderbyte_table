@@ -1215,26 +1215,58 @@ class wunderbyte_table extends table_sql {
 
         global $DB;
 
-        if (!$filterobject = json_decode($filter)) {
+        if ($filter !== "" && !$filterobject = json_decode($filter)) {
             throw new moodle_exception('invalidfilterjson', 'local_wunderbyte_table');
         }
-
+        if (!isset($filterobject)) {
+            $filterobject = new stdClass;
+        }
         if (!$searchtext == '') {
-            $regex = '/(?<key>\w+):(?:"(?<quotedValue>[^"]+)"|(?<nonQuotedValue>[^,\s]+))/';
+            $characterstoreplace = ["'", '„', '“'];
+            $searchtext = str_replace($characterstoreplace, '"', $searchtext);
 
+            $regex = '/(?|"([^"]+)"|(\w+)):(?:"([^"]+)"|([^,\s]+))/';
             $remainingstring = $searchtext;
+            $initialsearchtext = $searchtext;
             $columnname = '';
             $value = '';
             preg_match_all($regex, $searchtext, $matches, PREG_SET_ORDER);
 
-            foreach ($matches as $match) {
-                $columnname = $match["key"];
-                $quotedvalue = $match["quotedValue"];
-                $nonquotedvalue = $match["nonQuotedValue"];
-                $value = $quotedvalue ? $quotedvalue : $nonquotedvalue;
+            // Combining defined columns and their localized names.
+            $columns = array_combine(array_keys($this->columns), array_values($this->headers));
 
-                // TODO: Check if key is a column name - validation!
-                // Check if it's a column and if it exists in filtercolumns (localized and unlocalized)
+            foreach ($matches as $match) {
+                // Assigning the values the columnname and value. 
+                $columnname = $match[1];
+                $value = $match[2];
+                if ($match[2] == "") {
+                    $value = $match[3];
+                } 
+
+                // Checking if we find a doublequote after the semicolon
+                $quotedvalue = false;
+                $semicolonposition = strpos($match[0], ':');
+                if ($semicolonposition !== false) {
+                    $semicolonposition++;
+                    if ($semicolonposition < strlen($match[0])) {
+                        $characterAfter = $match[0][$semicolonposition];
+                        if ($characterAfter == '"') {
+                            $quotedvalue = true;
+                        }
+                    }
+                }
+
+                if (!$quotedvalue && !filter_var($value, FILTER_VALIDATE_INT)) { // Value is unquoted and not a number.
+                    $value = "%" . $value . "%"; // Add wildcards.
+                } else { // If value is an integer
+                }
+
+                if (in_array($columnname, $columns)) { // Check if searchstring column corresponds to localized name. If so set columnname.
+                    $columnname = array_search($columnname, $columns);
+                } else if (!array_key_exists($columnname, $columns) || !array_key_exists(strtolower($columnname), $columns)) { // Or columnname.
+                    continue;
+                } 
+
                 if (property_exists($filterobject, $columnname)) {
                     if (!in_array($value, $filterobject->$columnname)) {
                         $filterobject->$columnname[] = $value;
@@ -1244,11 +1276,13 @@ class wunderbyte_table extends table_sql {
                 }
 
                 // Check if there is a string remaining after getting key and value
-                $matchedstring = $match[0];
-                $lastIndex = $match["0"] + strlen($matchedstring);
-                $remainingstring = substr($remainingstring, $lastIndex);
+                $remainingstring = str_replace($match[0], "", $remainingstring);
             }
-            $searchtext .= trim($remainingstring);
+            $searchtext = trim($remainingstring);
+        }
+        // If we don't get filter values to apply from searchtext or filter, end of function.
+        if ($initialsearchtext == $searchtext && $filter == "") {
+            return;
         }
 
         $filter = '';
