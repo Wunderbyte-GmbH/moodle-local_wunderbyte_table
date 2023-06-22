@@ -553,10 +553,10 @@ function scrollListener(element, idstring, encodedtable) {
     if (returnHiddenElement(element)) {
         return;
     }
-
     const elementtop = element.getBoundingClientRect().top;
-    const elementheight = element.getBoundingClientRect().height;
     const screenheight = document.body.scrollHeight;
+    const tableelement = element.querySelector('.wunderbyte-table-table');
+    const tableelementheight = tableelement.getBoundingClientRect().height;
 
     // Double check if we have infinitescroll enabled.
     if (scrollpages[idstring] < 0 && infinitescrollEnabled(idstring)) {
@@ -564,7 +564,7 @@ function scrollListener(element, idstring, encodedtable) {
     }
 
     if (!loadings[idstring] && scrollpages[idstring] >= 0) {
-        if (elementtop + elementheight - screenheight < 0) {
+        if (elementtop + tableelementheight - screenheight < 0) {
             scrollpages[idstring] = scrollpages[idstring] + 1;
             callLoadData(idstring,
                 encodedtable,
