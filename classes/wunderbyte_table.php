@@ -1234,48 +1234,54 @@ class wunderbyte_table extends table_sql {
             $columns = array_combine(array_keys($this->columns), array_values($this->headers));
 
             foreach ($matches as $match) {
-                // Assigning the values the columnname and value. 
+                // Assigning the values the columnname and value.
                 $columnname = $match[1];
                 $value = $match[2];
                 if ($match[2] == "") {
                     $value = $match[3];
-                } 
+                }
 
-                // Checking if we find a doublequote after the semicolon
+                // Checking if we find a doublequote after the semicolon.
                 $quotedvalue = false;
                 $semicolonposition = strpos($match[0], ':');
                 if ($semicolonposition !== false) {
                     $semicolonposition++;
                     if ($semicolonposition < strlen($match[0])) {
-                        $characterAfter = $match[0][$semicolonposition];
-                        if ($characterAfter == '"') {
+                        $characterafter = $match[0][$semicolonposition];
+                        if ($characterafter == '"') {
                             $quotedvalue = true;
                         }
                     }
                 }
 
-                if (!$quotedvalue && // Value is unquoted
+                if (!$quotedvalue && // Value is unquoted.
                 !filter_var($value, FILTER_VALIDATE_INT) && // And not a number.
                 !filter_var($value, FILTER_VALIDATE_FLOAT)) {
                     $value = "%" . $value . "%"; // Add wildcards.
-                } else { // If value is an integer
                 }
+                // TODO: If value is an integer.
+                // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
+                /* else { // If value is an integer.
+                    // TODO.
+                } */
 
-                if (in_array($columnname, $columns)) { // Check if searchstring column corresponds to localized name. If so set columnname.
+                // Check if searchstring column corresponds to localized name. If so set columnname.
+                if (in_array($columnname, $columns)) {
                     $columnname = array_search($columnname, $columns);
-                } else if (!array_key_exists($columnname, $columns) || !array_key_exists(strtolower($columnname), $columns)) { // Or columnname.
+                } else if (!array_key_exists($columnname, $columns) || !array_key_exists(strtolower($columnname), $columns)) {
+                    // Or columnname.
                     continue;
-                } 
+                }
 
                 if (property_exists($filterobject, $columnname)) {
                     if (!in_array($value, $filterobject->$columnname)) {
-                        $filterobject->$columnname[] = $value;
+                        $filterobject->{$columnname}[] = $value;
                     }
                 } else {
-                    $filterobject->$columnname[] = $value;
+                    $filterobject->{$columnname}[] = $value;
                 }
 
-                // Check if there is a string remaining after getting key and value
+                // Check if there is a string remaining after getting key and value.
                 $remainingstring = str_replace($match[0], "", $remainingstring);
             }
             $searchtext = trim($remainingstring);
