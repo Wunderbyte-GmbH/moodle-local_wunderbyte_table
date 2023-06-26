@@ -255,11 +255,12 @@ export const callLoadData = (
         tsort = getSortSelection(idstring);
     }
 
-    if (moreThanOneTable !== true) {
+    const table = document.getElementById('a' + idstring);
+
+    // We don't want to update URL for lazyout tables that be loaded (have childnodes) at this point.
+    if (moreThanOneTable !== true && table.childNodes.length > 0) {
         updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
     }
-
-    let table = document.getElementById('a' + idstring);
 
     // This is now the individual spinner from the wunderbyte table template.
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
