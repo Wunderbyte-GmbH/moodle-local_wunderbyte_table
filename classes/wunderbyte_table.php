@@ -952,7 +952,13 @@ class wunderbyte_table extends table_sql {
             }
 
             if (isset($value['datepicker'])) {
-                $filtercolumns[$key] = 'datepicker';
+                foreach ($this->rawdata as $row) {
+                    $row = (array)$row;
+                    if (!empty($row[$key])) {
+                        $filtercolumns[$key] = 'datepicker';
+                        continue;
+                    }
+                }
                 continue;
             }
 
@@ -964,6 +970,7 @@ class wunderbyte_table extends table_sql {
 
                 // Do not use empty(...) here because we want to show 0 values.
                 if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
+                    // Here the check if entries are set.
                     continue;
                 }
 
