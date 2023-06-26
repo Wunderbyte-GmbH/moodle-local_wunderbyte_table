@@ -1259,7 +1259,8 @@ class wunderbyte_table extends table_sql {
                 preg_match_all($regex, $searchtext, $matches, PREG_SET_ORDER);
 
                 // Combining defined columns and their localized names.
-                // If you get an error here you have a problem with the definition with your headers and columns, they must be exactly the same.
+                // If you get an error here you have a problem with the definition of your headers and columns,
+                // they must be exactly the same.
                 $columns = array_combine(array_keys($this->columns), array_values($this->headers));
 
                 foreach ($matches as $match) {
@@ -1307,7 +1308,7 @@ class wunderbyte_table extends table_sql {
 
                     // Check if there is a string remaining after getting key and value.
                     $remainingstring = str_replace($match[0], "", $remainingstring);
-            }
+                }
             }
             $searchtext = trim($remainingstring);
         }
@@ -1501,10 +1502,11 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Encode the wholetable class and output it.
-     * @param boolean $newcache
+     *
+     * @param bool $newcache
      * @return string
      */
-    public function return_encoded_table(bool $newcache = false):string {
+    public function return_encoded_table($newcache = false) {
 
         global $USER;
 

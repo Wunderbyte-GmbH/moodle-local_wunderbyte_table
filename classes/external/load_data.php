@@ -122,7 +122,7 @@ class load_data extends external_api {
             $params['searchtext'] = $table->urlsearch ?? "";
             $table->urlsearch = '';
         }
-    
+
         $cache = cache::make('local_wunderbyte_table', 'encodedtables');
         $cache->delete($params['encodedtable']);
         $table->return_encoded_table(true);
