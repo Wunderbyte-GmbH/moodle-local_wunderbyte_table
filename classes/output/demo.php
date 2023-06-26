@@ -87,6 +87,7 @@ class demo implements renderable, templatable {
         ];
 
         // $table->add_subcolumns('cardbody', ['id', 'username', 'firstname', 'lastname', 'email']);
+        // Number of items must be equal.
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
 
