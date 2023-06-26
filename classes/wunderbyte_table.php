@@ -258,6 +258,20 @@ class wunderbyte_table extends table_sql {
      */
     public $filteronloadinactive = false;
 
+    /**
+     * Filter to be applied from URL
+     *
+     * @var string
+     */
+    public $urlfilter = '';
+
+    /**
+     * Search to be applied from URL
+     *
+     * @var string
+     */
+    public $urlsearch = '';
+
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
@@ -344,9 +358,18 @@ class wunderbyte_table extends table_sql {
         $this->useinitialsbar = $useinitialsbar;
         $this->downloadhelpbutton = $downloadhelpbutton;
 
-        // Retrieve the encoded table.
-        $tablecachehash = $this->return_encoded_table();
+        // Check if we have optional params from URL.
+        $this->urlfilter = optional_param('wbtfilter', '', PARAM_TEXT);
+        $this->urlsearch = optional_param('wbtsearch', '', PARAM_TEXT);
+        
+        if (($this->urlfilter !== '' && !empty($this->urlfilter)) 
+            || ($this->urlsearch !== '' && !empty($this->urlsearch))) {
+            $tablecachehash = $this->return_encoded_table(true);
+        } else {
+            $tablecachehash = $this->return_encoded_table();
+        }
 
+        // Retrieve the encoded table.
         $this->tablecachehash = $tablecachehash;
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         $data = new lazytable($this->idstring, $tablecachehash);
@@ -1474,24 +1497,23 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Encode the wholetable class and output it.
-     *
+     * @param boolean $newcache 
      * @return string
      */
-    public function return_encoded_table():string {
+    public function return_encoded_table(bool $newcache = false):string {
 
         global $USER;
 
         // We don't want errormessage in the encoded table.
         $this->errormessage = '';
 
-        if (empty($this->tablecachehash)) {
+        if (empty($this->tablecachehash) || $newcache) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
             $this->tablecachehash = md5($USER->id . $this->idstring);
 
-            if ($cashedtable = $cache->get($this->tablecachehash)) {
+            if (($cashedtable = $cache->get($this->tablecachehash)) && !$newcache) {
                 $this->pagesize = $cashedtable->pagesize;
             } else {
-
                 // Make sure that we don't use old filter params.
                 $filter = $this->sql->filter ?? '';
                 $this->sql->filter = '';

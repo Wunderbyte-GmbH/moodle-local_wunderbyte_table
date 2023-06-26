@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace local_wunderbyte_table\external;
 
+use cache;
 use context_system;
 use external_api;
 use external_function_parameters;
@@ -106,12 +107,25 @@ class load_data extends external_api {
                 'tdir' => $tdir,
                 'treset' => $treset,
                 'wbtfilter' => $filterobjects,
-                'searchtext' => $searchtext
+                'searchtext' => $searchtext ?? ""
         );
 
         $params = self::validate_parameters(self::execute_parameters(), $params);
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
+
+        if (isset($table->urlfilter) && $table->urlfilter !== "") {
+            $params['wbtfilter'] = $table->urlfilter;
+            $table->urlfilter = '';
+        }
+        if (isset($table->urlsearch) && $table->urlsearch !== "") {
+            $params['searchtext'] = $table->urlsearch ?? "";
+            $table->urlsearch = '';
+        }
+    
+        $cache = cache::make('local_wunderbyte_table', 'encodedtables');
+        $cache->delete($params['encodedtable']);
+        $table->return_encoded_table(true);
 
         if (empty($table->baseurl)) {
 
@@ -128,10 +142,10 @@ class load_data extends external_api {
             $_POST[$key] = $value;
         }
 
-        if (!empty($params['wbtfilter']) || !empty($params['searchtext'])) {
+        if (!empty($params['wbtfilter']) || $params['searchtext'] !== "") {
             $table->apply_filter($params['wbtfilter'], $params['searchtext']);
         }
-        if (!empty($params['searchtext'])) {
+        if ($params['searchtext'] !== "") {
             $table->apply_searchtext($params['searchtext']);
         }
 
