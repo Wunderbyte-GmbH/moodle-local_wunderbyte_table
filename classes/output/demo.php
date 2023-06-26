@@ -294,17 +294,15 @@ class demo implements renderable, templatable {
 
         $table->pageable(true);
 
-        //$table->infinitescroll = 5;
-        $table->stickyheader = false;
+        $table->stickyheader = true;
         $table->showcountlabel = true;
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
         //$table->showrowcountselect = true;
         //$table->filteronloadinactive = true; // By default, filter will be displayed next to table. Set filteronloadinactive true, if you want them to be hidden on load.
 
-        list($idstring, $encodedtable, $html) = $table->lazyouthtml(10, true);
 
-        return $html;
+        return $table->outhtml(10, true);
     }
 
     /**
@@ -645,14 +643,12 @@ class demo implements renderable, templatable {
         $data = [
             'table1' => $this->render_table_1(),
             'tab1_name' => TABLE1NAME,
-            /*
             'table2' => $this->render_table_2(),
             'tab2_name' => TABLE2NAME,
             'table3' => $this->render_table_3(),
             'tab3_name' => TABLE3NAME,
             'table4' => $this->render_table_4(),
             'tab4_name' => TABLE4NAME,
-            */
         ];
 
         return $data;
