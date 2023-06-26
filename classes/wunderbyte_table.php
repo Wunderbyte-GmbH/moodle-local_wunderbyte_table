@@ -1243,75 +1243,78 @@ class wunderbyte_table extends table_sql {
             $filterobject = new stdClass;
         }
         if (!$searchtext == '') {
-            $characterstoreplace = ["'", '„', '“'];
-            $searchtext = str_replace($characterstoreplace, '"', $searchtext);
+            // Seperator defines which character seperates key (columnname) from value (searchterm).
+            $seperator = ":";
+            // If the seperator is in the searchstring, we check if we get params to apply as filter.
+            if (strpos($searchtext, $seperator) !== false ) {  
+                $characterstoreplace = ["'", '„', '“'];
+                $searchtext = str_replace($characterstoreplace, '"', $searchtext);
 
-            $regex = '/(?|"([^"]+)"|(\w+)):(?:"([^"]+)"|([^,\s]+))/';
-            $remainingstring = $searchtext;
-            $initialsearchtext = $searchtext;
-            $columnname = '';
-            $value = '';
-            preg_match_all($regex, $searchtext, $matches, PREG_SET_ORDER);
+                $regex = '/(?|"([^"]+)"|(\w+))'.$seperator.'(?:"([^"]+)"|([^,\s]+))/';
+                $remainingstring = $searchtext;
+                $initialsearchtext = $searchtext;
+                $columnname = '';
+                $value = '';
+                preg_match_all($regex, $searchtext, $matches, PREG_SET_ORDER);
 
-            // Combining defined columns and their localized names.
-            $columns = array_combine(array_keys($this->columns), array_values($this->headers));
+                // Combining defined columns and their localized names.
+                // If you get an error here you have a problem with the definition with your headers and columns, they must be exactly the same.
+                $columns = array_combine(array_keys($this->columns), array_values($this->headers));
 
-            foreach ($matches as $match) {
-                // Assigning the values the columnname and value.
-                $columnname = $match[1];
-                $value = $match[2];
-                if ($match[2] == "") {
-                    $value = $match[3];
-                }
+                foreach ($matches as $match) {
+                    // Assigning the values the columnname and value.
+                    $columnname = $match[1];
+                    $value = $match[2];
+                    if ($match[2] == "") {
+                        $value = $match[3];
+                    }
 
-                // Checking if we find a doublequote after the semicolon.
-                $quotedvalue = false;
-                $semicolonposition = strpos($match[0], ':');
-                if ($semicolonposition !== false) {
-                    $semicolonposition++;
-                    if ($semicolonposition < strlen($match[0])) {
-                        $characterafter = $match[0][$semicolonposition];
-                        if ($characterafter == '"') {
-                            $quotedvalue = true;
+                    // Checking if we find a doublequote after the semicolon.
+                    $quotedvalue = false;
+                    $seperatorposition = strpos($match[0], $seperator);
+                    if ($seperatorposition !== false) {
+                        $seperatorposition++;
+                        if ($seperatorposition < strlen($match[0])) {
+                            $characterafter = $match[0][$seperatorposition];
+                            if ($characterafter == '"') {
+                                $quotedvalue = true;
+                            }
                         }
                     }
-                }
 
-                if (!$quotedvalue && // Value is unquoted.
-                !filter_var($value, FILTER_VALIDATE_INT) && // And not a number.
-                !filter_var($value, FILTER_VALIDATE_FLOAT)) {
-                    $value = "%" . $value . "%"; // Add wildcards.
-                }
-                // TODO: If value is an integer.
-                // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-                /* else { // If value is an integer.
-                    // TODO.
-                } */
+                    if (!$quotedvalue && // Value is unquoted.
+                    !filter_var($value, FILTER_VALIDATE_INT) && // And not a number.
+                    !filter_var($value, FILTER_VALIDATE_FLOAT)) {
+                        $value = "%" . $value . "%"; // Add wildcards.
+                    }
 
-                // Check if searchstring column corresponds to localized name. If so set columnname.
-                if (in_array($columnname, $columns)) {
-                    $columnname = array_search($columnname, $columns);
-                } else if (!array_key_exists($columnname, $columns) || !array_key_exists(strtolower($columnname), $columns)) {
-                    // Or columnname.
-                    continue;
-                }
+                    // Check if searchstring column corresponds to localized name. If so set columnname.
+                    if (in_array($columnname, $columns)) {
+                        $columnname = array_search($columnname, $columns);
+                    } else if (!array_key_exists($columnname, $columns) || !array_key_exists(strtolower($columnname), $columns)) {
+                        // Or columnname.
+                        continue;
+                    }
 
-                if (property_exists($filterobject, $columnname)) {
-                    if (!in_array($value, $filterobject->$columnname)) {
+                    if (property_exists($filterobject, $columnname)) {
+                        if (!in_array($value, $filterobject->$columnname)) {
+                            $filterobject->{$columnname}[] = $value;
+                        }
+                    } else {
                         $filterobject->{$columnname}[] = $value;
                     }
-                } else {
-                    $filterobject->{$columnname}[] = $value;
-                }
 
-                // Check if there is a string remaining after getting key and value.
-                $remainingstring = str_replace($match[0], "", $remainingstring);
+                    // Check if there is a string remaining after getting key and value.
+                    $remainingstring = str_replace($match[0], "", $remainingstring);
+            }
             }
             $searchtext = trim($remainingstring);
         }
         // If we don't get filter values to apply from searchtext or filter, end of function.
-        if ($initialsearchtext == $searchtext && $filter == "") {
-            return;
+        if (isset($initialsearchtext)) {
+            if ($initialsearchtext == $searchtext && $filter == "") {
+                return;
+            }
         }
 
         $filter = '';
