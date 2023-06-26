@@ -975,7 +975,6 @@ class wunderbyte_table extends table_sql {
                 }
 
                 if (!isset($filtercolumns[$key][$row[$key]])) {
-
                     $filtercolumns[$key][$row[$key]] = true;
                 }
             }
@@ -1564,7 +1563,7 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
-     * Return an arraf of the count of the total records and the filtered records.
+     * Return an array of the count of the total records and the filtered records.
      *
      * @return array
      */
