@@ -294,12 +294,12 @@ class demo implements renderable, templatable {
 
         $table->pageable(true);
 
-        $table->infinitescroll = 5;
+        //$table->infinitescroll = 5;
         $table->stickyheader = false;
         $table->showcountlabel = true;
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
-        $table->showrowcountselect = true;
+        //$table->showrowcountselect = true;
         //$table->filteronloadinactive = true; // By default, filter will be displayed next to table. Set filteronloadinactive true, if you want them to be hidden on load.
 
         list($idstring, $encodedtable, $html) = $table->lazyouthtml(10, true);

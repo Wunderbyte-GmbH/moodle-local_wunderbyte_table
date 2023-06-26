@@ -361,8 +361,8 @@ class wunderbyte_table extends table_sql {
         // Check if we have optional params from URL.
         $this->urlfilter = optional_param('wbtfilter', '', PARAM_TEXT);
         $this->urlsearch = optional_param('wbtsearch', '', PARAM_TEXT);
-        
-        if (($this->urlfilter !== '' && !empty($this->urlfilter)) 
+
+        if (($this->urlfilter !== '' && !empty($this->urlfilter))
             || ($this->urlsearch !== '' && !empty($this->urlsearch))) {
             $tablecachehash = $this->return_encoded_table(true);
         } else {
@@ -1230,6 +1230,7 @@ class wunderbyte_table extends table_sql {
      * Applies the filter we got via webservice as jsonobject to the sql object.
      *
      * @param string $filter
+     * @param string $searchtext
      * @return void
      */
     public function apply_filter(string $filter, string &$searchtext = '') {
@@ -1246,7 +1247,7 @@ class wunderbyte_table extends table_sql {
             // Seperator defines which character seperates key (columnname) from value (searchterm).
             $seperator = ":";
             // If the seperator is in the searchstring, we check if we get params to apply as filter.
-            if (strpos($searchtext, $seperator) !== false ) {  
+            if (strpos($searchtext, $seperator) !== false ) {
                 $characterstoreplace = ["'", '„', '“'];
                 $searchtext = str_replace($characterstoreplace, '"', $searchtext);
 
@@ -1500,7 +1501,7 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Encode the wholetable class and output it.
-     * @param boolean $newcache 
+     * @param boolean $newcache
      * @return string
      */
     public function return_encoded_table(bool $newcache = false):string {
