@@ -393,6 +393,8 @@ export const callLoadData = (
                 promises.push(Templates.renderForPromise('local_wunderbyte_table/component_sort', jsonobject).then(({html, js}) => {
                     const element = container.querySelector(sortselector);
                     Templates.replaceNode(element, html, js);
+                    // Make sure the element is working.
+                    initializeComponents(idstring, encodedtable);
                     return true;
                 }).catch(ex => {
                     // eslint-disable-next-line no-console
