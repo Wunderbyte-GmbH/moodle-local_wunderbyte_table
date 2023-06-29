@@ -145,7 +145,7 @@ class demo implements renderable, templatable {
         $table->addcheckboxes = true;
 
         // Add action buttons to bottom of table. Demo of all defined types.
-        // Define if it triggers a modal, if records need to be selected 
+        // Define if it triggers a modal, if records need to be selected
         // and if a single call for all records or multiple calls (one for each selected record) are triggered.
         $table->actionbuttons[] = [
             'label' => get_string('nmmcns', 'local_wunderbyte_table'), // 'NoModal, MultipleCall, NoSelection'-> Name of your action button.
@@ -181,18 +181,18 @@ class demo implements renderable, templatable {
             'label' => get_string('ymmcns', 'local_wunderbyte_table'),// '+Modal, MultipleCall, NoSelection'
             'class' => 'btn btn-danger',
             'href' => '#',
-            'methodname' => 'deleteitem', 
+            'methodname' => 'deleteitem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
-            'selectionmandatory' => false, 
+            'selectionmandatory' => false,
             'data' => [
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
-                'labelcolumn' => 'firstname', 
-                'noselectionbodystring' => 'specialbody', 
+                'labelcolumn' => 'firstname',
+                'noselectionbodystring' => 'specialbody',
             ]
         ];
 
@@ -254,7 +254,7 @@ class demo implements renderable, templatable {
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
-            'data' => [ 
+            'data' => [
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'deletedatabody',
@@ -298,7 +298,7 @@ class demo implements renderable, templatable {
         $table->showcountlabel = true;
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
-        //$table->showrowcountselect = true;
+        $table->showrowcountselect = true;
         //$table->filteronloadinactive = true; // By default, filter will be displayed next to table. Set filteronloadinactive true, if you want them to be hidden on load.
 
 
@@ -344,7 +344,7 @@ class demo implements renderable, templatable {
                     ]
                 ]
             ],
-            'startdate' => [ 
+            'startdate' => [
                 'localizedname' => get_string('timespan', 'local_wunderbyte_table'),
 
                 'datepicker' => [
@@ -356,7 +356,7 @@ class demo implements renderable, templatable {
                         'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
                         'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'),
                         'defaultvalueend' => 'now', // Can also be Unix timestamp or string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), 
+                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'),
                     ]
                 ]
 
@@ -532,9 +532,9 @@ class demo implements renderable, templatable {
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
 
-        // To lazy load wunderbyte table (eg. for loading in tabs or modals) 
-        // you need to call $table->lazyout() instead of $table->out. 
-        // While out will return the html to echo, lazyout echos right away. 
+        // To lazy load wunderbyte table (eg. for loading in tabs or modals)
+        // you need to call $table->lazyout() instead of $table->out.
+        // While out will return the html to echo, lazyout echos right away.
         list($idstring, $encodedtable, $html) = $table->lazyouthtml(10, true);
 
         return $html;
@@ -542,7 +542,7 @@ class demo implements renderable, templatable {
     }
 
     /**
-     * Renders demo table 4. Table with infinite scroll, triggering reload of records when scrolling to bottom of table. 
+     * Renders demo table 4. Table with infinite scroll, triggering reload of records when scrolling to bottom of table.
      *
      * @return demo_table
      *
