@@ -29,6 +29,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And the following "courses" exist:
       | fullname | shortname |
       | Course 1 | C1        |
+      | Course 2 | C2        |
     And the following "course enrolments" exist:
       | user     | course | role           |
       | user1    | C1     | student        |
@@ -66,6 +67,36 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I follow "changesortorder-Users"
     And I wait "1" seconds
     And I should see "admin" in the "#Users_r1" "css_element"
+
+  @javascript
+  Scenario: Wunderbyte Table: sort Course tab table using select field
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Course"
+    And I set the field "selectsortcolumn-Course" to "id"
+    And I wait "1" seconds
+    And I should see "Course 2" in the "#Course_r1" "css_element"
+    And I should see "Acceptance test site" in the "#Course_r3" "css_element"
+    And I follow "changesortorder-Course"
+    And I wait "1" seconds
+    And I should see "Acceptance test site" in the "#Course_r1" "css_element"
+    And I should see "Course 2" in the "#Course_r3" "css_element"
+    And I set the field "selectsortcolumn-Course" to "fullname"
+    And I wait "1" seconds
+    And I should see "Course 2" in the "#Course_r1" "css_element"
+    And I should see "Acceptance test site" in the "#Course_r3" "css_element"
+    And I follow "changesortorder-Course"
+    And I wait "1" seconds
+    And I should see "Acceptance test site" in the "#Course_r1" "css_element"
+    And I should see "Course 2" in the "#Course_r3" "css_element"
+    And I set the field "selectsortcolumn-Course" to "shortname"
+    And I wait "1" seconds
+    And I should see "Course 2" in the "#Course_r1" "css_element"
+    And I should see "Acceptance test site" in the "#Course_r3" "css_element"
+    And I follow "changesortorder-Course"
+    And I wait "1" seconds
+    And I should see "Acceptance test site" in the "#Course_r1" "css_element"
+    And I should see "Course 2" in the "#Course_r3" "css_element"
 
   @javascript
   Scenario: Sort Users tab table with column id
@@ -109,7 +140,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And the field "selectsortcolumn-Users" matches value "username"
 
   @javascript
-  Scenario: Sort Course tab table with column Full name
+  Scenario: Wunderbyte Table: Sort Course tab table with column Full name
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Course"
@@ -117,7 +148,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I should see "Acceptance test site" in the "#Course_r1" "css_element"
     And I click on "th.fullname.wb-table-column.asc" "css_element"
     And I wait "1" seconds
-    And I should see "Course 1" in the "#Course_r1" "css_element"
+    And I should see "Course 2" in the "#Course_r1" "css_element"
     And I click on "th.fullname.wb-table-column.desc" "css_element"
     And I wait "1" seconds
     And I should see "Acceptance test site" in the "#Course_r1" "css_element"
