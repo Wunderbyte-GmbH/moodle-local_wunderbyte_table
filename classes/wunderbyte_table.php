@@ -1252,13 +1252,13 @@ class wunderbyte_table extends table_sql {
         if (!$searchtext == '') {
             // Seperator defines which character seperates key (columnname) from value (searchterm).
             $seperator = ":";
+            $remainingstring = $searchtext;
             // If the seperator is in the searchstring, we check if we get params to apply as filter.
             if (strpos($searchtext, $seperator) !== false ) {
                 $characterstoreplace = ["'", '„', '“'];
                 $searchtext = str_replace($characterstoreplace, '"', $searchtext);
 
                 $regex = '/(?|"([^"]+)"|(\w+))'.$seperator.'(?:"([^"]+)"|([^,\s]+))/';
-                $remainingstring = $searchtext;
                 $initialsearchtext = $searchtext;
                 $columnname = '';
                 $value = '';
