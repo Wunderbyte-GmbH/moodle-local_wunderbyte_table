@@ -1,3 +1,6 @@
+## Version 1.6.6 (2023062901)
+* Bugfix: Infinitescroll triggered at the bottom of the table.
+
 ## Version 1.6.5 (2023062900)
 * New feature: Fulltext search in specific column using column:value (or "Column one":"value set" etc.) in searchfield.
 * Bugfix: Applying URL search also for lazy load table.

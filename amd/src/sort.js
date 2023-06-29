@@ -59,7 +59,7 @@ const SELECTOR = {
       sortColumnElement.dataset.initialized = true;
       sortOrderElement.dataset.initialized = true;
 
-      // We add to listener, on on the select, one on the sortorder button.
+      // We add two listener, one on the select, one on the sortorder button.
 
       sortColumnElement.addEventListener('change', (e) => {
         callSortAjax(e, idstring, encodedtable);
@@ -138,7 +138,6 @@ function callSortAjax(event, idstring, encodedtable) {
 
   className = sortOrderElement.className;
 
-
   // If we get an event, we are in the sortcolum mode.
   if (event !== null) {
 
@@ -186,7 +185,6 @@ function callSortAjax(event, idstring, encodedtable) {
 
    const filterobjects = getFilterObjects(idstring);
    const searchstring = getSearchInput(idstring);
-
 
    callLoadData(idstring,
      encodedtable,
