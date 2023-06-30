@@ -59,7 +59,7 @@ const SELECTOR = {
       sortColumnElement.dataset.initialized = true;
       sortOrderElement.dataset.initialized = true;
 
-      // We add two listener, one on the select, one on the sortorder button.
+      // We add to listener, on on the select, one on the sortorder button.
 
       sortColumnElement.addEventListener('change', (e) => {
         callSortAjax(e, idstring, encodedtable);

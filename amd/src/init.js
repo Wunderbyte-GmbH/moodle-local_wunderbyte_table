@@ -388,14 +388,10 @@ export const callLoadData = (
                 // If the componentscontainer is not yet rendered, we render the container. else, only the table.
                 rendertemplate = rendertemplate + '_container';
             } else {
-                // eslint-disable-next-line no-console
-                console.log("finding container");
                 const sortselector = '.wunderbyteTableSelect';
                 // eslint-disable-next-line no-unused-vars
                 promises.push(Templates.renderForPromise('local_wunderbyte_table/component_sort', jsonobject).then(({html, js}) => {
                     const element = container.querySelector(sortselector);
-
-
                     Templates.replaceNode(element, html, js);
                     // Make sure the element is working.
                     initializeComponents(idstring, encodedtable);
