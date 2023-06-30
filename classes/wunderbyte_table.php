@@ -284,6 +284,9 @@ class wunderbyte_table extends table_sql {
         $this->idstring = md5($uniqueid);
         $this->classname = get_class($this);
 
+        // This unsets the eventual memory of sorting in session to apply the default sorting on load as defined.
+        $this->unset_sorting_settings();
+
         // This is a fallback for the downloading function. A different baseurl can be defined later in the process.
         $this->define_baseurl(new moodle_url('/local/wunderbyte_table/download.php'));
     }
@@ -1185,8 +1188,8 @@ class wunderbyte_table extends table_sql {
         $sortorder = null;
 
         // We need the flextable session to get the sortorder.
-        if (isset($SESSION->flextable[$this->idstring])) {
-            $prefs = $SESSION->flextable[$this->idstring];
+        if (isset($SESSION->flextable[$this->uniqueid])) {
+            $prefs = $SESSION->flextable[$this->uniqueid];
         } else {
             return null;
         }
@@ -1644,6 +1647,18 @@ class wunderbyte_table extends table_sql {
 
         if (!empty($wbtsearch)) {
             $this->apply_searchtext($wbtsearch);
+        }
+    }
+    /**
+     * Unsetting all sorting settings from session.
+     * Important for application of default sort params.
+     *
+     * @return void
+     */
+    public function unset_sorting_settings() {
+        global $SESSION;
+        if (isset($SESSION->flextable[$this->uniqueid])) {
+            $SESSION->flextable[$this->uniqueid]['sortby'] = array();
         }
     }
 }
