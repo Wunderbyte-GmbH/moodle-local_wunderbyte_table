@@ -349,17 +349,51 @@ class table implements renderable, templatable {
                     'localized' => $localized,
                 ];
 
-                // Wether there should be up down arrows in the header.
+                // Whether there should be up down arrows in the header.
                 if (in_array($column, $table->sortablecolumns, true)
                     || in_array($column, array_keys($table->sortablecolumns), true)) {
 
                     $item['sortable'] = true;
                 };
 
+                // Make the up down arrow fat/black when it's actually sorted.
+                if (in_array($column, array_keys($sortcolumns))) {
+                    switch ($sortcolumns[$column]) {
+                        case (4):
+                            $item['sortclass'] = 'asc';
+                            $this->sort['sortup'] = true;
+                            $this->sort['sortdown'] = false;
+                            break;
+                        case (3):
+                            $item['sortclass'] = 'desc';
+                            $this->sort['sortdown'] = true;
+                            $this->sort['sortup'] = false;
+                            break;
+                    }
+
+                };
+
                 $this->table['header']['headers'][] = $item;
             }
+        } else { // We also need this in case there are no headers to apply sorting correctly.
+            foreach ($table->columns as $column => $key) {
+                if (in_array($column, array_keys($sortcolumns))) {
+                    switch ($sortcolumns[$column]) {
+                        case (4):
+                            $item['sortclass'] = 'asc';
+                            $this->sort['sortup'] = true;
+                            $this->sort['sortdown'] = false;
+                            break;
+                        case (3):
+                            $item['sortclass'] = 'desc';
+                            $this->sort['sortdown'] = true;
+                            $this->sort['sortup'] = false;
+                            break;
+                    }
+
+                };
+            }
         }
-        $this->apply_sort_order_for_display($table, $sortcolumns);
 
         // Create pagination data.
         // We show ellipsis if there are more than the specified number of pages.
@@ -429,30 +463,6 @@ class table implements renderable, templatable {
         }
     }
 
-    /**
-     * Writes sort values into JSON object to display right icon and make sort arrows fat/black in headers.
-     * @param * $table
-     * @param array $sortcolumns
-     *
-     */
-    private function apply_sort_order_for_display($table, $sortcolumns) {
-        foreach ($table->columns as $column => $key) {
-            if (in_array($column, array_keys($sortcolumns))) {
-                switch ($sortcolumns[$column]) {
-                    case (4):
-                        $item['sortclass'] = 'asc';
-                        $this->sort['sortup'] = true;
-                        $this->sort['sortdown'] = false;
-                        break;
-                    case (3):
-                        $item['sortclass'] = 'desc';
-                        $this->sort['sortdown'] = true;
-                        $this->sort['sortup'] = false;
-                        break;
-                }
-            };
-        }
-    }
 
     /**
      * Returns dataformat selector.
