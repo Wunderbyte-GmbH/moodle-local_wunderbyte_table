@@ -145,7 +145,7 @@ For columns that contain date and time values (as Unix timestamp) you can enable
     $table->define_filtercolumns([
                 'startdate' => [ // Columns containing Unix timestamps can be filtered.
                     'localizedname' => get_string('startdate'),
-                    'datepicker' => [  
+                    'datepicker' => [
                         'from time' => [ // Can be localized and like "Courses starting after:".
                             'operator' => '>', // Must be defined, can be any SQL comparison operator.
                             'defaultvalue' => 'now', // Can also be Unix timestamp or string "now".
@@ -158,10 +158,10 @@ For columns that contain date and time values (as Unix timestamp) you can enable
                 ],
     ]);
 
-A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'. 
-"Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan. 
-The possibleoperations array is containing a whitelist, if none specified, all are applied. 
-    'datepicker' => [  
+A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'.
+"Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan.
+The possibleoperations array is containing a whitelist, if none specified, all are applied.
+    'datepicker' => [
                     'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
                         'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'], // Will be displayed in select to choose from.
                         'columntimestart' => 'startdate', // Columnname as is query with lower value.
@@ -186,9 +186,14 @@ to your wunderbyte_table classs (look in the _container templates to understand 
 
 Each column defined as sortable will display carets in the table header. They have the same functionality as sortcolumn select & changesortorder element displayed in top of table.
 
-## Sort
+If you want to define default sorting on table load, set:
 
-The fulltext search is triggerd when more than 3 characters are typed into the searchfield. Fulltext search is checking values from all columns defined in $table->define_fulltextsearchcolumns(["column1", "column2"]). 
+    $table->sort_default_column = 'columnname';
+    $table->sort_default_order = SORT_ASC; // Or SORT_DESC.
+
+## Search
+
+The fulltext search is triggerd when more than 3 characters are typed into the searchfield. Fulltext search is checking values from all columns defined in $table->define_fulltextsearchcolumns(["column1", "column2"]).
 If you want to look for values in a specific column, use columnname:searchterm. This can be applied for numerous queries and combined with regular fulltext search. Combinations are seperated via whitespace and/or comma. If you want to use values containing whitespaces, use double (or single) quotes ie. "Localized Column":"value including whitespace". Searchterms will be used like wildcards, while quoted values and numbers trigger exact search (no wildcard).
 
 

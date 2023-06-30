@@ -283,7 +283,9 @@ class demo implements renderable, templatable {
             ]
         ];
 
-        $table->sort_default_column = 'username';
+        // Set default sortcolumn and sortorder.
+        $table->sort_default_column = 'lastname';
+        $table->sort_default_order = SORT_ASC; // Or SORT_DESC.
 
         // Work out the sql for the table.
         $table->set_filter_sql('*', "{user}", '1=1', '');
