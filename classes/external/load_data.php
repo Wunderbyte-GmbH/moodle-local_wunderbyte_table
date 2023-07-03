@@ -149,6 +149,10 @@ class load_data extends external_api {
             $table->apply_searchtext($params['searchtext']);
         }
 
+        if (!empty($params['tsort'])) {
+            $table->unset_sorting_settings();
+        }
+
         // No we return the json object and the matching method.
         $tableobject = $table->printtable($table->pagesize, $table->useinitialsbar, $table->downloadhelpbutton);
         $output = $PAGE->get_renderer('local_wunderbyte_table');
