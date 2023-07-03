@@ -33,6 +33,9 @@ const SELECTOR = {
   TABLEHEADERCHECKBOX: 'input.tableheadercheckbox',
 };
 
+const SORT_ASC = 4;
+const SORT_DESC = 3;
+
 /**
  * Function to initialize the search after rendering the searchbox.
  * @param {*} listContainer
@@ -59,7 +62,7 @@ const SELECTOR = {
       sortColumnElement.dataset.initialized = true;
       sortOrderElement.dataset.initialized = true;
 
-      // We add to listener, on on the select, one on the sortorder button.
+      // We add two listener, one on the select, one on the sortorder button.
 
       sortColumnElement.addEventListener('change', (e) => {
         callSortAjax(e, idstring, encodedtable);
@@ -155,27 +158,27 @@ function callSortAjax(event, idstring, encodedtable) {
       return;
     }
 
+    // eslint-disable-next-line no-console
+    console.log("Classname ", className);
     // Get the sortorder by the icon and apply it.
     if (className.includes('asc')) {
 
-      sortorder = 3;
+      sortorder = SORT_DESC;
     } else {
 
-      sortorder = 4;
+      sortorder = SORT_ASC;
     }
 
   } else {
     // Else, we are in the sortorder mode.
-    // 3 is ASC, 4 is DESC. We have to find out which is the current mode.
-
     // Get the sortorder by the icon and change it.
     if (className.includes('asc')) {
 
-      sortorder = 3;
+      sortorder = SORT_DESC;
       sortOrderElement.className = className.replace('asc', 'desc');
     } else {
 
-      sortorder = 4;
+      sortorder = SORT_ASC;
       sortOrderElement.className = className.replace('desc', 'asc');
     }
 

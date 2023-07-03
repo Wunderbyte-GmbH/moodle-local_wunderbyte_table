@@ -359,12 +359,12 @@ class table implements renderable, templatable {
                 // Make the up down arrow fat/black when it's actually sorted.
                 if (in_array($column, array_keys($sortcolumns))) {
                     switch ($sortcolumns[$column]) {
-                        case (4):
+                        case (SORT_ASC):
                             $item['sortclass'] = 'asc';
                             $this->sort['sortup'] = true;
                             $this->sort['sortdown'] = false;
                             break;
-                        case (3):
+                        case (SORT_DESC):
                             $item['sortclass'] = 'desc';
                             $this->sort['sortdown'] = true;
                             $this->sort['sortup'] = false;
@@ -379,12 +379,12 @@ class table implements renderable, templatable {
             foreach ($table->columns as $column => $key) {
                 if (in_array($column, array_keys($sortcolumns))) {
                     switch ($sortcolumns[$column]) {
-                        case (4):
+                        case (SORT_ASC):
                             $item['sortclass'] = 'asc';
                             $this->sort['sortup'] = true;
                             $this->sort['sortdown'] = false;
                             break;
-                        case (3):
+                        case (SORT_DESC):
                             $item['sortclass'] = 'desc';
                             $this->sort['sortdown'] = true;
                             $this->sort['sortup'] = false;
@@ -664,7 +664,7 @@ class table implements renderable, templatable {
 
             $sortarray['options'][] = $item;
         }
-        if ($this->wbtable->return_current_sortorder() == 3) {
+        if ($this->wbtable->return_current_sortorder() == SORT_ASC) {
             $sortarray['sortup'] = true;
         } else {
             $sortarray['sortdown'] = true;
