@@ -133,10 +133,12 @@ function callSortAjax(event, idstring, encodedtable) {
 
   let sortOrderElement = container.querySelector("a.changesortorder i");
   let className = null;
+  let columnheaderIsTrigger = false;
 
   if (typeof event === 'string') {
     // We are sure that we clicked on a column header.
     sortOrderElement = container.querySelector(SELECTOR.TABLECOLUMN + '.' + event);
+    columnheaderIsTrigger = true;
   }
 
   className = sortOrderElement.className;
@@ -161,11 +163,10 @@ function callSortAjax(event, idstring, encodedtable) {
     // eslint-disable-next-line no-console
     console.log("Classname ", className);
     // Get the sortorder by the icon and apply it.
-    if (className.includes('asc')) {
-
+    if ((className.includes('desc') && columnheaderIsTrigger == false)
+    || (className.includes('asc') && columnheaderIsTrigger == true)) {
       sortorder = SORT_DESC;
     } else {
-
       sortorder = SORT_ASC;
     }
 
