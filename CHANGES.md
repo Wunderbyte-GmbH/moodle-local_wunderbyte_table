@@ -1,5 +1,7 @@
-## Version 1.6.6 (2023062901)
-* Bugfix: Infinitescroll triggered at the bottom of the table.
+## Version 1.6.6 (2023070500)
+* Bugfix: Default sortorder on tableload now applying.
+* Bugfix: Keep sortorder on change of sortcolumn.
+
 
 ## Version 1.6.5 (2023062900)
 * New feature: Fulltext search in specific column using column:value (or "Column one":"value set" etc.) in searchfield.
