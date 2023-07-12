@@ -195,12 +195,18 @@ class table implements renderable, templatable {
     public $showrowcountselect = false;
 
     /**
+     * Display Actionbuttons, Pagination and Rowcount on top of table.
+     *
+     * @var bool
+     */
+    public $placebuttonandpageelementsontop = false;
+
+    /**
      * Pagesize
      *
      * @var int
      */
     private $pagesize = 10;
-
 
     /**
      * Constructor.
@@ -250,6 +256,8 @@ class table implements renderable, templatable {
         $this->actionbuttons = $table->actionbuttons;
 
         $this->showrowcountselect = $table->showrowcountselect;
+
+        $this->placebuttonandpageelementsontop = $table->placebuttonandpageelementsontop;
 
         $this->pagesize = $table->pagesize;
 
@@ -545,6 +553,7 @@ class table implements renderable, templatable {
             'filter' => $this->categories ?? null,
             'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
             'showrowcountselect' => $this->showcountselect(),
+            'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
             ];
 
         // Only if we want to show the searchfield, we actually add the key.

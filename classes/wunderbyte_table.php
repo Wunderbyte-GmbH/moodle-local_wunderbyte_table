@@ -272,6 +272,12 @@ class wunderbyte_table extends table_sql {
      */
     public $urlsearch = '';
 
+    /**
+     * Display Actionbuttons, Pagination and Rowcount on top of table.
+     *
+     * @var bool
+     */
+    public $placebuttonandpageelementsontop = false;
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
@@ -1579,6 +1585,20 @@ class wunderbyte_table extends table_sql {
         $filteredrecords = $this->filteredrecords === -1 ? $totalrecords : $this->filteredrecords;
 
         return [$totalrecords, $filteredrecords];
+    }
+
+    /**
+     * Return an array of the count of the total records and the filtered records.
+     *
+     * @return int
+     */
+    public function return_number_of_records() {
+
+        if (isset($this->totalrows)) {
+            return $this->totalrows;
+        } else {
+            return 0;
+        }
     }
 
     /**

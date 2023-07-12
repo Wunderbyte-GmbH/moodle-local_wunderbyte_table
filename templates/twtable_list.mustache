@@ -74,6 +74,16 @@
      {{> local_wunderbyte_table/component_actionbutton }}
      </div>
 {{/infinitescroll}}
+{{#displayelementsontop}}
+     <div>
+     {{> local_wunderbyte_table/component_actionbutton }}
+     </div>
+     <br>
+     <div>
+          {{> local_wunderbyte_table/component_pagination }}
+          <div class="float-right">{{> local_wunderbyte_table/component_selectrows }}</div>
+     </div>
+{{/displayelementsontop}}
 <div class="wunderbyte-table-table">
      {{> local_wunderbyte_table/component_countlabel }}
      <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}}
@@ -102,12 +112,14 @@
           </table>
      </div>
 </div>
-<div class="float-right">{{> local_wunderbyte_table/component_selectrows }}</div>
 {{/table}}
 
 {{^infinitescroll}}
-     {{> local_wunderbyte_table/component_pagination }}
-     {{> local_wunderbyte_table/component_actionbutton }}
+{{^displayelementsontop}}
+<div class="float-right">{{> local_wunderbyte_table/component_selectrows }}</div>
+          {{> local_wunderbyte_table/component_pagination }}
+          {{> local_wunderbyte_table/component_actionbutton }}
+{{/displayelementsontop}}
 {{/infinitescroll}}
 {{#errormessage}}
      <div class="alert alert-danger" role="alert">
