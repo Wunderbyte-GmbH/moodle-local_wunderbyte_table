@@ -288,7 +288,7 @@ class demo implements renderable, templatable {
         $table->sort_default_order = SORT_ASC; // Or SORT_DESC.
 
         // Work out the sql for the table.
-        $table->set_filter_sql('*', "{user}", '1=1', '');
+        $table->set_filter_sql('*', "(SELECT * FROM {user} LIMIT 112) as s1", '1=1', '');
 
         $table->cardsort = true;
 
@@ -410,7 +410,7 @@ class demo implements renderable, templatable {
 
         $table->sort_default_column = 'fullname';
 
-        $table->set_filter_sql('*', "{course}", '1=1', '');
+        $table->set_filter_sql('*', "(SELECT * FROM {course} LIMIT 112) as s1", '1=1', '');
 
         $table->cardsort = true;
 
@@ -519,7 +519,7 @@ class demo implements renderable, templatable {
         $table->sort_default_column = 'id';
 
         // Work out the sql for the table.
-        $table->set_filter_sql('*', "{course_modules}", '1=1', '');
+        $table->set_filter_sql('*', "(SELECT * FROM {course_modules} LIMIT 112) as s1", '1=1', '');
 
         $table->cardsort = true;
 
@@ -616,7 +616,7 @@ class demo implements renderable, templatable {
         $table->sort_default_column = 'username';
 
         // Work out the sql for the table.
-        $table->set_filter_sql('*', "{user}", '1=1', '');
+        $table->set_filter_sql('*', "(SELECT * FROM {user} LIMIT 112) as s1", '1=1', '');
 
         $table->cardsort = true;
 
