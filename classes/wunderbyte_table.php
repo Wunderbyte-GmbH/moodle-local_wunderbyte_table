@@ -276,7 +276,7 @@ class wunderbyte_table extends table_sql {
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      *
-     * @param string $uniqueid
+     * @param string $uniqueid Has to be really unique eg. by adding the cmid, so it's unique over all instances of one plugin!
      */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
@@ -1524,7 +1524,7 @@ class wunderbyte_table extends table_sql {
 
         if (empty($this->tablecachehash) || $newcache) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
-            $this->tablecachehash = md5($USER->id . $this->idstring);
+            $this->tablecachehash = md5($this->idstring);
 
             if (($cashedtable = $cache->get($this->tablecachehash)) && !$newcache) {
                 $this->pagesize = $cashedtable->pagesize;
