@@ -114,18 +114,24 @@ class load_data extends external_api {
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
-        if (isset($table->urlfilter) && $table->urlfilter !== "") {
+
+        // If the table was cached with filter or searchtext, we need to recache it.
+        $recachetable = false;
+        if (!empty($table->urlfilter)) {
             $params['wbtfilter'] = $table->urlfilter;
             $table->urlfilter = '';
+            $recachetable = true;
         }
-        if (isset($table->urlsearch) && $table->urlsearch !== "") {
+        if (!empty($table->urlsearch)) {
             $params['searchtext'] = $table->urlsearch ?? "";
             $table->urlsearch = '';
+            $recachetable = true;
         }
-
-        $cache = cache::make('local_wunderbyte_table', 'encodedtables');
-        $cache->delete($params['encodedtable']);
-        $table->return_encoded_table(true);
+        if ($recachetable) {
+            $cache = cache::make('local_wunderbyte_table', 'encodedtables');
+            $cache->delete($params['encodedtable']);
+            $table->return_encoded_table(true);
+        }
 
         if (empty($table->baseurl)) {
 
