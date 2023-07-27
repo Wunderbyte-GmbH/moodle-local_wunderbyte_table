@@ -114,7 +114,6 @@ class load_data extends external_api {
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
-
         // If the table was cached with filter or searchtext, we need to recache it.
         $recachetable = false;
         if (!empty($table->urlfilter)) {
