@@ -42,6 +42,7 @@ var moreThanOneTable = false;
 export const SELECTORS = {
     CONTAINER: ".wunderbyte_table_container_",
     FILTER: " .wunderbyteTableFilter",
+    WBTABLE: "wunderbyte-table-",
 };
 
 /**
@@ -558,7 +559,15 @@ function scrollListener(element, idstring, encodedtable) {
     }
     const elementtop = element.getBoundingClientRect().top;
     const screenheight = document.body.scrollHeight;
-    const tableelement = element.querySelector('.wunderbyte-table-table');
+
+    let container = document.querySelector(".wunderbyte_table_container_" + idstring);
+    const tableelement = container.querySelector('[class^="' + SELECTORS.WBTABLE + '"]');
+
+    // If we can't find this table element, we abort.
+    if (!tableelement) {
+        return;
+    }
+
     const tableelementheight = tableelement.getBoundingClientRect().height;
 
     // Double check if we have infinitescroll enabled.
