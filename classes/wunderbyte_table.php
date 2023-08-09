@@ -715,9 +715,8 @@ class wunderbyte_table extends table_sql {
 
             foreach ($searchcolumns as $key => $value) {
 
-                // This fix is only for bigger than 4.1.
-
-                $valuestring = $CFG->version > 2022112800 ? $DB->sql_cast_to_char($value) : "CAST(".$value." AS VARCHAR)";
+                // Sql_cast_to_char is available since Moodle 4.1.
+                $valuestring = $CFG->version >= 2022112800 ? $DB->sql_cast_to_char($value) : "CAST(" . $value . " AS VARCHAR)";
 
                 $searchcolumns[$key] = "COALESCE(" . $valuestring . ", ' ')";
 
