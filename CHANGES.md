@@ -1,7 +1,10 @@
+## Version 1.6.9 (2023081100)
+* Improvement: Move buttons, pagination, rowcount to top of table.
+* Bugfix: Missing cache definitions.
+
 ## Version 1.6.6 (2023070500)
 * Bugfix: Default sortorder on tableload now applying.
 * Bugfix: Keep sortorder on change of sortcolumn.
-
 
 ## Version 1.6.5 (2023062900)
 * New feature: Fulltext search in specific column using column:value (or "Column one":"value set" etc.) in searchfield.
