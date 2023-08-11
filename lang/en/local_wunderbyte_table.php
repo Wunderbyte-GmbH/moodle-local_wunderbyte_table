@@ -33,16 +33,16 @@ $string['changesortorder'] = "Change sort order";
 $string['orderup'] = "Sorted from A to Z";
 $string['orderdown'] = "Sorted from Z to A";
 
-$string['cachedef_cachedrawdata'] = "Wunderbyte standard cache";
-
 $string['noentriesfound'] = "No entries found";
 
 $string['reload'] = "Reload table";
 $string['print'] = "Download table";
 $string['downloadas'] = "Download table data as";
 
-// Cache.
+// Caches.
 $string['cachedef_cachedfulltable'] = 'Cached full table';
+$string['cachedef_cachedrawdata'] = "Wunderbyte Table standard cache";
+$string['cachedef_encodedtables'] = 'Cache for encoded tables';
 
 $string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found';
 
