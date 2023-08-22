@@ -70,7 +70,8 @@ class demo_table extends wunderbyte_table {
             'label' => 'TriggersNoModal', // Name of your action button.
             'class' => 'btn btn-danger',
             'href' => '#', // You can either use the link, or JS, or both.
-            'iclass' => 'fa fa-edit', // Add an icon before the label.
+            'iclass' => 'fa fa-cog', // Add an icon before the label.
+            'arialabel' => 'cogwheel', // Add an aria-label string to your icon.
             'id' => $values->id.'-'.$this->uniqueid,
             'name' => $this->uniqueid.'-'.$values->id,
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.

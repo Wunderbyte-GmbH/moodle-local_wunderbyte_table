@@ -101,7 +101,31 @@ You can choose if your Action Button transmits a single or multiple call(s) in c
         'id' => -1, // This forces single call execution.
     ]
 
+You can also use actiobuttons in a column to treat the corresponding record.
 
+    public function col_action($values) { // Button will be added to action column.
+
+        $data[] = [
+            'label' => get_string('delete', 'core'), // Name of your action button.
+            'class' => 'btn btn-danger', // Use bootstrap 4.
+            'href' => '#', // You can either use the link, or JS, or both.
+            'iclass' => 'fa fa-cog', // Add an icon before the label.
+            'arialabel' => 'cogwheel', // Add an aria-label string to your icon.
+            'id' => $values->id.'-'.$this->uniqueid, // Access the data of the record.
+            'name' => $this->uniqueid.'-'.$values->id,
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'nomodal' => true,
+            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
+                'id' => $values->id,
+            ]
+        ];
+
+Use a bootstrap 4 icon with label:
+
+    $mytable->actionbuttons = [
+                'iclass' => 'fa fa-cog', // Add an icon before the label.
+                'arialabel' => 'cogwheel', // Add an aria-label string to your icon.
+        ];
 
 ## Filter, Sort and Search
 WB Table provides direct filter, search and sort functionality.
