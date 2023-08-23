@@ -61,7 +61,7 @@ If you don't use infinite scroll, pagination options will be displayed at the bo
 You can add a number of action buttons to your table. If you combine them with "$yourtable->addcheckbox = true", you will be able to select single lines and execute your function with it. The methods will need to be implemented in your child class of wunderbyte table and they will be called via ajax. Example:
 
     $mytable->addcheckbox = true;
-    $mytable->actionbuttons = [
+    $mytable->actionbuttons[] = [
         'label' => get_string('deleterow', 'mod_myproject'), // Name of your action button.
         'methodname' => 'deleterow', // The method needs to be added to your child of wunderbyte_table class.
         'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
@@ -72,18 +72,18 @@ You can add a number of action buttons to your table. If you combine them with "
 You can choose if your Action Button needs element(s) to be selected in order to trigger an action.
 If this is set to false, you can trigger actions with or without actions selected.
 
-    $mytable->actionbuttons = [
+    $mytable->actionbuttons[] = [
         'selectionmandatory' => false,
     ]
 You can choose if your Action Button triggers a modal with the "nomodal" param:
 
-    $mytable->actionbuttons = [
+    $mytable->actionbuttons[] = [
         'nomodal' => false,
     ]
 
 If your Action Button works with or without selected elements, you can choose a different bodystring for the modal it may trigger.
 
-    $mytable->actionbuttons = [
+    $mytable->actionbuttons[] = [
     'data' => [
                     'id' => 'id',
                     'titlestring' => 'deletedatatitle', // Will be shown in modal title
@@ -97,11 +97,11 @@ If your Action Button works with or without selected elements, you can choose a 
 
 You can choose if your Action Button transmits a single or multiple call(s) in case multiple elements are selected.
 
-    $mytable->actionbuttons = [
+    $mytable->actionbuttons[] = [
         'id' => -1, // This forces single call execution.
     ]
 
-You can also use actiobuttons in a column to treat the corresponding record.
+You can also use actionbuttons in a column to treat the corresponding record.
 
     public function col_action($values) { // Button will be added to action column.
 
@@ -118,13 +118,6 @@ You can also use actiobuttons in a column to treat the corresponding record.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,
             ]
-        ];
-
-Use a bootstrap 4 icon with label:
-
-    $mytable->actionbuttons = [
-                'iclass' => 'fa fa-cog', // Add an icon before the label.
-                'arialabel' => 'cogwheel', // Add an aria-label string to your icon.
         ];
 
 ## Filter, Sort and Search
