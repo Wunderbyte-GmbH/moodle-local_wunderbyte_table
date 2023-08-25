@@ -56,7 +56,7 @@ class demo_table extends wunderbyte_table {
     }
 
     /**
-     * This handles the colum checkboxes.
+     * This handles the action column with buttons, icons, checkboxes.
      *
      * @param stdClass $values
      * @return void
@@ -72,6 +72,7 @@ class demo_table extends wunderbyte_table {
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-cog', // Add an icon before the label.
             'arialabel' => 'cogwheel', // Add an aria-label string to your icon.
+            'title' => 'Edit', // We be displayed when hovered over icon.
             'id' => $values->id.'-'.$this->uniqueid,
             'name' => $this->uniqueid.'-'.$values->id,
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.

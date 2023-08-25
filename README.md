@@ -111,6 +111,7 @@ You can also use actionbuttons in a column to treat the corresponding record.
             'href' => '#', // You can either use the link, or JS, or both.
             'iclass' => 'fa fa-cog', // Add an icon before the label.
             'arialabel' => 'cogwheel', // Add an aria-label string to your icon.
+            'title' => 'Edit', // Will be displayed when hovered over icon.
             'id' => $values->id.'-'.$this->uniqueid, // Access the data of the record.
             'name' => $this->uniqueid.'-'.$values->id,
             'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
