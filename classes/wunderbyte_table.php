@@ -1263,15 +1263,16 @@ class wunderbyte_table extends table_sql {
             $filterobject = new stdClass;
         }
         if (!$searchtext == '') {
-            // Seperator defines which character seperates key (columnname) from value (searchterm).
-            $seperator = ":";
+            // Separator defines which character seperates key (columnname) from value (searchterm).
+            $separator = ":";
             $remainingstring = $searchtext;
-            // If the seperator is in the searchstring, we check if we get params to apply as filter.
-            if (strpos($searchtext, $seperator) !== false ) {
+            // If the separator is in the searchstring, we check if we get params to apply as filter.
+            if (strpos($searchtext, $separator) !== false ) {
                 $characterstoreplace = ["'", '„', '“'];
-                $searchtext = str_replace($characterstoreplace, '"', $searchtext);
+                $replacements = ['"', '"', '"'];
+                $searchtext = str_replace($characterstoreplace, $replacements, $searchtext);
 
-                $regex = '/(?|"([^"]+)"|(\w+))'.$seperator.'(?:"([^"]+)"|([^,\s]+))/';
+                $regex = '/(?|"([^"]+)"|(\w+))'.$separator.'(?:"([^"]+)"|([^,\s]+))/';
                 $initialsearchtext = $searchtext;
                 $columnname = '';
                 $value = '';
@@ -1292,11 +1293,11 @@ class wunderbyte_table extends table_sql {
 
                     // Checking if we find a doublequote after the semicolon.
                     $quotedvalue = false;
-                    $seperatorposition = strpos($match[0], $seperator);
-                    if ($seperatorposition !== false) {
-                        $seperatorposition++;
-                        if ($seperatorposition < strlen($match[0])) {
-                            $characterafter = $match[0][$seperatorposition];
+                    $separatorposition = strpos($match[0], $separator);
+                    if ($separatorposition !== false) {
+                        $separatorposition++;
+                        if ($separatorposition < strlen($match[0])) {
+                            $characterafter = $match[0][$separatorposition];
                             if ($characterafter == '"') {
                                 $quotedvalue = true;
                             }
@@ -1326,7 +1327,9 @@ class wunderbyte_table extends table_sql {
                     }
 
                     // Check if there is a string remaining after getting key and value.
-                    $remainingstring = str_replace($match[0], "", $remainingstring);
+                    if (isset($match[0]) && is_string($match[0])) {
+                        $remainingstring = str_replace($match[0], "", $remainingstring);
+                    }
                 }
             }
             $searchtext = trim($remainingstring);
