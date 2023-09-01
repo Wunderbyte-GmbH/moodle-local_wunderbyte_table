@@ -1,3 +1,6 @@
+## Version 1.7.0 (2023090100)
+* Bugfix: str_replace causes exception if $match[0] not found.
+
 ## Version 1.6.9 (2023081100)
 * Improvement: Move buttons, pagination, rowcount to top of table.
 * Bugfix: Missing cache definitions.
