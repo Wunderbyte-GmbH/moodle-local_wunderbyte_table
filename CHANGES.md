@@ -1,3 +1,9 @@
+## Version 1.7.1 (2023090600)
+* Improvement: Github actions green again.
+* Improvement: Add aria label to actionbutton icon.
+* Improvement: Correction in readme.
+* Improvement: Add title to icon in column.
+
 ## Version 1.7.0 (2023090100)
 * Bugfix: str_replace causes exception if $match[0] not found.
 
