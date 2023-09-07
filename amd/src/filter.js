@@ -264,6 +264,10 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
       additionalFirstColumnValues[">="] = valuesecondcolumn;
       firstoperator = ">";
       break;
+    case "flexoverlap":
+      firstoperator = "fo";
+      secondoperator = "fo";
+      break;
     default:
     // eslint-disable-next-line no-console
     console.error("Value of selection not readable");

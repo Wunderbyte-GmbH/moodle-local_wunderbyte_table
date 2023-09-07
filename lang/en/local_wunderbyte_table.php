@@ -79,15 +79,16 @@ $string['id'] = 'ID';
 // Filter for timespan.
 $string['displayrecords'] = 'Display records';
 $string['within'] = 'within';
-$string['overlapboth'] = 'overlap';
-$string['overlapstart'] = 'overlap beginning';
-$string['overlapend'] = 'overlap ending';
+$string['overlapboth'] = 'overlapping both dates';
+$string['overlapstart'] = 'overlapping beginning';
+$string['overlapend'] = 'overlapping ending';
 $string['before'] = 'before';
 $string['after'] = 'after';
 $string['startvalue'] = 'Start';
 $string['endvalue'] = 'End';
 $string['selectedtimespan'] = 'selected timespan';
 $string['timespan'] = 'Timespan';
+$string['flexoverlap'] = 'overlapping';
 
 // Action Buttons demo names.
 $string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';

@@ -1033,7 +1033,7 @@ class wunderbyte_table extends table_sql {
                         // Prepare the array for output.
                         if (empty($datepickerarray['datepicker'][$labelkey]['possibleoperations'])) {
                             $datepickerarray['datepicker'][$labelkey]['possibleoperations'] =
-                                ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'];
+                                ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap'];
                         }
                         $operationsarray = array_map(fn($y) => [
                             'operator' => $y,
@@ -1343,6 +1343,39 @@ class wunderbyte_table extends table_sql {
 
         $filter = '';
         $paramkey = 'param';
+
+        // This handles the case of flexoverlap filter.
+        $foobject = [];
+        foreach ($filterobject as $categorykey => $categoryvalue) {
+            if (!is_object($categoryvalue)) {
+                continue;
+            }
+            foreach ($categoryvalue as $filtername => $filterarray) {
+                foreach ($filterarray as $key => $value) {
+                    if ($key == "fo") {
+                        $foobject[$categorykey] = $value;
+                        if (count($filterobject->$categorykey) > 1) {
+                            unset($filterobject->$categorykey->$filtername);
+                        } else {
+                            unset($filterobject->$categorykey);
+                        }
+                    }
+                }
+            }
+        }
+        // Define the filter string.
+        if (count($foobject) > 1) {
+            $sc = array_keys($foobject)[0]; // Startcolumn.
+            $ec = array_keys($foobject)[1]; // Endcolumn.
+            $sf = array_values($foobject)[0]; // Startfilter.
+            $ef = array_values($foobject)[1]; // Endfilter.
+
+            $filter.= " AND (
+                ($sf <= $sc AND $ef >= $sc) OR
+                ($sf <= $ec AND $ef >= $ec) OR
+                ($sf >= $sc AND $ef <= $ec)
+            ) ";
+        }
 
         foreach ($filterobject as $categorykey => $categoryvalue) {
 

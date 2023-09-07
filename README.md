@@ -176,12 +176,12 @@ For columns that contain date and time values (as Unix timestamp) you can enable
                 ],
     ]);
 
-A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'.
-"Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan.
+A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after' and 'flexoverlap'.
+"Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan. "Flexoverlap" will include all kinds of overlaping: overlapping the beginning, the end, both sides or within.
 The possibleoperations array is containing a whitelist, if none specified, all are applied.
     'datepicker' => [
                     'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
-                        'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after'], // Will be displayed in select to choose from.
+                        'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap'], // Will be displayed in select to choose from.
                         'columntimestart' => 'startdate', // Columnname as is query with lower value.
                         'columntimeend' => 'enddate', // Columnname as is query with higher value.
                         'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".

@@ -85,6 +85,7 @@ $string['startvalue'] = 'Anfang';
 $string['endvalue'] = 'Ende';
 $string['selectedtimespan'] = 'gewählter Zeitspanne';
 $string['timespan'] = 'Zeitspanne';
+$string['flexoverlap'] = 'überlappend';
 
 // Action Buttons demo names.
 $string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';
