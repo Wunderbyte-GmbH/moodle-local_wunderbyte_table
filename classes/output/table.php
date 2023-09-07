@@ -535,6 +535,7 @@ class table implements renderable, templatable {
             'baseurl' => $this->baseurl,
             'table' => $this->table,
             'totalrecords' => $this->totalrecords,
+            'norecords' => $this->totalrecords == 0 ? true : false,
             'filteredrecords' => $this->filteredrecords,
             'countlabelstring' => get_string('countlabel',
                 'local_wunderbyte_table',

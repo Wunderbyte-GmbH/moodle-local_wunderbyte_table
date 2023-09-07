@@ -67,52 +67,57 @@
           ]
      }
 }}
+{{#norecords}}
+     <div class="norecordsfound">{{#str}} norecords, local_wunderbyte_table {{/str}}</div>
+{{/norecords}}
+{{^norecords}}
+     {{#table}}
 
-{{#table}}
-{{#infinitescroll}}
-     <div>
-     {{> local_wunderbyte_table/component_actionbutton }}
+     {{#infinitescroll}}
+          <div>
+          {{> local_wunderbyte_table/component_actionbutton }}
+          </div>
+     {{/infinitescroll}}
+     {{#displayelementsontop}}
+          <div>
+          {{> local_wunderbyte_table/component_actionbutton }}
+          </div>
+          <br>
+          <div>
+               {{> local_wunderbyte_table/component_pagination }}
+               <div class="float-right">{{> local_wunderbyte_table/component_selectrows }}</div>
+          </div>
+     {{/displayelementsontop}}
+     <div class="wunderbyte-table-table">
+          {{> local_wunderbyte_table/component_countlabel }}
+          <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}}
+          style="height: {{tableheight}};" {{/tableheight}}>
+               <table class="table" id="{{uniqueid}}">
+                    <thead>
+                         <tr>
+                              {{#header}}
+                                   {{#headers}}
+                                        <th class="{{key}} wb-table-column {{sortclass}}"
+                                        data-columnname="{{key}}"
+                                        {{#sortable}}
+                                        data-sortable="{{sortable}}"
+                                        {{/sortable}}>
+                                             {{{localized}}}
+                                        </th>
+                                   {{/headers}}
+                              {{/header}}
+                         </tr>
+                    </thead>
+                    <tbody class="rows-container">
+                         {{#rows}}
+                              {{> local_wunderbyte_table/twtable_list_row }}
+                         {{/rows}}
+                    </tbody>
+               </table>
+          </div>
      </div>
-{{/infinitescroll}}
-{{#displayelementsontop}}
-     <div>
-     {{> local_wunderbyte_table/component_actionbutton }}
-     </div>
-     <br>
-     <div>
-          {{> local_wunderbyte_table/component_pagination }}
-          <div class="float-right">{{> local_wunderbyte_table/component_selectrows }}</div>
-     </div>
-{{/displayelementsontop}}
-<div class="wunderbyte-table-table">
-     {{> local_wunderbyte_table/component_countlabel }}
-     <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}}
-     style="height: {{tableheight}};" {{/tableheight}}>
-          <table class="table" id="{{uniqueid}}">
-               <thead>
-                    <tr>
-                         {{#header}}
-                              {{#headers}}
-                                   <th class="{{key}} wb-table-column {{sortclass}}"
-                                   data-columnname="{{key}}"
-                                   {{#sortable}}
-                                   data-sortable="{{sortable}}"
-                                   {{/sortable}}>
-                                        {{{localized}}}
-                                   </th>
-                              {{/headers}}
-                         {{/header}}
-                    </tr>
-               </thead>
-               <tbody class="rows-container">
-                    {{#rows}}
-                         {{> local_wunderbyte_table/twtable_list_row }}
-                    {{/rows}}
-               </tbody>
-          </table>
-     </div>
-</div>
-{{/table}}
+     {{/table}}
+{{/norecords}}
 
 {{^infinitescroll}}
 {{^displayelementsontop}}

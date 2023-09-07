@@ -39,6 +39,8 @@ $string['reload'] = "Tabelle neu laden";
 $string['print'] = "Tabelle herunterladen";
 $string['downloadas'] = "Tabelle laden als";
 
+$string['norecords'] = "Keine Daten gefunden.";
+
 // Caches.
 $string['cachedef_cachedfulltable'] = 'Cache für die ganze Tabelle';
 $string['cachedef_cachedrawdata'] = "Wunderbyte Table Standard Cache";

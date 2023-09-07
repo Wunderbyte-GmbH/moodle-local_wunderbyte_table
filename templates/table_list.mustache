@@ -67,29 +67,33 @@
        ]
     }
 }}
-
+{{#norecords}}
+     <div class="norecordsfound">{{#str}} norecords, local_wunderbyte_table {{/str}}</div>
+{{/norecords}}
+{{^norecords}}
 {{#table}}
-<div class="wunderbyte-table-list">
-<table class="table">
-     <thead>
-          <tr class='row'>
-               {{#header}}
-                    {{#cardbody}}
-                         <th class="{{columnclass}} {{key}} {{sortclass}}">
-                              {{key}}
-                         </th>
-                    {{/cardbody}}
-               {{/header}}
-          </tr>
-     </thead>
-     <tbody class="rows-container">
-          {{#rows}}
-               {{> local_wunderbyte_table/table_list_row }}
-          {{/rows}}
-     </tbody>
-</table>
-</div>
-{{/table}}
+     <div class="wunderbyte-table-list">
+     <table class="table">
+          <thead>
+               <tr class='row'>
+                    {{#header}}
+                         {{#cardbody}}
+                              <th class="{{columnclass}} {{key}} {{sortclass}}">
+                                   {{key}}
+                              </th>
+                         {{/cardbody}}
+                    {{/header}}
+               </tr>
+          </thead>
+          <tbody class="rows-container">
+               {{#rows}}
+                    {{> local_wunderbyte_table/table_list_row }}
+               {{/rows}}
+          </tbody>
+     </table>
+     </div>
+     {{/table}}
+{{/norecords}}
 
 {{#errormessage}}
      <div class="alert alert-danger" role="alert">

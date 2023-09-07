@@ -69,19 +69,23 @@
      }
 }}
 
-
-<div class="wunderbyte_table_container_{{idstring}} wunderbyte_table_container">
-     <aside class="wunderbyte_table_components">
-          {{> local_wunderbyte_table/component_sort }}
-          {{> local_wunderbyte_table/component_search }}
-          {{> local_wunderbyte_table/component_filter }}
-     </aside>
-     <div> {{! This div makes sure infinite scroll works properly }}
-          <div class= "wunderbyteTableClass" id='a{{idstring}}'>
-               {{> local_wunderbyte_table/table_list }}
+{{#norecords}}
+     <div class="norecordsfound">{{#str}} norecords, local_wunderbyte_table {{/str}}</div>
+{{/norecords}}
+{{^norecords}}
+     <div class="wunderbyte_table_container_{{idstring}} wunderbyte_table_container">
+          <aside class="wunderbyte_table_components">
+               {{> local_wunderbyte_table/component_sort }}
+               {{> local_wunderbyte_table/component_search }}
+               {{> local_wunderbyte_table/component_filter }}
+          </aside>
+          <div> {{! This div makes sure infinite scroll works properly }}
+               <div class= "wunderbyteTableClass" id='a{{idstring}}'>
+                    {{> local_wunderbyte_table/table_list }}
+               </div>
           </div>
      </div>
-</div>
+{{/norecords}}
 
 {{#js}}
     require(['local_wunderbyte_table/init'], function(init) {
