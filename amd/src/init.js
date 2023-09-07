@@ -30,7 +30,7 @@ import {initializeReload} from 'local_wunderbyte_table/reload';
 import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 import {initializeRowsSelect} from './rowsdisplayselect';
 import {updateUrlWithFilterSearchSort} from './filter';
-import { initializeFilterSearch } from './filtersearch';
+import {initializeFilterSearch} from './filtersearch';
 
 // All these variables will be objects with the idstring so their tables as identifiers.
 var loadings = {};
