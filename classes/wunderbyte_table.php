@@ -1563,8 +1563,6 @@ class wunderbyte_table extends table_sql {
      */
     public function return_encoded_table($newcache = false) {
 
-        global $USER;
-
         // We don't want errormessage in the encoded table.
         $this->errormessage = '';
 
