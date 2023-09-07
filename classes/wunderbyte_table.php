@@ -1370,7 +1370,7 @@ class wunderbyte_table extends table_sql {
             $sf = array_values($foobject)[0]; // Startfilter.
             $ef = array_values($foobject)[1]; // Endfilter.
 
-            $filter.= " AND (
+            $filter .= " AND (
                 ($sf <= $sc AND $ef >= $sc) OR
                 ($sf <= $ec AND $ef >= $ec) OR
                 ($sf >= $sc AND $ef <= $ec)

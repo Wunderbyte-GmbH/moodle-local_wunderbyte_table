@@ -1,3 +1,7 @@
+* New feature: Flexoverlap filter for timespan taking into account all kind of overlapping timespans.
+* New feature: Search function within filters.
+* Improvement: Display norecords message, when no records found in table.
+
 ## Version 1.7.1 (2023090600)
 * Improvement: Github actions green again.
 * Improvement: Add aria label to actionbutton icon.
