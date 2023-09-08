@@ -108,7 +108,7 @@ function applyChangelistener(nodelist, selector, idstring, encodedtable) {
   // Because of pages and infinite scroll we don't have the data to do without.
   callLoadData(idstring,
     encodedtable,
-    0, // Pagenumber is always rest to 0.
+    0, // Pagenumber is always set to 0.
     null,
     sort,
     null,
