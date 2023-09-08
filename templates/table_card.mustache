@@ -114,9 +114,10 @@
 {{/errormessage}}
 
 {{> local_wunderbyte_table/component_pagination }}
-
+{{^norecords}}
 {{#js}}
     require(['local_wunderbyte_table/init'], function(init) {
      init.init('{{idstring}}', '{{encodedtable}}');
     });
 {{/js}}
+{{/norecords}}

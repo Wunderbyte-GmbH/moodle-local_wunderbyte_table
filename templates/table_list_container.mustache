@@ -70,7 +70,9 @@
 }}
 
 {{#norecords}}
-     <div class="norecordsfound">{{#str}} norecords, local_wunderbyte_table {{/str}}</div>
+    <div class="norecordsfound">
+        <div class="alert alert-warning" role="alert">{{#str}} norecords, local_wunderbyte_table {{/str}}</div>
+    </div>
 {{/norecords}}
 {{^norecords}}
      <div class="wunderbyte_table_container_{{idstring}} wunderbyte_table_container">
@@ -85,10 +87,11 @@
                </div>
           </div>
      </div>
-{{/norecords}}
 
-{{#js}}
-    require(['local_wunderbyte_table/init'], function(init) {
-    init.init('{{idstring}}', '{{encodedtable}}');
-    });
-{{/js}}
+     {{#js}}
+     require(['local_wunderbyte_table/init'], function(init) {
+     init.init('{{idstring}}', '{{encodedtable}}');
+     });
+     {{/js}}
+
+{{/norecords}}
