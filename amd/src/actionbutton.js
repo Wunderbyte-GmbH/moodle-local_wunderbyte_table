@@ -46,6 +46,7 @@ const SELECTOR = {
 export function initializeActionButton(selector, idstring, encodedtable) {
 
   const container = document.querySelector(selector);
+
   if (!container) {
     return;
   }
@@ -391,4 +392,3 @@ function chooseActionToTransmit(button, idstring, encodedtable, selectionresult)
     });
   }
 }
-

@@ -119,6 +119,11 @@
           </div>
      </div>
      {{/table}}
+{{#js}}
+    require(['local_wunderbyte_table/init'], function(init) {
+    init.init('{{idstring}}', '{{encodedtable}}');
+    });
+{{/js}}
 {{/norecords}}
 
 {{^infinitescroll}}
@@ -133,11 +138,3 @@
           {{errormessage}}
      </div>
 {{/errormessage}}
-
-{{^norecords}}
-{{#js}}
-    require(['local_wunderbyte_table/init'], function(init) {
-    init.init('{{idstring}}', '{{encodedtable}}');
-    });
-{{/js}}
-{{/norecords}}

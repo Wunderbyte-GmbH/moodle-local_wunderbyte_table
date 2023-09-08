@@ -50,5 +50,3 @@ export function initializeRowsSelect(selector, idstring, encodedtable) {
             }
         });
 }
-
-

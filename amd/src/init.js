@@ -145,18 +145,23 @@ function respondToVisibility(idstring, encodedtable, callback) {
 
     } else {
 
-        // This is what we do when we didn't lazyload.
-        // replaceLinksInFrag(idstring, encodedtable, element, null);
-        addLinksToPagination(idstring, encodedtable, element);
+        const selector = ".wunderbyte_table_container_" + idstring;
+        const container = document.querySelector(selector);
 
-        initializeComponents(idstring, encodedtable);
+        if (container != undefined) {
+            // This is what we do when we didn't lazyload.
+            // replaceLinksInFrag(idstring, encodedtable, element, null);
+            addLinksToPagination(idstring, encodedtable, element);
 
-        // Check to see if scrolling near bottom of page; load more photos
-        // This shoiuld only be added once.
+            initializeComponents(idstring, encodedtable);
 
-        // As this can only be here once per table, we mark the table.
-        addScrollFunctionality(idstring, encodedtable, element);
-        initToggleAside(idstring);
+            // Check to see if scrolling near bottom of page; load more photos
+            // This shoiuld only be added once.
+
+            // As this can only be here once per table, we mark the table.
+            addScrollFunctionality(idstring, encodedtable, element);
+            initToggleAside(idstring);
+        }
 
     }
 }
@@ -442,7 +447,9 @@ export const callLoadData = (
 
                         container = document.querySelector(".wunderbyte_table_container_" + idstring);
                     }
-
+                    if (container == undefined) {
+                        return true;
+                    }
                     addLinksToPagination(idstring, encodedtable, container);
 
                     // When everything is done, we loaded fine.
@@ -668,18 +675,20 @@ function infinitescrollEnabled(idstring) {
  */
 function initializeComponents(idstring, encodedtable) {
     const selector = ".wunderbyte_table_container_" + idstring;
-    initializeCheckboxes(selector, idstring, encodedtable);
-    initializeSearch(selector, idstring, encodedtable);
-    initializeSort(selector, idstring, encodedtable);
-    initializeRowsSelect(selector, idstring, encodedtable);
-    initializeFilterSearch(selector, idstring, encodedtable);
 
-    // A very strange error leads to a failed import from the reloadTable.js under some circumstances.
-    // Reload has to be called with this precaution therefore.
-    if (initializeReload) {
-        initializeReload(selector, idstring, encodedtable);
-    }
-    initializeActionButton(selector, idstring, encodedtable);
+        initializeCheckboxes(selector, idstring, encodedtable);
+        initializeSearch(selector, idstring, encodedtable);
+        initializeSort(selector, idstring, encodedtable);
+        initializeRowsSelect(selector, idstring, encodedtable);
+        initializeFilterSearch(selector, idstring, encodedtable);
+
+        // A very strange error leads to a failed import from the reloadTable.js under some circumstances.
+        // Reload has to be called with this precaution therefore.
+        if (initializeReload) {
+            initializeReload(selector, idstring, encodedtable);
+        }
+        initializeActionButton(selector, idstring, encodedtable);
+
 }
 
 /**
