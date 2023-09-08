@@ -82,9 +82,9 @@ export function initializeFilterSearch(containerselector) {
           // Check if value of records contains searchstring.
           // If countained, display it, else hide.
           records.forEach(function(record) {
-            let value = record.value;
+            let value = record.value.toLowerCase();
             const listelement = record.parentNode;
-            if (value.includes(searchstring)) {
+            if (value.includes(searchstring.toLowerCase())) {
               listelement.removeAttribute('hidden');
             } else {
               listelement.setAttribute('hidden', '');
