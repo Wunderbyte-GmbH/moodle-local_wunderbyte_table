@@ -46,6 +46,9 @@ const SELECTOR = {
 export function initializeActionButton(selector, idstring, encodedtable) {
 
   const container = document.querySelector(selector);
+  if (!container) {
+    return;
+  }
   const actionbuttons = container.querySelectorAll(SELECTOR.ACTIONBUTTON);
 
   actionbuttons.forEach(button => {

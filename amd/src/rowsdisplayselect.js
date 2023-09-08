@@ -32,6 +32,9 @@ const SELECTOR = {
  */
 export function initializeRowsSelect(selector, idstring, encodedtable) {
         const container = document.querySelector(selector);
+        if (!container) {
+            return;
+        }
         const selectElements = container.querySelectorAll(SELECTOR.ROWSELECT);
 
         selectElements.forEach(selectElement => {

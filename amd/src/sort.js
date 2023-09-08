@@ -46,7 +46,9 @@ const SORT_DESC = 3;
  export function initializeSort(listContainer, idstring, encodedtable) {
 
     const container = document.querySelector(listContainer);
-
+    if (!container) {
+        return;
+    }
     const sortColumnElement = container.querySelector(SELECTOR.SORTCOLUMN);
     const sortOrderElement = container.querySelector(SELECTOR.CHANGESORTORDER);
 

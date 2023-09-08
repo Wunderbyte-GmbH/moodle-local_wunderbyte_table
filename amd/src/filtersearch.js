@@ -24,18 +24,24 @@
  * Render the checkboxes for the filer.
  * @param {string} idstring
  */
- export const renderSearchbox = (idstring) => {
+export const renderSearchbox = (idstring) => {
 
     const selector = ".wunderbyte_table_container_" + idstring;
     const tablecontainer = document.querySelector(selector);
+    if (!tablecontainer) {
+        return;
+    }
     const filtercontainer = tablecontainer.querySelector(".wunderbyteTableFilter");
+    if (!filtercontainer) {
+        return;
+    }
     let searchfields = filtercontainer.querySelectorAll("input.search");
 
     // eslint-disable-next-line no-console
     console.log("filtersearch init", searchfields);
 
     if (!searchfields) {
-      return;
+        return;
     }
 };
 
@@ -46,54 +52,56 @@
  */
 export function initializeFilterSearch(containerselector) {
 
-      const tablecontainer = document.querySelector(containerselector);
-      const filtercontainer = tablecontainer.querySelector(".wunderbyteTableFilter");
-
-      if (!filtercontainer) {
+    const tablecontainer = document.querySelector(containerselector);
+    if (!tablecontainer) {
         return;
-      }
-      var inputElements = filtercontainer.querySelectorAll('input.search');
-
-      if (!inputElements) {
-          return;
-      }
-
-      inputElements.forEach(function(inputElement) {
-        if (!inputElement.dataset.initialized) {
-          inputElement.dataset.initialized = true;
-
-        // Get all records of filter.
-        const parentElement = inputElement.parentNode;
-        let records = parentElement.querySelectorAll('input.filterelement.form-check-input[type="checkbox"]');
-
-        // Display searchfield with minimum of 13 records.
-        if (records.length > 12) {
-          inputElement.removeAttribute('hidden');
-        }
-
-        inputElement.addEventListener('keyup', () => {
-
-          let searchstring = null;
-          if (inputElement.value.length > 2
-              || inputElement.value.length === 0) {
-            searchstring = inputElement.value;
-          }
-
-          // Check if value of records contains searchstring.
-          // If countained, display it, else hide.
-          records.forEach(function(record) {
-            let value = record.value.toLowerCase();
-            const listelement = record.parentNode;
-            if (value.includes(searchstring.toLowerCase())) {
-              listelement.removeAttribute('hidden');
-            } else {
-              listelement.setAttribute('hidden', '');
-            }
-          });
-
-          return;
-        });
-      }
     }
-  );
+    const filtercontainer = tablecontainer.querySelector(".wunderbyteTableFilter");
+
+    if (!filtercontainer) {
+        return;
+    }
+    var inputElements = filtercontainer.querySelectorAll('input.search');
+
+    if (!inputElements) {
+        return;
+    }
+
+    inputElements.forEach(function(inputElement) {
+        if (!inputElement.dataset.initialized) {
+            inputElement.dataset.initialized = true;
+
+            // Get all records of filter.
+            const parentElement = inputElement.parentNode;
+            let records = parentElement.querySelectorAll('input.filterelement.form-check-input[type="checkbox"]');
+
+            // Display searchfield with minimum of 13 records.
+            if (records.length > 12) {
+                inputElement.removeAttribute('hidden');
+            }
+
+            inputElement.addEventListener('keyup', () => {
+
+                let searchstring = null;
+                if (inputElement.value.length > 2
+                    || inputElement.value.length === 0) {
+                    searchstring = inputElement.value;
+                }
+
+                // Check if value of records contains searchstring.
+                // If countained, display it, else hide.
+                records.forEach(function(record) {
+                    let value = record.value.toLowerCase();
+                    const listelement = record.parentNode;
+                    if (value.includes(searchstring.toLowerCase())) {
+                        listelement.removeAttribute('hidden');
+                    } else {
+                        listelement.setAttribute('hidden', '');
+                    }
+                });
+                return;
+            });
+        }
+    }
+    );
 }

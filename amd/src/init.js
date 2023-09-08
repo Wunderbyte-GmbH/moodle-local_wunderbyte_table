@@ -313,6 +313,9 @@ export const callLoadData = (
             // We can always expect a wunderbyte table container at this point.
             // The container will hold wunderbyteTableClass, wunderbyteTableFilter, wunderbyteTableSearch classes.
             let container = document.querySelector(".wunderbyte_table_container_" + idstring);
+            if (!container) {
+                return;
+            }
             const componentscontainer = container.querySelector(".wunderbyte_table_components");
 
             // If we only increase the scrollpage, we don't need to render everything again.
@@ -455,6 +458,9 @@ export const callLoadData = (
                     // Make sure all elements are working.
                     initializeComponents(idstring, encodedtable);
 
+                    if (!container) {
+                        return true;
+                    }
                     const element = container.querySelector('#a' + idstring);
 
                     // This is the place where we are after lazyloading. We check if we need to reinitialize scrolllistener:
@@ -619,6 +625,10 @@ function returnHiddenElement(element) {
  * @param {DocumentFragment} frag
  */
 function addLinksToPagination(idstring, encodedtable, frag) {
+    if (!frag) {
+        return;
+    }
+
     var arrayOfPageItems = frag.querySelectorAll(".page-item");
 
     if (!arrayOfPageItems || arrayOfPageItems.length == 0) {
