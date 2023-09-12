@@ -378,7 +378,6 @@ class table implements renderable, templatable {
                             $this->sort['sortup'] = false;
                             break;
                     }
-
                 };
 
                 $this->table['header']['headers'][] = $item;
@@ -398,7 +397,6 @@ class table implements renderable, templatable {
                             $this->sort['sortup'] = false;
                             break;
                     }
-
                 };
             }
         }
@@ -528,6 +526,7 @@ class table implements renderable, templatable {
      * @return array
      */
     public function export_for_template(renderer_base $output) {
+        global $CFG;
         $data = [
             'idstring' => $this->idstring,
             'uniqueid' => $this->uniqueid,
@@ -560,6 +559,13 @@ class table implements renderable, templatable {
         // Only if we want to show the searchfield, we actually add the key.
         if ($this->search) {
             $data['search'] = true;
+            if ($CFG->version >= 2023042400) {
+                // Moodle 4.2 uses Fontawesome 6.
+                $data['searchiconclasses'] = 'fa-solid fa-magnifying-glass fa-xl mt-3';
+            } else {
+                // For older versions, use Fontawesome 4.
+                $data['searchiconclasses'] = 'fa fa-search h4';
+            }
         }
 
         // Only if we want to show the sortelements, we actually add the key.
