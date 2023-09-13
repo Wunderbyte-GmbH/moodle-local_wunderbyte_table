@@ -529,20 +529,18 @@ function addScrollFunctionality(idstring, encodedtable, element) {
 
     const scrollableelement = getScrollParent(element);
 
-    if (!scrollableelement) {
-        return;
-    }
+    if (scrollableelement) {
+        scrollableelement.addEventListener('scroll', () => {
 
-    scrollableelement.addEventListener('scroll', () => {
-
-        if (!scrollingelement.hasOwnProperty(idstring)) {
-            scrollingelement[idstring] = 'scrollElement';
-        } else {
-            if (scrollingelement[idstring] === 'scrollElement') {
-                scrollListener(element, idstring, encodedtable);
+            if (!scrollingelement.hasOwnProperty(idstring)) {
+                scrollingelement[idstring] = 'scrollElement';
+            } else {
+                if (scrollingelement[idstring] === 'scrollElement') {
+                    scrollListener(element, idstring, encodedtable);
+                }
             }
-        }
-    });
+        });
+    }
 
     // It's not easy to decide which is the right, so we have to add both.
     window.addEventListener('scroll', () => {
