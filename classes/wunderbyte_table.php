@@ -381,7 +381,7 @@ class wunderbyte_table extends table_sql {
         // Retrieve the encoded table.
         $this->tablecachehash = $tablecachehash;
         $output = $PAGE->get_renderer('local_wunderbyte_table');
-        $data = new lazytable($this->idstring, $tablecachehash);
+        $data = new lazytable($this->idstring, $tablecachehash, $this->infinitescroll);
         return [$this->idstring, $tablecachehash, $output->render_lazytable($data)];
     }
 

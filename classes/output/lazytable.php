@@ -51,14 +51,23 @@ class lazytable implements renderable, templatable {
     public $encodedtable;
 
     /**
+     * See if infinitescroll is enabled.
+     *
+     * @var string
+     */
+    public $infinitescrollenabled;
+
+    /**
      * Constructor.
      *
      * @param string $idstring
      * @param string $encodedtable
      */
-    public function __construct(string $idstring, string $encodedtable) {
+    public function __construct(string $idstring, string $encodedtable, int $inifinitescroll) {
         $this->idstring = $idstring;
         $this->encodedtable = $encodedtable;
+
+        $this->infinitescrollenabled = $inifinitescroll > 0 ? true : false;
     }
 
     /**
@@ -70,7 +79,8 @@ class lazytable implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         $data = [
             'idstring' => $this->idstring,
-            'encodedtable' => $this->encodedtable
+            'encodedtable' => $this->encodedtable,
+            'infinitescrollenabled' => $this->infinitescrollenabled,
         ];
 
         if (class_exists('local_shopping_cart\shopping_cart')) {
