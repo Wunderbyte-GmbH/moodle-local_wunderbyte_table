@@ -1,3 +1,9 @@
+## Version 1.7.3 (2023091300)
+* Improvement: Code quality improvements and linting.
+* Bugfix: Fixes for github actions (behat, mustache etc.).
+* Bugfix: Fix search icon for Moodle 4.2.
+
+## Version 1.7.2 (2023090800)
 * New feature: Flexoverlap filter for timespan taking into account all kind of overlapping timespans.
 * New feature: Search function within filters.
 * Improvement: Display norecords message, when no records found in table.
