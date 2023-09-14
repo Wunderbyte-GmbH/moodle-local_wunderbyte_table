@@ -272,6 +272,7 @@ class table implements renderable, templatable {
         $prefs = $SESSION->flextable[$table->uniqueid] ?? [];
         $sortcolumns = isset($prefs['sortby']) ? array_slice($prefs['sortby'], 0, 1) : [];
 
+        // Will be null if no sort columns found/defined.
         $this->sort = $this->return_sort_columns($sortcolumns);
 
         // Now we create the Table with all necessary columns.
@@ -365,7 +366,7 @@ class table implements renderable, templatable {
                 };
 
                 // Make the up down arrow fat/black when it's actually sorted.
-                if (in_array($column, array_keys($sortcolumns))) {
+                if (in_array($column, array_keys($sortcolumns)) && !empty($this->sort)) {
                     switch ($sortcolumns[$column]) {
                         case (SORT_ASC):
                             $item['sortclass'] = 'asc';
@@ -384,7 +385,7 @@ class table implements renderable, templatable {
             }
         } else { // We also need this in case there are no headers to apply sorting correctly.
             foreach ($table->columns as $column => $key) {
-                if (in_array($column, array_keys($sortcolumns))) {
+                if (in_array($column, array_keys($sortcolumns)) && !empty($this->sort)) {
                     switch ($sortcolumns[$column]) {
                         case (SORT_ASC):
                             $item['sortclass'] = 'asc';
@@ -569,7 +570,7 @@ class table implements renderable, templatable {
         }
 
         // Only if we want to show the sortelements, we actually add the key.
-        if ($this->sort) {
+        if (!empty($this->sort)) {
             if (!$this->cardsort) {
                 $data['sort'] = $this->sort;
             } else {
