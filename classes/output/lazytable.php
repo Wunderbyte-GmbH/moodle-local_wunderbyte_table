@@ -62,6 +62,7 @@ class lazytable implements renderable, templatable {
      *
      * @param string $idstring
      * @param string $encodedtable
+     * @param int $inifinitescroll
      */
     public function __construct(string $idstring, string $encodedtable, int $inifinitescroll) {
         $this->idstring = $idstring;
