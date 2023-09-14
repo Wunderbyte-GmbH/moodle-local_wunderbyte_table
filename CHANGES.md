@@ -1,3 +1,8 @@
+## Version 1.7.4 (2023091400)
+* Bugfix: Fix infinitescroll.
+* Bugfix: Fix bug where we didn't attach scroll to window.
+* Bugfix: Fix PHPDocs.
+
 ## Version 1.7.3 (2023091300)
 * Improvement: Code quality improvements and linting.
 * Bugfix: Fixes for github actions (behat, mustache etc.).
