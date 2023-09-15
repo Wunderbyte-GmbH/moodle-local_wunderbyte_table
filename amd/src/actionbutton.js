@@ -237,6 +237,14 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
         showNotification(data.message, "danger");
       }
       reloadAllTables();
+
+      // We check if the table is within a modal and if so, we make sure that this modal...
+      // Stays scrollable by making sure that the body keeps the modal-open class.
+      const container = document.querySelector('#a' + idstring);
+      if (!container.closest(".modal-dialog")) {
+        let body = container.closest("body");
+        body.classList.add("modal-open");
+      }
     },
     fail: function(ex) {
       // eslint-disable-next-line no-console
