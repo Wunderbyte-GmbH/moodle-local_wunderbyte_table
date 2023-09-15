@@ -46,7 +46,10 @@ $string['cachedef_cachedfulltable'] = 'Cached full table';
 $string['cachedef_cachedrawdata'] = "Wunderbyte Table standard cache";
 $string['cachedef_encodedtables'] = 'Cache for encoded tables';
 
-$string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found';
+// Info messages over table.
+$string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found ';
+$string['filtercountmessage'] = '-- {$a->filtersum} filter on {$a->filtercolumns} -- ';
+$string['showallrecords'] = 'Show all records';
 
 $string['checkallcheckbox'] = "Check all";
 $string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheckbox">';

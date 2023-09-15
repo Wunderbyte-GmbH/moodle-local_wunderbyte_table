@@ -23,7 +23,8 @@
     Example context (json):
     {
     "countlabel": {
-        "countlabelstring": "Total Records: 100"
+        "countlabelstring": "Total Records: 100",
+        "filtercount": "5 Filter on col1, col2",
     }
     }
 
@@ -32,5 +33,10 @@
 {{#countlabel}}
     <div class="wb-records-count-label">
         {{countlabelstring}}
+        {{#filtercount}}
+            {{filtercount}}
+            <a href='#' class="reset-filter-button">{{#str}} showallrecords, local_wunderbyte_table{{/str}}</a>
+        {{/filtercount}}
+
     </div>
 {{/countlabel}}

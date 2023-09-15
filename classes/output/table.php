@@ -209,6 +209,13 @@ class table implements renderable, templatable {
     private $pagesize = 10;
 
     /**
+     * Errormessage
+     *
+     * @var string
+     */
+    private $filtercountstring = '';
+
+    /**
      * Constructor.
      *
      * @param wunderbyte_table $table
@@ -543,6 +550,8 @@ class table implements renderable, templatable {
                     'totalrecords' => $this->totalrecords,
                     'filteredrecords' => $this->filteredrecords,
                 ]),
+            'filtercount' => $this->filtercountstring,
+            'searchtextapplied' => $this->search,
             'pages' => $this->pagination['pages'] ?? null,
             'disableprevious' => $this->pagination['disableprevious'] ?? null,
             'disablenext' => $this->pagination['disablenext'] ?? null,
@@ -705,6 +714,8 @@ class table implements renderable, templatable {
             return null;
         }
 
+        $filtercountarray = [];
+
         $categories = json_decode($table->filterjson, true);
 
         if (!isset($categories['categories'])) {
@@ -755,6 +766,9 @@ class table implements renderable, templatable {
                 $tempfiltercolumn = $potentialfiltercolumn['columnname'];
 
                 if (isset($filterarray[$tempfiltercolumn])) {
+                    // We create an array to fetch human readable data.
+                    $filtercountarray[$potentialfiltercolumn['name']] = count($filterarray[$tempfiltercolumn]);
+
                     foreach ($filterarray[$tempfiltercolumn] as $sfkey => $filter) {
 
                         // Apply filter for date and time value.
@@ -800,6 +814,22 @@ class table implements renderable, templatable {
                 }
             }
         }
+
+        // We collect human readable informations about applied filters.
+
+
+        $filtercolumns = implode(', ', array_keys($filtercountarray));
+        $filtersum = array_sum($filtercountarray);
+
+        if ($filtersum > 0) {
+            $this->filtercountstring = get_string('filtercountmessage',
+            'local_wunderbyte_table',
+                (object)[
+                    'filtercolumns' => $filtercolumns,
+                    'filtersum' => $filtersum,
+                ]);
+        }
+
         $categories['categories'] = $tableobject;
         return $categories;
     }

@@ -46,7 +46,10 @@ $string['cachedef_cachedfulltable'] = 'Cache für die ganze Tabelle';
 $string['cachedef_cachedrawdata'] = "Wunderbyte Table Standard Cache";
 $string['cachedef_encodedtables'] = 'Cache für enkodierte Tabellen';
 
-$string['countlabel'] = '{$a->filteredrecords} von {$a->totalrecords} Einträgen gefunden';
+// Info messages over table.
+$string['countlabel'] = '{$a->filteredrecords} von {$a->totalrecords} Einträgen gefunden ';
+$string['filtercountmessage'] = '-- {$a->filtersum} Filter auf {$a->filtercolumns} -- ';
+$string['showallrecords'] = 'Show all records';
 
 $string['checkallcheckbox'] = "Alles auswählen";
 $string['functiondoesntexist'] = "Funktion des Aktionsbuttons exisitert nicht.";

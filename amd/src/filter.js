@@ -79,7 +79,44 @@ function applyChangelistener(nodelist, selector, idstring, encodedtable) {
     });
   }
 }
+/**
+ * Init for button to reset all filter and searchparams.
+ * @param {*} selector
+ * @param {*} idstring
+ * @param {*} encodedtable
+ */
+export function initializeResetFilterButton(selector, idstring, encodedtable) {
+  const container = document.querySelector(selector);
+  if (!container) {
+    return;
+  }
+  let button = container.querySelector(".reset-filter-button");
 
+  if (!button) {
+    return;
+  }
+  button.addEventListener('click', () => {
+
+    // eslint-disable-next-line no-console
+    console.log("show all data");
+
+    const componentscontainer = container.querySelector(".wunderbyte_table_components");
+
+    componentscontainer.remove();
+
+    const sort = getSortSelection(idstring);
+    callLoadData(idstring,
+      encodedtable,
+      0, // Pagenumber is always set to 0.
+      null,
+      sort,
+      null,
+      null,
+      null,
+      "",
+      "");
+  });
+}
 /**
  * Eventhandler
  * @param {*} e
