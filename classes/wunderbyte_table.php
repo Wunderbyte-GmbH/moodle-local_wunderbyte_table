@@ -1418,8 +1418,54 @@ class wunderbyte_table extends table_sql {
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "%$value%";
                     } else {
+
+                        // We want to find the value in an array of values.
+                        // Therefore, we have to use or as well.
+                        // First, make sure we have enough params we can use..
+
+                        $filter .= " ( ";
+
+                        while (isset($this->sql->params[$paramkey . $paramcounter])) {
+                            $paramcounter++;
+                            $paramsvaluekey = $paramkey . $paramcounter;
+                        }
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
                         $this->sql->params[$paramsvaluekey] = "$value";
+
+                        $filter .= " OR ";
+
+                        // Make sure again we have enough params we can use..
+                        while (isset($this->sql->params[$paramkey . $paramcounter])) {
+                            $paramcounter++;
+                            $paramsvaluekey = $paramkey . $paramcounter;
+                        }
+
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+                        $this->sql->params[$paramsvaluekey] = "$value,%";
+
+                        $filter .= " OR ";
+
+                        // Make sure again we have enough params we can use..
+                        while (isset($this->sql->params[$paramkey . $paramcounter])) {
+                            $paramcounter++;
+                            $paramsvaluekey = $paramkey . $paramcounter;
+                        }
+
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+                        $this->sql->params[$paramsvaluekey] = "%,$value";
+
+                        $filter .= " OR ";
+
+                        // Make sure again we have enough params we can use..
+                        while (isset($this->sql->params[$paramkey . $paramcounter])) {
+                            $paramcounter++;
+                            $paramsvaluekey = $paramkey . $paramcounter;
+                        }
+
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+                        $this->sql->params[$paramsvaluekey] = "%,$value,%";
+
+                        $filter .= " ) ";
                     }
                     $categorycounter++;
                 }
