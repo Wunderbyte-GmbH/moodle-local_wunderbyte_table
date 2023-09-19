@@ -53,9 +53,6 @@ const SORT_DESC = 3;
 
     const sortColumnElement = container.querySelector(SELECTOR.SORTCOLUMN);
 
-    if (!sortColumnElement) {
-      return;
-    }
     const sortOrderElement = container.querySelector(SELECTOR.CHANGESORTORDER);
 
     initializeSortColumns(listContainer, idstring, encodedtable);
