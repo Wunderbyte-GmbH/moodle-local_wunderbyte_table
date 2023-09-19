@@ -1,3 +1,7 @@
+## Version 1.7.5 (2023091900)
+* Bugfix: Allow for multiple values, comma separated values via filter.
+* Bugfix: Sorting not working without sort component.
+
 ## Version 1.7.4 (2023091400)
 * Bugfix: Fix infinitescroll.
 * Bugfix: Fix bug where we didn't attach scroll to window.
