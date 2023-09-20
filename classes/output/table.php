@@ -816,8 +816,6 @@ class table implements renderable, templatable {
         }
 
         // We collect human readable informations about applied filters.
-
-
         $filtercolumns = implode(', ', array_keys($filtercountarray));
         $filtersum = array_sum($filtercountarray);
 
