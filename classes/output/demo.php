@@ -138,7 +138,7 @@ class demo implements renderable, templatable {
         ];
 
         $table->define_filtercolumns($filtercolumns);
-        $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
+        //$table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 
         // When true and action buttons are present, checkboxes will be rendered to every line / record.
@@ -461,7 +461,7 @@ class demo implements renderable, templatable {
         ];
 
         $table->define_filtercolumns($filtercolumns);
-        $table->define_fulltextsearchcolumns(array_keys($filtercolumns));
+        //$table->define_fulltextsearchcolumns(array_keys($filtercolumns));
         $table->define_sortablecolumns(['id', 'course', 'module']);
 
         // When true and action buttons are present, checkboxes will be rendered to every line.
@@ -557,7 +557,7 @@ class demo implements renderable, templatable {
         $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
 
         $table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
-        $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
+        //$table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 
         $table->addcheckboxes = true;
