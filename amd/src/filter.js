@@ -100,7 +100,15 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
     // eslint-disable-next-line no-console
     console.log("show all data");
 
+    if (!container) {
+      return;
+    }
+
     const componentscontainer = container.querySelector(".wunderbyte_table_components");
+
+    if (!componentscontainer) {
+      return;
+    }
 
     componentscontainer.remove();
 
