@@ -137,30 +137,32 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
   e.stopPropagation();
   e.preventDefault();
 
-  // Check if Checkbox corresponds to datepicker
-  if (e.target.dataset.dateelement == 'dateelement') {
-    getDates(e, idstring);
-  } else {
-    getChecked(e.target.name, selector, idstring);
-  }
+  setTimeout(() => {
+    // Check if Checkbox corresponds to datepicker
+    if (e.target.dataset.dateelement == 'dateelement') {
+      getDates(e, idstring);
+    } else {
+      getChecked(e.target.name, selector, idstring);
+    }
 
-  // Reload the filtered elements via ajax.
-  const filterobjects = getFilterObjects(idstring);
-  const searchstring = getSearchInput(idstring);
-  const sort = getSortSelection(idstring);
+    // Reload the filtered elements via ajax.
+    const filterobjects = getFilterObjects(idstring);
+    const searchstring = getSearchInput(idstring);
+    const sort = getSortSelection(idstring);
 
-  // The filter reloads data from the Server.
-  // Because of pages and infinite scroll we don't have the data to do without.
-  callLoadData(idstring,
-    encodedtable,
-    0, // Pagenumber is always set to 0.
-    null,
-    sort,
-    null,
-    null,
-    null,
-    filterobjects,
-    searchstring);
+    // The filter reloads data from the Server.
+    // Because of pages and infinite scroll we don't have the data to do without.
+    callLoadData(idstring,
+      encodedtable,
+      0, // Pagenumber is always set to 0.
+      null,
+      sort,
+      null,
+      null,
+      null,
+      filterobjects,
+      searchstring);
+  }, 400);
 }
 
 /**

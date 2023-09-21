@@ -1354,7 +1354,7 @@ class wunderbyte_table extends table_sql {
                 foreach ($filterarray as $key => $value) {
                     if ($key == "fo") {
                         $foobject[$categorykey] = $value;
-                        if (count($filterobject->$categorykey) > 1) {
+                        if (count((array)$filterobject->$categorykey) > 1) {
                             unset($filterobject->$categorykey->$filtername);
                         } else {
                             unset($filterobject->$categorykey);
