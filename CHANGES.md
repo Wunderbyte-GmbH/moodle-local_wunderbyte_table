@@ -1,3 +1,11 @@
+## Version 1.7.6 (2023092100)
+* New feature: GH-26 & GH-27 display current filter settings and delete on button click.
+* Improvement: Hide search fields in 3/4 demo tables.
+* Bugfix: GH-25 Bugfix: Sorting field only displayed when sorting columns selectable.
+* Bugfix: GH-24 Fix for Moodle 4.2 FontAwesome sorting pseudo elements.
+* Bugfix: Keep tables in modals scrollable after actionbutton execution.
+* Bugfix: Prevent console error because of missing container element.
+
 ## Version 1.7.5 (2023091900)
 * Bugfix: Allow for multiple values, comma separated values via filter.
 * Bugfix: Sorting not working without sort component.
