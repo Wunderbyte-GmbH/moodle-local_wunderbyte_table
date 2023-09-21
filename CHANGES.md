@@ -1,3 +1,6 @@
+## Version 1.7.7 (2023092101)
+* Bugfix: Fix timefilters to work with count labels
+
 ## Version 1.7.6 (2023092100)
 * New feature: GH-26 & GH-27 display current filter settings and delete on button click.
 * Improvement: Hide search fields in 3/4 demo tables.
