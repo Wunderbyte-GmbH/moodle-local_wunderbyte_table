@@ -138,7 +138,7 @@ class demo implements renderable, templatable {
         ];
 
         $table->define_filtercolumns($filtercolumns);
-        //$table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
+        $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 
         // When true and action buttons are present, checkboxes will be rendered to every line / record.
