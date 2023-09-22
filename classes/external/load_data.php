@@ -56,7 +56,7 @@ class load_data extends external_api {
      * @return external_function_parameters
      */
     public static function execute_parameters(): external_function_parameters {
-        return new external_function_parameters(array(
+        return new external_function_parameters([
             'encodedtable'  => new external_value(PARAM_RAW, 'eoncodedtable', VALUE_DEFAULT, ''),
             'page'  => new external_value(PARAM_INT, 'page', VALUE_REQUIRED),
             'tsort'   => new external_value(PARAM_TEXT, 'sort value', VALUE_REQUIRED),
@@ -66,7 +66,7 @@ class load_data extends external_api {
             'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_REQUIRED),
             'wbtfilter'  => new external_value(PARAM_RAW, 'reset value', VALUE_REQUIRED),
             'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
-            )
+        ]
         );
     }
 
@@ -81,7 +81,7 @@ class load_data extends external_api {
      * @param integer $treset
      * @param string $filterobjects
      * @param string $searchtext
-     * @return external_function_parameters
+     * @return array
      */
     public static function execute($encodedtable = null,
             $page = null,
@@ -98,7 +98,7 @@ class load_data extends external_api {
         $context = context_system::instance();
         $PAGE->set_context($context);
 
-        $params = array(
+        $params = [
                 'encodedtable' => $encodedtable,
                 'page' => $page,
                 'tsort' => $tsort,
@@ -107,8 +107,8 @@ class load_data extends external_api {
                 'tdir' => $tdir,
                 'treset' => $treset,
                 'wbtfilter' => $filterobjects,
-                'searchtext' => $searchtext ?? ""
-        );
+                'searchtext' => $searchtext ?? "",
+        ];
 
         $params = self::validate_parameters(self::execute_parameters(), $params);
 
@@ -178,11 +178,10 @@ class load_data extends external_api {
      * @return external_single_structure
      */
     public static function execute_returns(): external_single_structure {
-        return new external_single_structure(array(
+        return new external_single_structure([
             'template' => new external_value(PARAM_TEXT, 'template name'),
             'content' => new external_value(PARAM_RAW, 'json content'),
-            'filterjson' => new external_value(PARAM_RAW, 'filter json to create checkboxes', VALUE_OPTIONAL, '')
-            )
-        );
+            'filterjson' => new external_value(PARAM_RAW, 'filter json to create checkboxes', VALUE_OPTIONAL, ''),
+        ]);
     }
 }

@@ -942,7 +942,7 @@ class wunderbyte_table extends table_sql {
     /**
      * Returns a json for rendering the filter elements.
      *
-     * @return void
+     * @return string
      */
     public function return_filterjson() {
 
@@ -993,7 +993,7 @@ class wunderbyte_table extends table_sql {
             }
         }
 
-        $filterjson = ['categories' => array()];
+        $filterjson = ['categories' => []];
 
         foreach ($filtercolumns as $fckey => $values) {
 
@@ -1037,7 +1037,7 @@ class wunderbyte_table extends table_sql {
                         }
                         $operationsarray = array_map(fn($y) => [
                             'operator' => $y,
-                            'label' => get_string($y, 'local_wunderbyte_table')
+                            'label' => get_string($y, 'local_wunderbyte_table'),
                         ], $datepickerarray['datepicker'][$labelkey]['possibleoperations']);
 
                         $datepickerobject = [
@@ -1160,7 +1160,7 @@ class wunderbyte_table extends table_sql {
                     $itemobject = [
                         'key' => $valuekey,
                         'value' => $valuevalue === true ? $valuekey : $valuevalue,
-                        'category' => $fckey
+                        'category' => $fckey,
                     ];
 
                     $categoryobject['default']['values'][$valuekey] = $itemobject;
@@ -1239,7 +1239,7 @@ class wunderbyte_table extends table_sql {
      *
      * @return void
      */
-    public function set_filter_sql(string $fields, string $from, string $where, string $filter, array $params = array()) {
+    public function set_filter_sql(string $fields, string $from, string $where, string $filter, array $params = []) {
 
         $this->set_sql($fields, $from, $where, $params);
         $this->sql->filter = $filter;
@@ -1762,7 +1762,7 @@ class wunderbyte_table extends table_sql {
     public function unset_sorting_settings() {
         global $SESSION;
         if (isset($SESSION->flextable[$this->uniqueid])) {
-            $SESSION->flextable[$this->uniqueid]['sortby'] = array();
+            $SESSION->flextable[$this->uniqueid]['sortby'] = [];
         }
     }
 }

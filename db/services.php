@@ -25,21 +25,21 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$functions = array(
-        'local_wunderbyte_table_load_data' => array(
+$functions = [
+        'local_wunderbyte_table_load_data' => [
                 'classname' => 'local_wunderbyte_table\external\load_data',
                 'description' => 'Ajax load table',
                 'type' => 'read',
                 'capabilities' => '',
                 'ajax' => true,
-                'loginrequired' => false
-        ),
-        'local_wunderbyte_table_execute_action' => array(
+                'loginrequired' => false,
+        ],
+        'local_wunderbyte_table_execute_action' => [
                 'classname' => 'local_wunderbyte_table\external\execute_action',
                 'description' => 'Executes an action button',
                 'type' => 'read',
                 'capabilities' => '',
                 'ajax' => true,
-                'loginrequired' => false
-        ),
-);
+                'loginrequired' => false,
+        ],
+];

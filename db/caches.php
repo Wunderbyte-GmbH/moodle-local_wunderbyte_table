@@ -25,27 +25,27 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$definitions = array(
-    'cachedrawdata' => array(
+$definitions = [
+    'cachedrawdata' => [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'staticacceleration' => true,
         'staticaccelerationsize' => 1,
-        'invalidationevents' => ['changesinwunderbytetable']
-    ),
-    'cachedfulltable' => array(
+        'invalidationevents' => ['changesinwunderbytetable'],
+    ],
+    'cachedfulltable' => [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'staticacceleration' => true,
         'staticaccelerationsize' => 1,
-        'invalidationevents' => ['smallchangesinwunderbytetable', 'changesinwunderbytetable']
-    ),
-    'encodedtables' => array(
+        'invalidationevents' => ['smallchangesinwunderbytetable', 'changesinwunderbytetable'],
+    ],
+    'encodedtables' => [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'staticacceleration' => true,
         'staticaccelerationsize' => 1,
-        'invalidationevents' => ['setbackencodedtables']
-    )
-);
+        'invalidationevents' => ['setbackencodedtables'],
+    ],
+];
 

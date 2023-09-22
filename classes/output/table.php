@@ -477,7 +477,6 @@ class table implements renderable, templatable {
         }
     }
 
-
     /**
      * Returns dataformat selector.
      *
@@ -486,13 +485,13 @@ class table implements renderable, templatable {
      */
     private function return_dataformat_selector() {
         $formats = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
-        $printoptions = array();
+        $printoptions = [];
         foreach ($formats as $format) {
             if ($format->is_enabled()) {
-                $printoptions[] = array(
+                $printoptions[] = [
                     'value' => $format->name,
                     'label' => get_string('dataformat', $format->component),
-                );
+                ];
             }
         }
         return $printoptions;
