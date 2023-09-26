@@ -209,13 +209,6 @@ class table implements renderable, templatable {
     private $pagesize = 10;
 
     /**
-     * Errormessage
-     *
-     * @var string
-     */
-    private $filtercountstring = '';
-
-    /**
      * Constructor.
      *
      * @param wunderbyte_table $table
@@ -279,7 +272,6 @@ class table implements renderable, templatable {
         $prefs = $SESSION->flextable[$table->uniqueid] ?? [];
         $sortcolumns = isset($prefs['sortby']) ? array_slice($prefs['sortby'], 0, 1) : [];
 
-        // Will be null if no sort columns found/defined.
         $this->sort = $this->return_sort_columns($sortcolumns);
 
         // Now we create the Table with all necessary columns.
@@ -373,7 +365,7 @@ class table implements renderable, templatable {
                 };
 
                 // Make the up down arrow fat/black when it's actually sorted.
-                if (in_array($column, array_keys($sortcolumns)) && !empty($this->sort)) {
+                if (in_array($column, array_keys($sortcolumns))) {
                     switch ($sortcolumns[$column]) {
                         case (SORT_ASC):
                             $item['sortclass'] = 'asc';
@@ -386,13 +378,14 @@ class table implements renderable, templatable {
                             $this->sort['sortup'] = false;
                             break;
                     }
+
                 };
 
                 $this->table['header']['headers'][] = $item;
             }
         } else { // We also need this in case there are no headers to apply sorting correctly.
             foreach ($table->columns as $column => $key) {
-                if (in_array($column, array_keys($sortcolumns)) && !empty($this->sort)) {
+                if (in_array($column, array_keys($sortcolumns))) {
                     switch ($sortcolumns[$column]) {
                         case (SORT_ASC):
                             $item['sortclass'] = 'asc';
@@ -405,6 +398,7 @@ class table implements renderable, templatable {
                             $this->sort['sortup'] = false;
                             break;
                     }
+
                 };
             }
         }
@@ -534,6 +528,7 @@ class table implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         global $CFG;
+
         $data = [
             'idstring' => $this->idstring,
             'uniqueid' => $this->uniqueid,
@@ -549,8 +544,6 @@ class table implements renderable, templatable {
                     'totalrecords' => $this->totalrecords,
                     'filteredrecords' => $this->filteredrecords,
                 ]),
-            'filtercount' => $this->filtercountstring,
-            'searchtextapplied' => $this->search,
             'pages' => $this->pagination['pages'] ?? null,
             'disableprevious' => $this->pagination['disableprevious'] ?? null,
             'disablenext' => $this->pagination['disablenext'] ?? null,
@@ -568,17 +561,10 @@ class table implements renderable, templatable {
         // Only if we want to show the searchfield, we actually add the key.
         if ($this->search) {
             $data['search'] = true;
-            if ($CFG->version >= 2023042400) {
-                // Moodle 4.2 uses Fontawesome 6.
-                $data['searchiconclasses'] = 'fa-solid fa-magnifying-glass fa-xl mt-3';
-            } else {
-                // For older versions, use Fontawesome 4.
-                $data['searchiconclasses'] = 'fa fa-search h4';
-            }
         }
 
         // Only if we want to show the sortelements, we actually add the key.
-        if (!empty($this->sort)) {
+        if ($this->sort) {
             if (!$this->cardsort) {
                 $data['sort'] = $this->sort;
             } else {
@@ -627,6 +613,11 @@ class table implements renderable, templatable {
 
         if (class_exists('local_shopping_cart\shopping_cart')) {
             $data['shoppingcartisavailable'] = true;
+        }
+
+        // We need a param to check in the css if the version is minimum 4.1
+        if ($CFG->version >= 2023042400) {
+            $data['moodleversionminfourtwo'] = 'moodleversionminfourtwo';
         }
 
         return $data;
@@ -713,8 +704,6 @@ class table implements renderable, templatable {
             return null;
         }
 
-        $filtercountarray = [];
-
         $categories = json_decode($table->filterjson, true);
 
         if (!isset($categories['categories'])) {
@@ -765,9 +754,6 @@ class table implements renderable, templatable {
                 $tempfiltercolumn = $potentialfiltercolumn['columnname'];
 
                 if (isset($filterarray[$tempfiltercolumn])) {
-                    // We create an array to fetch human readable data.
-                    $filtercountarray[$potentialfiltercolumn['name']] = count((array)$filterarray[$tempfiltercolumn]);
-
                     foreach ($filterarray[$tempfiltercolumn] as $sfkey => $filter) {
 
                         // Apply filter for date and time value.
@@ -813,20 +799,6 @@ class table implements renderable, templatable {
                 }
             }
         }
-
-        // We collect human readable informations about applied filters.
-        $filtercolumns = implode(', ', array_keys($filtercountarray));
-        $filtersum = array_sum($filtercountarray);
-
-        if ($filtersum > 0) {
-            $this->filtercountstring = get_string('filtercountmessage',
-            'local_wunderbyte_table',
-                (object)[
-                    'filtercolumns' => $filtercolumns,
-                    'filtersum' => $filtersum,
-                ]);
-        }
-
         $categories['categories'] = $tableobject;
         return $categories;
     }

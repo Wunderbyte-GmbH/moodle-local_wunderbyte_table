@@ -1,4 +1,3 @@
-
 .wunderbyte_table_filter_on .wunderbyte_table_container {
     display: grid;
     grid-template-columns: 1fr 3fr;
@@ -146,16 +145,30 @@
     opacity: 1;
 }
 
+.wunderbyte-table-table th[data-sortable]::before {
+    content: "\f0de";
+    font: normal normal normal 14px/1 FontAwesome;
+    top: 42%;
+    right: 0;
+}
+
 .wunderbyte-table-table th[data-sortable]::after {
-    font: var(--fa-font-solid);
-    content: "\f0dd";
+    content: "\f0d7";
+    font: normal normal normal 14px/1 FontAwesome;
     top: 60%;
 }
 
-.wunderbyte-table-table th[data-sortable]::before {
+.wunderbyte-table-table.moodleversionminfourtwo th[data-sortable]::before {
     font: var(--fa-font-solid);
     content: "\f0de";
     top: 42%;
+    right: 0;
+}
+
+.wunderbyte-table-table.moodleversionminfourtwo th[data-sortable]::after {
+    content: "\f0dd";
+    font: var(--fa-font-solid);
+    top: 60%;
 }
 
 .wunderbyte-table-table .scroll-y {
