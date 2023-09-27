@@ -1429,7 +1429,9 @@ class wunderbyte_table extends table_sql {
                             $paramcounter++;
                             $paramsvaluekey = $paramkey . $paramcounter;
                         }
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+
+                        $escapecharacter = self::return_escape_character($value);
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
                         $this->sql->params[$paramsvaluekey] = "$value";
 
                         $filter .= " OR ";
@@ -1440,7 +1442,7 @@ class wunderbyte_table extends table_sql {
                             $paramsvaluekey = $paramkey . $paramcounter;
                         }
 
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
                         $this->sql->params[$paramsvaluekey] = "$value,%";
 
                         $filter .= " OR ";
@@ -1451,7 +1453,7 @@ class wunderbyte_table extends table_sql {
                             $paramsvaluekey = $paramkey . $paramcounter;
                         }
 
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
                         $this->sql->params[$paramsvaluekey] = "%,$value";
 
                         $filter .= " OR ";
@@ -1462,7 +1464,7 @@ class wunderbyte_table extends table_sql {
                             $paramsvaluekey = $paramkey . $paramcounter;
                         }
 
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
                         $this->sql->params[$paramsvaluekey] = "%,$value,%";
 
                         $filter .= " ) ";
@@ -1764,5 +1766,22 @@ class wunderbyte_table extends table_sql {
         if (isset($SESSION->flextable[$this->uniqueid])) {
             $SESSION->flextable[$this->uniqueid]['sortby'] = [];
         }
+    }
+
+    /**
+     * We probe for an unused excape character.
+     * @param string @paramvalue
+     * @return string
+     */
+    private static function return_escape_character($paramvalue) {
+
+        $values = ['\\', '@', '~', '[',']'];
+
+        foreach($values as $value) {
+            if (strpos($paramvalue, $value) === false) {
+                return $value;
+            }
+        }
+        return '\\';
     }
 }
