@@ -1770,14 +1770,14 @@ class wunderbyte_table extends table_sql {
 
     /**
      * We probe for an unused excape character.
-     * @param string @paramvalue
+     * @param string $paramvalue
      * @return string
      */
     private static function return_escape_character($paramvalue) {
 
-        $values = ['\\', '@', '~', '[',']'];
+        $values = ['\\', '@', '~', '[', ']'];
 
-        foreach($values as $value) {
+        foreach ($values as $value) {
             if (strpos($paramvalue, $value) === false) {
                 return $value;
             }
