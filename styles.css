@@ -149,7 +149,7 @@
     content: "\f0de";
     font-family: 'FontAwesome', 'Font Awesome 6 Free';
     font: normal normal normal 14px/1;
-    top: 42%;
+    top: 35%;
     right: 0;
 }
 
@@ -157,14 +157,14 @@
     content: "\f0d7";
     font-family: 'FontAwesome', 'Font Awesome 6 Free';
     font: normal normal normal 14px/1;
-    top: 60%;
+    top: 40%;
 }
 
 .wunderbyte-table-table.moodleversionminfourtwo th[data-sortable]::before {
     font: var(--fa-font-solid);
     content: "\f0de";
     font-family: 'FontAwesome', 'Font Awesome 6 Free';
-    top: 42%;
+    top: 35%;
     right: 0;
 }
 
@@ -172,7 +172,7 @@
     content: "\f0dd";
     font-family: 'FontAwesome', 'Font Awesome 6 Free';
     font: var(--fa-font-solid);
-    top: 60%;
+    top: 40%;
 }
 
 .wunderbyte-table-table .scroll-y {
