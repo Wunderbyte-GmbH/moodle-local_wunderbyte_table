@@ -232,7 +232,9 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
     done: function(data) {
 
       if (data.success == 1) {
-        showNotification(data.message, "success");
+        if (data.message.length > 0) {
+          showNotification(data.message, "success");
+        }
       } else {
         showNotification(data.message, "danger");
       }
