@@ -147,22 +147,22 @@
 
 .wunderbyte-table-table th[data-sortable]::before {
     content: "\f0de";
-    font-family: 'FontAwesome', 'Font Awesome 6 Free';
     font: normal normal normal 14px/1;
+    font-family: 'FontAwesome', 'Font Awesome 6 Free';
     top: 35%;
     right: 0;
 }
 
 .wunderbyte-table-table th[data-sortable]::after {
     content: "\f0d7";
-    font-family: 'FontAwesome', 'Font Awesome 6 Free';
     font: normal normal normal 14px/1;
+    font-family: 'FontAwesome', 'Font Awesome 6 Free';
     top: 40%;
 }
 
 .wunderbyte-table-table.moodleversionminfourtwo th[data-sortable]::before {
-    font: var(--fa-font-solid);
     content: "\f0de";
+    font: var(--fa-font-solid);
     font-family: 'FontAwesome', 'Font Awesome 6 Free';
     top: 35%;
     right: 0;
@@ -170,8 +170,8 @@
 
 .wunderbyte-table-table.moodleversionminfourtwo th[data-sortable]::after {
     content: "\f0dd";
-    font-family: 'FontAwesome', 'Font Awesome 6 Free';
     font: var(--fa-font-solid);
+    font-family: 'FontAwesome', 'Font Awesome 6 Free';
     top: 40%;
 }
 
