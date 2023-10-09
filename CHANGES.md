@@ -1,3 +1,16 @@
+## Version 1.7.8 (2023100900)
+* Improvement: Re-enable filtering for "users" tab on demo page.
+* Improvement: Use primary color for filter button.
+* Improvement: Only show success notifications if there is a message.
+* Improvement: Better alignment of search box.
+* Improvement: Fix spaces between up and down sorting arrows.
+* Improvement:
+* Improvement:
+* Bugfix: Fix sorting pseudo elements for older versions.
+* Bugfix: Fix filter for escaped chars.
+* Bugfix: Fix FontAwesome6 issues.
+* Bugfix: Show search icon again and use primary text color for both search and sort icons.
+
 ## Version 1.7.7 (2023092101)
 * Bugfix: Fix timefilters to work with count labels
 
