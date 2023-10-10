@@ -1,3 +1,6 @@
+## Version 1.7.9 (2023101000)
+* Bugfix: Do not show "&amp;" in filters but show normal "&".
+
 ## Version 1.7.8 (2023100900)
 * Improvement: Re-enable filtering for "users" tab on demo page.
 * Improvement: Use primary color for filter button.
