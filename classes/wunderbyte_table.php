@@ -1158,7 +1158,8 @@ class wunderbyte_table extends table_sql {
                 foreach ($values as $valuekey => $valuevalue) {
 
                     $itemobject = [
-                        'key' => $valuekey,
+                        // We do not want to show html entities, so replace &amp; with &.
+                        'key' => str_replace("&amp;", "&", $valuekey),
                         'value' => $valuevalue === true ? $valuekey : $valuevalue,
                         'category' => $fckey,
                     ];
