@@ -294,10 +294,6 @@
     border-radius: 3px;
     z-index: 200000;
 }
-.zoom:hover {
-    transform: scale(1.025);
-    transition: transform .4s;
-}
 
 @media (min-width: 768px) {
     .pagelayout-standard #page.drawers .main-inner,
