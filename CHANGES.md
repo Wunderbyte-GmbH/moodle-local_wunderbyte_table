@@ -1,3 +1,6 @@
+## Version 1.8.0 (2023103100)
+* Bugfix: Remove "zoom" selector from styles.css because of unintended consequences in mod_zoom plugin.
+
 ## Version 1.7.9 (2023101000)
 * Bugfix: Do not show "&amp;" in filters but show normal "&".
 
