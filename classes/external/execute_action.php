@@ -58,9 +58,9 @@ class execute_action extends external_api {
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'methodname'  => new external_value(PARAM_TEXT, 'Methodname to be executed.', VALUE_REQUIRED),
-            'encodedtable'  => new external_value(PARAM_RAW, 'Encodedtable', VALUE_OPTIONAL, ''),
-            'id'  => new external_value(PARAM_INT, 'Id, normally of affected row.', VALUE_OPTIONAL, 0),
-            'data'  => new external_value(PARAM_RAW, 'Data package as json', VALUE_OPTIONAL, '{}'),
+            'encodedtable'  => new external_value(PARAM_RAW, 'Encodedtable', VALUE_DEFAULT, ''),
+            'id'  => new external_value(PARAM_INT, 'Id, normally of affected row.', VALUE_DEFAULT, 0),
+            'data'  => new external_value(PARAM_RAW, 'Data package as json', VALUE_DEFAULT, '{}'),
         ]);
     }
 
@@ -93,7 +93,7 @@ class execute_action extends external_api {
             'data' => $data,
         ];
 
-        $params = self::validate_parameters(self::execute_parameters(), $params);
+        $params = external_api::validate_parameters(self::execute_parameters(), $params);
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
@@ -119,7 +119,7 @@ class execute_action extends external_api {
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'success' => new external_value(PARAM_INT, '1 is success, 0 isn\'t'),
-            'message' => new external_value(PARAM_RAW, 'Message to be displayed', VALUE_OPTIONAL, ''),
+            'message' => new external_value(PARAM_RAW, 'Message to be displayed', VALUE_DEFAULT, ''),
         ]);
     }
 }
