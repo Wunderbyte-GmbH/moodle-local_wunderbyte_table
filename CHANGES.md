@@ -1,3 +1,7 @@
+## Version 1.8.1 (2023111300)
+* Bugfix: Fix param definition in external services.
+* Bugfix: Fix some namespaces.
+
 ## Version 1.8.0 (2023103100)
 * Bugfix: Remove "zoom" selector from styles.css because of unintended consequences in mod_zoom plugin.
 
@@ -10,8 +14,6 @@
 * Improvement: Only show success notifications if there is a message.
 * Improvement: Better alignment of search box.
 * Improvement: Fix spaces between up and down sorting arrows.
-* Improvement:
-* Improvement:
 * Bugfix: Fix sorting pseudo elements for older versions.
 * Bugfix: Fix filter for escaped chars.
 * Bugfix: Fix FontAwesome6 issues.
