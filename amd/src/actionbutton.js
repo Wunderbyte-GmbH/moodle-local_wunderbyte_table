@@ -108,7 +108,11 @@ export function initializeActionButton(selector, idstring, encodedtable) {
         const target = e.target;
         // eslint-disable-next-line no-console
         console.log('transmit data', target);
-        showEditFormModal(button, 'title', 'body', 'button', idstring, encodedtable);
+        let title = 'title';
+        if (target.dataset.title !== undefined) {
+          title = target.dataset.title;
+        }
+        showEditFormModal(button, title, 'body', 'button', idstring, encodedtable);
       });
     }
   });
@@ -163,6 +167,8 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
   }
 
   const localizedstrings = await getStrings(strings);
+  // eslint-disable-next-line no-console
+  console.log(localizedstrings);
 
   ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(modal => {
 
@@ -338,6 +344,10 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
   let data = button.dataset;
   data.id = button.dataset.id; // Get all the data of the clicked button.
 
+  if (data.id == -1) {
+    const result = getIds(data.id, idstring, data);
+    data.checkedids = result.checkedids;
+  }
   // eslint-disable-next-line no-console
   console.log(data);
 
@@ -375,6 +385,8 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
  */
 function chooseActionToTransmit(button, idstring, encodedtable, selectionresult) {
   const data = button.dataset;
+      // eslint-disable-next-line no-console
+      console.log(data);
   const id = parseInt(button.dataset.id);
   const methodname = button.dataset.methodname;
   const checkedids = selectionresult.checkedids ?? [];
