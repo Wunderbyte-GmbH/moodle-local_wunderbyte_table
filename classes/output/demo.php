@@ -175,6 +175,7 @@ class demo implements renderable, templatable {
             'selectionmandatory' => false,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
+                // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
             ],
         ];
         $table->actionbuttons[] = [
@@ -186,6 +187,7 @@ class demo implements renderable, templatable {
             'nomodal' => false,
             'selectionmandatory' => false,
             'data' => [
+                // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'deletedatabody',
@@ -207,6 +209,7 @@ class demo implements renderable, templatable {
             'selectionmandatory' => false,
             'data' => [
                 'id' => 'id',
+                // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'adddatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
@@ -227,6 +230,7 @@ class demo implements renderable, templatable {
             'data' => [
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
+                // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
@@ -257,6 +261,7 @@ class demo implements renderable, templatable {
             'data' => [
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
+                // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
                 'bodystring' => 'deletedatabody',
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
@@ -277,6 +282,7 @@ class demo implements renderable, templatable {
                 'id' => 'id',
                 'titlestring' => 'deletedatatitle',
                 'bodystring' => 'deletedatabody',
+                // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
                 'submitbuttonstring' => 'deletedatasubmit',
                 'component' => 'local_wunderbyte_table',
                 'labelcolumn' => 'firstname',

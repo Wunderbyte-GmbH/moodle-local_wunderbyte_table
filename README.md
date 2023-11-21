@@ -100,6 +100,14 @@ You can choose if your Action Button transmits a single or multiple call(s) in c
     $mytable->actionbuttons[] = [
         'id' => -1, // This forces single call execution.
     ]
+If you want your Action Button to trigger a form instead of a simple modal, hand over namespace and title.
+
+    $mytable->actionbuttons[] = [
+            'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'data' => [
+                'title' => get_string('title'), // Localized title to be displayed as title in dynamic form (formname).
+            ]
+    ]
 
 You can also use actionbuttons in a column to treat the corresponding record.
 
