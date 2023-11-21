@@ -169,7 +169,7 @@ class demo implements renderable, templatable {
             'class' => 'btn btn-primary',
             'href' => '#',
             'id' => -1, // This forces single call execution.
-            //'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+            //'formname' => '', // To open dynamic form, instead of just confirmation modal.
             'methodname' => 'additem',
             'nomodal' => true,
             'selectionmandatory' => false,
@@ -238,7 +238,7 @@ class demo implements renderable, templatable {
             'class' => 'btn btn-primary',
             'href' => '#',
             'id' => -1,
-            'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+            'formname' => '', // To open dynamic form, instead of just confirmation modal.
             'methodname' => 'additem',
             'nomodal' => true,
             'selectionmandatory' => true,
@@ -383,7 +383,7 @@ class demo implements renderable, templatable {
             'class' => 'btn btn-primary',
             'href' => '#',
             'id' => -1, // This forces single call execution.
-            'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+            'formname' => '', // To open dynamic form, instead of just confirmation modal.
             'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => true, // If set to true, there is no modal but the method will be called directly.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
@@ -471,7 +471,7 @@ class demo implements renderable, templatable {
             'class' => 'btn btn-primary',
             'href' => '#',
             'id' => -1, // This forces single call execution.
-            //'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+            //'formname' => '', // To open dynamic form, instead of just confirmation modal.
             'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => false, // If set to true, there is no modal but the method will be called directly.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
@@ -567,7 +567,7 @@ class demo implements renderable, templatable {
             'class' => 'btn btn-primary',
             'href' => '#',
             'id' => -1, // This forces single call execution.
-            //'formclass' => '', // To open dynamic form, instead of just confirmation modal.
+            //'formname' => '', // To open dynamic form, instead of just confirmation modal.
             'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => false, // If set to true, there is no modal but the method will be called directly.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
