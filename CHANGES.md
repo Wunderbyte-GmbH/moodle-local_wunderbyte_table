@@ -1,3 +1,8 @@
+## Version 1.8.2 (2023112200)
+* Improvement: Actionbutton now transmitting data from table and title for modal.
+* Improvement: Add readme about formname and title.
+* Bugfix: Fix string in demo.php.
+
 ## Version 1.8.1 (2023111300)
 * Bugfix: Fix param definition in external services.
 * Bugfix: Fix some namespaces.
