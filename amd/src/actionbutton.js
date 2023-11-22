@@ -167,8 +167,6 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
   }
 
   const localizedstrings = await getStrings(strings);
-  // eslint-disable-next-line no-console
-  console.log(localizedstrings);
 
   ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(modal => {
 
@@ -385,8 +383,6 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
  */
 function chooseActionToTransmit(button, idstring, encodedtable, selectionresult) {
   const data = button.dataset;
-      // eslint-disable-next-line no-console
-      console.log(data);
   const id = parseInt(button.dataset.id);
   const methodname = button.dataset.methodname;
   const checkedids = selectionresult.checkedids ?? [];
