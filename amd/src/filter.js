@@ -503,7 +503,6 @@ export function getFilterObjects(idstring) {
   }
 
   let hasvalues = false;
-  // eslint-disable-next-line no-unused-vars
 
   for (const [, value] of Object.entries(checked[idstring])) {
 

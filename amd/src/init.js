@@ -366,7 +366,6 @@ export const callLoadData = (
 
                 if (!tablejss.hasOwnProperty(idstring)) {
 
-                    // eslint-disable-next-line no-unused-vars
                     const promise = returnPromiseToSaveJS(rendertemplate, jsonobject, idstring);
 
                     promises.push(promise);
@@ -390,7 +389,6 @@ export const callLoadData = (
                 });
 
                 return;
-
             }
 
             const promises = [];
@@ -399,7 +397,6 @@ export const callLoadData = (
                 rendertemplate = rendertemplate + '_container';
             } else {
                 const sortselector = '.wunderbyteTableSelect';
-                // eslint-disable-next-line no-unused-vars
                 promises.push(Templates.renderForPromise('local_wunderbyte_table/component_sort', jsonobject).then(({html, js}) => {
                     const element = container.querySelector(sortselector);
                     Templates.replaceNode(element, html, js);

@@ -140,7 +140,6 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
         key: button.dataset.bodystring ?? 'genericbody',
         component: button.dataset.component ?? 'local_wunderbyte_table',
         param: {
-          // eslint-disable-next-line block-scoped-var
           data: datastring,
         },
       },
@@ -404,7 +403,6 @@ function chooseActionToTransmit(button, idstring, encodedtable, selectionresult)
   } else {
       // eslint-disable-next-line no-console
       console.log("multiple call");
-    // eslint-disable-next-line block-scoped-var
     checkedids.forEach(cid => {
       transmitAction(cid, methodname, JSON.stringify(data), idstring, encodedtable);
     });
