@@ -48,7 +48,7 @@ $string['cachedef_encodedtables'] = 'Cache for encoded tables';
 
 // Info messages over table.
 $string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found ';
-$string['filtercountmessage'] = '-- {$a->filtersum} filter on {$a->filtercolumns} -- ';
+$string['filtercountmessage'] = '| {$a->filtersum} filter(s) on: {$a->filtercolumns} | ';
 $string['showallrecords'] = 'Show all records';
 
 $string['checkallcheckbox'] = "Check all";

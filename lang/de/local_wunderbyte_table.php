@@ -48,8 +48,8 @@ $string['cachedef_encodedtables'] = 'Cache für enkodierte Tabellen';
 
 // Info messages over table.
 $string['countlabel'] = '{$a->filteredrecords} von {$a->totalrecords} Einträgen gefunden ';
-$string['filtercountmessage'] = '-- {$a->filtersum} Filter auf {$a->filtercolumns} -- ';
-$string['showallrecords'] = 'Show all records';
+$string['filtercountmessage'] = '| {$a->filtersum} Filter auf: {$a->filtercolumns} | ';
+$string['showallrecords'] = 'Alle Einträge anzeigen';
 
 $string['checkallcheckbox'] = "Alles auswählen";
 $string['functiondoesntexist'] = "Funktion des Aktionsbuttons exisitert nicht.";
