@@ -112,6 +112,8 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
 
     componentscontainer.remove();
 
+    resetCheckedObject(idstring);
+
     const sort = getSortSelection(idstring);
     callLoadData(idstring,
       encodedtable,
@@ -338,13 +340,19 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
  * @param {string} column
  * @param {string} filtername
  */
-function resetCheckedObject(idstring, column, filtername) {
-  if (checked[idstring].hasOwnProperty(column)) {
-    if (checked[idstring][column].hasOwnProperty(filtername)) {
-      delete checked[idstring][column][filtername];
-    }
-    if (checked[idstring][column].hasOwnProperty(filtername + 'a')) {
-      delete checked[idstring][column][filtername + 'a'];
+function resetCheckedObject(idstring, column = '', filtername = '') {
+
+  // If no column is specified, we reset all the filters.
+  if (column.length === 0) {
+    checked[idstring] = [];
+  } else {
+    if (checked[idstring].hasOwnProperty(column)) {
+      if (checked[idstring][column].hasOwnProperty(filtername)) {
+        delete checked[idstring][column][filtername];
+      }
+      if (checked[idstring][column].hasOwnProperty(filtername + 'a')) {
+        delete checked[idstring][column][filtername + 'a'];
+      }
     }
   }
 }
