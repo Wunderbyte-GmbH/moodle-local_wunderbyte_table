@@ -97,9 +97,6 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
   }
   button.addEventListener('click', () => {
 
-    // eslint-disable-next-line no-console
-    console.log("show all data");
-
     if (!container) {
       return;
     }
@@ -344,7 +341,10 @@ function resetCheckedObject(idstring, column = '', filtername = '') {
 
   // If no column is specified, we reset all the filters.
   if (column.length === 0) {
-    checked[idstring] = [];
+
+    Object.keys(checked[idstring]).forEach(col => {
+      checked[idstring][col] = [];
+    });
   } else {
     if (checked[idstring].hasOwnProperty(column)) {
       if (checked[idstring][column].hasOwnProperty(filtername)) {
