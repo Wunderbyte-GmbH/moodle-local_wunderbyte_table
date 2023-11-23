@@ -573,7 +573,7 @@ class table implements renderable, templatable {
                 $data['searchiconclasses'] = 'fa-solid fa-magnifying-glass fa-xl mt-3';
             } else {
                 // For older versions, use Fontawesome 4.
-                $data['searchiconclasses'] = 'fa fa-search h4';
+                $data['searchiconclasses'] = 'fa fa-search fa-xl mt-2';
             }
         }
 
