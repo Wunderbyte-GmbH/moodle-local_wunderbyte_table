@@ -85,6 +85,23 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "24 of 24 records found" in the "#Users.active .wb-records-count-label" "css_element"
 
   @javascript
+  Scenario: Filter users table by username and reset filter
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Users"
+    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
+    And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
+    And I set the field "user15" in the "#id_collapse_username" "css_element" to "checked"
+    And I wait until the page is ready
+    And I should see "admin" in the "#Users_r1" "css_element"
+    And I should see "user15" in the "#Users_r2" "css_element"
+    And I should see "2 of 24 records found" in the "#Users.active .wb-records-count-label" "css_element"
+    And I should see "2 filter(s) on: Username" in the "#Users.active .wb-records-count-label" "css_element"
+    And I follow "Show all records"
+    And I wait until the page is ready
+    And I should see "24 of 24 records found" in the "#Users.active .wb-records-count-label" "css_element"
+
+  @javascript
   Scenario: Search username in sidebar filter controls and filter by it
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
