@@ -718,6 +718,8 @@ class wunderbyte_table extends table_sql {
                 // Sql_cast_to_char is available since Moodle 4.1.
                 // Important: use ">" not ">=" here.
                 $valuestring = $CFG->version > 2022112800 ? $DB->sql_cast_to_char($value) :
+                    // No harm in using value here because it's actually the column name, defiined in the code.
+                    // No user entry possible here.
                     "CAST(" . $value . " AS VARCHAR)";
 
                 $searchcolumns[$key] = "COALESCE(" . $valuestring . ", ' ')";
@@ -1371,10 +1373,39 @@ class wunderbyte_table extends table_sql {
             $sf = array_values($foobject)[0]; // Startfilter.
             $ef = array_values($foobject)[1]; // Endfilter.
 
+            // In order to make sure we are dealing with real column names and no sql injection...
+            // ... we check against column names.
+            if (!in_array($sc, array_keys($this->columns))
+                || !in_array($ec, array_keys($this->columns))) {
+                throw new moodle_exception('novalidcolumnname', 'local_wunderbyte_table');
+            }
+
+            $fparam = 'fparam';
+            $fcounter = 1;
+            while (isset($this->sql->params[$fparam . 'sf1' . $fcounter])) {
+                $fcounter++;
+            }
+
+            $sfkey1 = $fparam . 'sf1' . $fcounter;
+            $sfkey2 = $fparam . 'sf2' . $fcounter;
+            $sfkey3 = $fparam . 'sf3' . $fcounter;
+
+            $this->sql->params[$sfkey1] = $sf;
+            $this->sql->params[$sfkey2] = $sf;
+            $this->sql->params[$sfkey3] = $sf;
+
+            $efkey1 = $fparam . 'ef1' . $fcounter;
+            $efkey2 = $fparam . 'ef2' . $fcounter;
+            $efkey3 = $fparam . 'ef3' . $fcounter;
+
+            $this->sql->params[$efkey1] = $ef;
+            $this->sql->params[$efkey2] = $ef;
+            $this->sql->params[$efkey3] = $ef;
+
             $filter .= " AND (
-                ($sf <= $sc AND $ef >= $sc) OR
-                ($sf <= $ec AND $ef >= $ec) OR
-                ($sf >= $sc AND $ef <= $ec)
+                (:$sfkey1 <= $sc AND :$efkey1 >= $sc) OR
+                (:$sfkey2 <= $ec AND :$efkey2 >= $ec) OR
+                (:$sfkey3 >= $sc AND :$efkey3 <= $ec)
             ) ";
         }
 
@@ -1643,12 +1674,17 @@ class wunderbyte_table extends table_sql {
     private static function check_if_multi_customfield($columnname) {
         global $DB;
 
-        $configmulti = $DB->sql_like('configdata', ":param1");
-        $params = ['param1' => '%multiselect\":\"1\"%'];
+        $configmulti = $DB->sql_like('configdata', ":mcfparam1");
+        $params = [
+            'mcfparam1' => '%multiselect\":\"1\"%',
+            'mcfparam2' => $columnname,
+        ];
+
+        $likecolum = $DB->sql_equal('shortname', ':mcfparam2');
 
         $sql = "SELECT id
                 FROM {customfield_field}
-                WHERE shortname='$columnname'
+                WHERE $likecolum
                 AND $configmulti";
 
         if (!$DB->record_exists_sql($sql, $params)) {
