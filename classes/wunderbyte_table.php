@@ -30,6 +30,7 @@ require_once("$CFG->libdir/tablelib.php");
 
 use cache;
 use Exception;
+use local_wunderbyte_table\event\table_viewed;
 use local_wunderbyte_table\output\lazytable;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
@@ -429,6 +430,7 @@ class wunderbyte_table extends table_sql {
 
         $this->build_table();
         $this->close_recordset();
+
         return $this->finish_output(true, $encodedtable);
     }
 
@@ -440,6 +442,20 @@ class wunderbyte_table extends table_sql {
      * @return table
      */
     public function finish_output($closeexportclassdoc = true, $encodedtable = '') {
+
+        global $USER;
+
+        // At this point, we trigger the table_viewed event.
+        $context = $this->get_context();
+        $event = table_viewed::create([
+            'context' => $context,
+            'userid' => $USER->id,
+            'other' => [
+                'tablename' => $this->uniqueid,
+            ],
+        ]);
+        $event->trigger();
+
         if ($this->exportclass !== null) {
             $this->exportclass->finish_table();
             if ($closeexportclassdoc) {

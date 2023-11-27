@@ -88,6 +88,12 @@ $string['flexoverlap'] = 'überlappend';
 
 $string['change'] = 'Ändere';
 
+// Events.
+$string['table_viewed'] = 'Tabelle angesehen';
+$string['table_viewed_desc'] = 'Die NutzerIn hat folgende Tabelle angesehen: "{$a}"';
+$string['action_executed'] = 'Aktion ausgeführt';
+$string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname}" in der folgenden Tabelle ausgeführt: "{$a->tablename}"';
+
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
 $string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';

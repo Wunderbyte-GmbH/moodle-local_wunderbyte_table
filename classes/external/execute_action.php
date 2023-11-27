@@ -32,6 +32,7 @@ use external_api;
 use external_function_parameters;
 use external_value;
 use external_single_structure;
+use local_wunderbyte_table\event\action_executed;
 use local_wunderbyte_table\wunderbyte_table;
 
 defined('MOODLE_INTERNAL') || die();
@@ -56,7 +57,7 @@ class execute_action extends external_api {
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
             'methodname'  => new external_value(PARAM_TEXT, 'Methodname to be executed.', VALUE_REQUIRED),
-            'encodedtable'  => new external_value(PARAM_RAW, 'Encodedtable', VALUE_DEFAULT, ''),
+            'encodedtable'  => new external_value(PARAM_ALPHANUM, 'Encodedtable', VALUE_DEFAULT, ''),
             'id'  => new external_value(PARAM_INT, 'Id, normally of affected row.', VALUE_DEFAULT, 0),
             'data'  => new external_value(PARAM_RAW, 'Data package as json', VALUE_DEFAULT, '{}'),
         ]);
@@ -79,7 +80,7 @@ class execute_action extends external_api {
         int $id,
         string $data) {
 
-        global $PAGE;
+        global $PAGE, $USER;
 
         $context = context_system::instance();
         $PAGE->set_context($context);
@@ -96,6 +97,19 @@ class execute_action extends external_api {
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
         // Now we can execute the method as expected.
+
+        // At this point, we trigger the table_viewed event.
+        $context = $table->get_context();
+        $event = action_executed::create([
+            'context' => $context,
+            'userid' => $USER->id,
+            'other' => [
+                'tablename' => $table->uniqueid,
+                'methodname' => $params['methodname'],
+            ],
+        ]);
+
+        $event->trigger();
 
         if (method_exists($table, $params['methodname']) ) {
             $result = $table->{$params['methodname']}($params['id'], $params['data']);
