@@ -16,6 +16,18 @@ The included demo.php is only meant to demonstrate the working of the table.
 
 That's all it takes. Switching pages, sorting, hiding columns and downloading will now run via ajax.
 
+## Security
+Wunderbyte Table uses webservices to support features like ajax reload, infinite scroll, action buttons etc. As it is a generic project it can't know about the security requirements for the projects it actually is used in.
+We use Wunderbyte Table in combination with shortcodes, where we can't know where in Moodle the table actually will show up and sometimes, this will be on a location without any login requirements. Therefore, the key requirelogin, which is set normally to "true" can also be set to false:
+
+    $table->requirelogin = false;
+
+We also provide the capability 'local/wunderbyte_table:canaccess' which normally is set to 'allow' for the archetype 'user'. This capability check is only required when requirelogin is set to true. Changing this will result in a change for all wunderbyte table on the moodle instance.
+
+If only a single table should be protected, you can use the requirecapability key on a specific table to require special capabilities. When this key is not set, it falls back to 'local/wunderbyte_table:canaccess'.
+
+    $table->requirecapability = 'local/myplugin:canaccess';
+
 ## Multiple custom templates
 Wunderbyte Table comes with a responsive table template, but it can and should be overriden in your project. To do so, set in your instance of your extended class (eg $yourtable) the template to your proper template, like
 

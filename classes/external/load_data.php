@@ -29,6 +29,7 @@ namespace local_wunderbyte_table\external;
 
 use cache;
 use context_system;
+use Exception;
 use external_api;
 use external_function_parameters;
 use external_value;
@@ -95,9 +96,6 @@ class load_data extends external_api {
 
         global $CFG, $PAGE;
 
-        $context = context_system::instance();
-        $PAGE->set_context($context);
-
         $params = [
                 'encodedtable' => $encodedtable,
                 'page' => $page,
@@ -113,6 +111,24 @@ class load_data extends external_api {
         $params = self::validate_parameters(self::execute_parameters(), $params);
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
+
+        $context = context_system::instance();
+        if ($table->requirelogin) {
+            try {
+                self::validate_context($context);
+                require_capability($table->requirecapability, $context);
+            } catch (Exception $e) {
+                return [
+                    'template' => '',
+                    'content' => '',
+                    'filterjson' => '',
+                ];
+            }
+        } else {
+            // We allow for this webservice to be executed without login, if specifically set so.
+            // Therefore, we need to use Page->set_context().
+            $PAGE->set_context($context);
+        }
 
         // If the table was cached with filter or searchtext, we need to recache it.
         $recachetable = false;

@@ -162,6 +162,18 @@ class wunderbyte_table extends table_sql {
     public $cardsort = false;
 
     /**
+     * Require Login is a security feature which normally is turned on.
+     * @var bool requirelogin
+     */
+    public $requirelogin = true;
+
+    /**
+     * Require capability is a security feature which defaults to the standard capability.
+     * @var string requirecapability
+     */
+    public $requirecapability = 'local/wunderbyte_table:canaccess';
+
+    /**
      * @var array array of supplementary column information. Can be used like below.
      * ['cardheader' => [
      *                  column1 => [
@@ -734,7 +746,7 @@ class wunderbyte_table extends table_sql {
                 // Sql_cast_to_char is available since Moodle 4.1.
                 // Important: use ">" not ">=" here.
                 $valuestring = $CFG->version > 2022112800 ? $DB->sql_cast_to_char($value) :
-                    // No harm in using value here because it's actually the column name, defiined in the code.
+                    // No harm in using value here because it's actually the column name, defined in the code.
                     // No user entry possible here.
                     "CAST(" . $value . " AS VARCHAR)";
 
@@ -835,7 +847,6 @@ class wunderbyte_table extends table_sql {
         $cachekey = crc32($sql);
 
         // And then we query our cache to see if we have it already.
-
         if ($this->cachecomponent && $this->rawcachename) {
             $cache = \cache::make($this->cachecomponent, $this->rawcachename);
             $cachedrawdata = $cache->get($cachekey);

@@ -34,6 +34,7 @@ $string['orderup'] = "Von A nach Z sortiert";
 $string['orderdown'] = "Von Z nach A sortiert";
 
 $string['noentriesfound'] = "Keine Einträge gefunden";
+$string['couldnotloaddata'] = "Konnte keine Daten laden";
 
 $string['reload'] = "Tabelle neu laden";
 $string['print'] = "Tabelle herunterladen";

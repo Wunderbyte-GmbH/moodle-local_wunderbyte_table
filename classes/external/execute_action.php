@@ -80,10 +80,7 @@ class execute_action extends external_api {
         int $id,
         string $data) {
 
-        global $PAGE, $USER;
-
-        $context = context_system::instance();
-        $PAGE->set_context($context);
+        global $USER, $PAGE;
 
         $params = [
             'encodedtable' => $encodedtable,
@@ -96,10 +93,25 @@ class execute_action extends external_api {
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
-        // Now we can execute the method as expected.
+        $context = context_system::instance();
 
-        // At this point, we trigger the table_viewed event.
-        $context = $table->get_context();
+        if ($table->requirelogin) {
+            try {
+                self::validate_context($context);
+                require_capability($table->requirecapability, $context);
+            } catch (Exception $e) {
+                return [
+                    'template' => '',
+                    'content' => '',
+                    'filterjson' => '',
+                ];
+            }
+        } else {
+            // We allow for this webservice to be executed without login, if specifically set so.
+            // Therefore, we need to use Page->set_context().
+            $PAGE->set_context($context);
+        }
+
         $event = action_executed::create([
             'context' => $context,
             'userid' => $USER->id,

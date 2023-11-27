@@ -32,6 +32,8 @@ import {initializeRowsSelect} from './rowsdisplayselect';
 import {initializeResetFilterButton, updateUrlWithFilterSearchSort} from './filter';
 import {initializeFilterSearch} from './filtersearch';
 
+import {get_string as getString} from 'core/str';
+
 // All these variables will be objects with the idstring so their tables as identifiers.
 var loadings = {};
 export var queries = {};
@@ -312,7 +314,26 @@ export const callLoadData = (
         },
         done: async function(res) {
 
-            let jsonobject = JSON.parse(res.content);
+            let jsonobject = '';
+            try {
+               jsonobject = JSON.parse(res.content);
+            } catch (e) {
+
+                const message = await getString('couldnotloaddata', 'local_wunderbyte_table');
+
+                Notification.addNotification({
+                    message,
+                    type: "danger"
+                });
+
+                // We need say we are not loading anymore.
+                loadings[idstring] = false;
+
+                // eslint-disable-next-line no-console
+                console.log(e);
+                return;
+            }
+
             let rendertemplate = res.template;
 
             // We can always expect a wunderbyte table container at this point.
