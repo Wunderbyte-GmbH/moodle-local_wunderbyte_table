@@ -302,18 +302,9 @@
         max-width: 100%;
     }
 }
-.list-group-item {
+
+.wunderbyte-table-grid .list-group-item {
     box-shadow: 0 .5rem .937rem rgba(140, 152, 164, .1);
-}
-body {
-    background: #fff;
-}
-.footer-columns,
-.copyright {
-    display: none;
-}
-.projects {
-    border-radius: 7px;
 }
 
 #entity-calendar {
@@ -403,11 +394,11 @@ body {
     padding-left: 5px;
 }
 
-a.changesortorder:hover {
+.wunderbyteTableSelect a.changesortorder:hover {
     text-decoration: none;
 }
 
-.wb-table-column {
+.wunderbyte-table-table .wb-table-column {
     z-index: 2;
 }
 
