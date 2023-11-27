@@ -57,7 +57,7 @@ class load_data extends external_api {
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'encodedtable'  => new external_value(PARAM_RAW, 'eoncodedtable', VALUE_DEFAULT, ''),
+            'encodedtable'  => new external_value(PARAM_ALPHANUM, 'eoncodedtable', VALUE_DEFAULT, ''),
             'page'  => new external_value(PARAM_INT, 'page', VALUE_REQUIRED),
             'tsort'   => new external_value(PARAM_TEXT, 'sort value', VALUE_REQUIRED),
             'thide'   => new external_value(PARAM_TEXT, 'hide value', VALUE_REQUIRED),
