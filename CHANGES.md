@@ -1,3 +1,15 @@
+## Version 1.8.3 (2023112700)
+* Improvement: Added support for Moodle 4.3 and PHP 8.2.
+* Improvement: Nicer strings for already set filters and language fix.
+* Improvement: No unsanitized params in sql requests (#39).
+* Bugfix: Restore possibility to show chosen filters and reset all filters.
+* Bugfix: Fix search icon.
+* Bugfix: Forget filter after reset.
+* Bugfix: Fix click on reset button.
+* Bugfix: Fix stale file.
+* Bugfix: Fix for unscrollable page (and 4 failed behat test) under Moodle 4.3.
+* Bugfix: More specific names in styles.css to avoid confusion (#34).
+
 ## Version 1.8.2 (2023112200)
 * Improvement: Actionbutton now transmitting data from table and title for modal.
 * Improvement: Add readme about formname and title.
