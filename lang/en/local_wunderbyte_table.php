@@ -55,7 +55,7 @@ $string['checkallcheckbox'] = "Check all";
 $string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheckbox">';
 $string['functiondoesntexist'] = "Function of action button doesn\'t exist.";
 
-// Test and example strings.
+// Example strings.
 $string['deletedatatitle'] = 'Do you really want to delete this data?';
 $string['deletedatabody'] = 'You are about to submit this data: <br> "{$a->data}"';
 $string['deletedatasubmit'] = 'Delete';
@@ -75,12 +75,6 @@ $string['apply_filter'] = 'Apply Filter';
 
 $string['pagelabel'] = 'Show {$a} rows';
 
-$string['table1name'] = 'Users';
-$string['table2name'] = 'Course';
-$string['table3name'] = 'Course_Modules';
-$string['table4name'] = 'Users_InfiniteScroll';
-$string['id'] = 'ID';
-
 // Filter for timespan.
 $string['displayrecords'] = 'Display records';
 $string['within'] = 'within';
@@ -95,6 +89,9 @@ $string['selectedtimespan'] = 'selected timespan';
 $string['timespan'] = 'Timespan';
 $string['flexoverlap'] = 'overlapping';
 
+$string['change'] = 'Change';
+
+// Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
 $string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';
 $string['nmscns'] = 'NoModal, SingleCall, NoSelection';
@@ -105,4 +102,8 @@ $string['nmscys'] = 'NoModal, SingleCall, Selection';
 $string['ymmcys'] = '+Modal, MultipleCall, Selection';
 $string['ymscys'] = '+Modal, SingleCall, Selection';
 
-$string['change'] = 'Change';
+$string['table1name'] = 'Demo table 1';
+$string['table2name'] = 'Demo table 2';
+$string['table3name'] = 'Demo table 3';
+$string['table4name'] = 'Demo table 4';
+$string['id'] = 'ID';
