@@ -299,6 +299,8 @@ class wunderbyte_table extends table_sql {
      * @param string $uniqueid Has to be really unique eg. by adding the cmid, so it's unique over all instances of one plugin!
      */
     public function __construct($uniqueid) {
+
+        $uniqueid = md5($uniqueid); // Must to avoid unwanted symbols especially spaces, etc.
         parent::__construct($uniqueid);
 
         $this->idstring = md5($uniqueid);
