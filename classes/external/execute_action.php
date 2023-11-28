@@ -95,6 +95,8 @@ class execute_action extends external_api {
 
         $context = context_system::instance();
 
+        // Normally, this webservice is only allowed for logged in users with some capabilites.
+        // But this can be turned off for given tables.
         if ($table->requirelogin) {
             try {
                 self::validate_context($context);
@@ -120,7 +122,6 @@ class execute_action extends external_api {
                 'methodname' => $params['methodname'],
             ],
         ]);
-
         $event->trigger();
 
         if (method_exists($table, $params['methodname']) ) {

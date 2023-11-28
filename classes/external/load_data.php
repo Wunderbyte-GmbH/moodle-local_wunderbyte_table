@@ -112,6 +112,8 @@ class load_data extends external_api {
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
+        // Normally, this webservice is only allowed for logged in users with some capabilites.
+        // But this can be turned off for given tables.
         $context = context_system::instance();
         if ($table->requirelogin) {
             try {

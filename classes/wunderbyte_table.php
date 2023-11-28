@@ -842,6 +842,8 @@ class wunderbyte_table extends table_sql {
         }
 
         $sql .= json_encode($params);
+        // We add the capability to the key to make sure no user with lesser capability can access data meant for higher access.
+        $sql .= $this->requirecapability ?? '';
 
         // Now that we have the string, we hash it with a very fast method.
         $cachekey = crc32($sql);
@@ -1675,7 +1677,10 @@ class wunderbyte_table extends table_sql {
 
         if (empty($this->tablecachehash) || $newcache) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
-            $this->tablecachehash = md5($this->idstring);
+
+            // We need to make sure that the correct instance with the correct capabilities are cached.
+            // Therefore, we add the capability to the hash.
+            $this->tablecachehash = md5($this->idstring . $this->requirecapability ?? '');
 
             if (($cashedtable = $cache->get($this->tablecachehash)) && !$newcache) {
                 $this->pagesize = $cashedtable->pagesize;

@@ -39,6 +39,8 @@ $PAGE->set_url('/download.php');
 
 $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
+require_capability($table->requirecapability, $context);
+
 $table->is_downloading($download, 'download', 'download');
 
 $table->printtable(20, true);
