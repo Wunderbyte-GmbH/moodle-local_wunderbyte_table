@@ -41,8 +41,8 @@ Feature: Baisc functionality of wunderbyte_table works as expected
   Scenario: WB_Table: Display single table
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    ## Then "2" row "username" column of "Users" table should contain "admin"
-    Then the following should exist in the "Users" table:
+    ## Then "2" row "username" column of "Demo table 1" table should contain "admin"
+    Then the following should exist in the "fa5e95f7721ad449d1cdd30f461d1cec" table:
       | Username | First name | Email address        |
       | admin    | Admin      | moodle@example.com   |
       | teacher1 | Teacher    | teacher1@example.com |
@@ -52,20 +52,23 @@ Feature: Baisc functionality of wunderbyte_table works as expected
   Scenario: WB_Table: Display few tables per multiple tabs
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Users"
-    Then the following should exist in the "Users" table:
+    ## Demo table 1 - users
+    And I follow "Demo table 1"
+    Then the following should exist in the "fa5e95f7721ad449d1cdd30f461d1cec" table:
       | Username | First name | Email address      |
       | admin    | Admin      | moodle@example.com |
       | user1    | Username   | user1@example.com  |
-    And I follow "Course"
+    ## Demo table 2 - courses
+    And I follow "Demo table 2"
     And I wait "1" seconds
-    Then the following should exist in the "Course" table:
+    Then the following should exist in the "d82aa03a37e6ab3d58369289ffadc665" table:
       | Full name            | Short name           |
       | Acceptance test site | Acceptance test site |
       | Course 1             | C1                   |
-    And I follow "Course_Modules"
+    ## Demo table 3 - course modules
+    And I follow "Demo table 3"
     And I wait "1" seconds
-    Then the following should exist in the "Course_Modules" table:
+    Then the following should exist in the "7c4920728afa854f9975943ccf1c8960" table:
       | Module |
       | 5      |
 
@@ -73,7 +76,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
   Scenario: WB_Table navigation: switch to the next page
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Users"
+    And I follow "Demo table 1"
     And "//nav[@aria-label='Page']" "xpath_element" should exist
     And I click on "2" "link" in the "ul.pagination" "css_element"
     And I should not see "guest"
@@ -84,32 +87,33 @@ Feature: Baisc functionality of wunderbyte_table works as expected
   Scenario: WB_Table navigation: set per page items count
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Users"
-    Then I should see "24 of 24 records found" in the ".Users .wb-records-count-label" "css_element"
-    And the field "selectrowsperpage-Users" matches value "Show 10 rows"
-    And "//*[contains(@id, 'Users')]//nav[@aria-label='Page']" "xpath_element" should exist
-    And I set the field "selectrowsperpage-Users" to "Show 30 rows"
+    And I follow "Demo table 1"
+    Then I should see "24 of 24 records found" in the ".fa5e95f7721ad449d1cdd30f461d1cec .wb-records-count-label" "css_element"
+    And the field "selectrowsperpage-fa5e95f7721ad449d1cdd30f461d1cec" matches value "Show 10 rows"
+    And "//*[contains(@class, 'fa5e95f7721ad449d1cdd30f461d1cec')]//nav[@aria-label='Page']" "xpath_element" should exist
+    And I set the field "selectrowsperpage-fa5e95f7721ad449d1cdd30f461d1cec" to "Show 30 rows"
     And I wait "1" seconds
-    And "//*[contains(@id, 'Users')]//nav[@aria-label='Page']" "xpath_element" should not exist
-    And the field "selectrowsperpage-Users" matches value "Show 30 rows"
+    And "//*[contains(@class, 'fa5e95f7721ad449d1cdd30f461d1cec')]//nav[@aria-label='Page']" "xpath_element" should not exist
+    And the field "selectrowsperpage-fa5e95f7721ad449d1cdd30f461d1cec" matches value "Show 30 rows"
 
   @javascript
   Scenario: WB_Table navigation: infinite scroll
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Users_InfiniteScroll"
+    ## Demo table 4 - Users_InfiniteScroll
+    And I follow "Demo table 4"
     # Ensure of available / not yet loaded records:
-    And I should see "user12" in the "#Users_InfiniteScroll_r7" "css_element"
-    And "//*[contains(@id, 'Users_InfiniteScroll')]//tr[@id, 'Users_InfiniteScroll_r16']" "xpath_element" should not exist
+    And I should see "user12" in the "#7ef0620c51db513cad089dcd596522bc_r7" "css_element"
+    And "//*[contains(@id, '7ef0620c51db513cad089dcd596522bc')]//tr[@id, '7ef0620c51db513cad089dcd596522bc_r16']" "xpath_element" should not exist
     ## Call pagedown twice to ensure actual bottom of page will be reached.
     And I press the pagedown key
     And I press the pagedown key
     And I wait "1" seconds
-    And I should see "user19" in the "#Users_InfiniteScroll_r14" "css_element"
+    And I should see "user19" in the "#7ef0620c51db513cad089dcd596522bc_r14" "css_element"
     ## Call pagedown twice to ensure actual bottom of page will be reached.
     And I press the pagedown key
     And I press the pagedown key
     # Ensure of available / not yet loaded records:
-    And "//*[contains(@id, 'Users_InfiniteScroll')]//tr[@id, 'Users_InfiniteScroll_r16']" "xpath_element" should not exist
+    And "//*[contains(@id, '7ef0620c51db513cad089dcd596522bc')]//tr[@id, '7ef0620c51db513cad089dcd596522bc_r16']" "xpath_element" should not exist
     And I wait "1" seconds
-    And I should see "user20" in the "#Users_InfiniteScroll_r16" "css_element"
+    And I should see "user20" in the "#7ef0620c51db513cad089dcd596522bc_r16" "css_element"
