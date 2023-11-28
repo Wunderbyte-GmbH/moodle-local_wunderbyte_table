@@ -39,7 +39,6 @@ use local_wunderbyte_table\output\viewtable;
 use moodle_url;
 use stdClass;
 
-#[AllowDynamicProperties]
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
