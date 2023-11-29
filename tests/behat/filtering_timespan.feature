@@ -35,10 +35,10 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
   Scenario: Filter course table in wb_table by timespan for overlaping
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Course"
+    And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-Course"
-    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I press "asidecollapse-d82aa03a37e6ab3d58369289ffadc665"
+    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-17"
@@ -49,124 +49,124 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     ##  | Display records | overlap |
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 1" in the "#Course_r1" "css_element"
+    Then I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-13"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-17"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 2" in the "#Course_r1" "css_element"
-    And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
+    Then I should see "Course 2" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
+    And I should not see "Course 1" in the ".wunderbyteTableClass.d82aa03a37e6ab3d58369289ffadc665" "css_element"
 
   @javascript
   Scenario: Filter course table in wb_table by timespan for within
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Course"
+    And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-Course"
-    And I should see "Course 1" in the "#Course_r2" "css_element"
-    And I should see "Course 2" in the "#Course_r3" "css_element"
+    And I press "asidecollapse-d82aa03a37e6ab3d58369289ffadc665"
+    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
+    And I should see "Course 2" in the "#d82aa03a37e6ab3d58369289ffadc665_r3" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-11"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-19"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "within"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 1" in the "#Course_r1" "css_element"
+    Then I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-11"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-19"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 2" in the "#Course_r1" "css_element"
-    And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
+    Then I should see "Course 2" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
+    And I should not see "Course 1" in the ".wunderbyteTableClass.d82aa03a37e6ab3d58369289ffadc665" "css_element"
 
   @javascript
   Scenario: Filter course table in wb_table by timespan for before and after
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Course"
+    And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-Course"
-    And I should see "Course 1" in the "#Course_r2" "css_element"
-    And I should see "Course 2" in the "#Course_r3" "css_element"
+    And I press "asidecollapse-d82aa03a37e6ab3d58369289ffadc665"
+    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
+    And I should see "Course 2" in the "#d82aa03a37e6ab3d58369289ffadc665_r3" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-10"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-11"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "before"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Acceptance test site" in the "#Course_r1" "css_element"
-    And I should see "Course 1" in the "#Course_r2" "css_element"
+    Then I should see "Acceptance test site" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
+    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "after"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 2" in the "#Course_r1" "css_element"
-    And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
+    Then I should see "Course 2" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
+    And I should not see "Course 1" in the ".wunderbyteTableClass.d82aa03a37e6ab3d58369289ffadc665" "css_element"
 
   @javascript
   Scenario: Filter course table in wb_table by timespan for overlap beginning
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Course"
+    And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-Course"
-    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I press "asidecollapse-d82aa03a37e6ab3d58369289ffadc665"
+    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-20"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlapping beginning"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 1" in the "#Course_r1" "css_element"
+    Then I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-13"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-20"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 2" in the "#Course_r1" "css_element"
-    And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
+    Then I should see "Course 2" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
+    And I should not see "Course 1" in the ".wunderbyteTableClass.d82aa03a37e6ab3d58369289ffadc665" "css_element"
 
   @javascript
   Scenario: Filter course table in wb_table by timespan for overlap ending
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Course"
+    And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-Course"
-    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I press "asidecollapse-d82aa03a37e6ab3d58369289ffadc665"
+    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-10"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-15"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlapping ending"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 1" in the "#Course_r1" "css_element"
+    Then I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-10"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-15"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
-    Then I should see "Course 2" in the "#Course_r1" "css_element"
-    And I should not see "Course 1" in the ".wunderbyteTableClass.Course" "css_element"
+    Then I should see "Course 2" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
+    And I should not see "Course 1" in the ".wunderbyteTableClass.d82aa03a37e6ab3d58369289ffadc665" "css_element"
 
   @javascript
   Scenario: Filter course table in wb_table ended before the exact end date
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
-    And I follow "Course"
+    And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-Course"
-    And I should see "Course 1" in the "#Course_r2" "css_element"
+    And I press "asidecollapse-Coud82aa03a37e6ab3d58369289ffadc665rse"
+    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_enddate\"]" "css_element"
     And I set the field "enddate_single-date" in the "#id_collapse_enddate" "css_element" to "2023-05-13"
     And I set the field "enddate" in the "#id_collapse_enddate" "css_element" to "checked"
     And I wait "1" seconds
-    And I should not see "Course 2" in the ".wunderbyteTableClass.Course" "css_element"
+    And I should not see "Course 2" in the ".wunderbyteTableClass.d82aa03a37e6ab3d58369289ffadc665" "css_element"
