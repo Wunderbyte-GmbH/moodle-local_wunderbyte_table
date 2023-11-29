@@ -163,7 +163,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-Coud82aa03a37e6ab3d58369289ffadc665rse"
+    And I press "asidecollapse-d82aa03a37e6ab3d58369289ffadc665"
     And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_enddate\"]" "css_element"
     And I set the field "enddate_single-date" in the "#id_collapse_enddate" "css_element" to "2023-05-13"

@@ -39,8 +39,8 @@ Feature: Row controls functionality of wunderbyte_table works as expected
     And I should see "Did work" in the "#user-notifications" "css_element"
     And I follow "Demo table 2"
     And I wait "1" seconds
-    Then I should see "Course 1" in the "#Course_r2" "css_element"
-    And I click on "TriggersNoModal" "link" in the "#Course_r2" "css_element"
+    Then I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
+    And I click on "TriggersNoModal" "link" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
 

@@ -133,18 +133,19 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I follow "Demo table 4"
     And I press "asidecollapse-7ef0620c51db513cad089dcd596522bc"
     And I should see "Teacher" in the "#7ef0620c51db513cad089dcd596522bc_r3" "css_element"
-    And I click on ".7ef0620c51db513cad089dcd596522bc [aria-controls=\"id_collapse_firstname\"]" "css_element"
-    And I should see "Teacher" in the ".7ef0620c51db513cad089dcd596522bc #id_collapse_firstname" "css_element"
-    And I set the field "Teacher" in the ".7ef0620c51db513cad089dcd596522bc #id_collapse_firstname" "css_element" to "checked"
+    ##And I press "filterbtn-7ef0620c51db513cad089dcd596522bc"
+    And I click on ".tab-pane.active [aria-controls=\"id_collapse_firstname\"]" "css_element"
+    And I should see "Teacher" in the ".tab-pane.active #id_collapse_firstname" "css_element"
+    And I set the field "Teacher" in the ".tab-pane.active #id_collapse_firstname" "css_element" to "checked"
     And I wait until the page is ready
     And I should see "Teacher" in the "#7ef0620c51db513cad089dcd596522bc_r1" "css_element"
     And "//*[contains(@id, '7ef0620c51db513cad089dcd596522bc')]//tr[@id, '7ef0620c51db513cad089dcd596522bc_r2']" "xpath_element" should not exist
     ## Filter panel being hidden by default on the Users tab
     And I follow "Demo table 1"
     And I should see "guest" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r2" "css_element"
-    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
-    And I should see "admin" in the "#id_collapse_username" "css_element"
-    And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
+    And I click on ".tab-pane.active [aria-controls=\"id_collapse_username\"]" "css_element"
+    And I should see "admin" in the ".tab-pane.active #id_collapse_username" "css_element"
+    And I set the field "admin" in the ".tab-pane.active #id_collapse_username" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "admin" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
     And "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec')]//tr[@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r2']" "xpath_element" should not exist
@@ -152,9 +153,9 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I follow "Demo table 2"
     And I press "asidecollapse-d82aa03a37e6ab3d58369289ffadc665"
     And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
-    And I click on "[aria-controls=\"id_collapse_fullname\"]" "css_element"
-    And I should see "Course 1" in the "#id_collapse_fullname" "css_element"
-    And I set the field "Course 1" in the "#id_collapse_fullname" "css_element" to "checked"
+    And I click on ".tab-pane.active [aria-controls=\"id_collapse_fullname\"]" "css_element"
+    And I should see "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element"
+    And I set the field "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
     And "//*[contains(@id, 'd82aa03a37e6ab3d58369289ffadc665')]//tr[@id, 'd82aa03a37e6ab3d58369289ffadc665_r2']" "xpath_element" should not exist
