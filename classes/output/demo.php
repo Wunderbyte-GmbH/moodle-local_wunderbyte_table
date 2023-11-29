@@ -31,7 +31,6 @@ use renderable;
 use renderer_base;
 use templatable;
 
-
 define('TABLE1NAME', get_string('table1name', 'local_wunderbyte_table'));
 define('TABLE2NAME', get_string('table2name', 'local_wunderbyte_table'));
 define('TABLE3NAME', get_string('table3name', 'local_wunderbyte_table'));
