@@ -1681,7 +1681,7 @@ class wunderbyte_table extends table_sql {
 
             // We need to make sure that the correct instance with the correct capabilities are cached.
             // Therefore, we add the capability to the hash.
-            $this->tablecachehash = md5($this->idstring . $this->requirecapability ?? '');
+            $this->tablecachehash = md5($this->idstring . $this->requirecapability ?? '' . $this->requirelogin ?? '');
 
             if (($cashedtable = $cache->get($this->tablecachehash)) && !$newcache) {
                 $this->pagesize = $cashedtable->pagesize;
