@@ -37,7 +37,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-demotable_2"
+    And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
@@ -65,7 +65,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-demotable_2"
+    And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I should see "Course 2" in the "#demotable_2_r3" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
@@ -90,7 +90,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-demotable_2"
+    And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I should see "Course 2" in the "#demotable_2_r3" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
@@ -115,7 +115,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-demotable_2"
+    And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
@@ -139,7 +139,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-demotable_2"
+    And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-10"
@@ -163,7 +163,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 2"
     ## Filter panel being hidden by default on the Course tab
-    And I press "asidecollapse-demotable_2"
+    And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_enddate\"]" "css_element"
     And I set the field "enddate_single-date" in the "#id_collapse_enddate" "css_element" to "2023-05-13"

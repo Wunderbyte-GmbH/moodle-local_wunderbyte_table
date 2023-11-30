@@ -131,7 +131,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     ## Filter panel being hidden by default on the Infinite Scroll tab
     And I follow "Demo table 4"
-    And I press "asidecollapse-demotable_4"
+    And I click on ".asidecollapse-demotable_4" "css_element"
     And I should see "Teacher" in the "#demotable_4_r3" "css_element"
     ##And I press "filterbtn-demotable_4"
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_firstname\"]" "css_element"
@@ -151,7 +151,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
     ## Filter panel being hidden by default on the Course tab
     And I follow "Demo table 2"
-    And I press "asidecollapse-demotable_2"
+    And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_fullname\"]" "css_element"
     And I should see "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element"

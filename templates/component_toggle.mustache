@@ -31,7 +31,8 @@
 }}
 
 {{#showfilterbutton}}
-    <button type="button" id="asidecollapse_{{idstring}}" class="btn btn-primary" title="asidecollapse-{{uniqueid}}">
+    <button type="button" id="asidecollapse_{{idstring}}" class="btn btn-primary asidecollapse-{{uniqueid}}"
+        data-toggle="tooltip" data-placement="bottom" title="{{#str}} filter, local_wunderbyte_table {{/str}}">
         <i class="fa fa-align-left"></i>
     </button>
 {{/showfilterbutton}}

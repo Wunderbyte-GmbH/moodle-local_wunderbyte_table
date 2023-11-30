@@ -36,6 +36,7 @@ $string['orderdown'] = "Von Z nach A sortiert";
 $string['noentriesfound'] = "Keine Einträge gefunden";
 $string['couldnotloaddata'] = "Konnte keine Daten laden";
 
+$string['filter'] = 'Tabelle filtern';
 $string['reload'] = "Tabelle neu laden";
 $string['print'] = "Tabelle herunterladen";
 $string['downloadas'] = "Tabelle laden als";
@@ -85,7 +86,7 @@ $string['startvalue'] = 'Anfang';
 $string['endvalue'] = 'Ende';
 $string['selectedtimespan'] = 'gewählter Zeitspanne';
 $string['timespan'] = 'Zeitspanne';
-$string['flexoverlap'] = 'überlappend';
+$string['flexoverlap'] = 'überlappend mit';
 
 $string['change'] = 'Ändere';
 
