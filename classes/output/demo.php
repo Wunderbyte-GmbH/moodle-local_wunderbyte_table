@@ -73,7 +73,7 @@ class demo implements renderable, templatable {
      */
     private function render_table_1() {
 
-        $table = new demo_table(TABLE1NAME);
+        $table = new demo_table('demotable_1');
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
@@ -320,7 +320,7 @@ class demo implements renderable, templatable {
      */
     private function render_table_2() {
 
-        $table = new demo_table(TABLE2NAME);
+        $table = new demo_table('demotable_2');
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
@@ -441,7 +441,7 @@ class demo implements renderable, templatable {
      */
     private function render_table_3() {
 
-        $table = new demo_table(TABLE3NAME);
+        $table = new demo_table('demotable_3');
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
@@ -556,7 +556,7 @@ class demo implements renderable, templatable {
      */
     private function render_table_4() {
 
-        $table = new demo_table(TABLE4NAME);
+        $table = new demo_table('demotable_4');
 
         $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
         $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
