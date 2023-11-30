@@ -1,3 +1,9 @@
+## Version 1.8.4 (2023113000)
+* Improvement: Add privacy class
+* Improvement: Add view and actionbutton events for logging
+* Improvement: Add requirelogin and requirecapability for more security
+* Improvement: Additional automatic tests
+
 ## Version 1.8.3 (2023112700)
 * Improvement: Added support for Moodle 4.3 and PHP 8.2.
 * Improvement: Nicer strings for already set filters and language fix.
