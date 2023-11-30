@@ -42,12 +42,12 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    Then I should see "admin" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And I click on "NoModal, MultipleCall, NoSelection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    Then I should see "admin" in the "#demotable_1_r1" "css_element"
+    And I click on "NoModal, MultipleCall, NoSelection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
     And I wait "1" seconds
-    And I click on "NoModal, SingleCall, NoSelection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    And I click on "NoModal, SingleCall, NoSelection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
 
@@ -56,27 +56,27 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    Then I should see "admin" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And I click on "NoModal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    Then I should see "admin" in the "#demotable_1_r1" "css_element"
+    And I click on "NoModal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I wait "1" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
     ## Fix for "Element is not clickable ... because another element .... obscures it"
     And I follow "Demo table 1"
-    And I set the field with xpath "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r2')]//*[contains(@name, 'row-fa5e95f7721ad449d1cdd30f461d1cec-')]" to "checked"
-    And I click on "NoModal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    And I set the field with xpath "//*[contains(@id, 'demotable_1_r2')]//*[contains(@name, 'row-demotable_1-')]" to "checked"
+    And I click on "NoModal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
     And I wait "1" seconds
     ## Fix for "Element is not clickable ... because another element .... obscures it"
     And I follow "Demo table 1"
-    And I set the field with xpath "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r2')]//*[contains(@name, 'row-fa5e95f7721ad449d1cdd30f461d1cec-')]" to ""
-    And I click on "NoModal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    And I set the field with xpath "//*[contains(@id, 'demotable_1_r2')]//*[contains(@name, 'row-demotable_1-')]" to ""
+    And I click on "NoModal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I wait "1" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
     ## Fix for "Element is not clickable ... because another element .... obscures it"
     And I follow "Demo table 1"
-    And I set the field with xpath "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r3')]//*[contains(@name, 'row-fa5e95f7721ad449d1cdd30f461d1cec-')]" to "checked"
-    And I click on "NoModal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    And I set the field with xpath "//*[contains(@id, 'demotable_1_r3')]//*[contains(@name, 'row-demotable_1-')]" to "checked"
+    And I click on "NoModal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
 
@@ -85,14 +85,14 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    Then I should see "admin" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And I click on "+Modal, MultipleCall, NoSelection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    Then I should see "admin" in the "#demotable_1_r1" "css_element"
+    And I click on "+Modal, MultipleCall, NoSelection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I should see "Action will be applied!" in the ".show .modal-content" "css_element"
     And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"
     And I wait "1" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"
     And I wait "1" seconds
-    And I click on "+Modal, SingleCall, NoSelection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    And I click on "+Modal, SingleCall, NoSelection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I should see "You are about to add a row" in the ".show .modal-content" "css_element"
     And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"
     And I wait "1" seconds
@@ -103,14 +103,14 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    Then I should see "guest" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r2" "css_element"
-    And I click on "+Modal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    Then I should see "guest" in the "#demotable_1_r2" "css_element"
+    And I click on "+Modal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I wait "1" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
     ## Fix for "Element is not clickable ... because another element .... obscures it"
     And I follow "Demo table 1"
-    And I set the field with xpath "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r2')]//*[contains(@name, 'row-fa5e95f7721ad449d1cdd30f461d1cec-')]" to "checked"
-    And I click on "+Modal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    And I set the field with xpath "//*[contains(@id, 'demotable_1_r2')]//*[contains(@name, 'row-demotable_1-')]" to "checked"
+    And I click on "+Modal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I should see "You are about to submit this data:" in the ".show .modal-content" "css_element"
     And I should see "Guest user" in the ".show .modal-content" "css_element"
     And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"
@@ -119,14 +119,14 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     ## Fix for "Element is not clickable ... because another element .... obscures it"
     And I follow "Demo table 1"
-    And I set the field with xpath "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r2')]//*[contains(@name, 'row-fa5e95f7721ad449d1cdd30f461d1cec-')]" to ""
-    And I click on "+Modal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    And I set the field with xpath "//*[contains(@id, 'demotable_1_r2')]//*[contains(@name, 'row-demotable_1-')]" to ""
+    And I click on "+Modal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I wait "1" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
     ## Fix for "Element is not clickable ... because another element .... obscures it"
     And I follow "Demo table 1"
-    And I set the field with xpath "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r3')]//*[contains(@name, 'row-fa5e95f7721ad449d1cdd30f461d1cec-')]" to "checked"
-    And I click on "+Modal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.fa5e95f7721ad449d1cdd30f461d1cec" "css_element"
+    And I set the field with xpath "//*[contains(@id, 'demotable_1_r3')]//*[contains(@name, 'row-demotable_1-')]" to "checked"
+    And I click on "+Modal, SingleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
     And I should see "You are about to submit this data:" in the ".show .modal-content" "css_element"
     And I should see "Teacher" in the ".show .modal-content" "css_element"
     And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"

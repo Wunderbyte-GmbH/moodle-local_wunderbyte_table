@@ -42,44 +42,44 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    And I set the field "search-fa5e95f7721ad449d1cdd30f461d1cec" to "teacher"
+    And I set the field "search-demotable_1" to "teacher"
     And I wait "1" seconds
-    And I should see "teacher1" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And I set the field "search-fa5e95f7721ad449d1cdd30f461d1cec" to "admin"
+    And I should see "teacher1" in the "#demotable_1_r1" "css_element"
+    And I set the field "search-demotable_1" to "admin"
     And I wait "1" seconds
-    And I should see "admin" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And I set the field "search-fa5e95f7721ad449d1cdd30f461d1cec" to "guest"
+    And I should see "admin" in the "#demotable_1_r1" "css_element"
+    And I set the field "search-demotable_1" to "guest"
     And I wait "1" seconds
-    And I should see "guest" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
+    And I should see "guest" in the "#demotable_1_r1" "css_element"
     And I follow "Demo table 2"
-    And I set the field "search-d82aa03a37e6ab3d58369289ffadc665" to "course"
+    And I set the field "search-demotable_2" to "course"
     And I wait "1" seconds
-    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
-    And I set the field "search-d82aa03a37e6ab3d58369289ffadc665" to "site"
+    And I should see "Course 1" in the "#demotable_2_r1" "css_element"
+    And I set the field "search-demotable_2" to "site"
     And I wait "1" seconds
-    And I should see "Acceptance test site" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
+    And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
 
   @javascript
   Scenario: Filter users table by username via sidebar filter controls
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    And I should see "guest" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r2" "css_element"
+    And I should see "guest" in the "#demotable_1_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
     And I should see "admin" in the "#id_collapse_username" "css_element"
     And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
     And I wait "1" seconds
-    And I should see "admin" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec')]//tr[@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r2']" "xpath_element" should not exist
+    And I should see "admin" in the "#demotable_1_r1" "css_element"
+    And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
     And I set the field "guest" in the "#id_collapse_username" "css_element" to "checked"
     And I wait "1" seconds
-    And I should see "guest" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r2" "css_element"
+    And I should see "guest" in the "#demotable_1_r2" "css_element"
     ## And "//*[contains(@id, 'Users')]//tr[@id, 'Users_r3']" "xpath_element" should not exist
     And I should see "2 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I set the field "admin" in the "#id_collapse_username" "css_element" to ""
     And I wait "1" seconds
-    And I should see "guest" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec')]//tr[@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r2']" "xpath_element" should not exist
+    And I should see "guest" in the "#demotable_1_r1" "css_element"
+    And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
     And I set the field "guest" in the "#id_collapse_username" "css_element" to ""
     And I wait "1" seconds
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
@@ -93,8 +93,8 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
     And I set the field "user15" in the "#id_collapse_username" "css_element" to "checked"
     And I wait until the page is ready
-    And I should see "admin" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And I should see "user15" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r2" "css_element"
+    And I should see "admin" in the "#demotable_1_r1" "css_element"
+    And I should see "user15" in the "#demotable_1_r2" "css_element"
     And I should see "2 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "2 filter(s) on: Username" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I follow "Show all records"
@@ -114,7 +114,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should not see "user16" in the "#id_collapse_username" "css_element"
     And I set the field "user15" in the "#id_collapse_username" "css_element" to "checked"
     And I wait "1" seconds
-    And I should see "user15" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
+    And I should see "user15" in the "#demotable_1_r1" "css_element"
     And I should see "1 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Remove filter and search
     And I set the field "user15" in the "#id_collapse_username" "css_element" to ""
@@ -131,31 +131,31 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     ## Filter panel being hidden by default on the Infinite Scroll tab
     And I follow "Demo table 4"
-    And I press "asidecollapse-7ef0620c51db513cad089dcd596522bc"
-    And I should see "Teacher" in the "#7ef0620c51db513cad089dcd596522bc_r3" "css_element"
-    ##And I press "filterbtn-7ef0620c51db513cad089dcd596522bc"
+    And I press "asidecollapse-demotable_4"
+    And I should see "Teacher" in the "#demotable_4_r3" "css_element"
+    ##And I press "filterbtn-demotable_4"
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_firstname\"]" "css_element"
     And I should see "Teacher" in the ".tab-pane.active #id_collapse_firstname" "css_element"
     And I set the field "Teacher" in the ".tab-pane.active #id_collapse_firstname" "css_element" to "checked"
     And I wait until the page is ready
-    And I should see "Teacher" in the "#7ef0620c51db513cad089dcd596522bc_r1" "css_element"
-    And "//*[contains(@id, '7ef0620c51db513cad089dcd596522bc')]//tr[@id, '7ef0620c51db513cad089dcd596522bc_r2']" "xpath_element" should not exist
+    And I should see "Teacher" in the "#demotable_4_r1" "css_element"
+    And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r2']" "xpath_element" should not exist
     ## Filter panel being hidden by default on the Users tab
     And I follow "Demo table 1"
-    And I should see "guest" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r2" "css_element"
+    And I should see "guest" in the "#demotable_1_r2" "css_element"
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_username\"]" "css_element"
     And I should see "admin" in the ".tab-pane.active #id_collapse_username" "css_element"
     And I set the field "admin" in the ".tab-pane.active #id_collapse_username" "css_element" to "checked"
     And I wait "1" seconds
-    And I should see "admin" in the "#fa5e95f7721ad449d1cdd30f461d1cec_r1" "css_element"
-    And "//*[contains(@id, 'fa5e95f7721ad449d1cdd30f461d1cec')]//tr[@id, 'fa5e95f7721ad449d1cdd30f461d1cec_r2']" "xpath_element" should not exist
+    And I should see "admin" in the "#demotable_1_r1" "css_element"
+    And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
     ## Filter panel being hidden by default on the Course tab
     And I follow "Demo table 2"
-    And I press "asidecollapse-d82aa03a37e6ab3d58369289ffadc665"
-    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r2" "css_element"
+    And I press "asidecollapse-demotable_2"
+    And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_fullname\"]" "css_element"
     And I should see "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element"
     And I set the field "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element" to "checked"
     And I wait "1" seconds
-    And I should see "Course 1" in the "#d82aa03a37e6ab3d58369289ffadc665_r1" "css_element"
-    And "//*[contains(@id, 'd82aa03a37e6ab3d58369289ffadc665')]//tr[@id, 'd82aa03a37e6ab3d58369289ffadc665_r2']" "xpath_element" should not exist
+    And I should see "Course 1" in the "#demotable_2_r1" "css_element"
+    And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
