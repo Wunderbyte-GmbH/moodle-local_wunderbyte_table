@@ -1,3 +1,6 @@
+## Version 1.8.5 (2023113001)
+* Improvement: Better tests, some smaller improvement of UI.
+
 ## Version 1.8.4 (2023113000)
 * Improvement: Add privacy class
 * Improvement: Add view and actionbutton events for logging
