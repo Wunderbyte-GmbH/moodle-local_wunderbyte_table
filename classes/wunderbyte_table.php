@@ -299,9 +299,9 @@ class wunderbyte_table extends table_sql {
      */
     public function __construct($uniqueid) {
 
-        $this->idstring = md5($uniqueid);
-        parent::__construct($this->idstring);
+        parent::__construct($uniqueid);
 
+        $this->idstring = md5($uniqueid);
         $this->classname = get_class($this);
 
         // This unsets the eventual memory of sorting in session to apply the default sorting on load as defined.
