@@ -202,8 +202,8 @@ The possibleoperations array is containing a whitelist, if none specified, all a
     'datepicker' => [
                     'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
                         'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap'], // Will be displayed in select to choose from.
-                        'columntimestart' => 'startdate', // Columnname as is query with lower value.
-                        'columntimeend' => 'enddate', // Columnname as is query with higher value.
+                        'columntimestart' => 'startdate', // Columnname as is query with lower value. Column has to be defined in $table->define_columns().
+                        'columntimeend' => 'enddate', // Columnname as is query with higher value. Column has to be defined in $table->define_columns().
                         'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
                         'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
                         'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
