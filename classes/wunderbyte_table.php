@@ -38,6 +38,7 @@ use table_sql;
 use local_wunderbyte_table\output\viewtable;
 use moodle_url;
 use stdClass;
+use coding_exception;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -294,11 +295,19 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
+     * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
+     * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
      *
      * @param string $uniqueid Has to be really unique eg. by adding the cmid, so it's unique over all instances of one plugin!
      */
     public function __construct($uniqueid) {
-
+        // We will not breack working code but have to inform developers about potentially severe issue.
+        if (debugging() && preg_match('#[^a-zA-Z0-9_\s]#', $uniqueid)) {
+            throw new coding_exception(
+                "Variable uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!",
+                $uniqueid
+            );
+        }
         parent::__construct($uniqueid);
 
         $this->idstring = md5($uniqueid);

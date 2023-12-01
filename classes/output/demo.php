@@ -72,7 +72,8 @@ class demo implements renderable, templatable {
      *
      */
     private function render_table_1() {
-
+        // The $uniqueid Should be composed by ASCII alphanumeric characters, underlines and spaces only!
+        // It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
         $table = new demo_table('demotable_1');
 
         $columns = [
@@ -319,7 +320,8 @@ class demo implements renderable, templatable {
      *
      */
     private function render_table_2() {
-
+        // The $uniqueid Should be composed by ASCII alphanumeric characters, underlines and spaces only!
+        // It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
         $table = new demo_table('demotable_2');
 
         $columns = [
@@ -440,7 +442,8 @@ class demo implements renderable, templatable {
      *
      */
     private function render_table_3() {
-
+        // The $uniqueid Should be composed by ASCII alphanumeric characters, underlines and spaces only!
+        // It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
         $table = new demo_table('demotable_3');
 
         $columns = [
@@ -555,7 +558,8 @@ class demo implements renderable, templatable {
      *
      */
     private function render_table_4() {
-
+        // The $uniqueid Should be composed by ASCII alphanumeric characters, underlines and spaces only!
+        // It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
         $table = new demo_table('demotable_4');
 
         $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
