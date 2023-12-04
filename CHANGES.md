@@ -1,3 +1,6 @@
+## Version 1.8.6 (2023120400)
+* Bugfix: Notifications and debug error if uniqueid contains any symbols other than ASCII alphanumeric characters, underlines and spaces.
+
 ## Version 1.8.5 (2023113001)
 * Improvement: Better tests, some smaller improvement of UI.
 
