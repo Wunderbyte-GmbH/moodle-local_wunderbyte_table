@@ -1,3 +1,7 @@
+## Version 1.8.8 (2023120501)
+* Bugfix: Check "real" method names including "_action".
+* Bugfix: Fix behat.
+
 ## Version 1.8.7 (2023120500)
 * Improvement: Additional security via "action_" prefix for methodnames that can be called via webservice actions.
 
