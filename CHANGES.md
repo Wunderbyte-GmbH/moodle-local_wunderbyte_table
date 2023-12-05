@@ -1,3 +1,6 @@
+## Version 1.8.7 (2023120500)
+* Improvement: Additional security via "action_" prefix for methodnames that can be called via webservice actions.
+
 ## Version 1.8.6 (2023120400)
 * Bugfix: Notifications and debug error if uniqueid contains any symbols other than ASCII alphanumeric characters, underlines and spaces.
 
