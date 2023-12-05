@@ -151,7 +151,7 @@ class demo implements renderable, templatable {
             'label' => get_string('nmmcns', 'local_wunderbyte_table'), // 'NoModal, MultipleCall, NoSelection'-> Name of your action button.
             'class' => 'btn btn-success', // Example colors bootstrap 4 classes.
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => true, // If set to true, there is no modal and the method will be called directly.
             'selectionmandatory' => false, // When set to true, action will only be triggered, if elements are selected.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
@@ -182,7 +182,7 @@ class demo implements renderable, templatable {
             'label' => get_string('ymmcns', 'local_wunderbyte_table'),// '+Modal, MultipleCall, NoSelection'
             'class' => 'btn btn-danger',
             'href' => '#',
-            'methodname' => 'deleteitem',
+            'methodname' => 'action_deleteitem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => false,
@@ -223,7 +223,7 @@ class demo implements renderable, templatable {
             'label' => get_string('nmmcys', 'local_wunderbyte_table'), // 'NoModal, MultipleCall, Selection'
             'class' => 'btn btn-success',
             'href' => '#',
-            'methodname' => 'deleteitem',
+            'methodname' => 'action_deleteitem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => true,
             'selectionmandatory' => true,
@@ -254,7 +254,7 @@ class demo implements renderable, templatable {
             'label' => get_string('ymmcys', 'local_wunderbyte_table'), // '+Modal, MultipleCall, Selection',
             'class' => 'btn btn-danger',
             'href' => '#',
-            'methodname' => 'deleteitem',
+            'methodname' => 'action_deleteitem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
@@ -273,7 +273,7 @@ class demo implements renderable, templatable {
             'label' => get_string('ymscys', 'local_wunderbyte_table'), // '+Modal, SingleCall, Selection'.
             'class' => 'btn btn-warning',
             'href' => '#',
-            'methodname' => 'deleteitem',
+            'methodname' => 'action_deleteitem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
@@ -402,7 +402,7 @@ class demo implements renderable, templatable {
             'label' => get_string('delete', 'core'), // Name of your action button.
             'class' => 'btn btn-danger',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
@@ -491,7 +491,7 @@ class demo implements renderable, templatable {
             'label' => get_string('delete'), // Name of your action button.
             'class' => 'btn btn-danger',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
@@ -509,7 +509,7 @@ class demo implements renderable, templatable {
             'label' => get_string('change', 'local_wunderbyte_table'), // Name of your action button.
             'class' => 'btn btn-warning',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
@@ -588,7 +588,7 @@ class demo implements renderable, templatable {
             'label' => get_string('delete'), // Name of your action button.
             'class' => 'btn btn-danger',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
@@ -606,7 +606,7 @@ class demo implements renderable, templatable {
             'label' => get_string('change', 'local_wunderbyte_table'), // Name of your action button.
             'class' => 'btn btn-warning',
             'href' => '#',
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'selectionmandatory' => true,
