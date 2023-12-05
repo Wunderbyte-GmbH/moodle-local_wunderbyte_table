@@ -170,7 +170,7 @@ class demo implements renderable, templatable {
             'href' => '#',
             'id' => -1, // This forces single call execution.
             //'formname' => '', // To open dynamic form, instead of just confirmation modal.
-            'methodname' => 'additem',
+            'methodname' => 'action_additem',
             'nomodal' => true,
             'selectionmandatory' => false,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
@@ -202,7 +202,7 @@ class demo implements renderable, templatable {
             'label' => get_string('ymscns', 'local_wunderbyte_table'), // '+Modal, SingleCall, NoSelection'
             'class' => 'btn btn-warning',
             'href' => '#',
-            'methodname' => 'additem',
+            'methodname' => 'action_additem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'id' => -1,
@@ -243,7 +243,7 @@ class demo implements renderable, templatable {
             'href' => '#',
             'id' => -1,
             'formname' => '', // To open dynamic form, instead of just confirmation modal.
-            'methodname' => 'additem',
+            'methodname' => 'action_additem',
             'nomodal' => true,
             'selectionmandatory' => true,
             'data' => [
@@ -391,7 +391,7 @@ class demo implements renderable, templatable {
             'href' => '#',
             'id' => -1, // This forces single call execution.
             'formname' => '', // To open dynamic form, instead of just confirmation modal.
-            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_additem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => true, // If set to true, there is no modal but the method will be called directly.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
@@ -480,7 +480,7 @@ class demo implements renderable, templatable {
             'href' => '#',
             'id' => -1, // This forces single call execution.
             //'formname' => '', // To open dynamic form, instead of just confirmation modal.
-            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_additem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => false, // If set to true, there is no modal but the method will be called directly.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
@@ -577,7 +577,7 @@ class demo implements renderable, templatable {
             'href' => '#',
             'id' => -1, // This forces single call execution.
             //'formname' => '', // To open dynamic form, instead of just confirmation modal.
-            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'action_additem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => false, // If set to true, there is no modal but the method will be called directly.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => 'id',
