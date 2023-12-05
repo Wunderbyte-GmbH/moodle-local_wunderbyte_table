@@ -124,8 +124,8 @@ class execute_action extends external_api {
         ]);
         $event->trigger();
 
-        if (method_exists($table, 'action_' . $params['methodname']) ) {
-            $result = $table->{'action_' . $params['methodname']}($params['id'], $params['data']);
+        if (method_exists($table, $params['methodname']) ) {
+            $result = $table->{$params['methodname']}($params['id'], $params['data']);
         } else {
             $result = [
                 'success' => 0,
