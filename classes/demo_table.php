@@ -125,7 +125,7 @@ class demo_table extends wunderbyte_table {
      * @param string $data
      * @return array
      */
-    public function deleteitem(int $id, string $data):array {
+    public function action_deleteitem(int $id, string $data):array {
 
         return [
             'success' => 1,
@@ -140,7 +140,7 @@ class demo_table extends wunderbyte_table {
      * @param string $data
      * @return array
      */
-    public function additem(int $id, string $data):array {
+    public function action_additem(int $id, string $data):array {
 
         return [
             'success' => 1,
@@ -155,7 +155,7 @@ class demo_table extends wunderbyte_table {
      * @param string $data
      * @return array
      */
-    public function togglecheckbox(int $id, string $data):array {
+    public function action_togglecheckbox(int $id, string $data):array {
 
         $dataobject = json_decode($data);
         return [
