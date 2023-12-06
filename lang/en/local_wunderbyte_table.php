@@ -43,6 +43,9 @@ $string['downloadas'] = "Download table data as";
 
 $string['norecords'] = "No records found.";
 
+// Capabilities.
+$string['wunderbyte_table:canaccess'] = 'Can access Wunderbyte Table';
+
 // Caches.
 $string['cachedef_cachedfulltable'] = 'Cached full table';
 $string['cachedef_cachedrawdata'] = "Wunderbyte Table standard cache";
