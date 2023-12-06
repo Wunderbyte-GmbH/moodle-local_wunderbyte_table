@@ -75,7 +75,7 @@ class demo_table extends wunderbyte_table {
             'title' => 'Edit', // We be displayed when hovered over icon.
             'id' => $values->id.'-'.$this->uniqueid,
             'name' => $this->uniqueid.'-'.$values->id,
-            'methodname' => 'action_deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => true,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,
@@ -104,7 +104,7 @@ class demo_table extends wunderbyte_table {
             'iclass' => 'fa fa-edit', // Add an icon before the label.
             'id' => $values->id.'-'.$this->uniqueid,
             'name' => $this->uniqueid.'-'.$values->id,
-            'methodname' => 'action_togglecheckbox', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'togglecheckbox', // The method needs to be added to your child of wunderbyte_table class.
             'ischeckbox' => true,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,

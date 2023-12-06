@@ -134,7 +134,7 @@ You can also use actionbuttons in a column to treat the corresponding record.
             'title' => 'Edit', // Will be displayed when hovered over icon.
             'id' => $values->id.'-'.$this->uniqueid, // Access the data of the record.
             'name' => $this->uniqueid.'-'.$values->id,
-            'methodname' => 'action_deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
             'nomodal' => true,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,
