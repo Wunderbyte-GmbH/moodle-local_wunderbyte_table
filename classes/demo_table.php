@@ -90,7 +90,7 @@ class demo_table extends wunderbyte_table {
             'iclass' => 'fa fa-edit', // Add an icon before the label.
             'id' => $values->id.'-'.$this->uniqueid,
             'name' => $this->uniqueid.'-'.$values->id,
-            'methodname' => 'action_additem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'additem', // The method needs to be added to your child of wunderbyte_table class.
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,
                 'labelcolumn' => 'username',
