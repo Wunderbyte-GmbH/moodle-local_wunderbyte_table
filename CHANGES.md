@@ -1,3 +1,8 @@
+## Version 1.8.9 (2023120600)
+* Bugfix: Revert wrong "fixes" that actually broke the new security with "action_"-prefix.
+* Bugfix: Add missing capability strings.
+* Bugfix: Add "action_" to rownumberperpage function.
+
 ## Version 1.8.8 (2023120501)
 * Bugfix: Check "real" method names including "_action".
 * Bugfix: Fix behat.
