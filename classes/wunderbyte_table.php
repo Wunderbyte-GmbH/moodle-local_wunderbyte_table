@@ -1789,7 +1789,7 @@ class wunderbyte_table extends table_sql {
      * @param string $data
      * @return array
      */
-    public function rownumberperpage(int $id, string $data):array {
+    public function action_rownumberperpage(int $id, string $data):array {
 
         $jsonobject = json_decode($data);
         $this->pagesize = $jsonobject->numberofrowsselect;
