@@ -74,7 +74,15 @@ var lastsearchinputs = {};
 
       inputElement.dataset.initialized = true;
 
-      inputElement.addEventListener('keyup', () => {
+      inputElement.addEventListener('keyup', (e) => {
+
+        let minlenght = 2;
+        let timeout = 400;
+        // If Enter was pressed in searchfield, trigger search immediatly, without minimum length of input.
+        if (e.key == 'Enter') {
+          minlenght = 0;
+          timeout = 0;
+        }
 
         let now = Date.now();
 
@@ -82,11 +90,11 @@ var lastsearchinputs = {};
 
         setTimeout(() => {
 
-          const searchstring = getSearchInput(idstring);
+          const searchstring = getSearchInput(idstring, minlenght);
 
           // If the timevalue after the wait is the same as before, we didn't have another input.
           // we want to make sure we do no loading while we are waiting for the answer.
-          // And the iput string must be longr than 3.
+          // And the iput string must be longer than 3.
           if (lastsearchinputs[idstring] === now
               && searchstring !== null) {
 
@@ -105,7 +113,7 @@ var lastsearchinputs = {};
               searchstring);
 
           }
-        }, 400);
+        }, timeout);
 
         return;
       });
@@ -113,11 +121,12 @@ var lastsearchinputs = {};
 }
 
 /**
- * Function to read the searchstring from the input leement.
+ * Function to read the searchstring from the input element.
  * @param {*} idstring
+ * @param {int} minlenght
  * @returns {null|string}
  */
-export function getSearchInput(idstring) {
+export function getSearchInput(idstring, minlenght) {
 
   const inputElement = document.querySelector(".wunderbyte_table_container_" + idstring + ' input.search');
 
@@ -127,7 +136,7 @@ export function getSearchInput(idstring) {
 
     let searchstring = null;
 
-    if (inputElement.value.length > 2
+    if (inputElement.value.length > minlenght
         || inputElement.value.length === 0) {
       searchstring = inputElement.value;
     }
