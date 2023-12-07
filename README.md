@@ -28,6 +28,8 @@ If only a single table should be protected, you can use the requirecapability ke
 
     $table->requirecapability = 'local/myplugin:canaccess';
 
+Methods that should be called via the actionbutton functionality (webservice execute_action) must include the action_ prefix ie "action_deleterow". While the transmitted methodname is "deleterow", the actual method which will be called via the webservice is action_deleterow. This prevents any other method to be called than a method defined for this purpose.
+
 ## Multiple custom templates
 Wunderbyte Table comes with a responsive table template, but it can and should be overriden in your project. To do so, set in your instance of your extended class (eg $yourtable) the template to your proper template, like
 
@@ -75,7 +77,7 @@ You can add a number of action buttons to your table. If you combine them with "
     $mytable->addcheckbox = true;
     $mytable->actionbuttons[] = [
         'label' => get_string('deleterow', 'mod_myproject'), // Name of your action button.
-        'methodname' => 'deleterow', // The method needs to be added to your child of wunderbyte_table class.
+        'methodname' => 'deleterow', // The method needs to be added to your child of wunderbyte_table class including "action_" prefix ie action_deleterow.
         'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
             'id' => 'id'
         ]
@@ -134,7 +136,7 @@ You can also use actionbuttons in a column to treat the corresponding record.
             'title' => 'Edit', // Will be displayed when hovered over icon.
             'id' => $values->id.'-'.$this->uniqueid, // Access the data of the record.
             'name' => $this->uniqueid.'-'.$values->id,
-            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class.
+            'methodname' => 'deleteitem', // The method needs to be added to your child of wunderbyte_table class including "action_" prefix ie action_deleterow.
             'nomodal' => true,
             'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
                 'id' => $values->id,
