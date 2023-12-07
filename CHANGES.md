@@ -1,3 +1,9 @@
+## Version 1.9.0 (2023120700)
+* Improvement: Add Documentation about additional security "action_" methods.
+* Improvement: Toggle search immediately after enter key pressed.
+* Improvement: Update readme about search function enter key.
+* Improvement: Large A->Z sort icon, hamburger icon for filters.
+
 ## Version 1.8.9 (2023120600)
 * Bugfix: Revert wrong "fixes" that actually broke the new security with "action_"-prefix.
 * Bugfix: Add missing capability strings.
