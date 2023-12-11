@@ -1,3 +1,7 @@
+## Version 1.9.1 (2023121100)
+* Improvement: Styling of search and sort icons.
+* Bugfix: Normal size of sorting icon (A->Z).
+
 ## Version 1.9.0 (2023120700)
 * Improvement: Add Documentation about additional security "action_" methods.
 * Improvement: Toggle search immediately after enter key pressed.
