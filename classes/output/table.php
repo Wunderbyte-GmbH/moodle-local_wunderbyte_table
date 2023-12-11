@@ -570,7 +570,7 @@ class table implements renderable, templatable {
             $data['search'] = true;
             if ($CFG->version >= 2023042400) {
                 // Moodle 4.2 uses Fontawesome 6.
-                $data['searchiconclasses'] = 'fa-solid fa-magnifying-glass fa-xl mt-3';
+                $data['searchiconclasses'] = 'fa-solid fa-magnifying-glass wunderbyteTableSearchIcon';
             } else {
                 // For older versions, use Fontawesome 4.
                 $data['searchiconclasses'] = 'fa fa-search fa-xl mt-2';

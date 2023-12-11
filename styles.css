@@ -432,3 +432,13 @@
 .wunderbyteTableFilter .datepicker-input:hover {
     box-shadow: 0 0 1px 1px #77838f;
 }
+
+.wunderbyteTableSearchIcon {
+    padding-top: 7px;
+    padding-right: 5px;
+    font-size: 1.3em;
+}
+
+.wunderbyteTableSortIcon {
+    font-size: 1.2em;
+}
