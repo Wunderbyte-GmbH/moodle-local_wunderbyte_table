@@ -101,14 +101,14 @@ $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname
 
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
-$string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';
-$string['nmscns'] = 'NoModal, SingleCall, NoSelection';
-$string['ymmcns'] = '+Modal, MultipleCall, NoSelection';
-$string['ymscns'] = '+Modal, SingleCall, NoSelection';
-$string['nmmcys'] = 'NoModal, MultipleCall, Selection';
-$string['nmscys'] = 'NoModal, SingleCall, Selection';
-$string['ymmcys'] = '+Modal, MultipleCall, Selection';
-$string['ymscys'] = '+Modal, SingleCall, Selection';
+$string['nmmcns'] = 'Kein Modal, mehrere Requests, Keine Checkbox Auswahl';
+$string['nmscns'] = 'Kein Modal, ein Request, keine Checkbox Auswahl';
+$string['ymmcns'] = 'Modal, mehrere Requests, keine Checkbox Auswahl';
+$string['ymscns'] = 'Modal, ein Request, keine Checkbox Auswahl';
+$string['nmmcys'] = 'Kein Modal, mehrere Requests, Checkbox Auswahl';
+$string['nmscys'] = 'Kein Modal, ein Request, Checkbox Auswahl';
+$string['ymmcys'] = 'Modal, mehrere Requests, Checkbox Auswahl';
+$string['ymscys'] = 'Modal, ein Request, Checkbox Auswahl';
 
 $string['table1name'] = 'Demo Tabelle 1';
 $string['table2name'] = 'Demo Tabelle 2';
