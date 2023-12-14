@@ -296,20 +296,10 @@
     z-index: 200000;
 }
 
-@media (min-width: 768px) {
-    .pagelayout-standard #page.drawers .main-inner,
-    body.limitedwidth #page.drawers .main-inner {
-        max-width: 100%;
-    }
-}
-
 .wunderbyte-table-grid .list-group-item {
     box-shadow: 0 .5rem .937rem rgba(140, 152, 164, .1);
 }
 
-#entity-calendar {
-    max-height: 80vh;
-}
 .wunderbyte-table-grid .grid-entry {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr;
