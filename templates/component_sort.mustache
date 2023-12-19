@@ -50,16 +50,19 @@
 
 {{#cardsort}}
     <span class="wunderbyteTableSelect mr-3">
-        <a href="#" style="text-decoration: none;" title="changesortorder-{{uniqueid}}" class="changesortorder" aria-label="{{#str}} changesortorder, local_wunderbyte_table {{/str}}">
+        <a href="#" style="text-decoration: none;" title="changesortorder-{{uniqueid}}" class="changesortorder"
+            {{#sortdown}} aria-label="{{#str}} orderup, local_wunderbyte_table {{/str}}"{{/sortdown}}
+            {{#sortup}} aria-label="{{#str}} orderdown, local_wunderbyte_table {{/str}}"{{/sortup}}
+         >
             {{#sortdown}}
-                <i class="fa fa-sort-alpha-desc text-primary sortdown wunderbyteTableSortIcon" aria-label="{{#str}} orderup, local_wunderbyte_table {{/str}}"></i>
+                <i class="fa fa-sort-alpha-desc text-primary sortdown wunderbyteTableSortIcon"></i>
             {{/sortdown}}
             {{#sortup}}
-                <i class="fa fa-sort-alpha-asc text-primary sortup wunderbyteTableSortIcon" aria-label="{{#str}} orderdown, local_wunderbyte_table {{/str}}"></i>
+                <i class="fa fa-sort-alpha-asc text-primary sortup wunderbyteTableSortIcon"></i>
             {{/sortup}}
         </a>
-        <select class="sortcolumn" name="selectsortcolumn-{{uniqueid}}">
-            <option value="" aria-label="{{#str}} sortby, local_wunderbyte_table {{/str}}">{{#str}} sortby, local_wunderbyte_table {{/str}}</option>
+        <select class="sortcolumn" name="selectsortcolumn-{{uniqueid}}" aria-label="{{#str}} sortby, local_wunderbyte_table {{/str}}">
+            <option value="">{{#str}} sortby, local_wunderbyte_table {{/str}}</option>
             {{#options}}
                 <option value="{{sortid}}" {{selected}}>{{key}}</option>
             {{/options}}
