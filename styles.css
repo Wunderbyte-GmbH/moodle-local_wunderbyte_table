@@ -313,6 +313,9 @@
 .wunderbyteTableFilter .form-group .collapse {
     padding-left: 16px;
 }
+.wunderbyteTableFilter .filtertitle {
+    font-size: large;
+}
 .wunderbyteTableFilter ul {
     overflow-y: auto;
     /* Show all filters without scrollbar. */

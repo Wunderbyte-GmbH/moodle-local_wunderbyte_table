@@ -139,9 +139,8 @@
         {{#categories}}
     <div class="border mb-4">
         <div class="form-group m-0">
-        <h4 class="mb-0">
-        <button class="p-4 align-items-center collapse-accordion-toggle text-left {{collapsed}}" name="filterbtn-{{uniqueid}}"
-        data-toggle="collapse" href="#id_collapse_{{columnname}}" role="button"
+        <div class="p-4 align-items-center collapse-accordion-toggle text-left {{collapsed}}" title="filterbtn-{{uniqueid}}"
+        data-toggle="collapse" data-target="#id_collapse_{{columnname}}" role="button"
         {{#expanded}}
             aria-expanded="true"
         {{/expanded}}
@@ -166,8 +165,7 @@
 
                 </span>
             </div>
-        </button>
-        </h4>
+        </div>
         </div>
             <div class="collapse mt-2 {{show}}" id="id_collapse_{{columnname}}">
                 <input class="search form-control" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
