@@ -1,3 +1,11 @@
+## Version 1.9.3 (2023122000)
+* Improvement: Add class wbtablefilter-columnname to each filter-div, so we can hide them with CSS.
+* Bugfix: Fix some Github actions (mustache templates).
+
+## Version 1.9.2 (2023121400)
+* Bugfix: Localize Demo strings in German #38
+* Bugfix: Delete unneeded and conflicting CSS #34
+
 ## Version 1.9.1 (2023121100)
 * Improvement: Styling of search and sort icons.
 * Bugfix: Normal size of sorting icon (A->Z).
