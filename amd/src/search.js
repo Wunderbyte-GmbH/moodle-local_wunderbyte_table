@@ -27,6 +27,7 @@ import {getFilterObjects} from 'local_wunderbyte_table/filter';
 import {getSortSelection} from 'local_wunderbyte_table/sort';
 
 var lastsearchinputs = {};
+const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 2;
 
 /**
  * Render the checkboxes for the filer.
@@ -76,11 +77,11 @@ var lastsearchinputs = {};
 
       inputElement.addEventListener('keyup', (e) => {
 
-        let minlenght = 2;
+        let minlength = LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH;
         let timeout = 400;
         // If Enter was pressed in searchfield, trigger search immediatly, without minimum length of input.
         if (e.key == 'Enter') {
-          minlenght = 0;
+          minlength = 0;
           timeout = 0;
         }
 
@@ -90,7 +91,7 @@ var lastsearchinputs = {};
 
         setTimeout(() => {
 
-          const searchstring = getSearchInput(idstring, minlenght);
+          const searchstring = getSearchInput(idstring, minlength);
 
           // If the timevalue after the wait is the same as before, we didn't have another input.
           // we want to make sure we do no loading while we are waiting for the answer.
@@ -123,10 +124,10 @@ var lastsearchinputs = {};
 /**
  * Function to read the searchstring from the input element.
  * @param {*} idstring
- * @param {int} minlenght
+ * @param {int} minlength
  * @returns {null|string}
  */
-export function getSearchInput(idstring, minlenght) {
+export function getSearchInput(idstring, minlength = LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH) {
 
   const inputElement = document.querySelector(".wunderbyte_table_container_" + idstring + ' input.search');
 
@@ -136,7 +137,7 @@ export function getSearchInput(idstring, minlenght) {
 
     let searchstring = null;
 
-    if (inputElement.value.length > minlenght
+    if (inputElement.value.length > minlength
         || inputElement.value.length === 0) {
       searchstring = inputElement.value;
     }
