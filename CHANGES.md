@@ -1,3 +1,6 @@
+## Version 1.9.4 (2024010600)
+* Bugfix: Minlength implementation broke changing sites with textinput.
+
 ## Version 1.9.3 (2023122000)
 * Improvement: Add class wbtablefilter-columnname to each filter-div, so we can hide them with CSS.
 * Bugfix: Fix some Github actions (mustache templates).
