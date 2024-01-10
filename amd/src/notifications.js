@@ -35,6 +35,8 @@ export const showNotification = (message, type) => {
     setTimeout(() => {
         let notificationslist = document.querySelectorAll(SELECTORS.NOTIFICATION_LIST);
         const notificatonelement = notificationslist[notificationslist.length - 1];
-        notificatonelement.remove();
+        if (notificatonelement) {
+            notificatonelement.remove();
+        }
     }, 5000);
 };
