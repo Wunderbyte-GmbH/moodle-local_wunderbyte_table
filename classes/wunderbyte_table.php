@@ -783,80 +783,16 @@ class wunderbyte_table extends table_sql {
 
         global $CFG;
 
-        // We might run this function twice to generate the filter options.
-        // Therefore, we need to store the values we actually want to use temporary.
-        $setbackvalues = false;
+        // At this point, we need seperate the unfiltered sql and the filtered sql and create respective cachekeys.
+        // The sepearation of the sql is important because it allows us to distinguish ...
+        // ... between filtered and unfiltered calls.
+        // They will both use the same data for the filter, though.
+        filter::create_filter($this);
 
-        // First create hash of all relevant entries.
-        $sort = $this->get_sql_sort();
-        if ($sort) {
-            $sort = "ORDER BY $sort";
-        }
-
-        // If we haven't a filter json yet and we have filters defined as usepages is right now true...
-        // ... we set it for a moment to false.
-        // We do so because we need to get the whole table for once. We'll run the same function again twice...
-        // ... and the next time, the pagination will be applied.
-        if (isset($this->subcolumns['datafields'])
-            && !$this->filterjson
-            && (($this->use_pages == true) || $this->infinitescroll > 0) || !empty($this->sql->filter)) {
-
-            // For the caching to work over all pages, we need to set the currpage to null for the filter request.
-            // Else the hash value would not match and we would not have filtering of filterjson over the different pages.
-            $currpage = $this->currpage;
-            $usepages = $this->use_pages;
-
-            $this->use_pages = false;
-            $this->currpage = null;
-
-            $setbackvalues = true;
-        } else {
-            // If we don't cache, we need to set infinite scroll at this point.
-
-            // If we want to use infinite scroll, we need to fetch the current page.
-            // We use the same functionality as for just loading the page itself.
-            if ($this->infinitescroll > 0) {
-                $pagesize = $this->infinitescroll;
-                $this->use_pages = true;
-            }
-        }
-
-        // Create the query string including params.
-        $sql = "SELECT
-                {$this->sql->fields}
-                FROM {$this->sql->from}
-                WHERE {$this->sql->where}
-                {$sort}"
-                // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-                /* . json_encode($this->sql->params) */
-                . $pagesize
-                . $useinitialsbar
-                . $this->download
-                . $this->currpage
-                . $this->use_pages;
-
-        // We might run a truncated sql which does not use all the params.
-        // To use caching in this case, we need to exclude all params not used in this sql.
-        $params = $this->sql->params;
-
-        foreach ($params as $key => $value) {
-            // If the key is an int, we can't run this.
-            if (!is_int($key)) {
-                // We only exclude it when we are sure that it's really there.
-                if (!strpos($sql, ':'. $key . ' ')
-                    && !strpos($sql, ':'. $key . ')')
-                    && !strpos($sql, ':'. $key . PHP_EOL)) {
-                        unset($params[$key]);
-                }
-            }
-        }
-
-        $sql .= json_encode($params);
-        // We add the capability to the key to make sure no user with lesser capability can access data meant for higher access.
-        $sql .= $this->requirecapability ?? '';
-
-        // Now that we have the string, we hash it with a very fast method.
-        $cachekey = crc32($sql);
+        // Now we proceed to the actual sql query.
+        $filter = $this->sql->filter ?? '';
+        $this->sql->where .= " $filter ";
+        $cachekey = $this->create_cachekey();
 
         // And then we query our cache to see if we have it already.
         if ($this->cachecomponent && $this->rawcachename) {
@@ -925,48 +861,6 @@ class wunderbyte_table extends table_sql {
             // We have to reset the count sql.
             $this->set_count_sql(null, []);
         }
-
-        // We have stored the columns to filter in the subcolumn "datafields".
-        // If we have filters defines, we need to actually create a filter json.
-        // It might exist already in our DB. We have to create this from all data, without filter applied.
-
-        if (isset($this->subcolumns['datafields']) && !$this->filterjson) {
-
-            // We need to localize the filter for every user.
-            $lang = current_language();
-
-            $key = str_replace(' ', '', $this->uniqueid);
-            $key = $key . $cachekey . $lang . '_filterjson';
-
-            if (!$this->filterjson = $cache->get($key)) {
-                // Now we create the filter json from the unfiltered json.
-                $this->filterjson = $this->return_filterjson();
-                $cache->set($key, $this->filterjson);
-            }
-        }
-
-        // If we have chosen this value above, we want to run the code again.
-        // The first time, we got rawdata but it's without the filter applied.
-        // We still use it.
-        if ($setbackvalues) {
-
-            $this->sql->where .= $this->sql->filter ?? '';
-            // To avoid another run, we have to set filter to empty now.
-            $this->sql->filter = '';
-
-            $this->use_pages = $usepages ?? $this->use_pages; // We set back the old value.
-            $this->currpage = $currpage ?? $this->currpage;
-
-            // If we want to use infinite scroll, we need to fetch the current page.
-            // We use the same functionality as for just loading the page itself.
-            if ($this->infinitescroll > 0) {
-                $pagesize = $this->infinitescroll;
-                $this->use_pages = true;
-            }
-
-            $this->query_db_cached($pagesize, $useinitialsbar);
-
-        }
     }
 
     /**
@@ -978,254 +872,6 @@ class wunderbyte_table extends table_sql {
      */
     public function col_fullname($row) {
         return $row->fullname;
-    }
-
-    /**
-     * Returns a json for rendering the filter elements.
-     *
-     * @return string
-     */
-    public function return_filterjson() {
-
-        $filtercolumns = [];
-
-        // We have stored the columns to filter in the subcolumn "datafields".
-        if (!isset($this->subcolumns['datafields'])) {
-            return '';
-        }
-
-        // Here, we create the filter first like this:
-        // For every field we want to filter for, we look in our rawdata...
-        // ... to fetch all the available values once.
-        foreach ($this->subcolumns['datafields'] as $key => $value) {
-
-            // We won't generate a filter for the id column, but it will be present because we need it as dataset.
-
-            if (strtolower($key) == 'id') {
-                continue;
-            }
-
-            if (isset($value['datepicker'])) {
-                foreach ($this->rawdata as $row) {
-                    $row = (array)$row;
-                    if (!empty($row[$key])) {
-                        $filtercolumns[$key] = 'datepicker';
-                        continue;
-                    }
-                }
-                continue;
-            }
-
-            $filtercolumns[$key] = [];
-
-            foreach ($this->rawdata as $row) {
-
-                $row = (array)$row;
-
-                // Do not use empty(...) here because we want to show 0 values.
-                if (!isset($row[$key]) || $row[$key] === null || $row[$key] === '') {
-                    // Here the check if entries are set.
-                    continue;
-                }
-
-                if (!isset($filtercolumns[$key][$row[$key]])) {
-                    $filtercolumns[$key][$row[$key]] = true;
-                }
-            }
-        }
-
-        $filterjson = ['categories' => []];
-
-        foreach ($filtercolumns as $fckey => $values) {
-
-            // Special treatment for key localizedname.
-            if (isset($this->subcolumns['datafields'][$fckey]['localizedname'])) {
-                $localizedname = $this->subcolumns['datafields'][$fckey]['localizedname'];
-                unset($this->subcolumns['datafields'][$fckey]['localizedname']);
-            } else {
-                $localizedname = $fckey;
-            }
-
-            $categoryobject = [
-                'name' => $localizedname, // Localized name.
-                'columnname' => $fckey, // The column name.
-                'collapsed' => 'collapsed',
-            ];
-
-            if (is_string($values) && $values === 'datepicker') {
-
-                $datepickerarray = $this->subcolumns['datafields'][$fckey];
-
-                foreach ($datepickerarray['datepicker'] as $labelkey => $object) {
-
-                    if (!isset($object['columntimestart'])) {
-                        $defaulttimestamp = $datepickerarray['datepicker'][$labelkey]['defaultvalue'];
-
-                        $datepickerobject = [
-                            'label' => $labelkey,
-                            'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
-                            'timestamp' => $defaulttimestamp,
-                            'datereadable' => $defaulttimestamp === 'now' ? 'now' : date('Y-m-d', $defaulttimestamp),
-                            'timereadable' => $defaulttimestamp === 'now' ? 'now' : date('H:i', $defaulttimestamp),
-                            'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
-                        ];
-
-                    } else { // Inbetween Filter applied.
-                        // Prepare the array for output.
-                        if (empty($datepickerarray['datepicker'][$labelkey]['possibleoperations'])) {
-                            $datepickerarray['datepicker'][$labelkey]['possibleoperations'] =
-                                ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap'];
-                        }
-                        $operationsarray = array_map(fn($y) => [
-                            'operator' => $y,
-                            'label' => get_string($y, 'local_wunderbyte_table'),
-                        ], $datepickerarray['datepicker'][$labelkey]['possibleoperations']);
-
-                        $datepickerobject = [
-                            'label' => $labelkey,
-                            'startcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimestart'],
-                            'starttimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
-                            'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ?
-                                'now' : date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
-                            'starttimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ?
-                                'now' : date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
-                            'endcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimeend'],
-                            'endtimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
-                            'enddatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ?
-                                'now' : date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
-                            'endtimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ?
-                                'now' : date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
-                            'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
-                            'possibleoperations' => $operationsarray, // Array.
-                        ];
-                    }
-
-                    $categoryobject['datepicker']['datepickers'][] = $datepickerobject;
-                }
-
-            } else if (is_array($values)) {
-                // We might need to explode values, because of a multi-field.
-                if (isset($this->subcolumns['datafields'][$fckey]['explode'])
-                    || self::check_if_multi_customfield($fckey)) {
-
-                    // We run through the array of values and explode each item.
-                    foreach ($values as $keytoexplode => $valuetoexplode) {
-
-                        $separator = $this->subcolumns['datafields'][$fckey]['explode'] ?? ',';
-
-                        $explodedarray = explode($separator, $keytoexplode);
-
-                        // Only if we have more than one item, we unset key and insert all the new keys we got.
-                        if (count($explodedarray) > 1) {
-                            // Run through all the keys.
-                            foreach ($explodedarray as $explodeditem) {
-
-                                // Make sure we don't have any empty values.
-                                $explodeditem = trim($explodeditem);
-
-                                if (empty($explodeditem)) {
-                                    continue;
-                                }
-
-                                $values[$explodeditem] = true;
-                            }
-                            // We make sure the strings with more than one values are not treated anymore.
-                            unset($values[$keytoexplode]);
-                        }
-                    }
-
-                    unset($this->subcolumns['datafields'][$fckey]['explode']);
-                }
-
-                // If we have JSON, we need special treatment.
-                if (!empty($this->subcolumns['datafields'][$fckey]['jsonattribute'])) {
-                    $valuescopy = $values;
-                    $values = [];
-
-                    // We run through the array of values containing the JSON strings.
-                    foreach ($valuescopy as $jsonstring => $boolvalue) {
-                        // Convert into an array, so we can handle items with multiple objects.
-                        $jsonstring = '[' . $jsonstring . ']';
-                        $jsonarray = json_decode($jsonstring);
-
-                        foreach ($jsonarray as $jsonobj) {
-                            if (empty($jsonobj)) {
-                                continue;
-                            }
-                            // We only want to show the attribute of the JSON which is relevant for the filter.
-                            $searchattribute = $jsonobj->{$this->subcolumns['datafields'][$fckey]['jsonattribute']};
-                            $values[$searchattribute] = true;
-                        }
-                    }
-
-                    unset($this->subcolumns['datafields'][$fckey]['json']);
-                }
-
-                // We have to check if we have a sortarray for this filtercolumn.
-                if (isset($this->subcolumns['datafields'][$fckey])
-                            && count($this->subcolumns['datafields'][$fckey]) > 0) {
-
-                                    $sortarray = $this->subcolumns['datafields'][$fckey];
-                } else {
-                    $sortarray = null;
-                }
-
-                // First we create our sortedarray and add all values in the right order.
-                if ($sortarray != null) {
-                    $sortedarray = [];
-                    foreach ($sortarray as $sortkey => $sortvalue) {
-                        if (isset($values[$sortkey])) {
-                            $sortedarray[$sortvalue] = $sortkey;
-
-                            unset($values[$sortkey]);
-                        }
-                    }
-
-                    // Now we make sure we havent forgotten any values.
-                    // If so, we sort them and add them at the end.
-                    if (count($values) > 0) {
-                        // First sort the values first.
-                        ksort($values);
-
-                        foreach ($values as $unsortedkey => $unsortedvalue) {
-                            $sortedarray[$unsortedkey] = true;
-                        }
-                    }
-
-                    // Finally, we pass the sorted array to the values back.
-                    $values = $sortedarray;
-                }
-
-                foreach ($values as $valuekey => $valuevalue) {
-
-                    $itemobject = [
-                        // We do not want to show html entities, so replace &amp; with &.
-                        'key' => str_replace("&amp;", "&", $valuekey),
-                        'value' => $valuevalue === true ? $valuekey : $valuevalue,
-                        'category' => $fckey,
-                    ];
-
-                    $categoryobject['default']['values'][$valuekey] = $itemobject;
-                }
-
-                if (!isset($categoryobject['default']) || count($categoryobject['default']['values']) == 0) {
-                    continue;
-                }
-
-                if ($sortarray == null) {
-                    // If we didn't sort otherwise, we do it now.
-                    ksort($categoryobject['default']['values']);
-                }
-
-                // Make the arrays mustache ready, we have to jump through loops.
-                $categoryobject['default']['values'] = array_values($categoryobject['default']['values']);
-            }
-            $filterjson['categories'][] = $categoryobject;
-        }
-
-        // Check if filter display should be hidden on load.
-        $filterjson['filterinactive'] = $this->filteronloadinactive;
-        return json_encode($filterjson);
     }
 
     /**
@@ -1708,35 +1354,6 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
-     * Checks if a config shortname exists and if so, checks for configdata to see, if it's set to multi.
-     *
-     * @param string $columnname
-     * @return bool
-     */
-    private static function check_if_multi_customfield($columnname) {
-        global $DB;
-
-        $configmulti = $DB->sql_like('configdata', ":mcfparam1");
-        $params = [
-            'mcfparam1' => '%multiselect\":\"1\"%',
-            'mcfparam2' => $columnname,
-        ];
-
-        $likecolum = $DB->sql_equal('shortname', ':mcfparam2');
-
-        $sql = "SELECT id
-                FROM {customfield_field}
-                WHERE $likecolum
-                AND $configmulti";
-
-        if (!$DB->record_exists_sql($sql, $params)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Return an array of the count of the total records and the filtered records.
      *
      * @return array
@@ -1862,5 +1479,94 @@ class wunderbyte_table extends table_sql {
             }
         }
         return '\\';
+    }
+
+    /**
+     * Function to create cachekey.
+     * Every time we create a cachekey for an sql request...
+     * ... we will also check if the filter for this request is created.
+     * @param bool $useinitialsbar
+     * @param bool $forfilter
+     * @return string
+     */
+    public function create_cachekey(bool $forfilter = false, bool $useinitialsbar = true) {
+
+        // If we run this for filter, we need have a reduced set of values.
+        if ($forfilter) {
+            $usepages = true;
+            $sort = '';
+            $currpage = '';
+            $download = '';
+            $pagesize = '';
+        } else {
+
+            // First create hash of all relevant entries.
+            $sort = $this->get_sql_sort();
+            if ($sort) {
+                $sort = "ORDER BY $sort";
+            }
+
+            // If we want to use infinite scroll, we need to fetch the current page.
+            // We use the same functionality as for just loading the page itself.
+            if ($this->infinitescroll > 0) {
+                $pagesize = $this->infinitescroll;
+                $this->use_pages = true;
+                $usepages = true;
+            } else {
+                $pagesize = $this->pagesize;
+                $usepages = $this->use_pages;
+            }
+
+            $currpage = $this->currpage;
+            $download = $this->download;
+        }
+
+        // Create the query string including params.
+        $sql = "SELECT
+                {$this->sql->fields}
+                FROM {$this->sql->from}
+                WHERE {$this->sql->where}
+                {$sort}"
+                . ($usepages ? $pagesize : '')
+                . $useinitialsbar
+                . $download
+                . $currpage
+                . $usepages;
+
+        // We might run a truncated sql which does not use all the params.
+        // To use caching in this case, we need to exclude all params not used in this sql.
+        $params = $this->sql->params;
+
+        self::unset_unused_params_in_sql($sql, $params);
+
+        $sql .= json_encode($params);
+        // We add the capability to the key to make sure no user with lesser capability can access data meant for higher access.
+        $sql .= $this->requirecapability ?? '';
+
+        // Now that we have the string, we hash it with a very fast method.
+        $cachekey = crc32($sql);
+
+        return $cachekey;
+    }
+
+    /**
+     * Make sure only params which are actually needed are present in the array.
+     * @param string $sql
+     * @param array $params
+     * @return void
+     */
+    public static function unset_unused_params_in_sql(string $sql, array &$params) {
+
+        foreach ($params as $key => $value) {
+            // If the key is an int, we can't run this.
+            if (!is_int($key)) {
+                // We only exclude it when we are sure that it's really there.
+                if (!strpos($sql, ':'. $key . ' ')
+                    && !strpos($sql, ':'. $key . ')')
+                    && !strpos($sql, ':'. $key . PHP_EOL)) {
+                        unset($params[$key]);
+                }
+            }
+        }
     }
 }
