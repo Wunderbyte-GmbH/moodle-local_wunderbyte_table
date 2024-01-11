@@ -177,7 +177,7 @@
                         <li class="form-check">
                                 <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
                                 <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
-                                    {{key}} ({{count}})
+                                    {{key}} {{#count}}({{count}}){{/count}}
                                 </label>
                         </li>
                     {{/values}}
