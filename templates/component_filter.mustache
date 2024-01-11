@@ -62,12 +62,14 @@
             {
                 "value": "value4",
                 "key": "Value4",
-                "checked": ""
+                "checked": "",
+                "count": "8"
             },
             {
                 "value": "value5",
                 "key": "Value5",
-                "checked": "checked"
+                "checked": "checked",
+                "count": "5"
             }
             ],
             "datepicker": true,
@@ -175,7 +177,7 @@
                         <li class="form-check">
                                 <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
                                 <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
-                                    {{key}}
+                                    {{key}} ({{count}})
                                 </label>
                         </li>
                     {{/values}}

@@ -103,13 +103,13 @@ class filter {
             foreach ($rawdata as $row) {
 
                 // Do not use empty(...) here because we want to show 0 values.
-                if ($row === null || $row === '') {
+                if ($row->{$key} === null || $row->{$key} === '') {
                     // Here the check if entries are set.
                     continue;
                 }
 
-                if (!isset($filtercolumns[$key][$row])) {
-                    $filtercolumns[$key][$row] = true;
+                if (!isset($filtercolumns[$key][$row->{$key}])) {
+                    $filtercolumns[$key][$row->{$key}] = $row->count;
                 }
             }
         }
@@ -274,6 +274,8 @@ class filter {
 
                     // Finally, we pass the sorted array to the values back.
                     $values = $sortedarray;
+                } else {
+                    $values = array_combine(array_keys($values), array_keys($values));
                 }
 
                 foreach ($values as $valuekey => $valuevalue) {
@@ -282,6 +284,7 @@ class filter {
                         // We do not want to show html entities, so replace &amp; with &.
                         'key' => str_replace("&amp;", "&", $valuekey),
                         'value' => $valuevalue === true ? $valuekey : $valuevalue,
+                        'count' => $filtercolumns[$fckey][$valuevalue],
                         'category' => $fckey,
                     ];
 
@@ -347,11 +350,12 @@ class filter {
 
         global $DB;
 
-        $sql = " SELECT DISTINCT $key
+        $sql = " SELECT $key, COUNT($key)
                 FROM {$table->sql->from}
-                WHERE {$table->sql->where} ";
+                WHERE {$table->sql->where}
+                GROUP BY $key ";
 
-        $records = $DB->get_fieldset_sql($sql, $table->sql->params);
+        $records = $DB->get_records_sql($sql, $table->sql->params);
 
         return $records;
     }
