@@ -92,6 +92,7 @@ $string['timespan'] = 'Zeitspanne';
 $string['flexoverlap'] = 'überlappend mit';
 
 $string['change'] = 'Ändere';
+$string['hourlastmodified'] = 'Stunde, zu der zuletzt aktualisiert wurde';
 
 // Events.
 $string['table_viewed'] = 'Tabelle angesehen';

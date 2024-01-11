@@ -94,9 +94,12 @@ class filter {
             if (isset($value['datepicker'])) {
                 $filtercolumns[$key] = 'datepicker';
                 continue;
+            } else if (isset($value['hourlist'])) {
+                $filtercolumns[$key] = 'hourlist';
+                $rawdata = self::get_db_filter_column_hours($table, $key);
+            } else {
+                $rawdata = self::get_db_filter_column($table, $key);
             }
-
-            $rawdata = self::get_db_filter_column($table, $key);
 
             $filtercolumns[$key] = [];
 
@@ -284,9 +287,13 @@ class filter {
                         // We do not want to show html entities, so replace &amp; with &.
                         'key' => str_replace("&amp;", "&", $valuekey),
                         'value' => $valuevalue === true ? $valuekey : $valuevalue,
-                        'count' => $filtercolumns[$fckey][$valuevalue],
                         'category' => $fckey,
                     ];
+
+                    // Count may not be used, so we have an extra check.
+                    if (!empty($filtercolumns[$fckey][$valuevalue])) {
+                        $itemobject['count'] = $filtercolumns[$fckey][$valuevalue];
+                    }
 
                     $categoryobject['default']['values'][$valuekey] = $itemobject;
                 }
@@ -350,13 +357,71 @@ class filter {
 
         global $DB;
 
+        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         $sql = " SELECT $key, COUNT($key)
                 FROM {$table->sql->from}
-                WHERE {$table->sql->where}
+                WHERE {$table->sql->where} AND $key IS NOT NULL
                 GROUP BY $key ";
 
         $records = $DB->get_records_sql($sql, $table->sql->params);
 
         return $records;
+    }
+
+    /**
+     * Makes sql requests.
+     * @param wunderbyte_table $table
+     * @param string $key
+     * @return array
+     */
+    private static function get_db_filter_column_hours(wunderbyte_table $table, string $key) {
+
+        global $DB;
+
+        $databasetype = $DB->get_dbfamily();
+
+        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+        switch ($databasetype) {
+            case 'postgres':
+                $sql = "SELECT $key, COUNT($key)
+                        FROM ( SELECT EXTRACT(HOUR FROM TIMESTAMP 'epoch' + $key * interval '1 second') AS $key
+                        FROM {$table->sql->from}
+                        WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as hourss1
+                        GROUP BY $key ";
+                break;
+            default:
+                $sql = "SELECT $key, COUNT($key)
+                        FROM ( SELECT EXTRACT(HOUR FROM FROM_UNIXTIME($key)) AS $key
+                        FROM {$table->sql->from}
+                        WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as hourss1
+                        GROUP BY $key ";
+        }
+
+        $records = $DB->get_records_sql($sql, $table->sql->params);
+
+        return $records;
+    }
+
+    /**
+     * Apply the filter for postgres & mariadb DB.
+     * @param string $fieldname
+     * @param string $param
+     * @return string
+     */
+    public static function apply_hourlist_filter(string $fieldname, string $param) {
+        global $DB;
+
+        $databasetype = $DB->get_dbfamily();
+
+        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+        switch ($databasetype) {
+            case 'postgres':
+                $sql = " EXTRACT(HOUR FROM TIMESTAMP 'epoch' + $fieldname * interval '1 second') = $param";
+                break;
+            default:
+                $sql = " EXTRACT(HOUR FROM FROM_UNIXTIME($fieldname)) = $param";
+        }
+
+        return $sql;
     }
 }
