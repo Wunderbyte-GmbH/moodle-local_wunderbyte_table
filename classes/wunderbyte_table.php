@@ -1492,9 +1492,10 @@ class wunderbyte_table extends table_sql {
      * Function to create cachekey.
      * Every time we create a cachekey for an sql request...
      * ... we will also check if the filter for this request is created.
-     * @param bool $useinitialsbar
      * @param bool $forfilter
-     * @return string
+     * @param bool $useinitialsbar
+     * @return int
+     * @throws coding_exception
      */
     public function create_cachekey(bool $forfilter = false, bool $useinitialsbar = true) {
 

@@ -66,8 +66,9 @@ class filter {
 
     /**
      * Returns a json for rendering the filter elements.
-     *
+     * @param wunderbyte_table $table
      * @return string
+     * @throws dml_exception
      */
     public static function return_filterjson(wunderbyte_table $table) {
 
@@ -112,7 +113,7 @@ class filter {
                 }
 
                 if (!isset($filtercolumns[$key][$row->{$key}])) {
-                    $filtercolumns[$key][$row->{$key}] = $row->count;
+                    $filtercolumns[$key][$row->{$key}] = $row->count ?? true;
                 }
             }
         }
@@ -315,7 +316,8 @@ class filter {
 
         // Check if filter display should be hidden on load.
         $filterjson['filterinactive'] = $table->filteronloadinactive;
-        return json_encode($filterjson);
+        $encodedstring = json_encode($filterjson);
+        return $encodedstring ? $encodedstring : '';
     }
 
     /**
