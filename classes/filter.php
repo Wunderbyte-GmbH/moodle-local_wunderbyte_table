@@ -64,7 +64,6 @@ class filter {
                 // Todo: This can be relayed to an ad hoc task or delegated to an ajax call...
                 // ... to further improve performance.
                 $table->filterjson = self::return_filterjson($table);
-                // $table->totalrecords = self::count_db_filter_column($table);
                 $cache->set($key, $table->filterjson);
                 $cache->set($totalrecordskey, $table->totalrecords);
             }
