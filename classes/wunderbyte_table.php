@@ -63,7 +63,7 @@ class wunderbyte_table extends table_sql {
     /**
      * @var int number of total records found.
      */
-    private $totalrecords = 0;
+    public $totalrecords = 0;
 
     /**
      * @var string number of filtered records. We need to know if altered or just 0.
@@ -781,13 +781,18 @@ class wunderbyte_table extends table_sql {
      */
     public function query_db_cached($pagesize, $useinitialsbar=true) {
 
-        global $CFG;
+        global $CFG, $DB;
 
         // At this point, we need seperate the unfiltered sql and the filtered sql and create respective cachekeys.
         // The sepearation of the sql is important because it allows us to distinguish ...
         // ... between filtered and unfiltered calls.
         // They will both use the same data for the filter, though.
         filter::create_filter($this);
+
+        // We store our totalcountsql here, we might need it only later.
+        $totalcountsql = "SELECT COUNT(id)
+                         FROM {$this->sql->from}
+                         WHERE {$this->sql->where}";
 
         // Now we proceed to the actual sql query.
         $filter = $this->sql->filter ?? '';
@@ -810,6 +815,7 @@ class wunderbyte_table extends table_sql {
             $this->totalrows = $pagination['totalrows'];
             $this->currpage = $pagination['currpage'];
             $this->use_pages = $pagination['use_pages'];
+            $this->totalrecords = $pagination['totalrecords'];
         } else {
             // If not, we query as usual.
             try {
@@ -838,10 +844,13 @@ class wunderbyte_table extends table_sql {
                     $cache->set($cachekey, $this->rawdata);
                 }
 
+                $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
+
                 if (isset($this->use_pages)
                             && isset($this->pagesize)
                             && isset($this->totalrows)) {
                     $pagination['pagesize'] = $this->pagesize;
+                    $pagination['totalrecords'] = $this->totalrecords;
                     $pagination['totalrows'] = $this->totalrows;
                     $pagination['currpage'] = $this->currpage;
                     $pagination['use_pages'] = $this->use_pages;
@@ -850,17 +859,7 @@ class wunderbyte_table extends table_sql {
             }
         }
 
-        // We store the total number of records.
-        // In the first tour, totalrecords will aways be 0.
-        // If we filter, the second value will be lower or the same.
-        if ($this->totalrecords > 0) {
-            $this->filteredrecords = $this->totalrows;
-        } else {
-            $this->totalrecords = $this->totalrows;
-
-            // We have to reset the count sql.
-            $this->set_count_sql(null, []);
-        }
+        $this->filteredrecords = empty($filter) ? $this->totalrows : count($this->rawdata);
     }
 
     /**

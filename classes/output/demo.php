@@ -445,7 +445,7 @@ class demo implements renderable, templatable {
 
         $table->sort_default_column = 'fullname';
 
-        $table->set_filter_sql('*', "(SELECT * FROM {course} ORDER BY id ASC LIMIT 10) as s1", '1=1', '');
+        $table->set_filter_sql('*', "(SELECT * FROM {course} ORDER BY id ASC LIMIT 112) as s1", '1=1', '');
 
         $table->cardsort = true;
 

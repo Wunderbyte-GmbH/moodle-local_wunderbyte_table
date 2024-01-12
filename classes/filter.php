@@ -52,14 +52,21 @@ class filter {
             // This is the cachekey at a moment when sql->where and sql->filter are not yet joined.
             $cachekey = $table->create_cachekey(true);
             $key = $key . $cachekey . $lang . '_filterjson';
+            $totalrecordskey = $key . '_totalrecords';
 
             $cache = \cache::make($table->cachecomponent, $table->rawcachename);
-            if (!$table->filterjson = $cache->get($key)) {
+
+            // See if we have the filter json.
+            $table->filterjson = $cache->get($key);
+
+            if (!$table->filterjson) {
                 // Now we create the filter json from the unfiltered json.
                 // Todo: This can be relayed to an ad hoc task or delegated to an ajax call...
                 // ... to further improve performance.
                 $table->filterjson = self::return_filterjson($table);
+                // $table->totalrecords = self::count_db_filter_column($table);
                 $cache->set($key, $table->filterjson);
+                $cache->set($totalrecordskey, $table->totalrecords);
             }
         }
     }
