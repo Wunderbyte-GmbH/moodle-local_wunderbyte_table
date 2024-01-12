@@ -1,3 +1,6 @@
+## Version 1.9.6 (2024011201)
+* Bugfix: Automatic tests are running correctly
+
 ## Version 1.9.5 (2024011200)
 * Improvement: Filter generation in large tables is much faster and more efficient
 * Improvement: Filters now show a count of hits
