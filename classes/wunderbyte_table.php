@@ -1517,6 +1517,7 @@ class wunderbyte_table extends table_sql {
             // We use the same functionality as for just loading the page itself.
             if ($this->infinitescroll > 0) {
                 $pagesize = $this->infinitescroll;
+                $this->pagesize = $this->infinitescroll;
                 $this->use_pages = true;
                 $usepages = true;
             } else {
