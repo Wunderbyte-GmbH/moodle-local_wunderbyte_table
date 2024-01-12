@@ -1,3 +1,8 @@
+## Version 1.9.5 (2024011200)
+* Improvement: Filter generation in large tables is much faster and more efficient
+* Improvement: Filters now show a count of hits
+* Improvement: Hoursfilter: Full hours can be extracted from a unix timestamp in postgres, mysql & mariadb DBs
+
 ## Version 1.9.4 (2024010600)
 * Bugfix: Minlength implementation broke changing sites with textinput.
 

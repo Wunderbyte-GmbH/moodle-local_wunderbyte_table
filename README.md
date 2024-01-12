@@ -216,6 +216,46 @@ The possibleoperations array is containing a whitelist, if none specified, all a
 
 By default filters are displayed next to the table and can be hidden with the filterbutton. If you want them to be hidden on load, set filteronloadinactive = true in the instance of your table.
 
+The Hourslist filter can extract full hours from a unix timestamp and thus only show results which e.g. happened at a certain time. One example would be in mod_booking to show only courses which start at a given time (like 10:00 - 11:00).
+
+This only works with mariadb, mysql and postgres db.
+
+Example of a filter json for this:
+
+    $filtercolumns = [
+        'id' => [
+            'localizedname' => get_string('id', 'local_wunderbyte_table')
+        ],
+        'timemodified' => [ // Columns containing Unix timestamps can be filtered.
+            'localizedname' => get_string('hourlastmodified', 'local_wunderbyte_table'),
+            'hourlist' => true,
+            0  => '00:00 - 01:00',
+            1  => '01:00 - 02:00',
+            2  => '02:00 - 03:00',
+            3  => '03:00 - 04:00',
+            4  => '04:00 - 05:00',
+            5  => '05:00 - 06:00',
+            6  => '06:00 - 07:00',
+            7  => '07:00 - 08:00',
+            8  => '08:00 - 09:00',
+            9  => '09:00 - 10:00',
+            10 => '10:00 - 11:00',
+            11 => '11:00 - 12:00',
+            12 => '12:00 - 13:00',
+            13 => '13:00 - 14:00',
+            14 => '14:00 - 15:00',
+            15 => '15:00 - 16:00',
+            16 => '16:00 - 17:00',
+            17 => '17:00 - 18:00',
+            18 => '18:00 - 19:00',
+            19 => '19:00 - 20:00',
+            20 => '20:00 - 21:00',
+            21 => '21:00 - 22:00',
+            22 => '22:00 - 23:00',
+            23 => '23:00 - 00:00',
+        ],
+    ];
+
 ## Sorting
 
 If the output template you want to use doesn't support clickable headers to sort (eg because you use cards), you might want to use the sort select. Just add
