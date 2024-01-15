@@ -47,48 +47,46 @@ class filter {
 
             // We need to localize the filter for every user.
             $lang = current_language();
-            $key = '';
 
-            // This is the cachekey at a moment when sql->where and sql->filter are not yet joined.
-            $cachekey = $table->create_cachekey(true);
-            $key = $key . $cachekey . $lang . '_filterjson';
-            $totalrecordskey = $key . '_totalrecords';
+            $key = $table->idstring . $lang . '_filterjson';
 
-            $cache = \cache::make($table->cachecomponent, $table->rawcachename);
-
-            // See if we have the filter json.
-            $table->filterjson = $cache->get($key);
+            $table->filterjson = editfilter::get_userspecific_filterjson($table, $key);
 
             if (!$table->filterjson) {
                 // Now we create the filter json from the unfiltered json.
                 // Todo: This can be relayed to an ad hoc task or delegated to an ajax call...
                 // ... to further improve performance.
-                $table->filterjson = self::return_filterjson($table);
+                $table->filterjson = self::return_filterjson($table, $key);
+
+                // This needs to be moved below.
+                $cache = \cache::make($table->cachecomponent, $table->rawcachename);
                 $cache->set($key, $table->filterjson);
-                $cache->set($totalrecordskey, $table->totalrecords);
             }
         }
     }
 
+
     /**
      * Returns a json for rendering the filter elements.
      * @param wunderbyte_table $table
+     * @param string $cachekey
      * @return string
      * @throws dml_exception
      */
-    public static function return_filterjson(wunderbyte_table $table) {
+    public static function return_filterjson(wunderbyte_table $table, string $cachekey) {
 
         $filtercolumns = [];
 
-        // We have stored the columns to filter in the subcolumn "datafields".
-        if (!isset($table->subcolumns['datafields'])) {
-            return '';
+        $filtersettings = editfilter::return_filtersettings($table, $cachekey);
+
+        if (empty($filtersettings)) {
+            return;
         }
 
         // Here, we create the filter first like this:
         // For every field we want to filter for, we look in our rawdata...
         // ... to fetch all the available values once.
-        foreach ($table->subcolumns['datafields'] as $key => $value) {
+        foreach ($filtersettings as $key => $value) {
 
             // Instead of, like previously, fetching rawdata once and iterating multiple times over it, we make another sql.
             // We just use the distinct method.
@@ -129,9 +127,9 @@ class filter {
         foreach ($filtercolumns as $fckey => $values) {
 
             // Special treatment for key localizedname.
-            if (isset($table->subcolumns['datafields'][$fckey]['localizedname'])) {
-                $localizedname = $table->subcolumns['datafields'][$fckey]['localizedname'];
-                unset($table->subcolumns['datafields'][$fckey]['localizedname']);
+            if (isset($filtersettings[$fckey]['localizedname'])) {
+                $localizedname = $filtersettings[$fckey]['localizedname'];
+                unset($filtersettings[$fckey]['localizedname']);
             } else {
                 $localizedname = $fckey;
             }
@@ -144,7 +142,7 @@ class filter {
 
             if (is_string($values) && $values === 'datepicker') {
 
-                $datepickerarray = $table->subcolumns['datafields'][$fckey];
+                $datepickerarray = $filtersettings[$fckey];
 
                 foreach ($datepickerarray['datepicker'] as $labelkey => $object) {
 
@@ -195,13 +193,13 @@ class filter {
 
             } else if (is_array($values)) {
                 // We might need to explode values, because of a multi-field.
-                if (isset($table->subcolumns['datafields'][$fckey]['explode'])
+                if (isset($filtersettings[$fckey]['explode'])
                     || self::check_if_multi_customfield($fckey)) {
 
                     // We run through the array of values and explode each item.
                     foreach ($values as $keytoexplode => $valuetoexplode) {
 
-                        $separator = $table->subcolumns['datafields'][$fckey]['explode'] ?? ',';
+                        $separator = $filtersettings[$fckey]['explode'] ?? ',';
 
                         $explodedarray = explode($separator, $keytoexplode);
 
@@ -224,11 +222,11 @@ class filter {
                         }
                     }
 
-                    unset($table->subcolumns['datafields'][$fckey]['explode']);
+                    unset($filtersettings[$fckey]['explode']);
                 }
 
                 // If we have JSON, we need special treatment.
-                if (!empty($table->subcolumns['datafields'][$fckey]['jsonattribute'])) {
+                if (!empty($filtersettings[$fckey]['jsonattribute'])) {
                     $valuescopy = $values;
                     $values = [];
 
@@ -243,19 +241,19 @@ class filter {
                                 continue;
                             }
                             // We only want to show the attribute of the JSON which is relevant for the filter.
-                            $searchattribute = $jsonobj->{$table->subcolumns['datafields'][$fckey]['jsonattribute']};
+                            $searchattribute = $jsonobj->{$filtersettings[$fckey]['jsonattribute']};
                             $values[$searchattribute] = true;
                         }
                     }
 
-                    unset($table->subcolumns['datafields'][$fckey]['json']);
+                    unset($filtersettings[$fckey]['json']);
                 }
 
                 // We have to check if we have a sortarray for this filtercolumn.
-                if (isset($table->subcolumns['datafields'][$fckey])
-                            && count($table->subcolumns['datafields'][$fckey]) > 0) {
+                if (isset($filtersettings[$fckey])
+                            && count($filtersettings[$fckey]) > 0) {
 
-                                    $sortarray = $table->subcolumns['datafields'][$fckey];
+                                    $sortarray = $filtersettings[$fckey];
                 } else {
                     $sortarray = null;
                 }

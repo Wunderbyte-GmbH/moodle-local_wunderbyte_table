@@ -443,8 +443,6 @@ class wunderbyte_table extends table_sql {
         $this->pagesize = $pagesize;
         $this->setup();
 
-        $this->apply_filter_and_search_from_url();
-
         $encodedtable = $this->return_encoded_table();
 
         // First we query without the filter.
@@ -794,6 +792,9 @@ class wunderbyte_table extends table_sql {
                          FROM {$this->sql->from}
                          WHERE {$this->sql->where}";
 
+        // Apply filter and search text.
+        $this->apply_filter_and_search_from_url();
+
         // Now we proceed to the actual sql query.
         $filter = $this->sql->filter ?? '';
         $this->sql->where .= " $filter ";
@@ -847,6 +848,9 @@ class wunderbyte_table extends table_sql {
                 }
 
                 $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
+                $lang = current_language();
+                $totalrecordskey = $this->idstring . $lang . '_totalrecords';
+                $cache->set($totalrecordskey, $this->totalrecords);
 
                 if (isset($this->use_pages)
                             && isset($this->pagesize)
@@ -1557,6 +1561,26 @@ class wunderbyte_table extends table_sql {
         $cachekey = crc32($sql);
 
         return $cachekey;
+    }
+
+    /**
+     * This function replaces the given idstring with anotherone which is recreateable from the settings of the table class.
+     * This is useful when we have e.g. a table created via shortcodes. We don't know how many of them there will be.
+     * Random idstrings will not allow configurability, but hardcoding is not possible either.
+     * So we create the idstrings anew once we know the params and where they are created.
+     * @return void
+     */
+    public function recreateidstring() {
+
+        global $PAGE;
+        // This creates a hash from the sql settings.
+        $cachekey = $this->create_cachekey(true);
+
+        // We add to this the url of the page, where it appears.
+        $url = parse_url($PAGE->url, PHP_URL_PATH);
+        $idstring = md5($cachekey . $url);
+
+        $this->idstring = $idstring;
     }
 
     /**
