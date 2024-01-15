@@ -397,12 +397,20 @@ class filter {
                         WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as hourss1
                         GROUP BY $key ";
                 break;
-            default:
+            case 'mysql':
                 $sql = "SELECT $key, COUNT($key)
                         FROM ( SELECT EXTRACT(HOUR FROM FROM_UNIXTIME($key)) AS $key
                         FROM {$table->sql->from}
                         WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as hourss1
                         GROUP BY $key ";
+                break;
+            default:
+                $sql = '';
+                break;
+        }
+
+        if (empty($sql)) {
+            return [];
         }
 
         $records = $DB->get_records_sql($sql, $table->sql->params);
