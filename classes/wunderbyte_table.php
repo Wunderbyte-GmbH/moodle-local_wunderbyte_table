@@ -790,7 +790,7 @@ class wunderbyte_table extends table_sql {
         filter::create_filter($this);
 
         // We store our totalcountsql here, we might need it only later.
-        $totalcountsql = "SELECT COUNT(id)
+        $totalcountsql = "SELECT COUNT(*)
                          FROM {$this->sql->from}
                          WHERE {$this->sql->where}";
 
