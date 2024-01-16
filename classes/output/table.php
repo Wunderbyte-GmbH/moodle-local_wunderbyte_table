@@ -711,7 +711,7 @@ class table implements renderable, templatable {
      */
     private function applyfilterselection(wunderbyte_table $table) {
 
-        global $PAGE;
+        global $USER;
 
         // To be compatible with php 8.1.
         if (empty($table->filterjson)) {
@@ -726,8 +726,8 @@ class table implements renderable, templatable {
             return null;
         }
 
-        // We only need to run this, when we are not in webservice mode.
-        if ($PAGE->url === null) {
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            // Code is executed from an Ajax request.
             return null;
         }
 
