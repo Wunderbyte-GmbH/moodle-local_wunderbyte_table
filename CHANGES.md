@@ -1,3 +1,9 @@
+## Version 1.9.7 (2024011600)
+* Bugfix: Avoid error for not supported dbfamilies.
+* Bugfix: Totalcount could throw error because of ambigious columnname.
+* Bugfix: Set pages to correct values when infinite scroll is activated.
+* Bugfix: Fix behat test.
+
 ## Version 1.9.6 (2024011201)
 * Bugfix: Automatic tests are running correctly
 
