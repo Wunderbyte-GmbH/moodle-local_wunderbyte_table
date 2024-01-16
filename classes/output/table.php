@@ -711,8 +711,6 @@ class table implements renderable, templatable {
      */
     private function applyfilterselection(wunderbyte_table $table) {
 
-        global $USER;
-
         // To be compatible with php 8.1.
         if (empty($table->filterjson)) {
             return null;
@@ -723,11 +721,6 @@ class table implements renderable, templatable {
         $categories = json_decode($table->filterjson, true);
 
         if (!isset($categories['categories'])) {
-            return null;
-        }
-
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-            // Code is executed from an Ajax request.
             return null;
         }
 

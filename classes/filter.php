@@ -47,7 +47,7 @@ class filter {
 
             // We need to localize the filter for every user.
             $lang = current_language();
-            $key = str_replace(' ', '', $table->uniqueid);
+            $key = '';
 
             // This is the cachekey at a moment when sql->where and sql->filter are not yet joined.
             $cachekey = $table->create_cachekey(true);
