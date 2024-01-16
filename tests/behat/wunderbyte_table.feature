@@ -104,16 +104,16 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I follow "Demo table 4"
     # Ensure of available / not yet loaded records:
     And I should see "user12" in the "#demotable_4_r7" "css_element"
-    And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r13']" "xpath_element" should not exist
+    And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r16']" "xpath_element" should not exist
     ## Call pagedown twice to ensure actual bottom of page will be reached.
     And I press the pagedown key
     And I press the pagedown key
-    And I wait "3" seconds
-    And I should see "user19" in the "#demotable_4_r11" "css_element"
+    And I wait "1" seconds
+    And I should see "user19" in the "#demotable_4_r14" "css_element"
     ## Call pagedown twice to ensure actual bottom of page will be reached.
     And I press the pagedown key
     And I press the pagedown key
     # Ensure of available / not yet loaded records:
-    And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r13']" "xpath_element" should not exist
+    And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r16']" "xpath_element" should not exist
     And I wait "1" seconds
-    And I should see "user20" in the "#demotable_4_r13" "css_element"
+    And I should see "user20" in the "#demotable_4_r16" "css_element"
