@@ -797,7 +797,9 @@ class wunderbyte_table extends table_sql {
         // Now we proceed to the actual sql query.
         $filter = $this->sql->filter ?? '';
         $this->sql->where .= " $filter ";
+        $this->pagesize = $pagesize;
         $cachekey = $this->create_cachekey();
+        $pagesize = $this->pagesize;
 
         // And then we query our cache to see if we have it already.
         if ($this->cachecomponent && $this->rawcachename) {
@@ -1500,7 +1502,7 @@ class wunderbyte_table extends table_sql {
 
         // If we run this for filter, we need have a reduced set of values.
         if ($forfilter) {
-            $usepages = true;
+            $usepages = false;
             $sort = '';
             $currpage = '';
             $download = '';
