@@ -159,6 +159,13 @@ class table implements renderable, templatable {
     private $totalrecords = '';
 
     /**
+     * Total records.
+     *
+     * @var int
+     */
+    private $totalrows = '';
+
+    /**
      * Options data format
      *
      * @var array
@@ -267,6 +274,8 @@ class table implements renderable, templatable {
         $this->placebuttonandpageelementsontop = $table->placebuttonandpageelementsontop;
 
         $this->pagesize = $table->pagesize;
+
+        $this->totalrows = $table->totalrows;
 
         list($this->totalrecords, $this->filteredrecords) = $table->return_records_count();
 
@@ -547,7 +556,7 @@ class table implements renderable, templatable {
                 'local_wunderbyte_table',
                 (object)[
                     'totalrecords' => $this->totalrecords,
-                    'filteredrecords' => $this->filteredrecords,
+                    'filteredrecords' => $this->totalrows,
                 ]),
             'filtercount' => $this->filtercountstring,
             'searchtextapplied' => $this->search,
