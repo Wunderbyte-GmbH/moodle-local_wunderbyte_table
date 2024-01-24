@@ -394,6 +394,8 @@ class wunderbyte_table extends table_sql {
         $this->urlfilter = optional_param('wbtfilter', '', PARAM_TEXT);
         $this->urlsearch = optional_param('wbtsearch', '', PARAM_TEXT);
 
+        $this->recreateidstring();
+
         if (($this->urlfilter !== '' && !empty($this->urlfilter))
             || ($this->urlsearch !== '' && !empty($this->urlsearch))) {
             $tablecachehash = $this->return_encoded_table(true);
@@ -442,6 +444,8 @@ class wunderbyte_table extends table_sql {
 
         $this->pagesize = $pagesize;
         $this->setup();
+
+        $this->recreateidstring();
 
         $encodedtable = $this->return_encoded_table();
 
