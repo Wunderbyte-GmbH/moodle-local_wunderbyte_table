@@ -394,6 +394,8 @@ class wunderbyte_table extends table_sql {
         $this->urlfilter = optional_param('wbtfilter', '', PARAM_TEXT);
         $this->urlsearch = optional_param('wbtsearch', '', PARAM_TEXT);
 
+        $this->recreateidstring();
+
         if (($this->urlfilter !== '' && !empty($this->urlfilter))
             || ($this->urlsearch !== '' && !empty($this->urlsearch))) {
             $tablecachehash = $this->return_encoded_table(true);
@@ -443,7 +445,7 @@ class wunderbyte_table extends table_sql {
         $this->pagesize = $pagesize;
         $this->setup();
 
-        $this->apply_filter_and_search_from_url();
+        $this->recreateidstring();
 
         $encodedtable = $this->return_encoded_table();
 
@@ -794,6 +796,9 @@ class wunderbyte_table extends table_sql {
                          FROM {$this->sql->from}
                          WHERE {$this->sql->where}";
 
+        // Apply filter and search text.
+        $this->apply_filter_and_search_from_url();
+
         // Now we proceed to the actual sql query.
         $filter = $this->sql->filter ?? '';
         $this->sql->where .= " $filter ";
@@ -847,6 +852,9 @@ class wunderbyte_table extends table_sql {
                 }
 
                 $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
+                $lang = current_language();
+                $totalrecordskey = $this->idstring . $lang . '_totalrecords';
+                $cache->set($totalrecordskey, $this->totalrecords);
 
                 if (isset($this->use_pages)
                             && isset($this->pagesize)
@@ -1500,6 +1508,22 @@ class wunderbyte_table extends table_sql {
      */
     public function create_cachekey(bool $forfilter = false, bool $useinitialsbar = true) {
 
+        $sql = $this->get_sql_for_cachekey($forfilter, $useinitialsbar);
+
+        // Now that we have the string, we hash it with a very fast method.
+        $cachekey = crc32($sql);
+
+        return $cachekey;
+    }
+
+    /**
+     * Returns the sql to create the cachekey.
+     * @param bool $forfilter
+     * @param bool $useinitialsbar
+     * @return string
+     * @throws coding_exception
+     */
+    public function get_sql_for_cachekey(bool $forfilter = false, bool $useinitialsbar = true) {
         // If we run this for filter, we need have a reduced set of values.
         if ($forfilter) {
             $usepages = false;
@@ -1553,10 +1577,27 @@ class wunderbyte_table extends table_sql {
         // We add the capability to the key to make sure no user with lesser capability can access data meant for higher access.
         $sql .= $this->requirecapability ?? '';
 
-        // Now that we have the string, we hash it with a very fast method.
-        $cachekey = crc32($sql);
+        return $sql;
+    }
 
-        return $cachekey;
+    /**
+     * This function replaces the given idstring with anotherone which is recreateable from the settings of the table class.
+     * This is useful when we have e.g. a table created via shortcodes. We don't know how many of them there will be.
+     * Random idstrings will not allow configurability, but hardcoding is not possible either.
+     * So we create the idstrings anew once we know the params and where they are created.
+     * @return void
+     */
+    public function recreateidstring() {
+
+        global $PAGE;
+        // This creates a hash from the sql settings.
+        $cachekey = $this->create_cachekey(true);
+
+        // We add to this the url of the page, where it appears.
+        $url = parse_url($PAGE->url, PHP_URL_PATH);
+        $idstring = md5($cachekey . $url);
+
+        $this->idstring = $idstring;
     }
 
     /**

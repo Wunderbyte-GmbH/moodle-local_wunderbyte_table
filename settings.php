@@ -15,17 +15,26 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Plugin administration pages are defined here.
  *
  * @package     local_wunderbyte_table
- * @copyright   2023 Wunderbyte GmbH <info@wunderbyte.at>
+ * @category    admin
+ * @copyright   2022 Wunderbyte Gmbh <info@wunderbyte.at>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_wunderbyte_table';
-$plugin->release = '1.9.8';
-$plugin->version = 2024012404;
-$plugin->requires = 2020061500;
-$plugin->maturity = MATURITY_STABLE;
+$componentname = "local_wunderbyte_table";
+
+if ($hassiteconfig) {
+
+    // Add the category to the local plugin branch.
+    $settings = new admin_settingpage($componentname . '_settings', '');
+    $ADMIN->add('localplugins', new admin_category($componentname, get_string('pluginname', $componentname)));
+    $ADMIN->add($componentname, $settings);
+
+    $settings->add(
+        new admin_setting_configcheckbox('local_wunderbyte_table/savesettingstodb',
+            get_string('savesettingstodb', 'local_wunderbyte_table'), '', 0));
+}
