@@ -1,3 +1,6 @@
+## Version 1.9.9 (2024012405)
+* Improvement: New filter handling and new setting to store filter settings to DB. (#47)
+
 ## Version 1.9.8 (2024012400)
 * Bugfix: Correct display of filtered records on pages.
 
