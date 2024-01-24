@@ -255,8 +255,7 @@ class editfilter {
 
             case false:
                 // If user specific key did not exist, we still need to look in the DB.
-
-                if (!empty(get_config('local_wunderbyte_table', 'savesettingstodb'))
+                if (get_config('local_wunderbyte_table', 'savesettingstodb')
                     && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => $USER->id])) {
                     // If the key doesn't exist, it returns false. If only the key exists...
                     // ... it returns null.

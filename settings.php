@@ -36,5 +36,5 @@ if ($hassiteconfig) {
 
     $settings->add(
         new admin_setting_configcheckbox('local_wunderbyte_table/savesettingstodb',
-            get_string('savesettingstodb', 'local_wunderbyte_table'), '', 1));
+            get_string('savesettingstodb', 'local_wunderbyte_table'), '', 0));
 }

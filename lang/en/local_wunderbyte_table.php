@@ -104,7 +104,7 @@ $string['action_executed'] = 'Action executed';
 $string['action_executed_desc'] = 'The user executed an action "{$a->methodname}" on the table "{$a->tablename}"';
 
 // Settings.
-$string['savesettingstodb'] = 'Saves settings to db';
+$string['savesettingstodb'] = 'Save Wunderbyte Table settings to db';
 
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
