@@ -204,11 +204,16 @@ class editfilter {
                 $filtersettings = json_decode($jsonstring, true);
             } else {
                 // We have stored the columns to filter in the subcolumn "datafields".
-                if (!isset($table->subcolumns['datafields'])
-                    || empty(get_config('local_wunderbyte_table', 'savesettingstodb'))) {
+                if (!isset($table->subcolumns['datafields'])) {
                     return '';
                 }
                 $filtersettings = $table->subcolumns['datafields'];
+
+                // We return the filtersettings right away.
+                if (empty(get_config('local_wunderbyte_table', 'savesettingstodb'))) {
+                    return $filtersettings;
+                }
+
                 $sql = $table->get_sql_for_cachekey(true);
 
                 // For testing, we save the filter settings at this point.
