@@ -34,7 +34,7 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2024011701) {
+    if ($oldversion < 2024012403) {
 
         // Define table wunderbyte_table_settings to be created.
         $table = new xmldb_table('local_wunderbyte_table');
@@ -43,7 +43,9 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('hash', XMLDB_TYPE_CHAR, '255', null, null, null, null);
         $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('page', XMLDB_TYPE_CHAR, '255', null, null, null, null);
         $table->add_field('jsonstring', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('sql', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('usermodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
@@ -66,7 +68,7 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
         }
 
         // Wunderbyte_table savepoint reached.
-        upgrade_plugin_savepoint(true, 2024011701, 'local', 'wunderbyte_table');
+        upgrade_plugin_savepoint(true, 2024012403, 'local', 'wunderbyte_table');
     }
 
     // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.

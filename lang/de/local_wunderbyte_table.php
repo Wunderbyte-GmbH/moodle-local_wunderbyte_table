@@ -100,6 +100,9 @@ $string['table_viewed_desc'] = 'Die NutzerIn hat folgende Tabelle angesehen: "{$
 $string['action_executed'] = 'Aktion ausgeführt';
 $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname}" in der folgenden Tabelle ausgeführt: "{$a->tablename}"';
 
+// Settings.
+$string['savesettingstodb'] = 'Speichere Einstellungen in der Datenbank';
+
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
 $string['nmmcns'] = 'Kein Modal, mehrere Requests, Keine Checkbox Auswahl';

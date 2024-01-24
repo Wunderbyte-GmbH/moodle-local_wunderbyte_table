@@ -1504,6 +1504,22 @@ class wunderbyte_table extends table_sql {
      */
     public function create_cachekey(bool $forfilter = false, bool $useinitialsbar = true) {
 
+        $sql = $this->get_sql_for_cachekey($forfilter, $useinitialsbar);
+
+        // Now that we have the string, we hash it with a very fast method.
+        $cachekey = crc32($sql);
+
+        return $cachekey;
+    }
+
+    /**
+     * Returns the sql to create the cachekey.
+     * @param bool $forfilter
+     * @param bool $useinitialsbar
+     * @return string
+     * @throws coding_exception
+     */
+    public function get_sql_for_cachekey(bool $forfilter = false, bool $useinitialsbar = true) {
         // If we run this for filter, we need have a reduced set of values.
         if ($forfilter) {
             $usepages = false;
@@ -1557,10 +1573,7 @@ class wunderbyte_table extends table_sql {
         // We add the capability to the key to make sure no user with lesser capability can access data meant for higher access.
         $sql .= $this->requirecapability ?? '';
 
-        // Now that we have the string, we hash it with a very fast method.
-        $cachekey = crc32($sql);
-
-        return $cachekey;
+        return $sql;
     }
 
     /**
