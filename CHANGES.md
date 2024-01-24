@@ -1,3 +1,6 @@
+## Version 1.9.8 (2024012400)
+* Bugfix: Correct display of filtered records on pages.
+
 ## Version 1.9.7 (2024011600)
 * Bugfix: Avoid error for not supported dbfamilies.
 * Bugfix: Totalcount could throw error because of ambigious columnname.
