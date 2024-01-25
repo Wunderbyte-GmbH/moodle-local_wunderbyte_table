@@ -257,7 +257,6 @@ class editfilter {
         $filterjson = $cache->get($userspecifickey);
 
         switch ($filterjson) {
-
             case false:
                 // If user specific key did not exist, we still need to look in the DB.
                 if (get_config('local_wunderbyte_table', 'savesettingstodb')
@@ -269,9 +268,8 @@ class editfilter {
                 }
 
                 $filterjson = $cache->get($cachekey);
-            case false:
-                // If general filter key did not exist, we return false.
-                return false;
+                break;
+            // TODO: There will be an additional case with null for user-specific keys.
         }
 
         return $filterjson;
