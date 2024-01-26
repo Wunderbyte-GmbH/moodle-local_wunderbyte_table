@@ -179,10 +179,8 @@ class editfilter {
         // What we don't know yet is if this userfilter exists in DB. But we have checked that before.
         // And we can get the information from cache.
 
-        $cache = cache::make($table->cachecomponent, $table->rawcachename);
-
         $userspecifickey = $cachekey . '_' . $USER->id;
-        $cache = \cache::make($table->cachecomponent, $table->rawcachename);
+        $cache = cache::make($table->cachecomponent, $table->rawcachename);
         $filterjson = $cache->get($userspecifickey);
 
         $filtersettings = [];
