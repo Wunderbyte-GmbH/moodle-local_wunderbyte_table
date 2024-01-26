@@ -8,6 +8,8 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Id"/>
                 <FIELD NAME="hash" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="tablehash" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="idstring" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="page" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="jsonstring" TYPE="text" NOTNULL="false" SEQUENCE="false"/>

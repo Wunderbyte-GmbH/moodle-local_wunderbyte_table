@@ -394,8 +394,6 @@ class wunderbyte_table extends table_sql {
         $this->urlfilter = optional_param('wbtfilter', '', PARAM_TEXT);
         $this->urlsearch = optional_param('wbtsearch', '', PARAM_TEXT);
 
-        $this->recreateidstring();
-
         if (($this->urlfilter !== '' && !empty($this->urlfilter))
             || ($this->urlsearch !== '' && !empty($this->urlsearch))) {
             $tablecachehash = $this->return_encoded_table(true);
@@ -1594,7 +1592,7 @@ class wunderbyte_table extends table_sql {
         $cachekey = $this->create_cachekey(true);
 
         // We add to this the url of the page, where it appears.
-        $url = parse_url($PAGE->url, PHP_URL_PATH);
+        $url = $PAGE->url->out();
         $idstring = md5($cachekey . $url);
 
         $this->idstring = $idstring;

@@ -219,6 +219,8 @@ class editfilter {
                 $now = time();
                 $data = (object)[
                     'hash' => $cachekey,
+                    'tablehash' => $table->tablecachehash,
+                    'idstring' => $table->idstring,
                     'userid' => 0,
                     'page' => $url,
                     'jsonstring' => json_encode($filtersettings),
