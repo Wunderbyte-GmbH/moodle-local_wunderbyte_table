@@ -18,14 +18,14 @@
  * Plugin version and other meta-data are defined here.
  *
  * @package     local_wunderbyte_table
- * @copyright   2023 Wunderbyte GmbH <info@wunderbyte.at>
+ * @copyright   Wunderbyte GmbH <info@wunderbyte.at>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_wunderbyte_table';
-$plugin->release = '1.9.9';
-$plugin->version = 2024012501;
+$plugin->release = '1.9.10';
+$plugin->version = 2024012900;
 $plugin->requires = 2020061500;
 $plugin->maturity = MATURITY_STABLE;

@@ -1,3 +1,7 @@
+## Version 1.9.10 (2024012900)
+* Improvement: Add more fields to WB table for better debugging.
+* Bugfix: Fix switch statement in edit filter.
+
 ## Version 1.9.9 (2024012405)
 * Improvement: New filter handling and new setting to store filter settings to DB. (#47)
 
