@@ -36,11 +36,13 @@ class weekdays extends base {
      * @param string $columnidentifier
      * @param string $localizedstring
      * @param string $secondcolumnidentifier
+     * @param string $secondcolumnlocalized
      * @return void
      */
     public function __construct(string $columnidentifier,
                                 string $localizedstring = '',
-                                string $secondcolumnidentifier = '') {
+                                string $secondcolumnidentifier = '',
+                                string $secondcolumnlocalized = '') {
 
         $this->options = [
             'monday' => get_string('monday', 'mod_booking'),
@@ -55,7 +57,7 @@ class weekdays extends base {
         $this->columnidentifier = $columnidentifier;
         $this->localizedstring = empty($localizedstring) ? $columnidentifier : $localizedstring;
         $this->secondcolumnidentifier = $secondcolumnidentifier;
-
+        $this->secondcolumnlocalized = empty($secondcolumnlocalized) ? $secondcolumnidentifier : $secondcolumnlocalized;
     }
 
     /**
@@ -70,6 +72,13 @@ class weekdays extends base {
 
         $options['localizedname'] = $this->localizedstring;
         $options[get_class($this)] = true;
+
+        // We always need to make sure that id column is present.
+        if (!isset($filter['id'])) {
+            $filter['id'] = [
+                'localizedname' => get_string('id', 'local_wunderbyte_table')
+            ];
+        }
 
         if (!isset($filter[$this->columnidentifier])) {
             $filter[$this->columnidentifier] = $options;

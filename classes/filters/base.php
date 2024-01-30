@@ -50,6 +50,11 @@ abstract class base {
     protected string $secondcolumnidentifier = '';
 
     /**
+     * @var string secondcolumnidentifier
+     */
+    protected string $secondcolumnlocalized = '';
+
+    /**
      * Options are there to sort or localize filter results.
      * @var array
      */
@@ -60,16 +65,18 @@ abstract class base {
      * @param string $columnidentifier
      * @param string $localizedstring
      * @param string $secondcolumnidentifier
+     * @param string $secondcolumnlocalized
      * @return void
      */
     public function __construct(string $columnidentifier,
                                 string $localizedstring = '',
-                                string $secondcolumnidentifier = '') {
+                                string $secondcolumnidentifier = '',
+                                string $secondcolumnlocalized = '') {
 
         $this->columnidentifier = $columnidentifier;
         $this->localizedstring = empty($localizedstring) ? $columnidentifier : $localizedstring;
         $this->secondcolumnidentifier = $secondcolumnidentifier;
-
+        $this->secondcolumnlocalized = empty($secondcolumnlocalized) ? $secondcolumnidentifier : $secondcolumnlocalized;
     }
 
 
@@ -100,6 +107,13 @@ abstract class base {
         $options = $this->options;
 
         $options['localizedname'] = $this->localizedstring;
+
+        // We always need to make sure that id column is present.
+        if (!isset($filter['id'])) {
+            $filter['id'] = [
+                'localizedname' => get_string('id', 'local_wunderbyte_table')
+            ];
+        }
 
         if (!isset($filter[$this->columnidentifier])) {
             $filter[$this->columnidentifier] = $options;

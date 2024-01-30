@@ -27,7 +27,9 @@
 namespace local_wunderbyte_table\output;
 
 use local_wunderbyte_table\demo_table;
+use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\hourlist;
+use local_wunderbyte_table\filters\types\standardfilter;
 use renderable;
 use renderer_base;
 use templatable;
@@ -120,23 +122,19 @@ class demo implements renderable, templatable {
         // $table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
         // $table->set_tableclass('cardbodyclass', 'card-body row');
 
-        $filtercolumns = [
-            'id' => [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
-            ],
-            'username' => [
-                'localizedname' => get_string('username')
-            ],
-            'firstname' => [
-                'localizedname' => get_string('firstname')
-            ],
-            'lastname' => [
-                'localizedname' => get_string('lastname')
-            ],
-            'email' => [
-                'localizedname' => get_string('email')
-            ],
-        ];
+        $filtercolumns = [];
+
+        $standardfilter = new standardfilter('username', get_string('username'));
+        $standardfilter->add_filter($filtercolumns);
+
+        $standardfilter = new standardfilter('firstname', get_string('firstname'));
+        $standardfilter->add_filter($filtercolumns);
+
+        $standardfilter = new standardfilter('lastname', get_string('lastname'));
+        $standardfilter->add_filter($filtercolumns);
+
+        $standardfilter = new standardfilter('email', get_string('email'));
+        $standardfilter->add_filter($filtercolumns);
 
         $hourslistfilter = new hourlist('timemodified', get_string('hourlastmodified', 'local_wunderbyte_table'));
         $hourslistfilter->add_filter($filtercolumns);
@@ -370,30 +368,11 @@ class demo implements renderable, templatable {
         ];
 
         $filtercolumns = [
-            'id' => [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
-            ],
-            'fullname' => [
-                'localizedname' => get_string('fullname')
-            ],
-            'shortname' =>  [
-                'localizedname' => get_string('shortname')
-            ],
-            'enddate' => [ // Columns containing Unix timestamps can be filtered.
-                'localizedname' => get_string('enddate'),
-                'datepicker' => [
-                    'label' => [ // Can be localized and like "Courses starting after:".
-                        'operator' => '<',
-                        'defaultvalue' => '1680130800', // Can also be string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the filter checkbox (ie 'apply filter').
-                    ]
-                ]
-            ],
             'startdate' => [
                 'localizedname' => get_string('timespan', 'local_wunderbyte_table'),
 
                 'datepicker' => [
-                    'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
+                    'in between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
                         'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap'], // Will be displayed in select to choose from.
                         'columntimestart' => 'startdate', // Columnname as is DB query with lower value. Column has to be defined in $table->define_columns().
                         'columntimeend' => 'enddate', // Columnname as is DB query with higher value. Column has to be defined in $table->define_columns().
@@ -407,6 +386,39 @@ class demo implements renderable, templatable {
 
             ],
         ];
+
+        $filtercolumns = [];
+
+        $standardfilter = new standardfilter('fullname', get_string('fullname'));
+        $standardfilter->add_filter($filtercolumns);
+
+        $standardfilter = new standardfilter('shortname', get_string('shortname'));
+        $standardfilter->add_filter($filtercolumns);
+
+        $datepicker = new datepicker('enddate', get_string('enddate'));
+        // For the datepicker, we need to add special options.
+        $datepicker->add_options(
+            'standard',
+            '<',
+            get_string('apply_filter', 'local_wunderbyte_table'),
+            'now',
+        );
+        $datepicker->add_filter($filtercolumns);
+
+        $datepicker = new datepicker(
+            'startdate',
+            get_string('timespan', 'local_wunderbyte_table'),
+            'enddate'
+        );
+        // For the datepicker, we need to add special options.
+        $datepicker->add_options(
+            'in between',
+            '<',
+            get_string('apply_filter', 'local_wunderbyte_table'),
+            'now',
+            'now'
+        );
+        $datepicker->add_filter($filtercolumns);
 
         $fulltextsearchcolumns = $filtercolumns;
         array_shift($fulltextsearchcolumns);

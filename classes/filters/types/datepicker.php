@@ -24,11 +24,24 @@
 
 namespace local_wunderbyte_table\filters\types;
 use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\wunderbyte_table;
+use moodle_exception;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
 class datepicker extends base {
+
+    /**
+     * Get standard filter options.
+     * @param wunderbyte_table $table
+     * @param string $key
+     * @return array
+     */
+    public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
+
+        return [];
+    }
 
     /**
      * Add the filter to the array.
@@ -41,7 +54,15 @@ class datepicker extends base {
         $options = [
             'localizedname' => $this->localizedstring,
             get_class($this) => true,
+            'datepicker' => $this->options,
         ];
+
+        // We always need to make sure that id column is present.
+        if (!isset($filter['id'])) {
+            $filter['id'] = [
+                'localizedname' => get_string('id', 'local_wunderbyte_table')
+            ];
+        }
 
         if (!isset($filter[$this->columnidentifier])) {
             $filter[$this->columnidentifier] = $options;
@@ -53,6 +74,53 @@ class datepicker extends base {
                 $this->columnidentifier,
                 'Every column can have only one filter applied');
         }
+    }
+
+    public function add_options(
+        string $type = 'standard',
+        string $operator = '<',
+        string $checkboxlabel = '',
+        string $defaultvaluestart = '',
+        string $defaultvalueend = '',
+        array $possibleoperations = [
+            'within',
+            'overlapboth',
+            'overlapstart',
+            'overlapend',
+            'before',
+            'after',
+            'flexoverlap'
+        ]) {
+
+        if (!in_array($operator, ['=', '<', '>', '<=', '>='])) {
+            throw new moodle_exception('novalidoperator', 'local_wunderbyte_table');
+        }
+
+        $filter = [
+            'checkboxlabel' => !empty($checkboxlabel) ? $checkboxlabel : get_string('apply_filter', 'local_wunderbyte_table'),
+        ];
+
+        switch ($type) {
+            case 'standard':
+                $filter['operator'] = $operator;
+                $filter['defaultvalue'] = !empty($defaultvaluestart) ? $defaultvaluestart : 'now';
+                break;
+            case 'in between':
+
+                $filter['columntimestart'] = $this->columnidentifier;
+                $filter['columntimeend'] = $this->secondcolumnidentifier;
+                $filter['labelstartvalue'] = $this->localizedstring;
+                $filter['labelendvalue'] = $this->secondcolumnlocalized;
+                $filter['defaultvaluestart'] = $defaultvaluestart;
+                $filter['defaultvalueend'] = $defaultvalueend;
+                $filter['possibleoperations'] = $possibleoperations;
+
+                break;
+            default:
+                throw new moodle_exception('unsupportedfiltertype', 'local_wunderbyte_table');
+        }
+
+        $this->options[$this->localizedstring] = $filter;
     }
 
     /**
@@ -67,7 +135,7 @@ class datepicker extends base {
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
 
-        if (!is_string($values) && $values !== get_called_class()) {
+        if (!isset($filtersettings[$fckey][get_called_class()])) {
             return;
         }
 
@@ -116,7 +184,7 @@ class datepicker extends base {
                     'possibleoperations' => $operationsarray, // Array.
                 ];
             }
-            $categoryobject['datepicker']['datepickers'] = $datepickerobject;
+            $categoryobject['datepicker']['datepickers'][] = $datepickerobject;
         }
     }
 }
