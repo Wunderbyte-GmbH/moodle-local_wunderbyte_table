@@ -65,6 +65,7 @@ class wunderbyte_table extends table_sql {
      * @var string Id of this table.
      */
     public $idstring = '';
+
     /**
      * @var string classname of possible subclass.
      */
@@ -1244,7 +1245,7 @@ class wunderbyte_table extends table_sql {
                     } else if (is_numeric($value)) {
 
                         // Here we check if it's an hourslist filter.
-                        if (isset($this->subcolumns['datafields'][$categorykey]['hourlist'])) {
+                        if (isset($this->subcolumns['datafields'][$categorykey]['local_wunderbyte_table\filters\types\hourlist'])) {
                             $filter .= filter::apply_hourlist_filter($categorykey, ":$paramsvaluekey");
                             $this->sql->params[$paramsvaluekey] = "". $value;
                         } else {
