@@ -40,13 +40,10 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
-    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
-    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-17"
-    And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlap"
-    ## And I set the following fields to these values:
-    ##  | date-startdate | ## 18 days ago ## |
-    ##  | date-enddate | ## 12 days ago ## |
-    ##  | Display records | overlap |
+    ## Actual dates falls to 13/05/2022 and 17/05/2022 (and should be such for test logic)
+    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "14-05-2022"
+    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "18-05-2022"
+    And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlapping"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
     Then I should see "Course 1" in the "#demotable_2_r1" "css_element"
@@ -118,16 +115,18 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
-    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
-    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-20"
+    ## Actual dates falls to 13/05/2022 and 20/05/2022 (and should be such for test logic)
+    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "14-05-2022"
+    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "21-05-2022"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlapping beginning"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
     Then I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
-    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-13"
-    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-20"
+    ## Actual dates falls to 13/05/2022 and 20/05/2022 (and should be such for test logic)
+    And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "14-05-2023"
+    And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "21-05-2023"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
     Then I should see "Course 2" in the "#demotable_2_r1" "css_element"
