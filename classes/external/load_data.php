@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This class contains a list of webservice functions related to the catquiz Module by Wunderbyte.
+ * This class contains a list of webservice functions related to Wunderbyte Table.
  *
  * @package    local_wunderbyte_table
  * @copyright  2023 Wunderbyte GmbH
