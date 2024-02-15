@@ -73,6 +73,21 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024012501, 'local', 'wunderbyte_table');
     }
 
+    if ($oldversion < 2024021501) {
+
+        // Define field count to be added to local_wunderbyte_table.
+        $table = new xmldb_table('local_wunderbyte_table');
+        $field = new xmldb_field('count', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'timemodified');
+
+        // Conditionally launch add field count.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Wunderbyte_table savepoint reached.
+        upgrade_plugin_savepoint(true, 2024021501, 'local', 'wunderbyte_table');
+    }
+
     // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
     //
     // You will also have to create the db/install.xml file by using the XMLDB Editor.

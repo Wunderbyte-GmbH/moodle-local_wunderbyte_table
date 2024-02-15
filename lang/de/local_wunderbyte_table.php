@@ -102,6 +102,7 @@ $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname
 
 // Settings.
 $string['savesettingstodb'] = 'Speichere Wunderbyte Table-Einstellungen in der Datenbank';
+$string['logfiltercaches'] = 'Debug feature: Speichere query hashes in der DB. Das hat negative Auswirkugen auf die Performance';
 
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.

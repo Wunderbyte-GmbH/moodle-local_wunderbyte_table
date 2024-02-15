@@ -781,7 +781,7 @@ class wunderbyte_table extends table_sql {
      */
     public function query_db_cached($pagesize, $useinitialsbar=true) {
 
-        global $CFG, $DB;
+        global $CFG, $DB, $PAGE, $USER;
 
         // At this point, we need seperate the unfiltered sql and the filtered sql and create respective cachekeys.
         // The sepearation of the sql is important because it allows us to distinguish ...
@@ -821,6 +821,15 @@ class wunderbyte_table extends table_sql {
             $this->currpage = $pagination['currpage'];
             $this->use_pages = $pagination['use_pages'];
             $this->totalrecords = $pagination['totalrecords'];
+
+            // If we hit the cache, we may increase the count for debugging reasons.
+            if (count($this->rawdata) > 0) {
+                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey], 'id, count')) {
+                    $record->count++;
+                    $record->timemodified = time();
+                    $DB->update_record('local_wunderbyte_table', $record);
+                }
+            }
         } else {
             // If not, we query as usual.
             try {
@@ -847,6 +856,35 @@ class wunderbyte_table extends table_sql {
                 // Only set cachekey when rawdata is bigger than 0.
                 if (count($this->rawdata) > 0) {
                     $cache->set($cachekey, $this->rawdata);
+
+                    if (get_config('local_wunderbyte_table', 'logfiltercaches')) {
+                        $sql = $this->get_sql_for_cachekey();
+
+                        // For testing, we save the filter settings at this point.
+                        $url = $PAGE->url->out();
+                        $now = time();
+                        $data = (object)[
+                            'hash' => $cachekey,
+                            'tablehash' => $this->tablecachehash,
+                            'idstring' => $this->idstring,
+                            'userid' => 0,
+                            'page' => $url,
+                            'jsonstring' => json_encode($this->sql),
+                            'sql' => $sql,
+                            'usermodified' => $USER->id,
+                            'timecreated' => $now,
+                            'timemodified' => $now,
+                            'count' => 1,
+                        ];
+                        if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey], 'id, count')) {
+                            $record->count++;
+                            $record->timemodified = time();
+                            $DB->update_record('local_wunderbyte_table', $record);
+                            $dontinsert = true;
+                        } else {
+                            $DB->insert_record('local_wunderbyte_table', $data);
+                        }
+                    }
                 }
 
                 $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
@@ -1509,7 +1547,7 @@ class wunderbyte_table extends table_sql {
         $sql = $this->get_sql_for_cachekey($forfilter, $useinitialsbar);
 
         // Now that we have the string, we hash it with a very fast method.
-        $cachekey = crc32($sql);
+        $cachekey = crc32($sql) . '_sqlquery';
 
         return $cachekey;
     }
