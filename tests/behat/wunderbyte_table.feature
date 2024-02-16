@@ -68,9 +68,8 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     ## Demo table 3 - course modules
     And I follow "Demo table 3"
     And I wait "1" seconds
-    Then the following should exist in the "demotable_3" table:
-      | Module |
-      | 5      |
+    And I should see "1 of 1 records found" in the ".wunderbyteTableClass.demotable_3" "css_element"
+    And I should see "TriggersModal" in the "#demotable_3_r1" "css_element"
 
   @javascript
   Scenario: WB_Table navigation: switch to the next page
