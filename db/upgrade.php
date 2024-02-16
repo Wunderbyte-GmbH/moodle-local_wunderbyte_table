@@ -73,7 +73,7 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024012501, 'local', 'wunderbyte_table');
     }
 
-    if ($oldversion < 2024021501) {
+    if ($oldversion < 2024021600) {
 
         // Define field count to be added to local_wunderbyte_table.
         $table = new xmldb_table('local_wunderbyte_table');
@@ -85,7 +85,7 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
         }
 
         // Wunderbyte_table savepoint reached.
-        upgrade_plugin_savepoint(true, 2024021501, 'local', 'wunderbyte_table');
+        upgrade_plugin_savepoint(true, 2024021600, 'local', 'wunderbyte_table');
     }
 
     // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.

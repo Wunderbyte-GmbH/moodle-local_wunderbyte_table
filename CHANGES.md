@@ -1,3 +1,8 @@
+## Version 1.9.11 (2024021600)
+* Improvement: Constructur can not be overriden anymore to prevent unwanted caching.
+* Improvement: Filter default values can be set via strtotime function
+* Improvement: Add debugging option via db
+
 ## Version 1.9.10 (2024012900)
 * Improvement: Add more fields to WB table for better debugging.
 * Bugfix: Fix switch statement in edit filter.
