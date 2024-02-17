@@ -920,8 +920,7 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Set pagination to cache.
-     * @param mixed $string
-     * @param mixed $cachekey
+     * @param string $cachekey
      * @return void
      * @throws coding_exception
      */
