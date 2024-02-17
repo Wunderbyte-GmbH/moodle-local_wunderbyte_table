@@ -30,7 +30,7 @@ $definitions = [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'staticacceleration' => true,
-        'staticaccelerationsize' => 1,
+        'staticaccelerationsize' => 100,
         'invalidationevents' => ['changesinwunderbytetable'],
     ],
     'cachedfulltable' => [
@@ -44,14 +44,14 @@ $definitions = [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'staticacceleration' => true,
-        'staticaccelerationsize' => 1,
+        'staticaccelerationsize' => 100,
         'invalidationevents' => ['setbackencodedtables'],
     ],
     'cachedfilters' => [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'staticacceleration' => true,
-        'staticaccelerationsize' => 1,
+        'staticaccelerationsize' => 100,
         'invalidationevents' => ['setbackfilters'],
     ],
 ];

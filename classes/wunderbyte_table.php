@@ -1419,13 +1419,18 @@ class wunderbyte_table extends table_sql {
             // Therefore, we add the capability to the hash.
             $this->tablecachehash = md5($this->idstring . $this->requirecapability ?? '' . $this->requirelogin ?? '');
 
-            if (($cashedtable = $cache->get($this->tablecachehash)) && !$newcache) {
-                $this->pagesize = $cashedtable->pagesize;
+            // We just fetch the pagesize, no need to get all the table here.
+            if (($pagesize = $cache->get($this->tablecachehash . '_pagesize')) && !$newcache) {
+                $this->pagesize = $pagesize;
             } else {
                 // Make sure that we don't use old filter params.
                 $filter = $this->sql->filter ?? '';
                 $this->sql->filter = '';
+
                 $cache->set($this->tablecachehash, $this);
+                $cache->set($this->tablecachehash . '_pagesize', $this->pagesize);
+
+                // Reassign those properties we didn't want to cache.
                 $this->sql->filter = $filter;
             }
         }
