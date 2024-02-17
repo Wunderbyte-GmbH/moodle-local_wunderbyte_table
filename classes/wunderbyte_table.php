@@ -812,15 +812,14 @@ class wunderbyte_table extends table_sql {
             $cachedrawdata = false;
         }
 
+        // Pagination might have been set independend from cachedrawdata.
+        // Because if there is no result, we don't save rawdata.
+        // But we still want to save pagination.
+        $paginationset = $this->get_pagination_from_cache($cachekey);
+
         if ($cachedrawdata !== false) {
             // If so, just return it.
             $this->rawdata = (array)$cachedrawdata;
-            $pagination = $cache->get($cachekey . '_pagination');
-            $this->pagesize = $pagination['pagesize'];
-            $this->totalrows = $pagination['totalrows'];
-            $this->currpage = $pagination['currpage'];
-            $this->use_pages = $pagination['use_pages'];
-            $this->totalrecords = $pagination['totalrecords'];
 
             // If we hit the cache, we may increase the count for debugging reasons.
             if (count($this->rawdata) > 0) {
@@ -887,25 +886,55 @@ class wunderbyte_table extends table_sql {
                     }
                 }
 
-                $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
-                $lang = current_language();
-                $totalrecordskey = $this->idstring . $lang . '_totalrecords';
-                $cache->set($totalrecordskey, $this->totalrecords);
-
-                if (isset($this->use_pages)
-                            && isset($this->pagesize)
-                            && isset($this->totalrows)) {
-                    $pagination['pagesize'] = $this->pagesize;
-                    $pagination['totalrecords'] = $this->totalrecords;
-                    $pagination['totalrows'] = $this->totalrows;
-                    $pagination['currpage'] = $this->currpage;
-                    $pagination['use_pages'] = $this->use_pages;
-                    $cache->set($cachekey . '_pagination', $pagination);
+                if (!$paginationset) {
+                    $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
+                    $this->set_pagination_to_cache($cachekey);
                 }
             }
         }
 
         $this->filteredrecords = empty($filter) ? $this->totalrows : count($this->rawdata);
+    }
+
+    /**
+     * Sets the pagination values of the class from the cache.
+     * Returns false if no cache was found.
+     * @param string $cachekey
+     * @return bool
+     * @throws coding_exception
+     */
+    private function get_pagination_from_cache(string $cachekey) {
+
+        $cache = \cache::make($this->cachecomponent, $this->rawcachename);
+        if ($pagination = $cache->get($cachekey . '_pagination')) {
+            $this->pagesize = $pagination['pagesize'];
+            $this->totalrows = $pagination['totalrows'];
+            $this->currpage = $pagination['currpage'];
+            $this->use_pages = $pagination['use_pages'];
+            $this->totalrecords = $pagination['totalrecords'];
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Set pagination to cache.
+     * @param mixed $string
+     * @param mixed $cachekey
+     * @return void
+     * @throws coding_exception
+     */
+    private function set_pagination_to_cache(string $cachekey) {
+
+        $cache = \cache::make($this->cachecomponent, $this->rawcachename);
+
+        $pagination['pagesize'] = $this->pagesize;
+        $pagination['totalrecords'] = $this->totalrecords;
+        $pagination['totalrows'] = $this->totalrows;
+        $pagination['currpage'] = $this->currpage;
+        $pagination['use_pages'] = $this->use_pages;
+        $cache->set($cachekey . '_pagination', $pagination);
     }
 
     /**
