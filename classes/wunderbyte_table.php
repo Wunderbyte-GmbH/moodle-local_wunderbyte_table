@@ -300,7 +300,7 @@ class wunderbyte_table extends table_sql {
      *
      * @param string $uniqueid Has to be really unique eg. by adding the cmid, so it's unique over all instances of one plugin!
      */
-    final public function __construct($uniqueid) {
+    public function __construct($uniqueid) {
         // We will not breack working code but have to inform developers about potentially severe issue.
         if (debugging() && preg_match('#[^a-zA-Z0-9_\s]#', $uniqueid)) {
             throw new coding_exception(
