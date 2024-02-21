@@ -391,8 +391,8 @@ class table implements renderable, templatable {
                             break;
                         case (SORT_DESC):
                             $item['sortclass'] = 'desc';
-                            $this->sort['sortdown'] = true;
                             $this->sort['sortup'] = false;
+                            $this->sort['sortdown'] = true;
                             break;
                     }
                 };
@@ -410,8 +410,8 @@ class table implements renderable, templatable {
                             break;
                         case (SORT_DESC):
                             $item['sortclass'] = 'desc';
-                            $this->sort['sortdown'] = true;
                             $this->sort['sortup'] = false;
+                            $this->sort['sortdown'] = true;
                             break;
                     }
                 };
@@ -703,9 +703,13 @@ class table implements renderable, templatable {
 
             $sortarray['options'][] = $item;
         }
-        if ($this->wbtable->return_current_sortorder() == SORT_ASC) {
+        if ($this->wbtable->return_current_sortorder() == SORT_ASC ||
+            empty($this->wbtable->return_current_sortorder())) {
+            // Sort up is the default.
             $sortarray['sortup'] = true;
+            $sortarray['sortdown'] = null; // For mustache, we neeed null, not false.
         } else {
+            $sortarray['sortup'] = null; // For mustache, we neeed null, not false.
             $sortarray['sortdown'] = true;
         }
 
