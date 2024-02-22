@@ -1,3 +1,6 @@
+## Version 1.9.13 (2024022200)
+* Bugfix: Use SORT_ASC as default sort order when return_current_sortorder() returns null.
+
 ## Version 1.9.12 (2024021900)
 * Improvement: Better handling of pagination cache.
 * Improvement: More efficient cache handling.
