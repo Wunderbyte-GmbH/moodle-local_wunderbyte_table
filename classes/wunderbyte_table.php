@@ -1050,73 +1050,76 @@ class wunderbyte_table extends table_sql {
         if (!isset($filterobject)) {
             $filterobject = new stdClass;
         }
-        if (!$searchtext == '') {
-            // Separator defines which character seperates key (columnname) from value (searchterm).
-            $separator = ":";
-            $remainingstring = $searchtext;
-            // If the separator is in the searchstring, we check if we get params to apply as filter.
-            if (strpos($searchtext, $separator) !== false ) {
-                $characterstoreplace = ["'", '„', '“'];
-                $replacements = ['"', '"', '"'];
-                $searchtext = str_replace($characterstoreplace, $replacements, $searchtext);
 
-                $regex = '/(?|"([^"]+)"|(\w+))'.$separator.'(?:"([^"]+)"|([^,\s]+))/';
-                $initialsearchtext = $searchtext;
-                $columnname = '';
-                $value = '';
-                preg_match_all($regex, $searchtext, $matches, PREG_SET_ORDER);
+        if (get_config('local_wunderbyte_table', 'allowsearchincolumns')) {
+            if (!$searchtext == '') {
+                // Separator defines which character seperates key (columnname) from value (searchterm).
+                $separator = ":";
+                $remainingstring = $searchtext;
+                // If the separator is in the searchstring, we check if we get params to apply as filter.
+                if (strpos($searchtext, $separator) !== false ) {
+                    $characterstoreplace = ["'", '„', '“'];
+                    $replacements = ['"', '"', '"'];
+                    $searchtext = str_replace($characterstoreplace, $replacements, $searchtext);
 
-                // Combining defined columns and their localized names.
-                // If you get an error here you have a problem with the definition of your headers and columns,
-                // they must be exactly the same.
-                $columns = array_combine(array_keys($this->columns), array_values($this->headers));
+                    $regex = '/(?|"([^"]+)"|(\w+))'.$separator.'(?:"([^"]+)"|([^,\s]+))/';
+                    $initialsearchtext = $searchtext;
+                    $columnname = '';
+                    $value = '';
+                    preg_match_all($regex, $searchtext, $matches, PREG_SET_ORDER);
 
-                foreach ($matches as $match) {
-                    // Assigning the values the columnname and value.
-                    $columnname = $match[1];
-                    $value = $match[2];
-                    if ($match[2] == "") {
-                        $value = $match[3];
-                    }
+                    // Combining defined columns and their localized names.
+                    // If you get an error here you have a problem with the definition of your headers and columns,
+                    // they must be exactly the same.
+                    $columns = array_combine(array_keys($this->columns), array_values($this->headers));
 
-                    // Checking if we find a doublequote after the semicolon.
-                    $quotedvalue = false;
-                    $separatorposition = strpos($match[0], $separator);
-                    if ($separatorposition !== false) {
-                        $separatorposition++;
-                        if ($separatorposition < strlen($match[0])) {
-                            $characterafter = $match[0][$separatorposition];
-                            if ($characterafter == '"') {
-                                $quotedvalue = true;
+                    foreach ($matches as $match) {
+                        // Assigning the values the columnname and value.
+                        $columnname = $match[1];
+                        $value = $match[2];
+                        if ($match[2] == "") {
+                            $value = $match[3];
+                        }
+
+                        // Checking if we find a doublequote after the semicolon.
+                        $quotedvalue = false;
+                        $separatorposition = strpos($match[0], $separator);
+                        if ($separatorposition !== false) {
+                            $separatorposition++;
+                            if ($separatorposition < strlen($match[0])) {
+                                $characterafter = $match[0][$separatorposition];
+                                if ($characterafter == '"') {
+                                    $quotedvalue = true;
+                                }
                             }
                         }
-                    }
 
-                    if (!$quotedvalue && // Value is unquoted.
-                    !filter_var($value, FILTER_VALIDATE_INT) && // And not a number.
-                    !filter_var($value, FILTER_VALIDATE_FLOAT)) {
-                        $value = "%" . $value . "%"; // Add wildcards.
-                    }
+                        if (!$quotedvalue && // Value is unquoted.
+                        !filter_var($value, FILTER_VALIDATE_INT) && // And not a number.
+                        !filter_var($value, FILTER_VALIDATE_FLOAT)) {
+                            $value = "%" . $value . "%"; // Add wildcards.
+                        }
 
-                    // Check if searchstring column corresponds to localized name. If so set columnname.
-                    if (in_array($columnname, $columns)) {
-                        $columnname = array_search($columnname, $columns);
-                    } else if (!array_key_exists($columnname, $columns) || !array_key_exists(strtolower($columnname), $columns)) {
-                        // Or columnname.
-                        continue;
-                    }
+                        // Check if searchstring column corresponds to localized name. If so set columnname.
+                        if (in_array($columnname, $columns)) {
+                            $columnname = array_search($columnname, $columns);
+                        } else if (!array_key_exists($columnname, $columns) || !array_key_exists(strtolower($columnname), $columns)) {
+                            // Or columnname.
+                            continue;
+                        }
 
-                    if (property_exists($filterobject, $columnname)) {
-                        if (!in_array($value, $filterobject->$columnname)) {
+                        if (property_exists($filterobject, $columnname)) {
+                            if (!in_array($value, $filterobject->$columnname)) {
+                                $filterobject->{$columnname}[] = $value;
+                            }
+                        } else {
                             $filterobject->{$columnname}[] = $value;
                         }
-                    } else {
-                        $filterobject->{$columnname}[] = $value;
-                    }
 
-                    // Check if there is a string remaining after getting key and value.
-                    if (isset($match[0]) && is_string($match[0])) {
-                        $remainingstring = str_replace($match[0], "", $remainingstring);
+                        // Check if there is a string remaining after getting key and value.
+                        if (isset($match[0]) && is_string($match[0])) {
+                            $remainingstring = str_replace($match[0], "", $remainingstring);
+                        }
                     }
                 }
             }
