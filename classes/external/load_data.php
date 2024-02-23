@@ -114,7 +114,7 @@ class load_data extends external_api {
 
         // Normally, this webservice is only allowed for logged in users with some capabilites.
         // But this can be turned off for given tables.
-        $context = context_system::instance();
+        $context = $table->get_context();
         if ($table->requirelogin) {
             try {
                 self::validate_context($context);

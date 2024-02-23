@@ -294,6 +294,12 @@ class wunderbyte_table extends table_sql {
     public $placebuttonandpageelementsontop = false;
 
     /**
+     * We need to store the context in the class.
+     * @var \context
+     */
+    public $context;
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
@@ -301,6 +307,9 @@ class wunderbyte_table extends table_sql {
      * @param string $uniqueid Has to be really unique eg. by adding the cmid, so it's unique over all instances of one plugin!
      */
     public function __construct($uniqueid) {
+
+        global $PAGE;
+
         // We will not breack working code but have to inform developers about potentially severe issue.
         if (debugging() && preg_match('#[^a-zA-Z0-9_\s]#', $uniqueid)) {
             throw new coding_exception(
@@ -308,7 +317,11 @@ class wunderbyte_table extends table_sql {
                 $uniqueid
             );
         }
-        parent::__construct($uniqueid);
+
+        // We always add the contextid to the table.
+        $this->context = $PAGE->context;
+
+        parent::__construct($uniqueid . $this->context->id ?? 1);
 
         $this->idstring = md5($uniqueid);
         $this->classname = get_class($this);
@@ -486,6 +499,20 @@ class wunderbyte_table extends table_sql {
         } else {
             return new table($this, $encodedtable);
         }
+    }
+
+    /**
+     * Get the context for the table.
+     *
+     * Note: This function _must_ be overridden by dynamic tables to ensure that the context is correctly determined
+     * from the filterset parameters.
+     *
+     * @return \context
+     */
+    public function get_context(): \context {
+        global $PAGE;
+
+        return $this->context;
     }
 
     /**

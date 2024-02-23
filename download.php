@@ -33,11 +33,12 @@ require_once($CFG->dirroot . '/local/wunderbyte_table/classes/wunderbyte_table.p
 $download = optional_param('download', '', PARAM_ALPHA);
 $encodedtable = optional_param('encodedtable', '', PARAM_RAW);
 
-$context = context_system::instance();
+$table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
+
+$context = $table->get_context();
+
 $PAGE->set_context($context);
 $PAGE->set_url('/download.php');
-
-$table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
 require_capability($table->requirecapability, $context);
 
