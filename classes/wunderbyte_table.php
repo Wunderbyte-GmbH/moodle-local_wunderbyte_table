@@ -1103,7 +1103,8 @@ class wunderbyte_table extends table_sql {
                         // Check if searchstring column corresponds to localized name. If so set columnname.
                         if (in_array($columnname, $columns)) {
                             $columnname = array_search($columnname, $columns);
-                        } else if (!array_key_exists($columnname, $columns) || !array_key_exists(strtolower($columnname), $columns)) {
+                        } else if (!array_key_exists($columnname, $columns)
+                            || !array_key_exists(strtolower($columnname), $columns)) {
                             // Or columnname.
                             continue;
                         }
