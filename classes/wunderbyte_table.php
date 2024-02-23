@@ -321,9 +321,9 @@ class wunderbyte_table extends table_sql {
         // We always add the contextid to the table.
         $this->context = $PAGE->context;
 
-        parent::__construct($uniqueid . $this->context->id ?? 1);
+        parent::__construct($uniqueid);
 
-        $this->idstring = md5($uniqueid);
+        $this->idstring = md5($uniqueid . $this->context->id ?? 1);
         $this->classname = get_class($this);
 
         // This unsets the eventual memory of sorting in session to apply the default sorting on load as defined.
@@ -1692,9 +1692,8 @@ class wunderbyte_table extends table_sql {
         // This creates a hash from the sql settings.
         $cachekey = $this->create_cachekey(true);
 
-        // We add to this the url of the page, where it appears.
-        $url = $PAGE->url->out();
-        $idstring = md5($cachekey . $url);
+        // We add the contextid.
+        $idstring = md5($cachekey . $this->context->id ?? 1);
 
         $this->idstring = $idstring;
     }
