@@ -28,6 +28,8 @@ use coding_exception;
 use local_wunderbyte_table\filter;
 use local_wunderbyte_table\wunderbyte_table;
 use moodle_exception;
+use MoodleQuickForm;
+use stdClass;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -79,6 +81,43 @@ abstract class base {
         $this->secondcolumnlocalized = empty($secondcolumnlocalized) ? $secondcolumnidentifier : $secondcolumnlocalized;
     }
 
+    /**
+     *
+     * @param MoodleQuickForm $mform
+     * @param array $formdata
+     * @return void
+     * @throws coding_exception
+     */
+    public static function definition(MoodleQuickForm &$mform, array &$formdata, stdClass $filter) {
+
+        $classname = get_called_class();
+        // We only want the last part of the classname.
+        $array = explode('\\', $classname);
+        $classname = array_pop($array);
+
+        $mform->addElement('advcheckbox',
+                           $filter->columnname . '_show',
+                           get_string('showfilter', 'local_wunderbyte_table'),
+                           $filter->name);
+        $mform->addElement('text',
+                           $filter->columnname . '_localizedname',
+                           get_string('editfiltername', 'local_wunderbyte_table'),
+                           $filter->name);
+    }
+
+
+    /**
+     * Set data for form.
+     * @param stdClass $data
+     * @param stdClass $filter
+     * @return void
+     */
+    public static function set_data(stdClass $data, stdClass $filter) {
+
+        $data->{$filter->columnname . '_show'} = 1;
+        $data->{$filter->columnname . '_localizedname'} = $filter->name;
+
+    }
 
     /**
      * This function takes a key value pair of options.
@@ -107,6 +146,7 @@ abstract class base {
         $options = $this->options;
 
         $options['localizedname'] = $this->localizedstring;
+        $options['wbfilterclass'] = get_called_class();
 
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {
@@ -280,5 +320,20 @@ abstract class base {
 
         // Make the arrays mustache ready, we have to jump through loops.
         $categoryobject['default']['values'] = array_values($categoryobject['default']['values']);
+    }
+
+    /**
+     * Definition after data callback
+     * @return string
+     * @throws coding_exception
+     */
+    public static function return_localized_name() {
+
+        $classname = get_called_class();
+        // We only want the last part of the classname.
+        $array = explode('\\', $classname);
+        $classname = array_pop($array);
+
+        return get_string($classname, 'local_wunderbyte_table');
     }
 }

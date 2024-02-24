@@ -28,6 +28,7 @@ import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
 import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
+import {initializeEditTableButton} from 'local_wunderbyte_table/edittable';
 import {initializeRowsSelect} from './rowsdisplayselect';
 import {initializeResetFilterButton, updateUrlWithFilterSearchSort} from './filter';
 import {initializeFilterSearch} from './filtersearch';
@@ -693,6 +694,7 @@ function initializeComponents(idstring, encodedtable) {
         initializeRowsSelect(selector, idstring, encodedtable);
         initializeFilterSearch(selector, idstring, encodedtable);
         initializeResetFilterButton(selector, idstring, encodedtable);
+        initializeEditTableButton(selector, idstring, encodedtable);
 
         // A very strange error leads to a failed import from the reloadTable.js under some circumstances.
         // Reload has to be called with this precaution therefore.

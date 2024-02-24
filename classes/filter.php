@@ -158,9 +158,9 @@ class filter {
                 'collapsed' => 'collapsed',
             ];
 
-            // We give every filterclass the chance to take care of adding the array for the template.
-            foreach ($filterclasses as $classname => $namespace) {
+            if ($classname = $filtersettings[$fckey]['wbfilterclass'] ?? false) {
                 $classname::add_to_categoryobject($categoryobject, $filtersettings, $fckey, $values);
+                $categoryobject['wbfilterclass'] = $classname;
             }
 
             $filterjson['categories'][] = $categoryobject;

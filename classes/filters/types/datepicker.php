@@ -56,6 +56,7 @@ class datepicker extends base {
             get_class($this) => true,
             'datepicker' => $this->options,
         ];
+        $options['wbfilterclass'] = get_called_class();
 
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {

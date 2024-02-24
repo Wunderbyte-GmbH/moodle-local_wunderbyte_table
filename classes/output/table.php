@@ -117,6 +117,13 @@ class table implements renderable, templatable {
     private $showreloadbutton = true;
 
     /**
+     * Allow editing of filter & table
+     *
+     * @var bool
+     */
+    private $edittable = true;
+
+    /**
      * Button to print table.
      *
      * @var bool
@@ -256,6 +263,8 @@ class table implements renderable, templatable {
         $this->showdownloadbutton = $table->showdownloadbutton;
 
         $this->showreloadbutton = $table->showreloadbutton;
+
+        $this->edittable = true;
 
         $this->showcountlabel = $table->showcountlabel;
 
@@ -598,6 +607,11 @@ class table implements renderable, templatable {
         // Only if we want to show the searchfield, we actually add the key.
         if ($this->showreloadbutton) {
             $data['reload'] = true;
+        }
+
+        // Only if we want to show the searchfield, we actually add the key.
+        if ($this->edittable) {
+            $data['edit'] = true;
         }
 
         if ($this->showcountlabel) {

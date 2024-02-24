@@ -71,6 +71,7 @@ class weekdays extends base {
         $options = $this->options;
 
         $options['localizedname'] = $this->localizedstring;
+        $options['wbfilterclass'] = get_called_class();
         $options[get_class($this)] = true;
 
         // We always need to make sure that id column is present.

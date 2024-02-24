@@ -38,6 +38,7 @@ $string['couldnotloaddata'] = "Could not load data";
 
 $string['filter'] = 'Filter table';
 $string['reload'] = "Reload table";
+$string['edittable'] = "Edit table";
 $string['print'] = "Download table";
 $string['downloadas'] = "Download table data as";
 
@@ -45,6 +46,7 @@ $string['norecords'] = "No records found.";
 
 // Capabilities.
 $string['wunderbyte_table:canaccess'] = 'Can access Wunderbyte Table';
+$string['wunderbyte_table:canedittable'] = 'Can edit Wunderbyte table';
 
 // Caches.
 $string['cachedef_cachedfulltable'] = 'Wunderbyte Table: Cached full table';
@@ -134,6 +136,16 @@ $string['from20to21'] = "20:00 - 21:00";
 $string['from21to22'] = "21:00 - 22:00";
 $string['from22to23'] = "22:00 - 23:00";
 $string['from23to24'] = "23:00 - 24:00";
+
+// Edit filter.
+$string['filterinactive'] = 'Schalte die gesamte Filter aus';
+$string['showfilter'] = 'Zeige diesen Filter';
+$string['editfiltername'] = 'Bearbeite den Filternamen';
+
+$string['datepicker'] = 'Datumsfilter';
+$string['hourlist'] = 'Stundenlistenfilter';
+$string['standardfilter'] = 'Standardfilter';
+$string['weekdays'] = 'Wochentagefilter';
 
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
