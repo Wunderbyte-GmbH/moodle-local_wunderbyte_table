@@ -54,7 +54,7 @@ class filter {
             // We need to localize the filter for every user.
             $lang = current_language();
 
-            $key = $table->idstring . $lang . '_filterjson';
+            $key = $table->tablecachehash . $lang . '_filterjson';
 
             $table->filterjson = editfilter::get_userspecific_filterjson($table, $key);
 

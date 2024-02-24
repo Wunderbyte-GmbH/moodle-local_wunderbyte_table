@@ -905,7 +905,7 @@ class wunderbyte_table extends table_sql {
                             'tablehash' => $this->tablecachehash,
                             'idstring' => $this->idstring,
                             'userid' => 0,
-                            'page' => $url,
+                            'page' => $this->context->id,
                             'jsonstring' => json_encode($this->sql),
                             'sql' => $sql,
                             'usermodified' => $USER->id,
@@ -913,7 +913,13 @@ class wunderbyte_table extends table_sql {
                             'timemodified' => $now,
                             'count' => 1,
                         ];
-                        if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey], 'id, count')) {
+                        if ($record = $DB->get_record('local_wunderbyte_table',
+                                [
+                                    'hash' => $cachekey,
+                                    'page' => $this->context->id,
+                                ],
+                                'id,
+                                count')) {
                             $record->count++;
                             $record->timemodified = time();
                             $DB->update_record('local_wunderbyte_table', $record);

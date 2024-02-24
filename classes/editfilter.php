@@ -196,8 +196,8 @@ class editfilter {
         } else {
             // At this point, we know that there is no user specific filter available.
             // There might be a general one in the DB.
-            if (!empty(get_config('local_wunderbyte_table', 'savesettingstodb'))
-                && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => 0])) {
+            if ((get_config('local_wunderbyte_table', 'savesettingstodb'))
+                && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => "0"])) {
                 $jsonstring = self::return_filterjson_from_db(0, $cachekey, 0);
                 $filtersettings = json_decode($jsonstring, true);
             } else {
@@ -222,7 +222,7 @@ class editfilter {
                     'tablehash' => $table->tablecachehash,
                     'idstring' => $table->idstring,
                     'userid' => 0,
-                    'page' => $url,
+                    'page' => $table->context->id,
                     'jsonstring' => json_encode($filtersettings),
                     'sql' => $sql,
                     'usermodified' => $USER->id,
