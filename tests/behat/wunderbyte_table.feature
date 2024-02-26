@@ -60,14 +60,14 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | user1    | Username   | user1@example.com  |
     ## Demo table 2 - courses
     And I follow "Demo table 2"
-    And I wait "1" seconds
+    And I wait "2" seconds
     Then the following should exist in the "demotable_2" table:
       | Full name            | Short name           |
       | Acceptance test site | Acceptance test site |
       | Course 1             | C1                   |
     ## Demo table 3 - course modules
     And I follow "Demo table 3"
-    And I wait "1" seconds
+    And I wait "2" seconds
     And I should see "1 of 1 records found" in the ".wunderbyteTableClass.demotable_3" "css_element"
     And I should see "TriggersModal" in the "#demotable_3_r1" "css_element"
 
@@ -91,7 +91,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And the field "selectrowsperpage-demotable_1" matches value "Show 10 rows"
     And "//*[contains(@class, 'demotable_1')]//nav[@aria-label='Page']" "xpath_element" should exist
     And I set the field "selectrowsperpage-demotable_1" to "Show 30 rows"
-    And I wait "1" seconds
+    And I wait "2" seconds
     And "//*[contains(@class, 'demotable_1')]//nav[@aria-label='Page']" "xpath_element" should not exist
     And the field "selectrowsperpage-demotable_1" matches value "Show 30 rows"
 
@@ -107,7 +107,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     ## Call pagedown twice to ensure actual bottom of page will be reached.
     And I press the pagedown key
     And I press the pagedown key
-    And I wait "1" seconds
+    And I wait "2" seconds
     And I should see "user19" in the "#demotable_4_r14" "css_element"
     ## Call pagedown twice to ensure actual bottom of page will be reached.
     And I press the pagedown key
