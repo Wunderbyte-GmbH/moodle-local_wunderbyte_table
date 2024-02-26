@@ -25,9 +25,9 @@
  namespace local_wunderbyte_table\filters\types;
  use local_wunderbyte_table\filters\base;
 
- /**
+/**
  * Filter class with automatically supports the english weekdays as filter options.
- * @package local_wunderbyte_table\filters\types
+ * @package local_wunderbyte_table
  */
 class weekdays extends base {
 
