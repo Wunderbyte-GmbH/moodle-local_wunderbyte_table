@@ -125,18 +125,4 @@ class hourlist extends base {
         return $returnarray ?? [];
     }
 
-    /**
-     * Adds the array for the mustache template to render the categoryobject.
-     * If no special treatment is needed, it must be implemented in the filter class, but just return.
-     * The standard filter will take care of it.
-     * @param array $categoryobject
-     * @param array $filtersettings
-     * @param string $fckey
-     * @param array $values
-     * @return array
-     */
-    public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
-        return;
-    }
-
 }

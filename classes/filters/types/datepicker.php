@@ -171,16 +171,12 @@ class datepicker extends base {
                     'label' => $labelkey,
                     'startcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimestart'],
                     'starttimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
-                    'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ?
-                        'now' : date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
-                    'starttimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'] === 'now' ?
-                        'now' : date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvaluestart']),
+                    'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
+                    'starttimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
                     'endcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimeend'],
                     'endtimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
-                    'enddatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ?
-                        'now' : date('Y-m-d', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
-                    'endtimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'] === 'now' ?
-                        'now' : date('H:i', $datepickerarray['datepicker'][$labelkey]['defaultvalueend']),
+                    'enddatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
+                    'endtimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
                     'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
                     'possibleoperations' => $operationsarray, // Array.
                 ];
