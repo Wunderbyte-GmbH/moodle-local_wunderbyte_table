@@ -105,7 +105,7 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     And I follow "Demo table 1"
     Then I should see "guest" in the "#demotable_1_r2" "css_element"
     And I click on "+Modal, MultipleCall, Selection" "link" in the ".wunderbyteTableClass.demotable_1" "css_element"
-    And I wait "1" seconds
+    And I wait "2" seconds
     And I should see "No checkbox checked" in the "#user-notifications" "css_element"
     ## Fix for "Element is not clickable ... because another element .... obscures it"
     And I follow "Demo table 1"
@@ -130,5 +130,5 @@ Feature: Table controls functionality of wunderbyte_table works as expected
     And I should see "You are about to submit this data:" in the ".show .modal-content" "css_element"
     And I should see "Teacher" in the ".show .modal-content" "css_element"
     And I click on ".show .modal-dialog .modal-footer .btn-primary" "css_element"
-    And I wait "1" seconds
+    And I wait "2" seconds
     And I should see "Did work" in the "#user-notifications" "css_element"

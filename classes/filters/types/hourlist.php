@@ -47,8 +47,7 @@ class hourlist extends base {
 
         $this->options = [
             0  => get_string('from0to1', 'local_wunderbyte_table'),
-            0  => get_string('from1to2', 'local_wunderbyte_table'),
-            1  => get_string('from2to3', 'local_wunderbyte_table'),
+            1  => get_string('from1to2', 'local_wunderbyte_table'),
             2  => get_string('from2to3', 'local_wunderbyte_table'),
             3  => get_string('from3to4', 'local_wunderbyte_table'),
             4  => get_string('from4to5', 'local_wunderbyte_table'),
@@ -96,7 +95,7 @@ class hourlist extends base {
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {
             $filter['id'] = [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
+                'localizedname' => get_string('id', 'local_wunderbyte_table'),
             ];
         }
 

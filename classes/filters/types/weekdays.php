@@ -25,9 +25,9 @@
  namespace local_wunderbyte_table\filters\types;
  use local_wunderbyte_table\filters\base;
 
-/**
+ /**
  * Filter class with automatically supports the english weekdays as filter options.
- * For the users, the weekdays are localized. Only weekdays which are actually in the DB are offered.
+ * @package local_wunderbyte_table\filters\types
  */
 class weekdays extends base {
 
@@ -77,7 +77,7 @@ class weekdays extends base {
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {
             $filter['id'] = [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
+                'localizedname' => get_string('id', 'local_wunderbyte_table'),
             ];
         }
 

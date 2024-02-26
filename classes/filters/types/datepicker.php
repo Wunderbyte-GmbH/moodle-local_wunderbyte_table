@@ -23,6 +23,8 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+
+use coding_exception;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
 use moodle_exception;
@@ -61,7 +63,7 @@ class datepicker extends base {
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {
             $filter['id'] = [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
+                'localizedname' => get_string('id', 'local_wunderbyte_table'),
             ];
         }
 
@@ -77,6 +79,18 @@ class datepicker extends base {
         }
     }
 
+    /**
+     * Add options.
+     * @param string $type
+     * @param string $operator
+     * @param string $checkboxlabel
+     * @param string $defaultvaluestart
+     * @param string $defaultvalueend
+     * @param array $possibleoperations
+     * @return void
+     * @throws moodle_exception
+     * @throws coding_exception
+     */
     public function add_options(
         string $type = 'standard',
         string $operator = '<',
@@ -90,7 +104,7 @@ class datepicker extends base {
             'overlapend',
             'before',
             'after',
-            'flexoverlap'
+            'flexoverlap',
         ]) {
 
         if (!in_array($operator, ['=', '<', '>', '<=', '>='])) {

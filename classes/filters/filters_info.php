@@ -33,7 +33,7 @@ use stdClass;
 
 /**
  * Handles the filter classes.
- * @package local_wunderbyte_table\filters
+ * @package local_wunderbyte_table
  */
 class filters_info {
 
@@ -69,7 +69,6 @@ class filters_info {
      * Returns an array of warnings as string.
      * @param stdClass $formdata
      * @param stdClass $newdata
-     * @param int $updateparam
      * @return array
      */
     public static function process_data(stdClass &$formdata, stdClass &$newdata): array {
@@ -112,6 +111,13 @@ class filters_info {
 
     }
 
+    /**
+     * Return filter object.
+     * @param array $formdata
+     * @return mixed
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     private static function return_filter_object(array $formdata) {
         $encodedtable = $formdata['encodedtable'];
 

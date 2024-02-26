@@ -82,9 +82,10 @@ abstract class base {
     }
 
     /**
-     *
+     * Handles form definiton for filter classes.
      * @param MoodleQuickForm $mform
      * @param array $formdata
+     * @param stdClass $filter
      * @return void
      * @throws coding_exception
      */
@@ -126,6 +127,7 @@ abstract class base {
      * For the standard filter, it's not necessary to provide these options...
      * They will be gathered automatically.
      *
+     * @param array $options
      * @return void
      */
     public function add_filteroptions(array $options = []) {
@@ -151,7 +153,7 @@ abstract class base {
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {
             $filter['id'] = [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
+                'localizedname' => get_string('id', 'local_wunderbyte_table'),
             ];
         }
 

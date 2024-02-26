@@ -27,13 +27,11 @@ use local_wunderbyte_table\filters\filters_info;
 use moodle_url;
 use stdClass;
 
-require_once($CFG->dirroot . '/mod/booking/lib.php');
-
 /**
  * Dynamic edit table form.
  * @copyright   2024 Wunderbyte GmbH <info@wunderbyte.at>
  * @author      Georg Maißer
- * @package     mod_booking
+ * @package     local_wunderbyte_table
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class edittable extends dynamic_form {
