@@ -1,3 +1,11 @@
+## Version 1.9.15 (2024022600)
+* Improvement: Better layout (margins) for filter search.
+
+## Version 1.9.14 (2024022300)
+* Improvement: Add correct context handling for table.
+* Improvement: Make search in columns optional.
+* Improvement: Make no context compatible with existing automated tests.
+
 ## Version 1.9.13 (2024022200)
 * Bugfix: Use SORT_ASC as default sort order when return_current_sortorder() returns null.
 

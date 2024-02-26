@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_wunderbyte_table';
-$plugin->release = '1.9.14';
-$plugin->version = 2024022300;
+$plugin->release = '1.9.15';
+$plugin->version = 2024022600;
 $plugin->requires = 2020061500;
 $plugin->maturity = MATURITY_STABLE;
