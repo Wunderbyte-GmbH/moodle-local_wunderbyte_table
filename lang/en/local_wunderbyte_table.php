@@ -47,9 +47,10 @@ $string['norecords'] = "No records found.";
 $string['wunderbyte_table:canaccess'] = 'Can access Wunderbyte Table';
 
 // Caches.
-$string['cachedef_cachedfulltable'] = 'Cached full table';
-$string['cachedef_cachedrawdata'] = "Wunderbyte Table standard cache";
-$string['cachedef_encodedtables'] = 'Cache for encoded tables';
+$string['cachedef_cachedfulltable'] = 'Wunderbyte Table: Cached full table';
+$string['cachedef_cachedrawdata'] = "Wunderbyte Table: Default cache";
+$string['cachedef_encodedtables'] = 'Wunderbyte Table: Cache for encoded tables';
+$string['cachedef_cachedfilters'] = 'Wunderbyte Table: Cache for filters';
 
 // Info messages over table.
 $string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found ';
