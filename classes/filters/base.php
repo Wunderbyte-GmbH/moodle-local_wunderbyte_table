@@ -121,23 +121,6 @@ abstract class base {
     }
 
     /**
-     * This function takes a key value pair of options.
-     * Only if there are actual results in the table, these options will be displayed.
-     * The keys are the results, the values are the localized strings.
-     * For the standard filter, it's not necessary to provide these options...
-     * They will be gathered automatically.
-     *
-     * @param array $options
-     * @return void
-     */
-    public function add_filteroptions(array $options = []) {
-
-        foreach ($options as $key => $value) {
-            $this->options[$key] = $value;
-        }
-    }
-
-    /**
      * Add the filter to the array.
      * @param array $filter
      * @return void
