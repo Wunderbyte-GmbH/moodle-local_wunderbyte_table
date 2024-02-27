@@ -19,7 +19,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 import ModalForm from 'core_form/modalform';
-import {reinit} from 'local_shopping_cart/cart';
 import {get_string as getString} from 'core/str';
 
 const SELECTORS = {
@@ -90,7 +89,6 @@ export function editTableModal(event, idstring, encodedtable) {
 
         // eslint-disable-next-line no-console
         console.log('form submitted response: ', response);
-        reinit();
 
     });
 
