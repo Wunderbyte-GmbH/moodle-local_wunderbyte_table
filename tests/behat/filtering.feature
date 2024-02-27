@@ -43,20 +43,20 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
     And I set the field "search-demotable_1" to "teacher"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "teacher1" in the "#demotable_1_r1" "css_element"
     And I set the field "search-demotable_1" to "admin"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And I set the field "search-demotable_1" to "guest"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "guest" in the "#demotable_1_r1" "css_element"
     And I follow "Demo table 2"
     And I set the field "search-demotable_2" to "course"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And I set the field "search-demotable_2" to "site"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
 
   @javascript
@@ -68,20 +68,20 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
     And I should see "admin" in the "#id_collapse_username" "css_element"
     And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
     And I set the field "guest" in the "#id_collapse_username" "css_element" to "checked"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "guest" in the "#demotable_1_r2" "css_element"
     ## And "//*[contains(@id, 'Users')]//tr[@id, 'Users_r3']" "xpath_element" should not exist
     And I should see "2 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I set the field "admin" in the "#id_collapse_username" "css_element" to ""
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "guest" in the "#demotable_1_r1" "css_element"
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
     And I set the field "guest" in the "#id_collapse_username" "css_element" to ""
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
   @javascript
@@ -113,13 +113,13 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "user15" in the "#id_collapse_username" "css_element"
     And I should not see "user16" in the "#id_collapse_username" "css_element"
     And I set the field "user15" in the "#id_collapse_username" "css_element" to "checked"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "user15" in the "#demotable_1_r1" "css_element"
     And I should see "1 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Remove filter and search
     And I set the field "user15" in the "#id_collapse_username" "css_element" to ""
     And I set the field "filtersearch-username" in the "#id_collapse_username" "css_element" to ""
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "user14" in the "#id_collapse_username" "css_element"
     And I should see "user15" in the "#id_collapse_username" "css_element"
     And I should see "user16" in the "#id_collapse_username" "css_element"
@@ -146,7 +146,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_username\"]" "css_element"
     And I should see "admin" in the ".tab-pane.active #id_collapse_username" "css_element"
     And I set the field "admin" in the ".tab-pane.active #id_collapse_username" "css_element" to "checked"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
     ## Filter panel being hidden by default on the Course tab
@@ -156,6 +156,6 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_fullname\"]" "css_element"
     And I should see "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element"
     And I set the field "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element" to "checked"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist

@@ -45,35 +45,35 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I follow "Demo table 1"
     And I wait until the page is ready
     And I set the field "selectsortcolumn-demotable_1" to "id"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.id.asc" "css_element" should exist
     And I should see "guest" in the "#demotable_1_r1" "css_element"
     And I follow "changesortorder-demotable_1"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.id.desc" "css_element" should exist
     And I should see "teacher1" in the "#demotable_1_r1" "css_element"
     And I set the field "selectsortcolumn-demotable_1" to "username"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.username.desc" "css_element" should exist
     And I should see "user9" in the "#demotable_1_r1" "css_element"
     And I follow "changesortorder-demotable_1"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.username.asc" "css_element" should exist
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And I set the field "selectsortcolumn-demotable_1" to "lastname"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.lastname.asc" "css_element" should exist
     And I should see "guest" in the "#demotable_1_r1" "css_element"
     And I follow "changesortorder-demotable_1"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.lastname.desc" "css_element" should exist
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And I set the field "selectsortcolumn-demotable_1" to "firstname"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.firstname.desc" "css_element" should exist
     And I should see "user1" in the "#demotable_1_r1" "css_element"
     And I follow "changesortorder-demotable_1"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.firstname.asc" "css_element" should exist
     And I should see "admin" in the "#demotable_1_r1" "css_element"
 
@@ -84,32 +84,32 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I follow "Demo table 2"
     And I wait until the page is ready
     And I set the field "selectsortcolumn-demotable_2" to "id"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_2 th.id.asc" "css_element" should exist
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
     And I should see "Course 2" in the "#demotable_2_r3" "css_element"
     And I follow "changesortorder-demotable_2"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_2 th.id.desc" "css_element" should exist
     And I should see "Course 2" in the "#demotable_2_r1" "css_element"
     And I should see "Acceptance test site" in the "#demotable_2_r3" "css_element"
     And I set the field "selectsortcolumn-demotable_2" to "fullname"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_2 th.fullname.desc" "css_element" should exist
     And I should see "Course 2" in the "#demotable_2_r1" "css_element"
     And I should see "Acceptance test site" in the "#demotable_2_r3" "css_element"
     And I follow "changesortorder-demotable_2"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_2 th.fullname.asc" "css_element" should exist
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
     And I should see "Course 2" in the "#demotable_2_r3" "css_element"
     And I set the field "selectsortcolumn-demotable_2" to "shortname"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_2 th.shortname.asc" "css_element" should exist
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
     And I should see "Course 2" in the "#demotable_2_r3" "css_element"
     And I follow "changesortorder-demotable_2"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_2 th.shortname.desc" "css_element" should exist
     And I should see "Course 2" in the "#demotable_2_r1" "css_element"
     And I should see "Acceptance test site" in the "#demotable_2_r3" "css_element"
@@ -123,11 +123,11 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I wait until the page is ready
     And I should see "ID" in the "th.id.wb-table-column" "css_element"
     And I click on "th.id.wb-table-column" "css_element"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.id.asc" "css_element" should exist
     And I should see "guest" in the "#demotable_1_r1" "css_element"
     And I click on "th.id.wb-table-column.asc" "css_element"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_1 th.id.desc" "css_element" should exist
     And I should see "teacher1" in the "#demotable_1_r1" "css_element"
     ## When clicking column header in table (for sorting) - sync value with the select "selectsortcolumn"
@@ -147,11 +147,11 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And ".demotable_2 th.shortname.asc" "css_element" should not exist
     And ".demotable_2 th.shortname.desc" "css_element" should not exist
     And I click on "th.shortname.wb-table-column" "css_element"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_2 th.shortname.asc" "css_element" should exist
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
     And I click on "th.shortname.wb-table-column.asc" "css_element"
-    And I wait "4" seconds
+    And I wait "1" seconds
     And ".demotable_2 th.shortname.desc" "css_element" should exist
     And I should see "Course 2" in the "#demotable_2_r1" "css_element"
     ## When clicking column header in table (for sorting) - sync value with the select "selectsortcolumn"
