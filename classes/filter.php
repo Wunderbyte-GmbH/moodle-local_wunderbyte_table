@@ -108,20 +108,12 @@ class filter {
             }
 
             $rawdata = false;
-            foreach ($filterclasses as $classname => $namespace) {
 
-                // Some filters might have a special way of retrieving their options.
-                if (isset($value[$classname])) {
-                    $rawdata = $classname::get_data_for_filter_options($table, $key);
-                    break;
-                }
-            }
+            $rawdata = $value['wbfilterclass']::get_data_for_filter_options($table, $key);
+
             // Some filters might want us to continue here.
             if (isset($rawdata['continue'])) {
                 continue;
-            } else if ($rawdata === false) {
-                // This is the standard way to optain the filter results.
-                $rawdata = base::get_data_for_filter_options($table, $key);
             }
 
             $filtercolumns[$key] = [];
@@ -219,7 +211,17 @@ class filter {
 
         $records = $DB->get_records_sql($sql, $table->sql->params);
 
-        return $records;
+        // If there are only empty strings, we don't want the filter to show.
+        if (!$records
+            || count($records) < 2
+            || (reset($records)->{$key} === null
+                || reset($records)->{$key} === '')) {
+            return [
+                'continue' => true,
+            ];
+        } else {
+            return $records;
+        }
     }
 
     /**
