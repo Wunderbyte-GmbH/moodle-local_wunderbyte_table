@@ -43,6 +43,9 @@ if ($hassiteconfig) {
             get_string('logfiltercaches', 'local_wunderbyte_table'), '', 0));
 
     $settings->add(
+        new admin_setting_configcheckbox('local_wunderbyte_table/allowedittable',
+            get_string('allowedittable', 'local_wunderbyte_table'), '', 0));
+    $settings->add(
         new admin_setting_configcheckbox('local_wunderbyte_table/allowsearchincolumns',
             get_string('allowsearchincolumns', 'local_wunderbyte_table'), '', 0));
 }

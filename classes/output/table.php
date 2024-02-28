@@ -264,7 +264,12 @@ class table implements renderable, templatable {
 
         $this->showreloadbutton = $table->showreloadbutton;
 
-        $this->edittable = true;
+        if (get_config('local_wunderbyte_table', 'allowedittable')
+            && has_capability('local/wunderbyte_table:canedittable', $table->context)) {
+                $this->edittable = true;
+        } else {
+            $this->edittable = false;
+        }
 
         $this->showcountlabel = $table->showcountlabel;
 
