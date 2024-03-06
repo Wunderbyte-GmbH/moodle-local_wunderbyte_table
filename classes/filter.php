@@ -32,6 +32,7 @@ use local_wunderbyte_table\filters\types\weekdays;
 use coding_exception;
 use core_component;
 use dml_exception;
+use stdClass;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -53,7 +54,6 @@ class filter {
 
             // We need to localize the filter for every user.
             $lang = current_language();
-
             $key = $table->tablecachehash . $lang . '_filterjson';
 
             $table->filterjson = editfilter::get_userspecific_filterjson($table, $key);
@@ -287,5 +287,55 @@ class filter {
         }
 
         return $sql;
+    }
+
+    /**
+     * Save settings of Filter.
+     * @param wunderbyte_table $table
+     * @param string $cachekey
+     * @param stdClass $filtersettings
+     * @return void
+     * @throws coding_exception
+     * @throws dml_exception
+     */
+    public static function save_settings(wunderbyte_table $table,
+                                        string $cachekey,
+                                        array $filtersettings,
+                                        bool $onlyinsert = true) {
+
+        global $USER, $DB;
+
+        $sql = $table->get_sql_for_cachekey(true);
+        $now = time();
+
+        // We use this to avoid unnecessary check.
+        if (!$onlyinsert) {
+
+            if ($data = $DB->get_record('local_wunderbyte_table', [
+                'hash' => $cachekey,
+                'userid' => 0,
+            ])) {
+                $data->timemodified = $now;
+                $data->jsonstring = json_encode($filtersettings);
+
+                $DB->update_record('local_wunderbyte_table', $data);
+                return;
+            }
+        }
+
+        // For testing, we save the filter settings at this point.
+        $data = (object)[
+            'hash' => $cachekey,
+            'tablehash' => $table->tablecachehash,
+            'idstring' => $table->idstring,
+            'userid' => 0,
+            'page' => $table->context->id,
+            'jsonstring' => json_encode($filtersettings),
+            'sql' => $sql,
+            'usermodified' => $USER->id,
+            'timecreated' => $now,
+            'timemodified' => $now,
+        ];
+        $DB->insert_record('local_wunderbyte_table', $data);
     }
 }

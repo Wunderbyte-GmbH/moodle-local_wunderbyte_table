@@ -91,11 +91,13 @@ class hourlist extends base {
         $options['localizedname'] = $this->localizedstring;
         $options['wbfilterclass'] = get_called_class();
         $options[get_class($this)] = true;
+        $options[$this->columnidentifier . '_wb_checked'] = 1;
 
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {
             $filter['id'] = [
                 'localizedname' => get_string('id', 'local_wunderbyte_table'),
+                'id_wb_checked' => 1,
             ];
         }
 

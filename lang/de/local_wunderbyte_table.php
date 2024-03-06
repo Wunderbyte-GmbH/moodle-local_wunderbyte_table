@@ -135,14 +135,14 @@ $string['from22to23'] = "22:00 - 23:00";
 $string['from23to24'] = "23:00 - 24:00";
 
 // Edit filter.
-$string['filterinactive'] = 'Deactivate the entire filter';
-$string['showfilter'] = 'Show this filter';
-$string['editfiltername'] = 'Edit filtername';
+$string['filterinactive'] = 'Verberge den Filter';
+$string['showfilter'] = 'Zeige diesen Filter';
+$string['editfiltername'] = 'Bearbeite den Filternamen';
 
-$string['datepicker'] = 'Datepicker filter';
-$string['hourlist'] = 'Hourlist filter';
-$string['standardfilter'] = 'Standard filter';
-$string['weekdays'] = 'Weekdays filter';
+$string['datepicker'] = 'Datumsfilter';
+$string['hourlist'] = 'Stundenlistenfilter';
+$string['standardfilter'] = 'Standardfilter';
+$string['weekdays'] = 'Wochentagefilter';
 
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.

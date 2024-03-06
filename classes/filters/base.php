@@ -97,13 +97,13 @@ abstract class base {
         $classname = array_pop($array);
 
         $mform->addElement('advcheckbox',
-                           $filter->columnname . '_show',
+                           $filter->columnidentifier . '_wb_checked',
                            get_string('showfilter', 'local_wunderbyte_table'),
-                           $filter->name);
+                           $filter->localizedname);
         $mform->addElement('text',
-                           $filter->columnname . '_localizedname',
+                           $filter->columnidentifier . '_wb_localizedname',
                            get_string('editfiltername', 'local_wunderbyte_table'),
-                           $filter->name);
+                           $filter->localizedname);
     }
 
 
@@ -115,8 +115,10 @@ abstract class base {
      */
     public static function set_data(stdClass $data, stdClass $filter) {
 
-        $data->{$filter->columnname . '_show'} = 1;
-        $data->{$filter->columnname . '_localizedname'} = $filter->name;
+        $data->{$filter->columnidentifier . '_wb_checked'}
+            = $filter->{$filter->columnidentifier . '_wb_checked'};
+        $data->{$filter->columnidentifier . '_wb_localizedname'}
+            = $filter->localizedname;
 
     }
 
@@ -132,11 +134,13 @@ abstract class base {
 
         $options['localizedname'] = $this->localizedstring;
         $options['wbfilterclass'] = get_called_class();
+        $options[$this->columnidentifier . '_wb_checked'] = 1;
 
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {
             $filter['id'] = [
                 'localizedname' => get_string('id', 'local_wunderbyte_table'),
+                'id_wb_checked' => 1,
             ];
         }
 

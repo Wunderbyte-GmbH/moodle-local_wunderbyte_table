@@ -24,8 +24,11 @@
 
 namespace local_wunderbyte_table\filters;
 
+use cache;
+use cache_helper;
 use coding_exception;
 use dml_exception;
+use local_wunderbyte_table\editfilter;
 use local_wunderbyte_table\filter;
 use local_wunderbyte_table\wunderbyte_table;
 use MoodleQuickForm;
@@ -49,17 +52,30 @@ class filters_info {
 
         // Here, we retrieve tha filters array with all the possible filters.
 
-        $filterobject = self::return_filter_object($formdata);
+        $encodedtable = $formdata['encodedtable'];
+        $mform->addElement('hidden', 'encodedtable', json_encode($encodedtable));
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
-        $mform->addElement('advcheckbox',
-                           'filterinactive',
-                           '',
-                           get_string('filterinactive', 'local_wunderbyte_table'));
+        // We need to localize the filter for every user.
+        $lang = current_language();
+        $key = $table->tablecachehash . $lang . '_filterjson';
 
-        foreach ($filterobject->categories as $filter) {
-            if (isset($filter->wbfilterclass)) {
-                $classname = $filter->wbfilterclass;
-                $classname::definition($mform, $formdata, $filter);
+        $filterobjects = $table->subcolumns['datafields'];
+
+        foreach ($filterobjects as $key => $filter) {
+
+            if ($key === 'id') {
+                $mform->addElement('advcheckbox',
+                    'id_wb_checked',
+                    '',
+                    get_string('filterinactive', 'local_wunderbyte_table'));
+
+                    // We save the filterobject as we get it here.
+                    $mform->addElement('hidden', 'wb_filterjson', json_encode($filterobjects));
+            } else {
+                $classname = $filter['wbfilterclass'];
+                $filter['columnidentifier'] = $key;
+                $classname::definition($mform, $formdata, (object)$filter);
             }
         }
     }
@@ -73,6 +89,46 @@ class filters_info {
      */
     public static function process_data(stdClass &$formdata, stdClass &$newdata): array {
 
+        // First, we get the original filterjson.
+
+        $originalfilterobject = json_decode($formdata->wb_filterjson);
+
+        $keystoskip = [
+            'wb_filterjson',
+            'encodedtable',
+        ];
+
+        // Now we update with the new values.
+        foreach ($formdata as $key => $value) {
+
+            if (in_array($key, $keystoskip)) {
+                continue;
+            }
+
+            list($columnidentifier, $fieldidentifier) = explode('_wb_', $key);
+
+            if (isset($originalfilterobject->{$columnidentifier})) {
+                // The checkbox comes directly like this.
+                if (isset($originalfilterobject->{$columnidentifier}->{$key})) {
+                    $originalfilterobject->{$columnidentifier}->{$key} = $value;
+                } else if (isset($originalfilterobject->{$columnidentifier}->{$fieldidentifier})) {
+                    $originalfilterobject->{$columnidentifier}->{$fieldidentifier} = $value;
+                }
+            }
+        }
+
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($formdata->encodedtable);
+        // We need to localize the filter for every user.
+        $lang = current_language();
+        $cachekey = $table->tablecachehash . $lang . '_filterjson';
+
+        filter::save_settings($table,
+                              $cachekey,
+                              (array)$originalfilterobject,
+                              false);
+
+        $cache = cache::make($table->cachecomponent, $table->rawcachename);
+        $cache->purge();
         return [];
     }
 
@@ -98,14 +154,23 @@ class filters_info {
 
         // Here, we retrive the actually stored filter array.
         // And fill in the data form.
-        $filterobject = self::return_filter_object((array)$data);
 
-        $data->filterinactive = $filterobject->filterinactive;
+        $encodedtable = $data->encodedtable;
 
-        foreach ($filterobject->categories as $filter) {
-            if (isset($filter->wbfilterclass)) {
-                $classname = $filter->wbfilterclass;
-                $classname::set_data($data, $filter);
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
+        // We need to localize the filter for every user.
+        $lang = current_language();
+        $key = $table->tablecachehash . $lang . '_filterjson';
+
+        $filtersettings = editfilter::return_filtersettings($table, $key);
+
+        foreach ($filtersettings as $key => $filter) {
+            if ($key === 'id') {
+                $data->id_wb_checked = $filter['id_wb_checked'] ?? 0;
+            } else if (isset($filter['wbfilterclass'])) {
+                $classname = $filter['wbfilterclass'];
+                $filter['columnidentifier'] = $key;
+                $classname::set_data($data, (object)$filter);
             }
         }
 

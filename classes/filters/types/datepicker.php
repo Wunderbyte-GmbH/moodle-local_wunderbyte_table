@@ -57,6 +57,7 @@ class datepicker extends base {
             'localizedname' => $this->localizedstring,
             get_class($this) => true,
             'datepicker' => $this->options,
+            $this->columnidentifier . '_wb_checked' => 1,
         ];
         $options['wbfilterclass'] = get_called_class();
 
@@ -64,6 +65,7 @@ class datepicker extends base {
         if (!isset($filter['id'])) {
             $filter['id'] = [
                 'localizedname' => get_string('id', 'local_wunderbyte_table'),
+                'id_wb_checked' => 1,
             ];
         }
 

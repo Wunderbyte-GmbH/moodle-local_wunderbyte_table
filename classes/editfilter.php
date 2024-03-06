@@ -212,24 +212,9 @@ class editfilter {
                     return $filtersettings;
                 }
 
-                $sql = $table->get_sql_for_cachekey(true);
-
-                // For testing, we save the filter settings at this point.
-                $url = $PAGE->url->out();
-                $now = time();
-                $data = (object)[
-                    'hash' => $cachekey,
-                    'tablehash' => $table->tablecachehash,
-                    'idstring' => $table->idstring,
-                    'userid' => 0,
-                    'page' => $table->context->id,
-                    'jsonstring' => json_encode($filtersettings),
-                    'sql' => $sql,
-                    'usermodified' => $USER->id,
-                    'timecreated' => $now,
-                    'timemodified' => $now,
-                ];
-                $DB->insert_record('local_wunderbyte_table', $data);
+                filter::save_settings($table,
+                                      $cachekey,
+                                      $filtersettings);
             }
         }
 
