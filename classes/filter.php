@@ -107,6 +107,11 @@ class filter {
                 continue;
             }
 
+            // If the filter is not checked, we skip it.
+            if (empty($value[$key . '_wb_checked'])) {
+                continue;
+            }
+
             $rawdata = false;
 
             $rawdata = $value['wbfilterclass']::get_data_for_filter_options($table, $key);

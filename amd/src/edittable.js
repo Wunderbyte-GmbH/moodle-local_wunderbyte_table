@@ -90,6 +90,7 @@ export function editTableModal(event, idstring, encodedtable) {
         // eslint-disable-next-line no-console
         console.log('form submitted response: ', response);
 
+        window.location.reload();
     });
 
     // Show the form.
