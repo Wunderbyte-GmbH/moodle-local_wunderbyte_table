@@ -246,6 +246,28 @@ class demo implements renderable, templatable {
                 'noselectionbodystring' => 'adddatabody',
             ]
         ];
+        // This is for calling a form.
+        // When id is set to -1, the key checkedids will hold comma separated string with the ids.
+        // $table->actionbuttons[] = [
+        //     'label' => 'myform', // '+Modal, SingleCall, NoSelection'
+        //     'class' => 'btn btn-warning',
+        //     'href' => '#',
+        //     // 'methodname' => 'additem',
+        //     'formname' => 'local_wunderbyte_table\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+        //     'nomodal' => false,
+        //     'id' => -1,
+        //     'selectionmandatory' => false,
+        //     'data' => [
+        //         'id' => 'id',
+        //         // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
+        //         'titlestring' => 'deletedatatitle',
+        //         'bodystring' => 'adddatabody',
+        //         'submitbuttonstring' => 'deletedatasubmit',
+        //         'component' => 'local_wunderbyte_table',
+        //         'labelcolumn' => 'firstname',
+        //         'noselectionbodystring' => 'adddatabody',
+        //     ]
+        // ];
 
         $table->actionbuttons[] = [
             'label' => get_string('nmmcys', 'local_wunderbyte_table'), // 'NoModal, MultipleCall, Selection'
