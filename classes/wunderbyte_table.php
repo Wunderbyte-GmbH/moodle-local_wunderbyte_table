@@ -39,6 +39,7 @@ use local_wunderbyte_table\output\viewtable;
 use moodle_url;
 use stdClass;
 use coding_exception;
+use local_wunderbyte_table\filters\base;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -739,17 +740,17 @@ class wunderbyte_table extends table_sql {
      * Define the columns for which an automatic filter should be generated.
      * We just store them as subcolumns of type datafields. In the mustache template these fields must be added to every...
      * ... row or card element, so it can be hidden or shown via the integrated filter mechanism..
-     *
-     * The filtercolumns can, suppelementary to just the values...
-     * ... also hold more information about the way the categories are displayed.
-     * First we can add a sortorder, second we can add a string for localisation.
-     * @param array $filtercolumns
+     * @param base $filter
      * @return void
+     * @throws moodle_exception
      */
-    public function define_filtercolumns(array $filtercolumns) {
+    public function add_filter(base $filter) {
+
+        $filtercolumns = $this->subcolumns['datafields'] ?? [];
+
+        $filter->add_filter($filtercolumns);
 
         $this->add_subcolumns('datafields', $filtercolumns, false);
-
     }
 
     /**

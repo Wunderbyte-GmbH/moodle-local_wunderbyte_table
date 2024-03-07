@@ -122,24 +122,21 @@ class demo implements renderable, templatable {
         // $table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
         // $table->set_tableclass('cardbodyclass', 'card-body row');
 
-        $filtercolumns = [];
-
         $standardfilter = new standardfilter('username', get_string('username'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
 
         $standardfilter = new standardfilter('firstname', get_string('firstname'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
 
         $standardfilter = new standardfilter('lastname', get_string('lastname'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
 
         $standardfilter = new standardfilter('email', get_string('email'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
 
         $hourslistfilter = new hourlist('timemodified', get_string('hourlastmodified', 'local_wunderbyte_table'));
-        $hourslistfilter->add_filter($filtercolumns);
+        $table->add_filter($hourslistfilter);
 
-        $table->define_filtercolumns($filtercolumns);
         $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname', 'email']);
 
@@ -222,26 +219,26 @@ class demo implements renderable, templatable {
         ];
         // This is for calling a form.
         // When id is set to -1, the key checkedids will hold comma separated string with the ids.
-        // $table->actionbuttons[] = [
-        //     'label' => 'myform', // '+Modal, SingleCall, NoSelection'
-        //     'class' => 'btn btn-warning',
-        //     'href' => '#',
-        //     // 'methodname' => 'additem',
-        //     'formname' => 'local_wunderbyte_table\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
-        //     'nomodal' => false,
-        //     'id' => -1,
-        //     'selectionmandatory' => false,
-        //     'data' => [
-        //         'id' => 'id',
-        //         // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
-        //         'titlestring' => 'deletedatatitle',
-        //         'bodystring' => 'adddatabody',
-        //         'submitbuttonstring' => 'deletedatasubmit',
-        //         'component' => 'local_wunderbyte_table',
-        //         'labelcolumn' => 'firstname',
-        //         'noselectionbodystring' => 'adddatabody',
-        //     ]
-        // ];
+        $table->actionbuttons[] = [
+            'label' => 'myform', // '+Modal, SingleCall, NoSelection'
+            'class' => 'btn btn-warning',
+            'href' => '#',
+            // 'methodname' => 'additem',
+            'formname' => 'local_wunderbyte_table\\form\\edittable', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => false,
+            'id' => -1,
+            'selectionmandatory' => false,
+            'data' => [
+                'id' => 'id',
+                // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'adddatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname',
+                'noselectionbodystring' => 'adddatabody',
+            ]
+        ];
 
         $table->actionbuttons[] = [
             'label' => get_string('nmmcys', 'local_wunderbyte_table'), // 'NoModal, MultipleCall, Selection'
@@ -370,10 +367,10 @@ class demo implements renderable, templatable {
         $filtercolumns = [];
 
         $standardfilter = new standardfilter('fullname', get_string('fullname'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
 
         $standardfilter = new standardfilter('shortname', get_string('shortname'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
 
         $datepicker = new datepicker('enddate', get_string('enddate'));
         // For the datepicker, we need to add special options.
@@ -383,7 +380,7 @@ class demo implements renderable, templatable {
             get_string('apply_filter', 'local_wunderbyte_table'),
             'now',
         );
-        $datepicker->add_filter($filtercolumns);
+        $table->add_filter($datepicker);
 
         $datepicker = new datepicker(
             'startdate',
@@ -398,7 +395,7 @@ class demo implements renderable, templatable {
             '1680130800',
             'now'
         );
-        $datepicker->add_filter($filtercolumns);
+        $table->add_filter($datepicker);
 
         $fulltextsearchcolumns = $filtercolumns;
         array_shift($fulltextsearchcolumns);
@@ -406,7 +403,6 @@ class demo implements renderable, templatable {
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
 
-        $table->define_filtercolumns($filtercolumns);
         $table->define_fulltextsearchcolumns(array_keys($filtercolumns));
         $table->define_sortablecolumns($columns);
 
@@ -487,11 +483,10 @@ class demo implements renderable, templatable {
         $filtercolumns = [];
 
         $standardfilter = new standardfilter('course', get_string('course'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('module',  get_string('module', 'local_wunderbyte_table'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
 
-        $table->define_filtercolumns($filtercolumns);
         //$table->define_fulltextsearchcolumns(array_keys($filtercolumns));
         $table->define_sortablecolumns(['id', 'course', 'module']);
 
@@ -588,17 +583,14 @@ class demo implements renderable, templatable {
         $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
         $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
 
-        $filtercolumns = [];
         $standardfilter = new standardfilter('username',  get_string('username'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('firstname',  get_string('firstname'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('lastname',  get_string('lastname'));
-        $standardfilter->add_filter($filtercolumns);
+        $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('email', get_string('email'));
-        $standardfilter->add_filter($filtercolumns);
-
-        $table->define_filtercolumns($filtercolumns);
+        $table->add_filter($standardfilter);
 
         //$table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
