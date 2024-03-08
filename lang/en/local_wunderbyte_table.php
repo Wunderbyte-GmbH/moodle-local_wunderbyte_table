@@ -105,9 +105,9 @@ $string['action_executed'] = 'Action executed';
 $string['action_executed_desc'] = 'The user executed an action "{$a->methodname}" on the table "{$a->tablename}"';
 
 // Settings.
-$string['savesettingstodb'] = 'Save Wunderbyte Table settings to db (Experimental)';
-$string['logfiltercaches'] = 'Debug feature: Save queries to DB. Has negative impact on performance. (Experimental)';
-$string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" (Experimental)';
+$string['savesettingstodb'] = 'Save Wunderbyte Table settings to db (experimental)';
+$string['logfiltercaches'] = 'Debug feature: Save queries to DB. Has negative impact on performance. (experimental)';
+$string['allowsearchincolumns'] = 'Allow search in columsn via ":" (experimental)';
 
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
