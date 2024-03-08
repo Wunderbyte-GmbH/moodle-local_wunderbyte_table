@@ -30,6 +30,7 @@ use local_wunderbyte_table\demo_table;
 use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\hourlist;
 use local_wunderbyte_table\filters\types\standardfilter;
+use local_wunderbyte_table\wunderbyte_table;
 use renderable;
 use renderer_base;
 use templatable;
