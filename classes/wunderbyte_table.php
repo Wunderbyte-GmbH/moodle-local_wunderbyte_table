@@ -45,6 +45,16 @@ use coding_exception;
  */
 class wunderbyte_table extends table_sql {
 
+    /**
+     * Provide const for sortorder ASC.
+     */
+    public const SORTORDER_ASC = 4;
+
+    /**
+     * Provide const for sortorder DESC.
+     */
+    public const SORTORDER_DESC = 3;
+
     // This variable overrides the one in table_sql. We also need the filter field.
     /**
      * @var object sql for querying db. Has fields 'fields', 'from', 'where', 'filter', 'params'.

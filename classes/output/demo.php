@@ -167,7 +167,7 @@ class demo implements renderable, templatable {
 
         $table->define_filtercolumns($filtercolumns);
         $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
-        $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
+        $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname', 'email']);
 
         // When true and action buttons are present, checkboxes will be rendered to every line / record.
         $table->addcheckboxes = true;
@@ -339,9 +339,17 @@ class demo implements renderable, templatable {
             ]
         ];
 
-        // Set default sortcolumn and sortorder.
-        $table->sort_default_column = 'username';
-        $table->sort_default_order = SORT_ASC; // Or SORT_DESC.
+        // Way to sort by default for more than one columns.
+        $table->set_sortdata([
+            [
+                'sortby' => 'username',
+                'sortorder' => wunderbyte_table::SORTORDER_ASC,
+            ],
+            [
+                'sortby' => 'firstname',
+                'sortorder' => wunderbyte_table::SORTORDER_DESC,
+            ],
+        ]);
 
         // Work out the sql for the table.
         $table->set_filter_sql('*', "(SELECT * FROM {user} ORDER BY id ASC LIMIT 112 ) as s1", '1=1', '');
