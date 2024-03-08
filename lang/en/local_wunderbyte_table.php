@@ -141,6 +141,7 @@ $string['from23to24'] = "23:00 - 24:00";
 $string['filterinactive'] = 'Hide the entire filter';
 $string['showfilter'] = 'Show this filter';
 $string['editfiltername'] = 'Edit filtername';
+$string['allowedittable'] = 'Edit table settings';
 
 $string['datepicker'] = 'Datepicker filter';
 $string['hourlist'] = 'Hourlist filter';

@@ -138,6 +138,7 @@ $string['from23to24'] = "23:00 - 24:00";
 $string['filterinactive'] = 'Verberge den Filter';
 $string['showfilter'] = 'Zeige diesen Filter';
 $string['editfiltername'] = 'Bearbeite den Filternamen';
+$string['allowedittable'] = 'Bearbeite Tabelleneinstellungen';
 
 $string['datepicker'] = 'Datumsfilter';
 $string['hourlist'] = 'Stundenlistenfilter';
