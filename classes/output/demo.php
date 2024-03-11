@@ -365,8 +365,6 @@ class demo implements renderable, templatable {
             'enddate' => get_string('enddate'),
         ];
 
-        $filtercolumns = [];
-
         $standardfilter = new standardfilter('fullname', get_string('fullname'));
         $table->add_filter($standardfilter);
 
@@ -398,13 +396,10 @@ class demo implements renderable, templatable {
         );
         $table->add_filter($datepicker);
 
-        $fulltextsearchcolumns = $filtercolumns;
-        array_shift($fulltextsearchcolumns);
-
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
 
-        $table->define_fulltextsearchcolumns(array_keys($filtercolumns));
+        $table->define_fulltextsearchcolumns(['fullname', 'shortname']);
         $table->define_sortablecolumns($columns);
 
         // When true and action buttons are present, checkboxes will be rendered to every line.

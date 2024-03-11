@@ -23,11 +23,6 @@
  */
 
 namespace local_wunderbyte_table;
-use local_wunderbyte_table\filters\base;
-use local_wunderbyte_table\filters\types\datepicker;
-use local_wunderbyte_table\filters\types\hourlist;
-use local_wunderbyte_table\filters\types\standardfilter;
-use local_wunderbyte_table\filters\types\weekdays;
 
 use coding_exception;
 use core_component;
@@ -298,7 +293,8 @@ class filter {
      * Save settings of Filter.
      * @param wunderbyte_table $table
      * @param string $cachekey
-     * @param stdClass $filtersettings
+     * @param array $filtersettings
+     * @param bool $onlyinsert
      * @return void
      * @throws coding_exception
      * @throws dml_exception
