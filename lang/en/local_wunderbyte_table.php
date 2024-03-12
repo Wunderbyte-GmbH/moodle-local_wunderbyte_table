@@ -126,4 +126,17 @@ $string['table3name'] = 'Demo table 3';
 $string['table4name'] = 'Demo table 4';
 $string['id'] = 'ID';
 
-$string['privacy:reason'] = 'This plugin does not store personal data.';
+// GDPR
+$string['privacy:metadata:local_wunderbyte_table'] = 'Store settings for tables';
+$string['privacy:metadata:local_wunderbyte_table:id'] = 'Id';
+$string['privacy:metadata:local_wunderbyte_table:hash'] = 'Hash';
+$string['privacy:metadata:local_wunderbyte_table:tablehash'] = 'Table hash';
+$string['privacy:metadata:local_wunderbyte_table:idstring'] = 'ID string';
+$string['privacy:metadata:local_wunderbyte_table:userid'] = 'User ID';
+$string['privacy:metadata:local_wunderbyte_table:page'] = 'Page';
+$string['privacy:metadata:local_wunderbyte_table:jsonstring'] = 'Json string';
+$string['privacy:metadata:local_wunderbyte_table:sql'] = 'Sql';
+$string['privacy:metadata:local_wunderbyte_table:usermodified'] = 'User modified';
+$string['privacy:metadata:local_wunderbyte_table:timecreated'] = 'The time created';
+$string['privacy:metadata:local_wunderbyte_table:timemodified'] = 'The time updated';
+$string['privacy:metadata:local_wunderbyte_table:count'] = 'Count';
