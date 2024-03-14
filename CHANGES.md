@@ -1,3 +1,9 @@
+## Version 1.9.17 (2024031400)
+* Improvement: More explanation on how to integrate a form.
+* Improvement: Add demo how to order by default for more than one columns.
+* Bugfix: Fix string confusion (English, German) - closes #51.
+* Bugfix: Namespace.
+
 ## Version 1.9.16 (2024022900)
 * Improvement: Show cards right next to each other (CSS fix).
 * Bugfix: Add missing cache definitions.
