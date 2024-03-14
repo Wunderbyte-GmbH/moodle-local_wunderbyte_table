@@ -40,6 +40,14 @@ $PAGE->set_url('/local/wunderbyte_table/demo.php');
 
 echo $OUTPUT->header();
 
+$PAGE->requires->js_call_amd('local_wunderbyte_table/app-lazy', 'init');
+echo <<<EOT
+    <div id="local-wunderbyte-table-app" name="local-wunderbyte-table-app">
+    <router-view></router-view>
+    </div>
+EOT;
+
+
 $outputdemo = new demo();
 
 echo $OUTPUT->render_from_template('local_wunderbyte_table/demo', $outputdemo->return_as_array());
