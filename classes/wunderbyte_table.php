@@ -138,6 +138,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Rows can be sorted.
+     */
+    public $sortablerows = false;
+
+    /**
+     *
      * @var string component where cache defintion is to be found.
      */
     public $cachecomponent = 'local_wunderbyte_table';
@@ -460,6 +466,17 @@ class wunderbyte_table extends table_sql {
             $headers = $this->headers;
             array_unshift($columns, 'wbcheckbox');
             array_unshift($headers, get_string('tableheadercheckbox', 'local_wunderbyte_table'));
+            $this->columns = [];
+            $this->define_columns($columns);
+            $this->headers = $headers;
+        }
+
+        // At this point, we check if we need to add the checkboxes.
+        if ($this->sortablerows && !$this->is_downloading()) {
+            $columns = array_keys($this->columns);
+            $headers = $this->headers;
+            array_unshift($columns, 'wbsortableitem');
+            array_unshift($headers, get_string('tableheadersortableitem', 'local_wunderbyte_table'));
             $this->columns = [];
             $this->define_columns($columns);
             $this->headers = $headers;
@@ -1535,6 +1552,26 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * This handles the colum checkboxes.
+     *
+     * @param stdClass $values
+     * @return void
+     */
+    public function col_wbsortableitem($values) {
+
+        global $OUTPUT;
+
+        $data['id'] = $values->id;
+        $data['label'] = '';
+        $data['name'] = 'row-'.$this->uniqueid.'-'.$values->id;
+        $data['checkboxclass'] = '';
+        $data['checked'] = !empty($values->checkbox) ? true : false;
+        $data['tableid'] = $this->idstring;
+
+        return $OUTPUT->render_from_template('local_wunderbyte_table/col_sortableitem', $data);;
+    }
+
+    /**
      * Change number of rows. Uses the transmitaction pattern (actionbutton).
      * @param int $id
      * @param string $data
@@ -1554,6 +1591,24 @@ class wunderbyte_table extends table_sql {
             'message' => 'Did work',
         ];
     }
+
+    /**
+     * Change number of rows. Uses the transmitaction pattern (actionbutton).
+     * @param int $id
+     * @param string $data
+     * @return array
+     */
+    public function action_reorderrows(int $id, string $data): array {
+
+        $jsonobject = json_decode($data);
+        $ids = $jsonobject->ids;
+
+        return [
+            'success' => 1,
+            'message' => 'This is just a demo, reordering has to be implemented for each table',
+        ];
+    }
+
     /**
      * This returns an instance of wunderbyte table or child class.
      *

@@ -37,7 +37,15 @@ $functions = [
         'local_wunderbyte_table_execute_action' => [
                 'classname' => 'local_wunderbyte_table\external\execute_action',
                 'description' => 'Executes an action button',
-                'type' => 'read',
+                'type' => 'write',
+                'capabilities' => '',
+                'ajax' => true,
+                'loginrequired' => false,
+        ],
+        'local_wunderbyte_table_sort_rows' => [
+                'classname' => 'local_wunderbyte_table\external\sort_rows',
+                'description' => 'Sorts rows',
+                'type' => 'write',
                 'capabilities' => '',
                 'ajax' => true,
                 'loginrequired' => false,

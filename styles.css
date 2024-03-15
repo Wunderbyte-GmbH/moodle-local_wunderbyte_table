@@ -435,3 +435,11 @@
 .wunderbyteTableSortIcon {
     font-size: 1.2em;
 }
+
+.wb-table-sortable-active {
+    background-color: grey;
+}
+
+.wb-table-sortable-drag {
+    background-color: lightgrey;
+}

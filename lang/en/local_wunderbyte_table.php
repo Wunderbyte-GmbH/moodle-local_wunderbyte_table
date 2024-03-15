@@ -148,6 +148,8 @@ $string['hourlist'] = 'Hourlist filter';
 $string['standardfilter'] = 'Standard filter';
 $string['weekdays'] = 'Weekdays filter';
 
+$string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sorting"></i>';
+
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
 $string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';
