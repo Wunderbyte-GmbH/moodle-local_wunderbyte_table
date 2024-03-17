@@ -145,6 +145,7 @@ class execute_action extends external_api {
         return new external_single_structure([
             'success' => new external_value(PARAM_INT, '1 is success, 0 isn\'t'),
             'message' => new external_value(PARAM_RAW, 'Message to be displayed', VALUE_DEFAULT, ''),
+            'reload' => new external_value(PARAM_INT, 'Reload table', VALUE_DEFAULT, 0),
         ]);
     }
 }

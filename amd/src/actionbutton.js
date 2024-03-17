@@ -234,12 +234,17 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
     done: function(data) {
 
       if (data.success == 1) {
+
+        if (data.reload > 0) {
+          window.location.reload();
+        }
         if (data.message.length > 0) {
           showNotification(data.message, "success");
         }
       } else {
         showNotification(data.message, "danger");
       }
+
       reloadAllTables();
 
       // We check if the table is within a modal and if so, we make sure that this modal...
@@ -365,7 +370,12 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
     // eslint-disable-next-line no-console
     console.log(e.detail);
 
-    reloadAllTables();
+    if (e.detail.reload) {
+      // Reload whole site.
+      window.location.reload();
+    } else {
+      reloadAllTables();
+    }
   });
 
   // Show the form.
