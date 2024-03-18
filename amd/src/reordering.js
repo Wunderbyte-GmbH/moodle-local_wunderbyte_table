@@ -25,9 +25,6 @@
  import jQuery from 'jquery';
  import {transmitAction} from 'local_wunderbyte_table/actionbutton';
 
-// eslint-disable-next-line capitalized-comments
-//  import {reloadAllTables} from 'local_wunderbyte_table/reload';
-
  const SELECTOR = {
     ROWS: '.rows-container',
  };
@@ -96,13 +93,12 @@
 
 
  /**
- * Function to initialize the search after rendering the searchbox.
- * @param {*} listContainer
- * @param {*} idstring
- * @param {*} encodedtable
- * @returns {void}
- */
- // eslint-disable-next-line no-unused-vars
+  * Function to initialize the search after rendering the searchbox.
+  * @param {*} listContainer
+  * @param {*} idstring
+  * @param {*} encodedtable
+  * @returns {void}
+  */
  export function initializeReordering(listContainer, idstring, encodedtable) {
 
 
