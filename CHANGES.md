@@ -1,3 +1,8 @@
+## Version 1.9.18 (2024031800)
+* Improvement: New filter classes for better handling of filters
+* Improvement: First steps to edit filter on the fly (experimental)
+* Improvement: Add generic reordering of list items (experimental)
+
 ## Version 1.9.17 (2024031400)
 * Improvement: More explanation on how to integrate a form.
 * Improvement: Add demo how to order by default for more than one columns.
