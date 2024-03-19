@@ -241,8 +241,6 @@ class table implements renderable, templatable {
 
         global $SESSION;
 
-        tablesettings::apply_setting($table);
-
         $this->table = [];
 
         $this->wbtable = $table;

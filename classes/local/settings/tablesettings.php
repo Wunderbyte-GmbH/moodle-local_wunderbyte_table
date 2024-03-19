@@ -76,8 +76,12 @@ class tablesettings {
         $table->showcountlabel = $settingsobject->general->showcountlabel;
         $table->showrowcountselect = $settingsobject->general->showrowcountselect;
         $table->stickyheader = $settingsobject->general->stickyheader;
+        $table->addcheckboxes = $settingsobject->general->addcheckboxes;
         $table->tableheight = $settingsobject->general->tableheight;
         $table->pagesize = $settingsobject->general->pagesize;
+        $table->filteronloadinactive = $settingsobject->general->filteronloadinactive;
+        $table->placebuttonandpageelementsontop = $settingsobject->general->placebuttonandpageelementsontop;
+        $table->infinitescroll = $settingsobject->general->infinitescroll;
 
     }
 
@@ -150,14 +154,22 @@ class tablesettings {
 
         $mform->addElement('advcheckbox', 'gs_wb_showrowcountselect', get_string('showrowcountselect', 'local_wunderbyte_table'));
 
+        $mform->addElement('advcheckbox', 'gs_wb_addcheckboxes', get_string('addcheckboxes', 'local_wunderbyte_table'));
+
         $mform->addElement('advcheckbox', 'gs_wb_placebuttonandpageelementsontop',
             get_string('placebuttonandpageelementsontop', 'local_wunderbyte_table'));
+
+        $mform->addElement('advcheckbox', 'gs_wb_filteronloadinactive',
+            get_string('filteronloadinactive', 'local_wunderbyte_table'));
 
         $mform->addElement('text', 'gs_wb_tableheight', get_string('tableheight', 'local_wunderbyte_table'));
         $mform->setType('tableheight', PARAM_INT);
 
         $mform->addElement('text', 'gs_wb_pagesize', get_string('pagesize', 'local_wunderbyte_table'));
         $mform->setType('pagesize', PARAM_INT);
+
+        $mform->addElement('text', 'gs_wb_infinitescroll', get_string('infinitescroll', 'local_wunderbyte_table'));
+        $mform->setType('infinitescroll', PARAM_INT);
 
     }
 
@@ -187,12 +199,18 @@ class tablesettings {
 
         $data->gs_wb_showrowcountselect = $ts->general->showrowcountselect ?? ($table->showrowcountselect ? 1 : 0);
 
+        $data->gs_wb_addcheckboxes = $ts->general->addcheckboxes ?? ($table->addcheckboxes ? 1 : 0);
+
+        $data->gs_wb_filteronloadinactive = $ts->general->filteronloadinactive ?? ($table->filteronloadinactive ? 1 : 0);
+
         $data->gs_wb_placebuttonandpageelementsontop
             = $ts->general->placebuttonandpageelementsontop ?? ($table->placebuttonandpageelementsontop ? 1 : 0);
 
         $data->gs_wb_tableheight = $ts->general->tableheight ?? $table->tableheight;
 
         $data->gs_wb_pagesize = $ts->general->pagesize ?? $table->pagesize;
+
+        $data->gs_wb_infinitescroll = $ts->general->infinitescroll ?? $table->infinitescroll;
 
     }
 

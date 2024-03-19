@@ -40,6 +40,7 @@ use moodle_url;
 use stdClass;
 use coding_exception;
 use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\local\settings\tablesettings;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -452,6 +453,12 @@ class wunderbyte_table extends table_sql {
 
         global $DB;
 
+        $this->recreateidstring();
+
+        $encodedtable = $this->return_encoded_table();
+
+        tablesettings::apply_setting($this);
+
         if (!$this->columns) {
             $onerow = $DB->get_record_sql("SELECT {$this->sql->fields} FROM {$this->sql->from} WHERE {$this->sql->where}",
                 $this->sql->params, IGNORE_MULTIPLE);
@@ -484,10 +491,6 @@ class wunderbyte_table extends table_sql {
 
         $this->pagesize = $pagesize;
         $this->setup();
-
-        $this->recreateidstring();
-
-        $encodedtable = $this->return_encoded_table();
 
         // First we query without the filter.
         $this->query_db_cached($this->pagesize, $useinitialsbar);

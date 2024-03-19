@@ -158,6 +158,9 @@ $string['weekdays'] = 'Weekdays filter';
 
 $string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sorting"></i>';
 
+// Errors.
+$string['valuehastobeint'] = "Value has to be a number";
+
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.
 $string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';

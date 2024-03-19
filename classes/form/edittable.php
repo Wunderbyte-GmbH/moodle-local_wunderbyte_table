@@ -108,6 +108,18 @@ class edittable extends dynamic_form {
     public function validation($data, $files) {
         $errors = [];
 
+        if (!is_number($data['gs_wb_pagesize'])) {
+            $errors['gs_wb_pagesize'] = get_string('valuehastobeint', 'local_wunderbyte_table');
+        }
+
+        if (!is_number($data['gs_wb_tableheight'])) {
+            $errors['gs_wb_tableheight'] = get_string('valuehastobeint', 'local_wunderbyte_table');
+        }
+
+        if (!is_number($data['gs_wb_infinitescroll'])) {
+            $errors['gs_wb_infinitescroll'] = get_string('valuehastobeint', 'local_wunderbyte_table');
+        }
+
         return $errors;
     }
 
