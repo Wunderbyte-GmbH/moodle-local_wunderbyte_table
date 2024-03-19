@@ -30,6 +30,7 @@ use coding_exception;
 use dml_exception;
 use local_wunderbyte_table\editfilter;
 use local_wunderbyte_table\filter;
+use local_wunderbyte_table\local\settings\tablesettings;
 use local_wunderbyte_table\wunderbyte_table;
 use MoodleQuickForm;
 use stdClass;
@@ -60,7 +61,9 @@ class filters_info {
         $lang = current_language();
         $key = $table->tablecachehash . $lang . '_filterjson';
 
-        $filterobjects = $table->subcolumns['datafields'];
+        // We want the live and uncached datafields.
+        $tablesettings = tablesettings::return_initial_settings($table);
+        $filterobjects = $tablesettings['filtersettings'];
 
         foreach ($filterobjects as $key => $filter) {
 
@@ -71,7 +74,7 @@ class filters_info {
                     get_string('filterinactive', 'local_wunderbyte_table'));
 
                     // We save the filterobject as we get it here.
-                    $mform->addElement('hidden', 'wb_filterjson', json_encode($filterobjects));
+                    $mform->addElement('hidden', 'wb_jsontablesettings', json_encode($tablesettings));
             } else {
                 $classname = $filter['wbfilterclass'];
                 $filter['columnidentifier'] = $key;
@@ -91,10 +94,10 @@ class filters_info {
 
         // First, we get the original filterjson.
 
-        $originalfilterobject = json_decode($formdata->wb_filterjson);
+        $originaltablesettings = json_decode($formdata->wb_jsontablesettings);
 
         $keystoskip = [
-            'wb_filterjson',
+            'wb_jsontablesettings',
             'encodedtable',
         ];
 
@@ -107,12 +110,12 @@ class filters_info {
 
             list($columnidentifier, $fieldidentifier) = explode('_wb_', $key);
 
-            if (isset($originalfilterobject->{$columnidentifier})) {
+            if (isset($originaltablesettings->filtersettings->{$columnidentifier})) {
                 // The checkbox comes directly like this.
-                if (isset($originalfilterobject->{$columnidentifier}->{$key})) {
-                    $originalfilterobject->{$columnidentifier}->{$key} = $value;
-                } else if (isset($originalfilterobject->{$columnidentifier}->{$fieldidentifier})) {
-                    $originalfilterobject->{$columnidentifier}->{$fieldidentifier} = $value;
+                if (isset($originaltablesettings->filtersettings->{$columnidentifier}->{$key})) {
+                    $originaltablesettings->filtersettings->{$columnidentifier}->{$key} = $value;
+                } else if (isset($originaltablesettings->filtersettings->{$columnidentifier}->{$fieldidentifier})) {
+                    $originaltablesettings->filtersettings->{$columnidentifier}->{$fieldidentifier} = $value;
                 }
             }
         }
@@ -124,7 +127,7 @@ class filters_info {
 
         filter::save_settings($table,
                               $cachekey,
-                              (array)$originalfilterobject,
+                              (array)$originaltablesettings,
                               false);
 
         $cache = cache::make($table->cachecomponent, $table->rawcachename);
@@ -174,21 +177,5 @@ class filters_info {
             }
         }
 
-    }
-
-    /**
-     * Return filter object.
-     * @param array $formdata
-     * @return mixed
-     * @throws coding_exception
-     * @throws dml_exception
-     */
-    private static function return_filter_object(array $formdata) {
-        $encodedtable = $formdata['encodedtable'];
-
-        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
-        filter::create_filter($table);
-
-        return json_decode($table->filterjson);
     }
 }

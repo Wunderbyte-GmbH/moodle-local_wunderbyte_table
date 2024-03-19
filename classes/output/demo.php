@@ -143,7 +143,7 @@ class demo implements renderable, templatable {
 
         // When true and action buttons are present, checkboxes will be rendered to every line / record.
         $table->addcheckboxes = true;
-        $table->sortablerows = true;
+        // $table->sortablerows = true;
 
         // Add action buttons to bottom of table. Demo of all defined types.
         // Define if it triggers a modal, if records need to be selected
