@@ -54,7 +54,6 @@ class tablesettings {
     /**
      * Applies the wb table settings to the output table class.
      * Overrides coded values with manually set values.
-     * @param table $outputtable
      * @param wunderbyte_table $table
      * @return void
      */
@@ -151,7 +150,8 @@ class tablesettings {
 
         $mform->addElement('advcheckbox', 'gs_wb_showrowcountselect', get_string('showrowcountselect', 'local_wunderbyte_table'));
 
-        $mform->addElement('advcheckbox', 'gs_wb_placebuttonandpageelementsontop', get_string('placebuttonandpageelementsontop', 'local_wunderbyte_table'));
+        $mform->addElement('advcheckbox', 'gs_wb_placebuttonandpageelementsontop',
+            get_string('placebuttonandpageelementsontop', 'local_wunderbyte_table'));
 
         $mform->addElement('text', 'gs_wb_tableheight', get_string('tableheight', 'local_wunderbyte_table'));
         $mform->setType('tableheight', PARAM_INT);
@@ -162,7 +162,7 @@ class tablesettings {
     }
 
     /**
-     *
+     * Set data.
      * @param stdClass $data
      * @param wunderbyte_table $table
      * @return void

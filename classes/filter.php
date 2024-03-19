@@ -293,7 +293,7 @@ class filter {
      * Save settings of Filter.
      * @param wunderbyte_table $table
      * @param string $cachekey
-     * @param array $filtersettings
+     * @param array $tablesettings
      * @param bool $onlyinsert
      * @return void
      * @throws coding_exception
