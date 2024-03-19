@@ -36,6 +36,7 @@ $string['orderdown'] = "Von Z nach A sortiert";
 $string['noentriesfound'] = "Keine Einträge gefunden";
 $string['couldnotloaddata'] = "Konnte keine Daten laden";
 
+$string['customizewbtable'] = 'Wunderbyte Table anpassen';
 $string['filter'] = 'Tabelle filtern';
 $string['reload'] = "Tabelle neu laden";
 $string['edittable'] = "Editieren";
@@ -138,6 +139,14 @@ $string['filterinactive'] = 'Verberge den Filter';
 $string['showfilter'] = 'Zeige diesen Filter';
 $string['editfiltername'] = 'Bearbeite den Filternamen';
 $string['allowedittable'] = 'Bearbeite Tabelleneinstellungen';
+$string['showdownloadbutton'] = 'Download-Button anzeigen';
+$string['showreloadbutton'] = 'Reload-Button anzeigen';
+$string['showcountlabel'] = 'Anzahl der gefundenen Einträge anzeigen';
+$string['stickyheader'] = 'Header fixieren (sticky header)';
+$string['showrowcountselect'] = 'Dropdown für Anzahl der anzuzeigenden Zeilen anzeigen';
+$string['placebuttonandpageelementsontop'] = 'Buttons und Elemente oben statt unten anzeigen';
+$string['tableheight'] = 'Tabellen-Höhe';
+$string['pagesize'] = 'Anzahl der Einträge pro Seite';
 
 $string['datepicker'] = 'Datumsfilter';
 $string['hourlist'] = 'Stundenlistenfilter';

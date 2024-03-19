@@ -79,7 +79,7 @@ export function editTableModal(event, idstring, encodedtable) {
             encodedtable,
         },
         // Pass any configuration settings to the modal dialogue, for example, the title:
-        modalConfig: {title: getString('edittable', 'local_wunderbyte_table')},
+        modalConfig: {title: getString('customizewbtable', 'local_wunderbyte_table')},
         // DOM element that should get the focus after the modal dialogue is closed:
         returnFocus: element
     });

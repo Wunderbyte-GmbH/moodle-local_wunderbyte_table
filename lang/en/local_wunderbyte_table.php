@@ -36,6 +36,7 @@ $string['orderdown'] = "Sorted from Z to A";
 $string['noentriesfound'] = "No entries found";
 $string['couldnotloaddata'] = "Could not load data";
 
+$string['customizewbtable'] = 'Customize Wunderbyte Table';
 $string['filter'] = 'Filter table';
 $string['reload'] = "Reload table";
 $string['edittable'] = "Edit table";
@@ -141,6 +142,14 @@ $string['filterinactive'] = 'Hide the entire filter';
 $string['showfilter'] = 'Show this filter';
 $string['editfiltername'] = 'Edit filtername';
 $string['allowedittable'] = 'Edit table settings';
+$string['showdownloadbutton'] = 'Show download button';
+$string['showreloadbutton'] = 'Show reload button';
+$string['showcountlabel'] = 'Show numer of records found';
+$string['stickyheader'] = 'Make header sticky';
+$string['showrowcountselect'] = 'Show dropdown for number of rows';
+$string['placebuttonandpageelementsontop'] = 'Show buttons and page elements on top (instead of bottom)';
+$string['tableheight'] = 'Table height';
+$string['pagesize'] = 'Number of records per page';
 
 $string['datepicker'] = 'Datepicker filter';
 $string['hourlist'] = 'Hourlist filter';
