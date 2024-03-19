@@ -104,7 +104,6 @@ $string['action_executed'] = 'Aktion ausgeführt';
 $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname}" in der folgenden Tabelle ausgeführt: "{$a->tablename}"';
 
 // Settings.
-$string['savesettingstodb'] = 'Speichere Wunderbyte Table-Einstellungen in der Datenbank (experimentell)';
 $string['logfiltercaches'] = 'Debug-Feature: Speichere Query-Hashes in der DB. Das hat negative Auswirkugen auf die Performance (experimentell)';
 $string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" (experimentell)';
 

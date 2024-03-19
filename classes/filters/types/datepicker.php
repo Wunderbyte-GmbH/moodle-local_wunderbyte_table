@@ -48,10 +48,11 @@ class datepicker extends base {
     /**
      * Add the filter to the array.
      * @param array $filter
+     * @param bool $invisible
      * @return void
      * @throws moodle_exception
      */
-    public function add_filter(array &$filter) {
+    public function add_filter(array &$filter, bool $invisible = false) {
 
         $options = [
             'localizedname' => $this->localizedstring,

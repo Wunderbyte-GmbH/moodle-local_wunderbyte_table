@@ -557,6 +557,8 @@ class demo implements renderable, templatable {
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
 
+        // $table->hide_filter();
+
         // To lazy load wunderbyte table (eg. for loading in tabs or modals)
         // you need to call $table->lazyout() instead of $table->out.
         // While out will return the html to echo, lazyout echos right away.

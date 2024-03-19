@@ -71,7 +71,7 @@ class filters_info {
                 $mform->addElement('advcheckbox',
                     'id_wb_checked',
                     '',
-                    get_string('filterinactive', 'local_wunderbyte_table'));
+                    get_string('showfilter', 'local_wunderbyte_table'));
 
                     // We save the filterobject as we get it here.
                     $mform->addElement('hidden', 'wb_jsontablesettings', json_encode($tablesettings));
@@ -84,54 +84,15 @@ class filters_info {
     }
 
     /**
-     * This function runs through all installed field classes and executes the prepare save function.
-     * Returns an array of warnings as string.
+     * Save data from field.
      * @param stdClass $formdata
      * @param stdClass $newdata
      * @return array
      */
     public static function process_data(stdClass &$formdata, stdClass &$newdata): array {
 
-        // First, we get the original filterjson.
+        // This is implemented in the tablesettings class.
 
-        $originaltablesettings = json_decode($formdata->wb_jsontablesettings);
-
-        $keystoskip = [
-            'wb_jsontablesettings',
-            'encodedtable',
-        ];
-
-        // Now we update with the new values.
-        foreach ($formdata as $key => $value) {
-
-            if (in_array($key, $keystoskip)) {
-                continue;
-            }
-
-            list($columnidentifier, $fieldidentifier) = explode('_wb_', $key);
-
-            if (isset($originaltablesettings->filtersettings->{$columnidentifier})) {
-                // The checkbox comes directly like this.
-                if (isset($originaltablesettings->filtersettings->{$columnidentifier}->{$key})) {
-                    $originaltablesettings->filtersettings->{$columnidentifier}->{$key} = $value;
-                } else if (isset($originaltablesettings->filtersettings->{$columnidentifier}->{$fieldidentifier})) {
-                    $originaltablesettings->filtersettings->{$columnidentifier}->{$fieldidentifier} = $value;
-                }
-            }
-        }
-
-        $table = wunderbyte_table::instantiate_from_tablecache_hash($formdata->encodedtable);
-        // We need to localize the filter for every user.
-        $lang = current_language();
-        $cachekey = $table->tablecachehash . $lang . '_filterjson';
-
-        filter::save_settings($table,
-                              $cachekey,
-                              (array)$originaltablesettings,
-                              false);
-
-        $cache = cache::make($table->cachecomponent, $table->rawcachename);
-        $cache->purge();
         return [];
     }
 
@@ -149,18 +110,16 @@ class filters_info {
     /**
      * Set data for all filters.
      * @param stdClass $data
+     * @param wunderbyte_table $table
      * @return void
      * @throws coding_exception
      * @throws dml_exception
      */
-    public static function set_data(stdClass &$data) {
+    public static function set_data(stdClass &$data, wunderbyte_table $table) {
 
         // Here, we retrive the actually stored filter array.
         // And fill in the data form.
 
-        $encodedtable = $data->encodedtable;
-
-        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
         // We need to localize the filter for every user.
         $lang = current_language();
         $key = $table->tablecachehash . $lang . '_filterjson';

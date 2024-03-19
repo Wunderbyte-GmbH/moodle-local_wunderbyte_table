@@ -81,17 +81,18 @@ class hourlist extends base {
     /**
      * Add the filter to the array.
      * @param array $filter
+     * @param bool $invisible
      * @return void
      * @throws moodle_exception
      */
-    public function add_filter(array &$filter) {
+    public function add_filter(array &$filter, bool $invisible = false) {
 
         $options = $this->options;
 
         $options['localizedname'] = $this->localizedstring;
         $options['wbfilterclass'] = get_called_class();
         $options[get_class($this)] = true;
-        $options[$this->columnidentifier . '_wb_checked'] = 1;
+        $options[$this->columnidentifier . '_wb_checked'] = $invisible ? 0 : 1;
 
         // We always need to make sure that id column is present.
         if (!isset($filter['id'])) {

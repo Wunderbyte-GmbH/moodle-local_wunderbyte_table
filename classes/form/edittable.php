@@ -24,6 +24,8 @@ use context;
 use context_system;
 use core_form\dynamic_form;
 use local_wunderbyte_table\filters\filters_info;
+use local_wunderbyte_table\local\settings\tablesettings;
+use local_wunderbyte_table\wunderbyte_table;
 use moodle_url;
 use stdClass;
 
@@ -56,6 +58,8 @@ class edittable extends dynamic_form {
 
         filters_info::defintion($mform, $data, []);
 
+        tablesettings::definition($mform, (array)$data);
+
     }
 
     /**
@@ -69,6 +73,8 @@ class edittable extends dynamic_form {
 
         filters_info::process_data($data, $newdata);
 
+        tablesettings::process_data($data, $newdata);
+
         return $newdata;
     }
 
@@ -79,7 +85,13 @@ class edittable extends dynamic_form {
     public function set_data_for_dynamic_submission(): void {
 
         $data = (object)$this->_ajaxformdata;
-        filters_info::set_data($data);
+
+        $encodedtable = $data->encodedtable;
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
+
+        filters_info::set_data($data, $table);
+
+        tablesettings::set_data($data, $table);
 
         $this->set_data($data);
 

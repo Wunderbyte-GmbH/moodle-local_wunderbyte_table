@@ -24,7 +24,13 @@
 
 namespace local_wunderbyte_table\local\settings;
 
+use cache;
+use coding_exception;
+use local_wunderbyte_table\filter;
+use local_wunderbyte_table\output\table;
 use local_wunderbyte_table\wunderbyte_table;
+use MoodleQuickForm;
+use stdClass;
 
 /**
  * Handles the settings of the table.
@@ -46,6 +52,37 @@ class tablesettings {
     }
 
     /**
+     * Applies the wb table settings to the output table class.
+     * Overrides coded values with manually set values.
+     * @param table $outputtable
+     * @param wunderbyte_table $table
+     * @return void
+     */
+    public static function apply_setting(wunderbyte_table $table) {
+
+        // We need to localize the filter for every user.
+        $lang = current_language();
+        $key = $table->tablecachehash . $lang . '_filterjson';
+
+        $jsontablesettings = self::return_jsontablesettings_from_db(0, $key);
+        $settingsobject = json_decode($jsontablesettings);
+
+        // Nothing saved?
+        if (empty($settingsobject->general)) {
+            return;
+        }
+
+        $table->showdownloadbutton = $settingsobject->general->showdownloadbutton;
+        $table->showreloadbutton = $settingsobject->general->showreloadbutton;
+        $table->showcountlabel = $settingsobject->general->showcountlabel;
+        $table->showrowcountselect = $settingsobject->general->showrowcountselect;
+        $table->stickyheader = $settingsobject->general->stickyheader;
+        $table->tableheight = $settingsobject->general->tableheight;
+        $table->pagesize = $settingsobject->general->pagesize;
+
+    }
+
+    /**
      * Find filterjson for user. If a userid is transmitted...
      * ... we first look for an individual setting for the user.
      * If there is no individual setting for the specific user, we fall back to the general one.
@@ -60,7 +97,7 @@ class tablesettings {
 
         global $DB;
 
-        if (empty(get_config('local_wunderbyte_table', 'savesettingstodb'))) {
+        if (empty(get_config('local_wunderbyte_table', 'allowedittable'))) {
             return '{}';
         }
 
@@ -93,5 +130,130 @@ class tablesettings {
         $json = $DB->get_field_sql($sql, $params);
 
         return $json ?? '{}';
+    }
+
+    /**
+     * Add Table settings form elements.
+     * @param MoodleQuickForm $mform
+     * @param array $formdata
+     * @return void
+     * @throws coding_exception
+     */
+    public static function definition(MoodleQuickForm $mform, array $formdata) {
+
+        $mform->addElement('advcheckbox', 'gs_wb_showdownloadbutton', get_string('showdownloadbutton', 'local_wunderbyte_table'));
+
+        $mform->addElement('advcheckbox', 'gs_wb_showreloadbutton', get_string('showreloadbutton', 'local_wunderbyte_table'));
+
+        $mform->addElement('advcheckbox', 'gs_wb_showcountlabel', get_string('showcountlabel', 'local_wunderbyte_table'));
+
+        $mform->addElement('advcheckbox', 'gs_wb_stickyheader', get_string('stickyheader', 'local_wunderbyte_table'));
+
+        $mform->addElement('advcheckbox', 'gs_wb_showrowcountselect', get_string('showrowcountselect', 'local_wunderbyte_table'));
+
+        $mform->addElement('advcheckbox', 'gs_wb_placebuttonandpageelementsontop', get_string('placebuttonandpageelementsontop', 'local_wunderbyte_table'));
+
+        $mform->addElement('text', 'gs_wb_tableheight', get_string('tableheight', 'local_wunderbyte_table'));
+        $mform->setType('tableheight', PARAM_INT);
+
+        $mform->addElement('text', 'gs_wb_pagesize', get_string('pagesize', 'local_wunderbyte_table'));
+        $mform->setType('pagesize', PARAM_INT);
+
+    }
+
+    /**
+     *
+     * @param stdClass $data
+     * @param wunderbyte_table $table
+     * @return void
+     */
+    public static function set_data(stdClass &$data, wunderbyte_table $table) {
+
+        // We need to localize the filter for every user.
+        $lang = current_language();
+        $key = $table->tablecachehash . $lang . '_filterjson';
+
+        $jsontablesettings = self::return_jsontablesettings_from_db(0, $key, 0);
+
+        $ts = json_decode($jsontablesettings);
+
+        $data->gs_wb_showdownloadbutton = $ts->general->showdownloadbutton ?? ($table->showdownloadbutton ? 1 : 0);
+
+        $data->gs_wb_showreloadbutton = $ts->general->showreloadbutton ?? ($table->showreloadbutton ? 1 : 0);
+
+        $data->gs_wb_showcountlabel = $ts->general->showcountlabel ?? ($table->showcountlabel ? 1 : 0);
+
+        $data->gs_wb_stickyheader = $ts->general->stickyheader ?? ($table->stickyheader ? 1 : 0);
+
+        $data->gs_wb_showrowcountselect = $ts->general->showrowcountselect ?? ($table->showrowcountselect ? 1 : 0);
+
+        $data->gs_wb_placebuttonandpageelementsontop
+            = $ts->general->placebuttonandpageelementsontop ?? ($table->placebuttonandpageelementsontop ? 1 : 0);
+
+        $data->gs_wb_tableheight = $ts->general->tableheight ?? $table->tableheight;
+
+        $data->gs_wb_pagesize = $ts->general->pagesize ?? $table->pagesize;
+
+    }
+
+    /**
+     * This function runs through all installed field classes and executes the prepare save function.
+     * Returns an array of warnings as string.
+     * @param stdClass $formdata
+     * @param stdClass $newdata
+     * @return array
+     */
+    public static function process_data(stdClass &$formdata, stdClass &$newdata): array {
+
+        // First, we get the original filterjson.
+
+        $originaltablesettings = json_decode($formdata->wb_jsontablesettings);
+
+        $keystoskip = [
+            'wb_jsontablesettings',
+            'encodedtable',
+        ];
+
+        // Now we update with the new values.
+        foreach ($formdata as $key => $value) {
+
+            if (in_array($key, $keystoskip)) {
+                continue;
+            }
+
+            list($columnidentifier, $fieldidentifier) = explode('_wb_', $key);
+
+            // We don't treat the gs column identifier.
+            if ($columnidentifier === 'gs') {
+                if (!isset($originaltablesettings->general)) {
+                    $originaltablesettings->general = new stdClass();
+                }
+                $originaltablesettings->general->$fieldidentifier = $value;
+                continue;
+            }
+
+            if (isset($originaltablesettings->filtersettings->{$columnidentifier})) {
+                // The checkbox comes directly like this.
+                if (isset($originaltablesettings->filtersettings->{$columnidentifier}->{$key})) {
+                    $originaltablesettings->filtersettings->{$columnidentifier}->{$key} = $value;
+                } else if (isset($originaltablesettings->filtersettings->{$columnidentifier}->{$fieldidentifier})) {
+                    $originaltablesettings->filtersettings->{$columnidentifier}->{$fieldidentifier} = $value;
+                }
+            }
+        }
+
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($formdata->encodedtable);
+        // We need to localize the filter for every user.
+        $lang = current_language();
+        $cachekey = $table->tablecachehash . $lang . '_filterjson';
+
+        filter::save_settings($table,
+                              $cachekey,
+                              (array)$originaltablesettings,
+                              false);
+
+        $cache = cache::make($table->cachecomponent, $table->rawcachename);
+        $cache->purge();
+        return [];
     }
 }

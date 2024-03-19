@@ -68,7 +68,7 @@ class editfilter {
             // This is distinct from a non existing key, which would return false.
 
             // Now we fetch the user specific filter columns from DB.
-            $jsonstring = tablesettings::return_jsontablesettings_from_db(0, $table->idstring, $USER->id);
+            $jsonstring = tablesettings::return_jsontablesettings_from_db(0, $cachekey, $USER->id);
 
             $tablesettings = json_decode($jsonstring);
             // For backwards compatibility, we also support only filtersettings.
@@ -76,7 +76,7 @@ class editfilter {
         } else {
             // At this point, we know that there is no user specific filter available.
             // There might be a general one in the DB.
-            if ((get_config('local_wunderbyte_table', 'savesettingstodb'))
+            if ((get_config('local_wunderbyte_table', 'allowedittable'))
                 && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => "0"])) {
                 $jsonstring = tablesettings::return_jsontablesettings_from_db(0, $cachekey, 0);
                 $tablesettings = json_decode($jsonstring, true);
@@ -90,7 +90,7 @@ class editfilter {
                 $filtersettings = $table->subcolumns['datafields'];
 
                 // We return the filtersettings right away.
-                if (empty(get_config('local_wunderbyte_table', 'savesettingstodb'))) {
+                if (empty(get_config('local_wunderbyte_table', 'allowedittable'))) {
                     return $filtersettings;
                 }
 
@@ -127,7 +127,7 @@ class editfilter {
         switch ($filterjson) {
             case false:
                 // If user specific key did not exist, we still need to look in the DB.
-                if (get_config('local_wunderbyte_table', 'savesettingstodb')
+                if (get_config('local_wunderbyte_table', 'allowedittable')
                     && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => $USER->id])) {
                     // If the key doesn't exist, it returns false. If only the key exists...
                     // ... it returns null.

@@ -471,7 +471,7 @@ class wunderbyte_table extends table_sql {
             $this->headers = $headers;
         }
 
-        // At this point, we check if we need to add the checkboxes.
+        // At this point, we check if we need to add the drag areas.
         if ($this->sortablerows && !$this->is_downloading()) {
             $columns = array_keys($this->columns);
             $headers = $this->headers;
@@ -758,16 +758,28 @@ class wunderbyte_table extends table_sql {
      * We just store them as subcolumns of type datafields. In the mustache template these fields must be added to every...
      * ... row or card element, so it can be hidden or shown via the integrated filter mechanism..
      * @param base $filter
+     * @param bool $invisible
      * @return void
      * @throws moodle_exception
      */
-    public function add_filter(base $filter) {
+    public function add_filter(base $filter, $invisible = false) {
 
         $filtercolumns = $this->subcolumns['datafields'] ?? [];
 
-        $filter->add_filter($filtercolumns);
+        $filter->add_filter($filtercolumns, $invisible);
 
         $this->add_subcolumns('datafields', $filtercolumns, false);
+    }
+
+    /**
+     * Hides the entire filter.
+     * This is not like toggling on and off on start, but there will be just no filter at all.
+     * @return void
+     * @throws moodle_exception
+     */
+    public function hide_filter() {
+
+        $this->subcolumns['datafields']['id']['id_wb_checked'] = 0;
     }
 
     /**
