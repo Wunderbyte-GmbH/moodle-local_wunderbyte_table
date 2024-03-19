@@ -30,7 +30,6 @@ const SELECTORS = {
  * @param {*} selector
  * @param {*} idstring
  * @param {*} encodedtable
- * @returns
  */
 export function initializeEditTableButton(selector, idstring, encodedtable) {
 
