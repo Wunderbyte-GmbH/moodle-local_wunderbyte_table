@@ -206,8 +206,8 @@ class filter {
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         $sql = " SELECT $key, COUNT($key)
                 FROM {$table->sql->from}
-                WHERE {$table->sql->where} AND $key IS NOT NULL
-                GROUP BY $key ";
+                WHERE {$table->sql->where} AND $key IS NOT NULL AND $key NOT LIKE ''
+                GROUP BY $key ORDER BY $key ASC";
 
         $records = $DB->get_records_sql($sql, $table->sql->params);
 
