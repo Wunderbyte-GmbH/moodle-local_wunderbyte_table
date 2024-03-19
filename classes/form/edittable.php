@@ -56,8 +56,12 @@ class edittable extends dynamic_form {
             $mform->addElement('hidden', 'id', $ajaxformdata['id']);
         }
 
+        $mform->addElement('header', 'wbtablefiltersettingsheader',
+            get_string('wbtablefiltersettingsheader', 'local_wunderbyte_table'));
         filters_info::defintion($mform, $data, []);
 
+        $mform->addElement('header', 'wbtabletablesettingsheader',
+            get_string('wbtabletablesettingsheader', 'local_wunderbyte_table'));
         tablesettings::definition($mform, (array)$data);
 
     }

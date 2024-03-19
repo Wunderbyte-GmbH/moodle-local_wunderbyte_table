@@ -135,6 +135,8 @@ $string['from22to23'] = "22:00 - 23:00";
 $string['from23to24'] = "23:00 - 24:00";
 
 // Edit filter.
+$string['wbtablefiltersettingsheader'] = 'Filter anpassen';
+$string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';
 $string['filterinactive'] = 'Verberge den Filter';
 $string['showfilter'] = 'Zeige diesen Filter';
 $string['editfiltername'] = 'Bearbeite den Filternamen';
