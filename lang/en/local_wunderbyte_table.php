@@ -152,6 +152,9 @@ $string['showrowcountselect'] = 'Show dropdown for number of rows';
 $string['placebuttonandpageelementsontop'] = 'Show buttons and page elements on top (instead of bottom)';
 $string['tableheight'] = 'Table height';
 $string['pagesize'] = 'Number of records per page';
+$string['addcheckboxes'] = 'Add a checkbox to each row';
+$string['filteronloadinactive'] = 'Collapse filters when table is loaded';
+$string['infinitescroll'] = 'Infinite scrolling';
 
 $string['datepicker'] = 'Datepicker filter';
 $string['hourlist'] = 'Hourlist filter';

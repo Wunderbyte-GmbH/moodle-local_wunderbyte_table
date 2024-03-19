@@ -149,6 +149,9 @@ $string['showrowcountselect'] = 'Dropdown für Anzahl der anzuzeigenden Zeilen a
 $string['placebuttonandpageelementsontop'] = 'Buttons und Elemente oben statt unten anzeigen';
 $string['tableheight'] = 'Tabellen-Höhe';
 $string['pagesize'] = 'Anzahl der Einträge pro Seite';
+$string['addcheckboxes'] = 'Für jede Zeile eine Checkbox anzeigen';
+$string['filteronloadinactive'] = 'Filter standardmäßig zugeklappt';
+$string['infinitescroll'] = 'Dynamisches Weiterscrollen aktivieren (infinite scrolling)';
 
 $string['datepicker'] = 'Datumsfilter';
 $string['hourlist'] = 'Stundenlistenfilter';
