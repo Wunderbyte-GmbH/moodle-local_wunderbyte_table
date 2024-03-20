@@ -457,8 +457,6 @@ class wunderbyte_table extends table_sql {
 
         global $DB;
 
-        // $this->recreateidstring();
-
         $encodedtable = $this->return_encoded_table();
 
         tablesettings::apply_setting($this);
