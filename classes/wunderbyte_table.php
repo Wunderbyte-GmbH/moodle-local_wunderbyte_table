@@ -453,7 +453,7 @@ class wunderbyte_table extends table_sql {
 
         global $DB;
 
-        $this->recreateidstring();
+        // $this->recreateidstring();
 
         $encodedtable = $this->return_encoded_table();
 
@@ -1492,6 +1492,8 @@ class wunderbyte_table extends table_sql {
         // We don't want errormessage in the encoded table.
         $this->errormessage = '';
 
+        $this->recreateidstring();
+
         if (empty($this->tablecachehash) || $newcache) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
 
@@ -1777,7 +1779,6 @@ class wunderbyte_table extends table_sql {
      */
     public function recreateidstring() {
 
-        global $PAGE;
         // This creates a hash from the sql settings.
         $cachekey = $this->create_cachekey(true);
 
