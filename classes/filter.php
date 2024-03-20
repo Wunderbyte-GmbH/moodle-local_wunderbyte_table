@@ -206,10 +206,22 @@ class filter {
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         $sql = " SELECT $key, COUNT($key)
                 FROM {$table->sql->from}
-                WHERE {$table->sql->where} AND $key IS NOT NULL AND $key NOT LIKE ''
+                WHERE {$table->sql->where} AND $key IS NOT NULL
                 GROUP BY $key ORDER BY $key ASC";
 
         $records = $DB->get_records_sql($sql, $table->sql->params);
+
+        if (is_array($records)) {
+            // Records ares sorted correctly, so just want to obmit all empty strings.
+            // We can break as soon as the value is not empty.
+            foreach ($records as $k => $v) {
+                if ($v->{$key} === '') {
+                    unset($records[$k]);
+                } else {
+                    break;
+                }
+            }
+        }
 
         // If there are only empty strings, we don't want the filter to show.
         if (!$records
