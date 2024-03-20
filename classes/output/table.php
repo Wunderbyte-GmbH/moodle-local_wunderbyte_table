@@ -839,7 +839,8 @@ class table implements renderable, templatable {
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
                             foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {
-                                if ($value['key'] === $filter) {
+                                if ($value['key'] == $filter
+                                    || $value['value'] == $filter) {
                                     // If we find the filter, we add the checked value...
                                     // ...and key to the initial tableobject array at the right place.
                                     $tableobject[$tokey]['default']['values'][$vkey]['checked'] = 'checked';

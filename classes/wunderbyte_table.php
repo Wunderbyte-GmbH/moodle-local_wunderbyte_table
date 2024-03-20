@@ -1103,6 +1103,8 @@ class wunderbyte_table extends table_sql {
             $filterobject = new stdClass;
         }
 
+        $_POST['wbtfilter'] = $filter;
+
         if (get_config('local_wunderbyte_table', 'allowsearchincolumns')) {
             if (!$searchtext == '') {
                 // Separator defines which character seperates key (columnname) from value (searchterm).
