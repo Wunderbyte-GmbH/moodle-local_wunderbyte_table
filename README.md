@@ -264,36 +264,29 @@ For the display of localized names in tableheaders, use the define_headers funct
     $table->define_columns(array_keys($columns));
 
 ### Exploding strings for columns storing multiple values
-The define_filtercolumns function also supports columns with multiple values stored as string with a separator.
+The filter function also supports columns with multiple values stored as string with a separator.
 
 You can define the separator like this:
 
-    $table->define_filtercolumns([
-        'mycolname' => [
-            'localizedname' => get_string('mystring', 'mod_myplugin'),
+    $standardfilter = new standardfilter('mycolname', get_string('mystring', 'mod_myplugin'));
+    $standardfilter->add_options(
+        [
             'explode' => ',', // In this example, a comma is the separator, you might need another one.
-        ],
-        'mytimestampcolumn' => [
-            'localizedname' => get_string('mystring', 'mod_myplugin'),
-            'datepicker' => [
-                'label' => [ // Can be localized and like "Courses starting after:".
-                    'operator' => '<',
-                    'defaultvalue' => '1680130800', // Can also be string "now".
-                ]
-            ]
-        ],
-    ]);
+        ]
+    );
+    $table->add_filter($standardfilter);
 
 ### Handle JSON objects
-The define_filtercolumns function also supports columns storing one or multiple JSON objects.
+The filter function also supports columns storing one or multiple JSON objects.
 You can define the attribute of the JSON object which should be used for the filter:
 
-    $table->define_filtercolumns([
-        'mycolname' => [
-            'localizedname' => get_string('mystring', 'mod_myplugin'),
+    $standardfilter = new standardfilter('mycolname', get_string('mystring', 'mod_myplugin'));
+    $standardfilter->add_options(
+        [
             'jsonattribute' => 'name', // Replace 'name' with the actual attribute name.
-        ],
-    ]);
+        ]
+    );
+    $table->add_filter($standardfilter);
 
 
 ## Lazy loading vs. direct out
