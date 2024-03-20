@@ -244,6 +244,9 @@ class tablesettings {
             // We don't treat the gs column identifier.
             if ($columnidentifier === 'gs') {
                 if (!isset($originaltablesettings->general)) {
+                    if (empty($originaltablesettings)) {
+                        $originaltablesettings = new stdClass();
+                    }
                     $originaltablesettings->general = new stdClass();
                 }
                 $originaltablesettings->general->$fieldidentifier = $value;

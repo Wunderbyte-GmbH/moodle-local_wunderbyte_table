@@ -141,13 +141,17 @@ abstract class base {
         if (!isset($filter['id'])) {
             $filter['id'] = [
                 'localizedname' => get_string('id', 'local_wunderbyte_table'),
-                'id_wb_checked' => 1,
+                'id_wb_checked' => $this->columnidentifier === 'id' ? 0 : 1,
             ];
+        } else {
+            // If we don't add the id column, we want the filter to be visible, normally.
+            // If not, we have to use the hide_filter() method after definining the filters.
+            $filter['id']['id_wb_checked'] = 1;
         }
 
         if (!isset($filter[$this->columnidentifier])) {
             $filter[$this->columnidentifier] = $options;
-        } else {
+        } else if ($this->columnidentifier !== 'id') {
             throw new moodle_exception(
                 'filteridentifierconflict',
                 'local_wunderbyte_table',

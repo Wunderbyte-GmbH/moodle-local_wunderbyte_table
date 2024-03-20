@@ -40,6 +40,7 @@ use moodle_url;
 use stdClass;
 use coding_exception;
 use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\local\settings\tablesettings;
 
 /**
@@ -350,6 +351,9 @@ class wunderbyte_table extends table_sql {
 
         // This is a fallback for the downloading function. A different baseurl can be defined later in the process.
         $this->define_baseurl(new moodle_url('/local/wunderbyte_table/download.php'));
+
+        $standardfilter = new standardfilter('id');
+        $this->add_filter($standardfilter);
     }
 
     /**
