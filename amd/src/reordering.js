@@ -104,8 +104,11 @@
 
     const container = document.querySelector(listContainer);
 
-    const rowscontainer = container.querySelector(`${SELECTOR.ROWS}`);
+    if (!container) {
+        return;
+    }
 
+    const rowscontainer = container.querySelector(`${SELECTOR.ROWS}`);
 
     if (!rowscontainer || rowscontainer.dataset.sortinitialized) {
       return;
