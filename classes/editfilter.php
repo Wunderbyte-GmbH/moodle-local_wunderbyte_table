@@ -70,7 +70,7 @@ class editfilter {
             // Now we fetch the user specific filter columns from DB.
             $jsonstring = tablesettings::return_jsontablesettings_from_db(0, $cachekey, $USER->id);
 
-            $tablesettings = json_decode($jsonstring);
+            $tablesettings = json_decode($jsonstring, true);
             // For backwards compatibility, we also support only filtersettings.
             $filtersettings = $tablesettings['filtersettings'] ?? $tablesettings;
         } else {
