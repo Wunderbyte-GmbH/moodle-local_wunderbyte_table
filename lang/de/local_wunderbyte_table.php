@@ -148,6 +148,7 @@ $string['stickyheader'] = 'Header fixieren (sticky header)';
 $string['showrowcountselect'] = 'Dropdown für Anzahl der anzuzeigenden Zeilen anzeigen';
 $string['placebuttonandpageelementsontop'] = 'Buttons und Elemente oben statt unten anzeigen';
 $string['tableheight'] = 'Tabellen-Höhe';
+$string['tableheight_help'] = 'Die Tabellenhöhe wird in Pixel angegeben, sinnvolle Werte beginne daher bei ca. 300. Bei 0 ist die Höhe entsprechend der angezeigten Tabellen.';
 $string['pagesize'] = 'Anzahl der Einträge pro Seite';
 $string['addcheckboxes'] = 'Für jede Zeile eine Checkbox anzeigen';
 $string['filteronloadinactive'] = 'Filter standardmäßig zugeklappt';

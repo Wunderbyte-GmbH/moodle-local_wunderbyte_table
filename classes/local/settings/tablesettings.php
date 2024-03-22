@@ -164,6 +164,8 @@ class tablesettings {
 
         $mform->addElement('text', 'gs_wb_tableheight', get_string('tableheight', 'local_wunderbyte_table'));
         $mform->setType('tableheight', PARAM_INT);
+        $mform->setDefault('gs_wb_tableheight', 0);
+        $mform->addHelpButton('gs_wb_tableheight', 'tableheight', 'local_wunderbyte_table');
 
         $mform->addElement('text', 'gs_wb_pagesize', get_string('pagesize', 'local_wunderbyte_table'));
         $mform->setType('pagesize', PARAM_INT);
