@@ -212,7 +212,7 @@ class filter {
         $records = $DB->get_records_sql($sql, $table->sql->params);
 
         if (is_array($records)) {
-            // Records ares sorted correctly, so just want to obmit all empty strings.
+            // Records are sorted correctly, so we just want to omit all empty strings.
             // We can break as soon as the value is not empty.
             foreach ($records as $k => $v) {
                 if ($v->{$key} === '') {
@@ -225,9 +225,8 @@ class filter {
 
         // If there are only empty strings, we don't want the filter to show.
         if (!$records
-            || count($records) < 2
             || (reset($records)->{$key} === null
-                || reset($records)->{$key} === '')) {
+            || reset($records)->{$key} === '')) {
             return [
                 'continue' => true,
             ];
