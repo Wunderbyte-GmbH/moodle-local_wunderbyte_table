@@ -76,9 +76,11 @@
      {{#table}}
 
      {{#infinitescroll}}
-          <div>
-          {{> local_wunderbyte_table/component_actionbutton }}
-          </div>
+          {{^displayelementsontop}}
+               <div>
+               {{> local_wunderbyte_table/component_actionbutton }}
+               </div>
+          {{/displayelementsontop}}
      {{/infinitescroll}}
      {{#displayelementsontop}}
           <div>
