@@ -77,7 +77,6 @@ class tablesettings {
         $table->showrowcountselect = $settingsobject->general->showrowcountselect;
         $table->stickyheader = $settingsobject->general->stickyheader;
         $table->addcheckboxes = $settingsobject->general->addcheckboxes;
-        $table->tableheight = $settingsobject->general->tableheight;
         $table->pagesize = $settingsobject->general->pagesize;
         $table->filteronloadinactive = $settingsobject->general->filteronloadinactive;
         $table->placebuttonandpageelementsontop = $settingsobject->general->placebuttonandpageelementsontop;
@@ -162,11 +161,6 @@ class tablesettings {
         $mform->addElement('advcheckbox', 'gs_wb_filteronloadinactive',
             get_string('filteronloadinactive', 'local_wunderbyte_table'));
 
-        $mform->addElement('text', 'gs_wb_tableheight', get_string('tableheight', 'local_wunderbyte_table'));
-        $mform->setType('tableheight', PARAM_INT);
-        $mform->setDefault('gs_wb_tableheight', 0);
-        $mform->addHelpButton('gs_wb_tableheight', 'tableheight', 'local_wunderbyte_table');
-
         $mform->addElement('text', 'gs_wb_pagesize', get_string('pagesize', 'local_wunderbyte_table'));
         $mform->setType('pagesize', PARAM_INT);
 
@@ -207,8 +201,6 @@ class tablesettings {
 
         $data->gs_wb_placebuttonandpageelementsontop
             = $ts->general->placebuttonandpageelementsontop ?? ($table->placebuttonandpageelementsontop ? 1 : 0);
-
-        $data->gs_wb_tableheight = $ts->general->tableheight ?? $table->tableheight;
 
         $data->gs_wb_pagesize = $ts->general->pagesize ?? $table->pagesize;
 
