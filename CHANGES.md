@@ -1,3 +1,8 @@
+## Version 2.0.0 (2024032500)
+* New feature: Now you can individually configure filters and settings for each Wunderbyte Table.
+(Setting has to be turned on in config settings of Wunderbyte Table.)
+* Improvement: Lots of little improvements that were necessary to get new settings to work correctly.
+
 ## Version 1.9.18 (2024031800)
 * Improvement: New filter classes for better handling of filters
 * Improvement: First steps to edit filter on the fly (experimental)
