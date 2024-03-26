@@ -586,6 +586,7 @@ class table implements renderable, templatable {
             'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
             'showrowcountselect' => $this->showcountselect(),
             'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
+            'showspinner' => true,
             ];
 
         // Only if we want to show the searchfield, we actually add the key.

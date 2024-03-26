@@ -284,6 +284,13 @@ export const callLoadData = (
         }
     }
 
+    // We also have the indidual load spinner.
+    // Show the call spinner.
+    let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+    if (callspinner) {
+        callspinner.classList.remove('hidden');
+    }
+
     // This is used to store information for reload etc.
     checkInTable(
         idstring,
@@ -315,6 +322,11 @@ export const callLoadData = (
             'searchtext': searchtext
         },
         done: async function(res) {
+            // Hide the call spinner.
+            let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+            if (callspinner) {
+                callspinner.classList.add('hidden');
+            }
 
             let jsonobject = '';
             try {
@@ -510,6 +522,7 @@ export const callLoadData = (
             const y = await promises[1];
         },
         fail: function(err) {
+
             // If we have an error, resetting the table might be enough. we do that.
             // To avoid a loop, we only do this in special cases.
             if ((treset != 1)) {
@@ -521,6 +534,12 @@ export const callLoadData = (
                 table.appendChild(node);
                 spinner.classList.add('hidden');
                 table.classList.remove('hidden');
+
+                // Hide the call spinner.
+                let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+                if (callspinner) {
+                    callspinner.classList.add('hidden');
+                }
             }
         }
     }]);

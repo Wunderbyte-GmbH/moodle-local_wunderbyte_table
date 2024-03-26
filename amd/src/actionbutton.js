@@ -223,6 +223,13 @@ async function showNoCheckboxNotification() {
  * @param {string} encodedtable
  */
 export function transmitAction(id, methodname, datastring, idstring, encodedtable) {
+
+  // Show the call spinner.
+  let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+  if (callspinner) {
+      callspinner.classList.remove('hidden');
+  }
+
   Ajax.call([{
     methodname: "local_wunderbyte_table_execute_action",
     args: {
@@ -232,6 +239,11 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
       'encodedtable': encodedtable,
     },
     done: function(data) {
+      // Hide the call spinner.
+      let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+      if (callspinner) {
+          callspinner.classList.add('hidden');
+      }
 
       if (data.success == 1) {
 
@@ -258,6 +270,12 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
     fail: function(ex) {
       // eslint-disable-next-line no-console
       console.log("ex:" + ex);
+
+      // Hide the call spinner.
+      let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+      if (callspinner) {
+          callspinner.classList.add('hidden');
+      }
 
       showNotification("row " + id + " was not treated", "danger");
     },
