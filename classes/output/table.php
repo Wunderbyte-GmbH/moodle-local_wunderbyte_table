@@ -132,6 +132,13 @@ class table implements renderable, templatable {
     private $showdownloadbutton = true;
 
     /**
+     * Applyfilterondownload.
+     *
+     * @var bool
+     */
+    private $applyfilterondownload = false;
+
+    /**
      * Countlabel.
      *
      * @var bool
@@ -261,6 +268,7 @@ class table implements renderable, templatable {
         $this->printoptions = $this->return_dataformat_selector();
 
         $this->showdownloadbutton = $table->showdownloadbutton;
+        $this->applyfilterondownload = $table->applyfilterondownload;
         $this->showreloadbutton = $table->showreloadbutton;
 
         if (get_config('local_wunderbyte_table', 'allowedittable')
@@ -636,6 +644,9 @@ class table implements renderable, templatable {
         if ($this->showdownloadbutton) {
             $data['print'] = true;
             $data['printoptions'] = $this->printoptions;
+            if (!empty($this->applyfilterondownload)) {
+                $data['applyfilterondownload'] = "1";
+            }
         }
 
         if (!empty($this->categories)) {

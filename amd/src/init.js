@@ -31,7 +31,9 @@ import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 import {initializeEditTableButton} from 'local_wunderbyte_table/edittable';
 import {initializeReordering} from 'local_wunderbyte_table/reordering';
 import {initializeRowsSelect} from './rowsdisplayselect';
-import {initializeResetFilterButton, updateUrlWithFilterSearchSort} from './filter';
+import {initializeResetFilterButton,
+    updateUrlWithFilterSearchSort,
+    updateDownloadUrlWithFilterSearchSort} from './filter';
 import {initializeFilterSearch} from './filtersearch';
 
 import {get_string as getString} from 'core/str';
@@ -48,6 +50,7 @@ export const SELECTORS = {
     CONTAINER: ".wunderbyte_table_container_",
     FILTER: " .wunderbyteTableFilter",
     WBTABLE: "wunderbyte-table-",
+    DOWNLOADELEMENT: "form.wb-table-download-buttons",
 };
 
 /**
@@ -271,6 +274,23 @@ export const callLoadData = (
     // We don't want to update URL for lazyout tables that be loaded (have childnodes) at this point.
     if (moreThanOneTable !== true && table.childNodes.length > 0) {
         updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
+    }
+
+    let container = document.querySelector(".wunderbyte_table_container_" + idstring);
+    if (container) {
+
+        const downloadelement = container.querySelector(SELECTORS.DOWNLOADELEMENT);
+
+        // eslint-disable-next-line no-console
+        console.log(container, SELECTORS.DOWNLOADELEMENT, downloadelement, downloadelement.dataset.applyfilter);
+        if (downloadelement && downloadelement.dataset.applyfilter) {
+            // eslint-disable-next-line no-console
+            console.log(downloadelement.dataset.applyfilter);
+            updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, searchtext, tsort, tdir);
+        }
+
+        // eslint-disable-next-line no-console
+        console.log(SELECTORS.DOWNLOADELEMENT);
     }
 
     // This is now the individual spinner from the wunderbyte table template.

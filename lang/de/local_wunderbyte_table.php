@@ -142,6 +142,7 @@ $string['showfilter'] = 'Zeige diesen Filter';
 $string['editfiltername'] = 'Bearbeite den Filternamen';
 $string['allowedittable'] = 'Bearbeite Tabelleneinstellungen';
 $string['showdownloadbutton'] = 'Download-Button anzeigen';
+$string['applyfilterondownload'] = 'Filter auf Download anwenden';
 $string['showreloadbutton'] = 'Reload-Button anzeigen';
 $string['showcountlabel'] = 'Anzahl der gefundenen Einträge anzeigen';
 $string['stickyheader'] = 'Header fixieren (sticky header)';

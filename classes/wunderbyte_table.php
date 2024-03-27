@@ -116,6 +116,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Apply filter on download.
+     */
+    public $applyfilterondownload = false;
+
+    /**
+     *
      * @var bool Show elements to reload the table.
      */
     public $showreloadbutton = false;

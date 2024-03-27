@@ -72,6 +72,7 @@ class tablesettings {
         }
 
         $table->showdownloadbutton = $settingsobject->general->showdownloadbutton;
+        $table->applyfilterondownload = $settingsobject->general->applyfilterondownload;
         $table->showreloadbutton = $settingsobject->general->showreloadbutton;
         $table->showcountlabel = $settingsobject->general->showcountlabel;
         $table->showrowcountselect = $settingsobject->general->showrowcountselect;
@@ -145,6 +146,8 @@ class tablesettings {
 
         $mform->addElement('advcheckbox', 'gs_wb_showdownloadbutton', get_string('showdownloadbutton', 'local_wunderbyte_table'));
 
+        $mform->addElement('advcheckbox', 'gs_wb_applyfilterondownload', get_string('applyfilterondownload', 'local_wunderbyte_table'));
+
         $mform->addElement('advcheckbox', 'gs_wb_showreloadbutton', get_string('showreloadbutton', 'local_wunderbyte_table'));
 
         $mform->addElement('advcheckbox', 'gs_wb_showcountlabel', get_string('showcountlabel', 'local_wunderbyte_table'));
@@ -186,6 +189,8 @@ class tablesettings {
         $ts = json_decode($jsontablesettings);
 
         $data->gs_wb_showdownloadbutton = $ts->general->showdownloadbutton ?? ($table->showdownloadbutton ? 1 : 0);
+
+        $data->gs_wb_applyfilterondownload = $ts->general->applyfilterondownload ?? ($table->applyfilterondownload ? 1 : 0);
 
         $data->gs_wb_showreloadbutton = $ts->general->showreloadbutton ?? ($table->showreloadbutton ? 1 : 0);
 

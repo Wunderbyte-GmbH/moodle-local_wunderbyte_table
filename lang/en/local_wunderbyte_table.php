@@ -145,6 +145,7 @@ $string['showfilter'] = 'Show this filter';
 $string['editfiltername'] = 'Edit filtername';
 $string['allowedittable'] = 'Edit table settings';
 $string['showdownloadbutton'] = 'Show download button';
+$string['applyfilterondownload'] = 'Apply filter on download';
 $string['showreloadbutton'] = 'Show reload button';
 $string['showcountlabel'] = 'Show numer of records found';
 $string['stickyheader'] = 'Make header sticky';
