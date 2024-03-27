@@ -280,12 +280,7 @@ export const callLoadData = (
     if (container) {
 
         const downloadelement = container.querySelector(SELECTORS.DOWNLOADELEMENT);
-
-        // eslint-disable-next-line no-console
-        console.log(container, SELECTORS.DOWNLOADELEMENT, downloadelement, downloadelement.dataset.applyfilter);
         if (downloadelement && downloadelement.dataset.applyfilter) {
-            // eslint-disable-next-line no-console
-            console.log(downloadelement.dataset.applyfilter);
             updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, searchtext, tsort, tdir);
         }
 
