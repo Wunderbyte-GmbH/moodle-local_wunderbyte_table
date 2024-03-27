@@ -1,3 +1,8 @@
+## Version 2.0.1 (2024032700)
+* Improvement: Show spinner when we trigger ajax call.
+* Improvement: Add "apply filtersetting" to download table.
+* Bugfix: Remove console logs that had null pointer problems.
+
 ## Version 2.0.0 (2024032500)
 * New feature: Now you can individually configure filters and settings for each Wunderbyte Table.
 (Setting has to be turned on in config settings of Wunderbyte Table.)
