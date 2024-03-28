@@ -705,7 +705,7 @@ function addLinksToPagination(idstring, encodedtable, frag) {
  * @param {string} idstring
  * @returns {bool}
  */
-function infinitescrollEnabled(idstring) {
+export function infinitescrollEnabled(idstring) {
     // If we don't find the infinitescrollelement, we don#t add the listener.
     const selector = ".wunderbyte_table_container_" + idstring;
     if (document.querySelector(selector + ' div.infinitescroll_enabled')) {

@@ -20,7 +20,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {callLoadData, queries} from 'local_wunderbyte_table/init';
+import {callLoadData, queries, infinitescrollEnabled} from 'local_wunderbyte_table/init';
 import {getFilterObjects} from 'local_wunderbyte_table/filter';
 import {getSearchInput} from 'local_wunderbyte_table/search';
 import {getSortSelection} from 'local_wunderbyte_table/sort';
@@ -132,18 +132,40 @@ export function reloadAllTables() {
   // eslint-disable-next-line no-unused-vars
   for (const [key, value] of Object.entries(queries)) {
 
-    callLoadData(
-      value.idstring,
-      value.encodedtable,
-      value.page,
-      value.tsort,
-      value.thide,
-      value.tshow,
-      value.tdir,
-      value.treset,
-      value.filterobjects,
-      value.searchtext,
-      value.replacerow
-  );
+    // When we have infinite scroll, we need to all the currently shown pages.
+    if (infinitescrollEnabled(value.idstring)) {
+      let counter = 0;
+      while (counter <= value.page) {
+        callLoadData(
+          value.idstring,
+          value.encodedtable,
+          counter,
+          value.tsort,
+          value.thide,
+          value.tshow,
+          value.tdir,
+          value.treset,
+          value.filterobjects,
+          value.searchtext,
+          value.replacerow
+        );
+        counter++;
+      }
+
+    } else {
+      callLoadData(
+        value.idstring,
+        value.encodedtable,
+        value.page,
+        value.tsort,
+        value.thide,
+        value.tshow,
+        value.tdir,
+        value.treset,
+        value.filterobjects,
+        value.searchtext,
+        value.replacerow
+    );
+    }
   }
 }
