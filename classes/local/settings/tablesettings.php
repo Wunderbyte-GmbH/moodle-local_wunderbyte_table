@@ -146,7 +146,11 @@ class tablesettings {
 
         $mform->addElement('advcheckbox', 'gs_wb_showdownloadbutton', get_string('showdownloadbutton', 'local_wunderbyte_table'));
 
-        $mform->addElement('advcheckbox', 'gs_wb_applyfilterondownload', get_string('applyfilterondownload', 'local_wunderbyte_table'));
+        $mform->addElement(
+            'advcheckbox',
+            'gs_wb_applyfilterondownload',
+            get_string('applyfilterondownload', 'local_wunderbyte_table')
+        );
 
         $mform->addElement('advcheckbox', 'gs_wb_showreloadbutton', get_string('showreloadbutton', 'local_wunderbyte_table'));
 

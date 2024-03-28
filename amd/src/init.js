@@ -280,12 +280,11 @@ export const callLoadData = (
     if (container) {
 
         const downloadelement = container.querySelector(SELECTORS.DOWNLOADELEMENT);
+
         if (downloadelement && downloadelement.dataset.applyfilter) {
+
             updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, searchtext, tsort, tdir);
         }
-
-        // eslint-disable-next-line no-console
-        console.log(SELECTORS.DOWNLOADELEMENT);
     }
 
     // This is now the individual spinner from the wunderbyte table template.
