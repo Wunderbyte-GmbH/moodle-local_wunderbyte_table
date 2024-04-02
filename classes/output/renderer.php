@@ -33,19 +33,18 @@ use templatable;
  */
 class renderer extends plugin_renderer_base {
 
-
     /**
      * Render a wunderbyte_table.
-     *
      * @param templatable $viewtable
-     * @return string|boolean
+     * @return string|bool
      */
     public function render_lazytable(templatable $viewtable) {
         $data = $viewtable->export_for_template($this);
         return $this->render_from_template('local_wunderbyte_table/table_lazy', $data);
     }
 
-    /** Function to render the cards table
+    /**
+     * Function to render the cards table
      * @param mixed $data
      * @param string $templatename
      * @return string

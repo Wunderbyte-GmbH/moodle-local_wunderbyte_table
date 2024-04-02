@@ -287,14 +287,14 @@ class wunderbyte_table extends table_sql {
     /**
      * Number of rows diplayed per page in table.
      *
-     * @var boolean
+     * @var bool
      */
     public $showrowcountselect = false;
 
     /**
      * Inactive filter display on load.
      *
-     * @var boolean
+     * @var bool
      */
     public $filteronloadinactive = false;
 
@@ -512,7 +512,7 @@ class wunderbyte_table extends table_sql {
     /**
      * You should call this to finish outputting the table data after adding
      * data to the table with add_data or add_data_keyed.
-     * @param boolean $closeexportclassdoc
+     * @param bool $closeexportclassdoc
      * @param string $encodedtable
      * @return table
      */
@@ -635,7 +635,7 @@ class wunderbyte_table extends table_sql {
     /** This overrides the classic define columns functions.
      * In the new table, one wouldn't use it but expose it here for backward compatibility.
      * @param array $columns
-     * @param boolean $usestandardclasses
+     * @param bool $usestandardclasses
      * @return void
      */
     public function define_columns($columns, $usestandardclasses = true) {
@@ -655,7 +655,7 @@ class wunderbyte_table extends table_sql {
      * In the new table, one wouldn't use it but expose it here for backward compatibility.
      *
      * @param array $columns
-     * @param boolean $usestandardclasses
+     * @param bool $usestandardclasses
      * @return void
      */
     public function define_headers($columns, $usestandardclasses = true) {
@@ -673,7 +673,7 @@ class wunderbyte_table extends table_sql {
      * @param string $subcolumnsidentifier
      * @param array $classes
      * @param array|null $subcolumns
-     * @param boolean $replace
+     * @param bool $replace
      * @return void
      */
     public function add_classes_to_subcolumns(
@@ -855,7 +855,7 @@ class wunderbyte_table extends table_sql {
      * This function can and should be overriden if your plugin needs different cache treatment.
      *
      * @param int $pagesize
-     * @param boolean $useinitialsbar
+     * @param bool $useinitialsbar
      * @return void
      */
     public function query_db_cached($pagesize, $useinitialsbar=true) {

@@ -212,7 +212,7 @@ class table implements renderable, templatable {
     /**
      * Number of rows diplayed per page in table.
      *
-     * @var boolean
+     * @var bool
      */
     public $showrowcountselect = false;
 
