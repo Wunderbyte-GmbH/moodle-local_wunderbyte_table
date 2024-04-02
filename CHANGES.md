@@ -1,3 +1,6 @@
+## Version 2.0.2 (2024040200)
+* Improvement: Triggering reload on all tables will now reload all rows of an infinite table.
+
 ## Version 2.0.1 (2024032700)
 * Improvement: Show spinner when we trigger ajax call.
 * Improvement: Add "apply filtersetting" to download table.
