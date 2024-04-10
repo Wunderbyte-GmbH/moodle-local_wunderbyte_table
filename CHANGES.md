@@ -1,3 +1,7 @@
+## Version 2.0.3 (2024041000)
+* Improvement: Update callback to purge caches and delete filter and sql hashes
+from DB when allowedittable is turned off or on.
+
 ## Version 2.0.2 (2024040200)
 * Improvement: Triggering reload on all tables will now reload all rows of an infinite table.
 
