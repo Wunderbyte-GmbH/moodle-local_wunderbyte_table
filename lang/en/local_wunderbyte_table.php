@@ -26,24 +26,24 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Wunderbyte Table';
+
+// General strings.
+$badgeexp = '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
+$string['changesortorder'] = "Change sort order";
+$string['couldnotloaddata'] = "Could not load data";
+$string['customizewbtable'] = 'Customize Wunderbyte Table';
+$string['downloadas'] = "Download table data as";
+$string['edittable'] = "Edit table";
+$string['filter'] = 'Filter table';
 $string['loading'] = 'Loading...';
+$string['noentriesfound'] = "No entries found";
+$string['norecords'] = "No records found.";
+$string['orderdown'] = "Sorted from Z to A";
+$string['orderup'] = "Sorted from A to Z";
+$string['print'] = "Download table";
+$string['reload'] = "Reload table";
 $string['search'] = 'Search';
 $string['sortby'] = 'Sort by...';
-$string['changesortorder'] = "Change sort order";
-$string['orderup'] = "Sorted from A to Z";
-$string['orderdown'] = "Sorted from Z to A";
-
-$string['noentriesfound'] = "No entries found";
-$string['couldnotloaddata'] = "Could not load data";
-
-$string['customizewbtable'] = 'Customize Wunderbyte Table';
-$string['filter'] = 'Filter table';
-$string['reload'] = "Reload table";
-$string['edittable'] = "Edit table";
-$string['print'] = "Download table";
-$string['downloadas'] = "Download table data as";
-
-$string['norecords'] = "No records found.";
 
 // Capabilities.
 $string['wunderbyte_table:canaccess'] = 'Can access Wunderbyte Table';
@@ -108,8 +108,8 @@ $string['action_executed'] = 'Action executed';
 $string['action_executed_desc'] = 'The user executed an action "{$a->methodname}" on the table "{$a->tablename}"';
 
 // Settings.
-$string['logfiltercaches'] = 'Debug feature: Save queries to DB. Has negative impact on performance. (experimental)';
-$string['allowsearchincolumns'] = 'Allow search in columsn via ":" (experimental)';
+$string['logfiltercaches'] = 'Debug feature: Save queries to DB. Has negative impact on performance. ' . $badgeexp;
+$string['allowsearchincolumns'] = 'Allow search in columsn via ":" ' . $badgeexp;
 
 // Hourlist filter.
 $string['from0to1'] = "00:00 - 01:00";
@@ -143,7 +143,7 @@ $string['wbtabletablesettingsheader'] = 'More settings';
 $string['filterinactive'] = 'Hide the entire filter';
 $string['showfilter'] = 'Show this filter';
 $string['editfiltername'] = 'Edit filtername';
-$string['allowedittable'] = 'Edit table settings';
+$string['allowedittable'] = 'Edit table settings (only for testing, do not use on productive sites!) ' . $badgeexp;
 $string['showdownloadbutton'] = 'Show download button';
 $string['applyfilterondownload'] = 'Apply filter on download';
 $string['showreloadbutton'] = 'Show reload button';

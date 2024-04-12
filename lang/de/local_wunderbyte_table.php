@@ -26,24 +26,24 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Wunderbyte Table';
+
+// General strings.
+$badgeexp = '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
+$string['changesortorder'] = "Ändere die Sortierungsrichtung";
+$string['couldnotloaddata'] = "Konnte keine Daten laden";
+$string['customizewbtable'] = 'Wunderbyte Table anpassen';
+$string['downloadas'] = "Tabelle laden als";
+$string['edittable'] = "Editieren";
+$string['filter'] = 'Tabelle filtern';
 $string['loading'] = 'Laden...';
+$string['noentriesfound'] = "Keine Einträge gefunden";
+$string['norecords'] = "Keine Daten gefunden.";
+$string['orderdown'] = "Von Z nach A sortiert";
+$string['orderup'] = "Von A nach Z sortiert";
+$string['print'] = "Tabelle herunterladen";
+$string['reload'] = "Tabelle neu laden";
 $string['search'] = 'Suchen';
 $string['sortby'] = 'Sortieren nach...';
-$string['changesortorder'] = "Ändere die Sortierungsrichtung";
-$string['orderup'] = "Von A nach Z sortiert";
-$string['orderdown'] = "Von Z nach A sortiert";
-
-$string['noentriesfound'] = "Keine Einträge gefunden";
-$string['couldnotloaddata'] = "Konnte keine Daten laden";
-
-$string['customizewbtable'] = 'Wunderbyte Table anpassen';
-$string['filter'] = 'Tabelle filtern';
-$string['reload'] = "Tabelle neu laden";
-$string['edittable'] = "Editieren";
-$string['print'] = "Tabelle herunterladen";
-$string['downloadas'] = "Tabelle laden als";
-
-$string['norecords'] = "Keine Daten gefunden.";
 
 // Capabilities.
 $string['wunderbyte_table:canaccess'] = 'Kann auf Wunderbyte Table zugreifen';
@@ -105,8 +105,9 @@ $string['action_executed'] = 'Aktion ausgeführt';
 $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname}" in der folgenden Tabelle ausgeführt: "{$a->tablename}"';
 
 // Settings.
-$string['logfiltercaches'] = 'Debug-Feature: Speichere Query-Hashes in der DB. Das hat negative Auswirkugen auf die Performance (experimentell)';
-$string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" (experimentell)';
+$string['logfiltercaches'] = 'Debug-Feature: Speichere Query-Hashes in der DB.
+Das hat negative Auswirkugen auf die Performance ' . $badgeexp;
+$string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" ' . $badgeexp;
 
 // Hourlist filter.
 $string['from0to1'] = "00:00 - 01:00";
@@ -140,7 +141,7 @@ $string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';
 $string['filterinactive'] = 'Verberge den Filter';
 $string['showfilter'] = 'Zeige diesen Filter';
 $string['editfiltername'] = 'Bearbeite den Filternamen';
-$string['allowedittable'] = 'Bearbeite Tabelleneinstellungen';
+$string['allowedittable'] = 'Bearbeite Tabelleneinstellungen (zum Testen, nicht auf produktiven Websites verwenden) ' . $badgeexp;
 $string['showdownloadbutton'] = 'Download-Button anzeigen';
 $string['applyfilterondownload'] = 'Filter auf Download anwenden';
 $string['showreloadbutton'] = 'Reload-Button anzeigen';
