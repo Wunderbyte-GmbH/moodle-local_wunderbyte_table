@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Wunderbyte Table';
 
 // General strings.
-$string['badge:experimental'] = '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
+$badgeexp = '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
 $string['changesortorder'] = "Ändere die Sortierungsrichtung";
 $string['couldnotloaddata'] = "Konnte keine Daten laden";
 $string['customizewbtable'] = 'Wunderbyte Table anpassen';
@@ -106,8 +106,8 @@ $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname
 
 // Settings.
 $string['logfiltercaches'] = 'Debug-Feature: Speichere Query-Hashes in der DB.
-Das hat negative Auswirkugen auf die Performance ' . $string['badge:experimental'];
-$string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" ' . $string['badge:experimental'];
+Das hat negative Auswirkugen auf die Performance ' . $badgeexp;
+$string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" ' . $badgeexp;
 
 // Hourlist filter.
 $string['from0to1'] = "00:00 - 01:00";
@@ -141,7 +141,7 @@ $string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';
 $string['filterinactive'] = 'Verberge den Filter';
 $string['showfilter'] = 'Zeige diesen Filter';
 $string['editfiltername'] = 'Bearbeite den Filternamen';
-$string['allowedittable'] = 'Bearbeite Tabelleneinstellungen (zum Testen, nicht auf produktiven Websites verwenden) ' . $string['badge:experimental'];
+$string['allowedittable'] = 'Bearbeite Tabelleneinstellungen (zum Testen, nicht auf produktiven Websites verwenden) ' . $badgeexp;
 $string['showdownloadbutton'] = 'Download-Button anzeigen';
 $string['applyfilterondownload'] = 'Filter auf Download anwenden';
 $string['showreloadbutton'] = 'Reload-Button anzeigen';
