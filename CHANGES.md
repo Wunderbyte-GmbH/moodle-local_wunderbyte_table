@@ -1,3 +1,7 @@
+## Version 2.0.5 (2024042200)
+* Bugfix: Fix strings for AMOS.
+* Bugfix: MariaDB does not allow alias in DELETE statement.
+
 ## Version 2.0.3 (2024041000)
 * Improvement: Update callback to purge caches and delete filter and sql hashes
 from DB when allowedittable is turned off or on.
