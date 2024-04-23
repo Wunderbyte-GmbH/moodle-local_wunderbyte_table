@@ -42,9 +42,9 @@ if ($hassiteconfig) {
         cache_helper::purge_by_event('setbackfilters');
         cache_helper::purge_by_event('setbackencodedtables');
         cache_helper::purge_by_event('changesinwunderbytetable');
-        $sql = "DELETE FROM {local_wunderbyte_table} wbt
-                      WHERE wbt.hash LIKE '%_filterjson'
-                         OR wbt.hash LIKE '%_sqlquery'";
+        $sql = "DELETE FROM {local_wunderbyte_table}
+                      WHERE hash LIKE '%_filterjson'
+                         OR hash LIKE '%_sqlquery'";
         $DB->execute($sql);
     });
     $settings->add($allowedittable);
