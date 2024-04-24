@@ -23,6 +23,10 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+
+use core_date;
+use DateTime;
+use DateTimeZone;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\filter;
 use local_wunderbyte_table\wunderbyte_table;
@@ -139,7 +143,19 @@ class hourlist extends base {
      */
     public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
 
-        $returnarray = filter::get_db_filter_column_hours($table, $key);
+        $array = filter::get_db_filter_column_hours($table, $key);
+
+        $delta = filter::get_timezone_offset();
+
+        $returnarray = [];
+        // We get back the GMT timestamps. We need to translate them.
+        foreach ($array as $key => $value) {
+
+            $key = $key - $delta;
+
+            $value->coursestarttime = "$key";
+            $returnarray[$key] = $value;
+        }
 
         return $returnarray ?? [];
     }

@@ -26,6 +26,9 @@ namespace local_wunderbyte_table;
 
 use coding_exception;
 use core_component;
+use core_date;
+use DateTime;
+use DateTimeZone;
 use dml_exception;
 use stdClass;
 
@@ -349,5 +352,22 @@ class filter {
             'timemodified' => $now,
         ];
         $DB->insert_record('local_wunderbyte_table', $data);
+    }
+
+    /**
+     * Returns the timezone detla between usertime & gmt.
+     * @return int
+     */
+    public static function get_timezone_offset() {
+
+        $now = new DateTime("now", new DateTimeZone('GMT'));
+        $gmttime = $now->format('h');
+
+        $now = new DateTime("now", core_date::get_user_timezone_object());
+        $userhour = $now->format('h');
+
+        $delta = $gmttime- $userhour;
+
+        return $delta;
     }
 }

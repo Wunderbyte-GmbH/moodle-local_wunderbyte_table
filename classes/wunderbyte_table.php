@@ -1296,6 +1296,10 @@ class wunderbyte_table extends table_sql {
                         // Here we check if it's an hourslist filter.
                         if (isset($this->subcolumns['datafields'][$categorykey]['local_wunderbyte_table\filters\types\hourlist'])) {
                             $filter .= filter::apply_hourlist_filter($categorykey, ":$paramsvaluekey");
+
+                            $delta = filter::get_timezone_offset();
+                            $value = $value + $delta;
+
                             $this->sql->params[$paramsvaluekey] = "". $value;
                         } else {
                             $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
