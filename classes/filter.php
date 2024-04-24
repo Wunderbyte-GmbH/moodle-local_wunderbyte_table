@@ -366,7 +366,7 @@ class filter {
         $now = new DateTime("now", core_date::get_user_timezone_object());
         $userhour = $now->format('h');
 
-        $delta = $gmttime- $userhour;
+        $delta = $gmttime - $userhour;
 
         return $delta;
     }
