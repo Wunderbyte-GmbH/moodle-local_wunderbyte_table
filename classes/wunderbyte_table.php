@@ -948,7 +948,7 @@ class wunderbyte_table extends table_sql {
                             'userid' => 0,
                             'page' => (string) $this->context->id,
                             'jsonstring' => json_encode($this->sql),
-                            'sql' => $sql,
+                            '\'sql\'' => $sql,
                             'usermodified' => (int) $USER->id,
                             'timecreated' => $now,
                             'timemodified' => $now,
