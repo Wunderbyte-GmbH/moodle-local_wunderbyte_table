@@ -329,7 +329,7 @@ class filter {
             if ($data = $DB->get_record('local_wunderbyte_table', [
                 'hash' => $cachekey,
                 'userid' => 0,
-            ])) {
+            ], 'id, timemodified, jsonstring')) {
                 $data->timemodified = $now;
                 $data->jsonstring = json_encode($tablesettings);
 

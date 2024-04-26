@@ -902,8 +902,11 @@ class wunderbyte_table extends table_sql {
 
             // If we hit the cache, we may increase the count for debugging reasons.
             if (count($this->rawdata) > 0) {
-                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey], 'id, count')) {
+                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey],
+                    'id, \'count\'')) {
                     $record->count++;
+                    $record->{'\'count\''} = $record->count; // COUNT is a reserved keyword in MariaDB, so use quotes.
+                    unset($record->count);
                     $record->timemodified = time();
                     $DB->update_record('local_wunderbyte_table', $record);
                 }
