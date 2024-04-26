@@ -948,19 +948,18 @@ class wunderbyte_table extends table_sql {
                             'userid' => 0,
                             'page' => (string) $this->context->id,
                             'jsonstring' => json_encode($this->sql),
-                            '\'sql\'' => $sql,
+                            '\'sql\'' => $sql, // SQL is a reserved keyword in MariaDB, so use quotes.
                             'usermodified' => (int) $USER->id,
                             'timecreated' => $now,
                             'timemodified' => $now,
-                            'count' => 1,
+                            '\'count\'' => 1, // COUNT is a reserved keyword in MariaDB, so use quotes.
                         ];
                         if ($record = $DB->get_record('local_wunderbyte_table',
                                 [
                                     'hash' => $cachekey,
                                     'page' => $this->context->id,
                                 ],
-                                'id,
-                                count')) {
+                                'id, \'count\'')) { // COUNT is a reserved keyword in MariaDB, so use quotes.
                             $record->count++;
                             $record->timemodified = time();
                             $DB->update_record('local_wunderbyte_table', $record);

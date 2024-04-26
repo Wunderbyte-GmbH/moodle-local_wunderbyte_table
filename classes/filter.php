@@ -346,7 +346,7 @@ class filter {
             'userid' => 0,
             'page' => (string)$table->context->id,
             'jsonstring' => (string) json_encode($tablesettings),
-            '\'sql\'' => $sql,
+            '\'sql\'' => $sql, // SQL is a reserved keyword in MariaDB, so use quotes.
             'usermodified' => (int)$USER->id,
             'timecreated' => $now,
             'timemodified' => $now,
