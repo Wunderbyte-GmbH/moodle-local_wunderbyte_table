@@ -1,3 +1,7 @@
+## Version 2.0.6 (2024042600)
+* Bugfix: Fix hourlist filter for timezone (bugs with summer time / winter time remain).
+* Bugfix: Fix MariaDB SQL errors with reserved keywords.
+
 ## Version 2.0.5 (2024042200)
 * Bugfix: Fix strings for AMOS.
 * Bugfix: MariaDB does not allow alias in DELETE statement.
