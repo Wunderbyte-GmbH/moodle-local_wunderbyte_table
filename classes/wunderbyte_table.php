@@ -963,7 +963,9 @@ class wunderbyte_table extends table_sql {
                                     'page' => $this->context->id,
                                 ],
                                 'id, \'count\'')) { // COUNT is a reserved keyword in MariaDB, so use quotes.
-                            $record->count++;
+                            $count = $record->count + 1;
+                            unset($record->count);
+                            $record->{'\'count\''} = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
                             $record->timemodified = time();
                             $DB->update_record('local_wunderbyte_table', $record);
                             $dontinsert = true;
