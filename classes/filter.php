@@ -344,10 +344,10 @@ class filter {
             'tablehash' => $table->tablecachehash,
             'idstring' => $table->idstring,
             'userid' => 0,
-            'page' => $table->context->id,
-            'jsonstring' => json_encode($tablesettings),
+            'page' => (string)$table->context->id,
+            'jsonstring' => (string) json_encode($tablesettings),
             'sql' => $sql,
-            'usermodified' => $USER->id,
+            'usermodified' => (int)$USER->id,
             'timecreated' => $now,
             'timemodified' => $now,
         ];
