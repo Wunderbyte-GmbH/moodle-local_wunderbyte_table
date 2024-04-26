@@ -88,6 +88,29 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024021600, 'local', 'wunderbyte_table');
     }
 
+    if ($oldversion < 2024042600) {
+
+        // Define field tablehash to be added to local_wunderbyte_table.
+        $table = new xmldb_table('local_wunderbyte_table');
+        $field = new xmldb_field('tablehash', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'hash');
+
+        // Conditionally launch add field tablehash.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field tablehash to be added to local_wunderbyte_table.
+        $field = new xmldb_field('idstring', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'tablehash');
+
+        // Conditionally launch add field tablehash.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Wunderbyte_table savepoint reached.
+        upgrade_plugin_savepoint(true, 2024042600, 'local', 'wunderbyte_table');
+    }
+
     // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
     //
     // You will also have to create the db/install.xml file by using the XMLDB Editor.

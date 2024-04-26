@@ -902,8 +902,11 @@ class wunderbyte_table extends table_sql {
 
             // If we hit the cache, we may increase the count for debugging reasons.
             if (count($this->rawdata) > 0) {
-                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey], 'id, count')) {
-                    $record->count++;
+                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey],
+                    'id, \'count\'')) {
+                    $count = $record->count + 1;
+                    unset($record->count);
+                    $record->{'\'count\''} = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
                     $record->timemodified = time();
                     $DB->update_record('local_wunderbyte_table', $record);
                 }
@@ -946,22 +949,23 @@ class wunderbyte_table extends table_sql {
                             'tablehash' => $this->tablecachehash,
                             'idstring' => $this->idstring,
                             'userid' => 0,
-                            'page' => $this->context->id,
+                            'page' => (string) $this->context->id,
                             'jsonstring' => json_encode($this->sql),
-                            'sql' => $sql,
-                            'usermodified' => $USER->id,
+                            '\'sql\'' => $sql, // SQL is a reserved keyword in MariaDB, so use quotes.
+                            'usermodified' => (int) $USER->id,
                             'timecreated' => $now,
                             'timemodified' => $now,
-                            'count' => 1,
+                            '\'count\'' => 1, // COUNT is a reserved keyword in MariaDB, so use quotes.
                         ];
                         if ($record = $DB->get_record('local_wunderbyte_table',
                                 [
                                     'hash' => $cachekey,
                                     'page' => $this->context->id,
                                 ],
-                                'id,
-                                count')) {
-                            $record->count++;
+                                'id, \'count\'')) { // COUNT is a reserved keyword in MariaDB, so use quotes.
+                            $count = $record->count + 1;
+                            unset($record->count);
+                            $record->{'\'count\''} = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
                             $record->timemodified = time();
                             $DB->update_record('local_wunderbyte_table', $record);
                             $dontinsert = true;
