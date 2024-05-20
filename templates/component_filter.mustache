@@ -172,17 +172,37 @@
             <div class="collapse mt-2 ml-2 mr-2 {{show}}" id="id_collapse_{{columnname}}">
                 <input class="search form-control mb-2" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
                 {{#default}}
-                <ul class="wunderbyterFilterList pt-2">
-                    {{#values}}
-                        <li class="form-check">
-                                <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
-                                <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
-                                    {{key}} {{#count}}({{count}}){{/count}}
-                                </label>
-                        </li>
-                    {{/values}}
-                </ul>
+                    <ul class="wunderbyterFilterList pt-2">
+                        {{#values}}
+                            <li class="form-check">
+                                    <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
+                                    <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
+                                        {{key}} {{#count}}({{count}}){{/count}}
+                                    </label>
+                            </li>
+                        {{/values}}
+                    </ul>
                 {{/default}}
+                {{#hierarchy}}
+                    <ul class="wunderbyterFilterList pt-2">
+                        <a class="btn btn-nolabel" data-toggle="collapse" href="#{{id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            {{label}}
+                        </a>
+                        <div class="collapse" id="{{id}}">
+                            <div class="card card-body">
+                                {{#values}}
+                                    <li class="form-check">
+                                            <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
+                                            <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
+                                                {{key}} {{#count}}({{count}}){{/count}}
+                                            </label>
+                                    </li>
+                                {{/values}}
+                            </div>
+                        </div>
+
+                    </ul>
+                {{/hierarchy}}
                 {{#datepicker}}
                     {{#datepickers}}
                         <form class="datepickerform">
