@@ -173,6 +173,43 @@ By the way: 'id' will aways be obmitted, as it is not a useful filter in any cas
     $weekdays = new weekdays('weekday', get_string('weekday', 'my_plugin'));
     $table->add_filter($weekdays);
 
+### Sort filter values and localize them
+When having eg three values in your dataset, one, two, three, and you want them to appear always in the right order in your filter, you can use $standardfilter->add_options(['one', 'two', 'three']) to achieve that result.
+
+If you only have 0 for inactive and 1 for active, you can use
+
+    $standardfilter->add_options([
+        0 => get_string('inactive', 'myplugin'),
+        1 => get_string('active', 'myplugin'),
+    ]);
+
+### Hierarchical filter
+The hierarchical filter will allow to order your results in a special way. Assume you have the following values: one, two, three, four, five, six in your database. They belong to three different categories. You can then add the filter like this:
+
+    $hierarchicalfilter = new hierarchicalfilter('x', get_string('x', 'my_plugin'));
+    $hierarchicalfilter->add_options([
+        'one' => [
+            'localizedname' => get_string('one', 'myplugin'),
+            'parent' => get_string('category A'),
+        ],
+        'two' => [
+            'localizedname' => get_string('two', 'myplugin'),
+            'parent' => get_string('category B'),
+        ],
+        'three' => [
+            'localizedname' => get_string('three', 'myplugin'),
+            'parent' => get_string('category A'),
+        ],
+        ...,
+        'other' => [
+            'localizedname' => get_string('other', 'myplugin'),
+            'parent' => get_string('category Other'),
+        ]
+    ]);
+    $table->add_filter($hierarchicalfilter);
+
+The hierarchical filter will just add a (only one!) layer for the defined values. With 'other', we have implemented a catch function which will take care of all values you didn't define. In our example above, if suddenly we find seven and eight in the DB, they would be added the the "Other" Category. To rename this category, just add it with the key "other" and your own localized string.
+
 For columns that contain date and time values (as Unix timestamp) you can enable a datepicker to allow users to filter the values:
 
     $datepicker = new datepicker('enddate', get_string('enddate'));
@@ -185,7 +222,7 @@ For columns that contain date and time values (as Unix timestamp) you can enable
     );
     $table->add_filter($datepicker);
 
-
+### datepicker filter
 A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after' and 'flexoverlap'.
 "Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan. "Flexoverlap" will include all kinds of overlaping: overlapping the beginning, the end, both sides or within.
 The possibleoperations array is containing a whitelist, if none specified, all are applied.
@@ -215,6 +252,31 @@ Example of a filter json for this:
 
     $hourslistfilter = new hourlist('timemodified', get_string('hourlastmodified', 'local_wunderbyte_table'));
     $table->add_filter($hourslistfilter);
+
+### Exploding strings for columns storing multiple values
+The filter function also supports columns with multiple values stored as string with a separator.
+
+You can define the separator like this:
+
+    $standardfilter = new standardfilter('mycolname', get_string('mystring', 'mod_myplugin'));
+    $standardfilter->add_options(
+        [
+            'explode' => ',', // In this example, a comma is the separator, you might need another one.
+        ]
+    );
+    $table->add_filter($standardfilter);
+
+### Handle JSON objects
+The filter function also supports columns storing one or multiple JSON objects.
+You can define the attribute of the JSON object which should be used for the filter:
+
+    $standardfilter = new standardfilter('mycolname', get_string('mystring', 'mod_myplugin'));
+    $standardfilter->add_options(
+        [
+            'jsonattribute' => 'name', // Replace 'name' with the actual attribute name.
+        ]
+    );
+    $table->add_filter($standardfilter);
 
 ## Sorting
 
@@ -262,32 +324,6 @@ For the display of localized names in tableheaders, use the define_headers funct
             ];
     $table->define_headers(array_values($columns));
     $table->define_columns(array_keys($columns));
-
-### Exploding strings for columns storing multiple values
-The filter function also supports columns with multiple values stored as string with a separator.
-
-You can define the separator like this:
-
-    $standardfilter = new standardfilter('mycolname', get_string('mystring', 'mod_myplugin'));
-    $standardfilter->add_options(
-        [
-            'explode' => ',', // In this example, a comma is the separator, you might need another one.
-        ]
-    );
-    $table->add_filter($standardfilter);
-
-### Handle JSON objects
-The filter function also supports columns storing one or multiple JSON objects.
-You can define the attribute of the JSON object which should be used for the filter:
-
-    $standardfilter = new standardfilter('mycolname', get_string('mystring', 'mod_myplugin'));
-    $standardfilter->add_options(
-        [
-            'jsonattribute' => 'name', // Replace 'name' with the actual attribute name.
-        ]
-    );
-    $table->add_filter($standardfilter);
-
 
 ## Lazy loading vs. direct out
 To lazy load wunderbyte table (eg. for loading in tabs or modals) you need to call $table->lazyout() instead of $table->out. While out will return the html to echo, lazyout echos right away. If you want the html of lazyout, use $table->lazyouthtml();
