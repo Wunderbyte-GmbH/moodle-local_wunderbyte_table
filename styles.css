@@ -452,7 +452,7 @@
 .wunderbyte_table_filter_on .wunderbyte_table_container.showontop {
     display: block;
 }
-.wunderbyte_table_filter_on .wunderbyte_table_container.showontop aside{
+.wunderbyte_table_filter_on .wunderbyte_table_container.showontop aside {
     max-width: 100%;
 }
 
@@ -471,7 +471,7 @@
     padding: 0;
 }
 
-.wunderbyteTableFilter .dd{
+.wunderbyteTableFilter .dd {
     padding: 10px;
     background: transparent;
     max-width: fit-content;
@@ -514,16 +514,15 @@
 /* Berta related CSS ? */
 
 .wunderbyte_table_components {
-    background: #E9F0F3
+    background: #e9f0f3
 }
 
 .wunderbyte_table_container.showontop .filterheader {
-    background: #E9F0F3;
-    /* min-height: 200px; */
-    padding:40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: #e9f0f3;
+    padding : 40px;
+    display : flex;
+    justify-content : center;
+    align-items : center;
 }
 
 .wunderbyte_table_container.showontop .filterheader .wunderbyte_table_components {
@@ -539,39 +538,39 @@
     position: relative;
 }
 
-.hierarchybutton::after {
+.hierarchy .hierarchybutton::after {
     position: absolute;
     right: 10px;
     height: 100%;
     align-items: center;
-    justify-content: center !important;
-    display: flex !important;;
-    top: 0 !important;
+    justify-content: center;
+    display: flex;
+    top: 0;
 }
 
-.filtersearch {
+.dropdown-menu .filtersearch {
     position: absolute;
-    height: 46px !important;
+    height: 46px;
     top: -49px;
     left: -1px;
-    width: calc(100% + 2px) !important;
+    width: calc(100% + 2px);
 }
 
-.labelsearch {
-    display: hide;
-    position: absolute !important;
+.dropdown-menu .labelsearch {
+    display: none;
+    position: absolute;
     height: 46px;
     top: -60px;
     z-index: 9999;
 }
 
-.labelsearch span {
+.dropdown-menu .labelsearch span {
     position: relative;
     color: rgba(15, 108, 191, .75);
     font-weight: bold;
 }
 
-.labelsearch span::after {
+.dropdown-menu .labelsearch span::after {
     position: absolute;
     width: 140%;
     height: 10px;
@@ -583,31 +582,34 @@
     border-radius: 2px;
 }
 
-.hideFocus.btn:focus, .btn.focus {
-
-    box-shadow: none !important
+.wunderbyteTableFilter .dropdownMenuButton.hideFocus.btn:focus, .btn.focus {
+    box-shadow: none;
 }
 
-
 @media screen and (max-width: 991px) {
-    .wunderbyte_table_filter_on .wunderbyte_table_container{
+    
+    .wunderbyte_table_filter_on .wunderbyte_table_container {
         display: block;
     }
-    .wunderbyte_table_filter_on .wunderbyte_table_container aside{
+
+    .wunderbyte_table_filter_on .wunderbyte_table_container aside {
         max-width: 100%;
     }
+
     .wunderbyte_table_container .filterheader {
-        padding: 0px !important;
+        padding: 0;
     }
 
     .wunderbyte_table_container aside {
-        padding: 15px !important;
+        padding: 15px;
     }
-    .wunderbyte_table_container 
-    .wunderbyteTableFilter .dd, .wunderbyteTableFilter .dropdownMenuButton {
+
+    .wunderbyte_table_container .wunderbyteTableFilter .dd,
+    .wunderbyte_table_container .wunderbyteTableFilter .dropdownMenuButton {
         max-width: 100%;
-        width: 100% !important;
+        width: 100%;
     }
+
     .showontop .wunderbyteTableFilter.row {
         flex-direction: column;
     }

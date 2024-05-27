@@ -190,7 +190,8 @@ class hierarchicalfilter extends base {
                 $categoryobject['hierarchy'][$subcategorykey]['values'][$valuekey] = $itemobject;
             }
 
-            if (!isset($categoryobject['hierarchy'][$subcategorykey]) || count($categoryobject['hierarchy'][$subcategorykey]['values']) == 0) {
+            if (!isset($categoryobject['hierarchy'][$subcategorykey])
+             || count($categoryobject['hierarchy'][$subcategorykey]['values']) == 0) {
                 // We don't add the filter if there is nothing in there.
                 return;
             }

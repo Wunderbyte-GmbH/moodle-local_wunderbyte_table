@@ -184,3 +184,4 @@ $string['table2name'] = 'Demo Tabelle 2';
 $string['table3name'] = 'Demo Tabelle 3';
 $string['table4name'] = 'Demo Tabelle 4';
 $string['id'] = 'ID';
+$string['other'] = 'Andere';
