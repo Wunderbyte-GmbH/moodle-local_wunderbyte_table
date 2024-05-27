@@ -139,7 +139,7 @@ class demo implements renderable, templatable {
                 'parent' => 'A',
             ],
             'other' => [
-                'localizedname' => get_string('other', 'myplugin'),
+                'localizedname' => get_string('other', 'local_wunderbyte_table'),
             ]
         ]);
         $table->add_filter($hierarchicalfilter);

@@ -471,13 +471,13 @@
     padding: 0;
 }
 
-#dd {
+.wunderbyteTableFilter .dd{
     padding: 10px;
     background: transparent;
     max-width: fit-content;
 }
 
-.wunderbyte_table_container #dropdownMenuButton {
+.wunderbyte_table_container .wunderbyteTableFilter .dropdownMenuButton {
     background: #fff;
     min-width: fit-content;
     width: 250px;
@@ -486,7 +486,7 @@
     border: 1px solid #d3d3d3bd;
 }
 
-.wunderbyte_table_container #dropdownMenuButton::after {
+.wunderbyte_table_container .wunderbyteTableFilter .dropdownMenuButton::after {
     position: absolute;
     right: 10px;
     height: 100%;
@@ -549,17 +549,12 @@
     top: 0 !important;
 }
 
-#filtersearch {
-    /* position: absolute;
-    height: 46px;
-    top: -48px;
-    left: 0;
-    width: calc(100% + 2px); */
+.filtersearch {
     position: absolute;
-    height: 46px;
+    height: 46px !important;
     top: -49px;
     left: -1px;
-    width: calc(100% + 2px);
+    width: calc(100% + 2px) !important;
 }
 
 .labelsearch {
@@ -608,7 +603,8 @@
     .wunderbyte_table_container aside {
         padding: 15px !important;
     }
-    .wunderbyte_table_container #dd, #dropdownMenuButton {
+    .wunderbyte_table_container 
+    .wunderbyteTableFilter .dd, .wunderbyteTableFilter .dropdownMenuButton {
         max-width: 100%;
         width: 100% !important;
     }
