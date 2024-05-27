@@ -141,7 +141,14 @@
     {{#categories}}
     <div class="col dropdowncontainer dd">
     <div class="dropdown">
-    <button class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{name}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button 
+        {{#expanded}}
+            aria-expanded="true"
+        {{/expanded}}
+        {{^expanded}}
+            aria-expanded="false"
+        {{/expanded}}
+    aria-controls="id_collapse_{{columnname}}" class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{name}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {{name}}
     </button>
     <div class="dropdown-menu">
