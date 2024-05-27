@@ -582,8 +582,8 @@
     border-radius: 2px;
 }
 
-.wunderbyteTableFilter .dropdownMenuButton.hideFocus.btn:focus
-, .btn.focus {
+.wunderbyteTableFilter .dropdownMenuButton.hideFocus.btn:focus,
+.btn.focus {
     box-shadow: none;
 }
 
