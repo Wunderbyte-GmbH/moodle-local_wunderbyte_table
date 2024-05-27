@@ -502,10 +502,6 @@
     width: 100%;
 }
 
-.inactivefilter .filterheader {
-    display: none !important;
-}
-
 .dropdowncontainer .wunderbyterFilterList {
     margin: 0;
     padding: 0;
@@ -514,15 +510,19 @@
 /* Berta related CSS ? */
 
 .wunderbyte_table_components {
-    background: #e9f0f3
+    background: #e9f0f3;
 }
 
 .wunderbyte_table_container.showontop .filterheader {
     background: #e9f0f3;
-    padding : 40px;
-    display : flex;
-    justify-content : center;
-    align-items : center;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inactivefilter .wunderbyte_table_container.showontop .filterheader {
+    display: none;
 }
 
 .wunderbyte_table_container.showontop .filterheader .wunderbyte_table_components {
@@ -582,12 +582,12 @@
     border-radius: 2px;
 }
 
-.wunderbyteTableFilter .dropdownMenuButton.hideFocus.btn:focus, .btn.focus {
+.wunderbyteTableFilter .dropdownMenuButton.hideFocus.btn:focus
+, .btn.focus {
     box-shadow: none;
 }
 
 @media screen and (max-width: 991px) {
-    
     .wunderbyte_table_filter_on .wunderbyte_table_container {
         display: block;
     }
