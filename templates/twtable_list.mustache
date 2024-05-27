@@ -74,16 +74,15 @@
 {{/norecords}}
 {{^norecords}}
      {{#table}}
-
      {{#infinitescroll}}
           {{^displayelementsontop}}
-               <div>
+               <div class="notontop infinite">
                {{> local_wunderbyte_table/component_actionbutton }}
                </div>
           {{/displayelementsontop}}
      {{/infinitescroll}}
      {{#displayelementsontop}}
-          <div>
+          <div class="ontop">
           {{> local_wunderbyte_table/component_actionbutton }}
           </div>
           <br>
@@ -130,7 +129,7 @@
 
 {{^infinitescroll}}
 {{^displayelementsontop}}
-<div class="float-right">{{> local_wunderbyte_table/component_selectrows }}</div>
+<div class="float-right notontop">{{> local_wunderbyte_table/component_selectrows }}</div>
           {{> local_wunderbyte_table/component_pagination }}
           {{> local_wunderbyte_table/component_actionbutton }}
 {{/displayelementsontop}}

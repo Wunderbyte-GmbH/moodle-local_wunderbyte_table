@@ -151,6 +151,7 @@ $string['showcountlabel'] = 'Show numer of records found';
 $string['stickyheader'] = 'Make header sticky';
 $string['showrowcountselect'] = 'Show dropdown for number of rows';
 $string['placebuttonandpageelementsontop'] = 'Show buttons and page elements on top (instead of bottom)';
+$string['showfilterontop'] = 'Show filters on top of table';
 $string['tableheight'] = 'Table height';
 $string['tableheight_help'] = 'Tableheight is set in pixels. Useful values start at about 300. 0 means the height is calculated automatically.';
 $string['pagesize'] = 'Number of records per page';

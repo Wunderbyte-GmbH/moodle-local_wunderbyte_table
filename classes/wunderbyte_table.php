@@ -110,6 +110,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Show a label where number of totalrows and filtered rows are displayed.
+     */
+    public $showfilterontop = false;
+
+    /**
+     *
      * @var bool Show elements to download the table.
      */
     public $showdownloadbutton = false;
