@@ -188,6 +188,12 @@ class table implements renderable, templatable {
     private $printoptions = [];
 
     /**
+     *
+     * @var bool Show a label where number of totalrows and filtered rows are displayed.
+     */
+    public $showfilterontop = false;
+
+    /**
      * Action buttons
      *
      * @var array
@@ -280,6 +286,8 @@ class table implements renderable, templatable {
         }
 
         $this->showcountlabel = $table->showcountlabel;
+
+        $this->showfilterontop = $table->showfilterontop;
 
         $this->tableheight = $table->tableheight;
 
@@ -593,6 +601,7 @@ class table implements renderable, templatable {
             'filter' => $this->categories ?? null,
             'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
             'showrowcountselect' => $this->showcountselect(),
+            'showfitlerontop' => $this->showfilterontop,
             'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
             'showspinner' => true,
             ];

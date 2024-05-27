@@ -74,6 +74,7 @@ class tablesettings {
         $table->showdownloadbutton = $settingsobject->general->showdownloadbutton;
         $table->applyfilterondownload = $settingsobject->general->applyfilterondownload;
         $table->showreloadbutton = $settingsobject->general->showreloadbutton;
+        $table->showfilterontop = $settingsobject->general->showfilterontop;
         $table->showcountlabel = $settingsobject->general->showcountlabel;
         $table->showrowcountselect = $settingsobject->general->showrowcountselect;
         $table->stickyheader = $settingsobject->general->stickyheader;
@@ -154,6 +155,8 @@ class tablesettings {
 
         $mform->addElement('advcheckbox', 'gs_wb_showreloadbutton', get_string('showreloadbutton', 'local_wunderbyte_table'));
 
+        $mform->addElement('advcheckbox', 'gs_wb_showfilterontop', get_string('showfilterontop', 'local_wunderbyte_table'));
+
         $mform->addElement('advcheckbox', 'gs_wb_showcountlabel', get_string('showcountlabel', 'local_wunderbyte_table'));
 
         $mform->addElement('advcheckbox', 'gs_wb_stickyheader', get_string('stickyheader', 'local_wunderbyte_table'));
@@ -197,6 +200,8 @@ class tablesettings {
         $data->gs_wb_applyfilterondownload = $ts->general->applyfilterondownload ?? ($table->applyfilterondownload ? 1 : 0);
 
         $data->gs_wb_showreloadbutton = $ts->general->showreloadbutton ?? ($table->showreloadbutton ? 1 : 0);
+
+        $data->gs_wb_showfilterontop = $ts->general->showfilterontop ?? ($table->showfilterontop ? 1 : 0);
 
         $data->gs_wb_showcountlabel = $ts->general->showcountlabel ?? ($table->showcountlabel ? 1 : 0);
 

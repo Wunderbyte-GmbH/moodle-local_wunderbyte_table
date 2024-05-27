@@ -71,6 +71,7 @@ export const init = (idstring, encodedtable) => {
         moreThanOneTable = true;
     }
 
+
     if (idstring && encodedtable) {
 
         if (!scrollpages.hasOwnProperty(idstring)) {
@@ -84,7 +85,68 @@ export const init = (idstring, encodedtable) => {
         }
         respondToVisibility(idstring, encodedtable, callLoadData);
     }
+
 };
+
+/**
+ * Handle Click on Dropdown
+ *
+ */
+const initHandleDropdown = () => {
+    console.log('initdropdown');
+    const elements = document.querySelectorAll('.hierarchy > button');
+    if (elements) {
+        elements.forEach(element => {
+            element.addEventListener('click', function(event) {
+                console.log(event.currentTarget.dataset.ident, element.dataset.ident);
+                event.stopPropagation();
+                const sibling = element.nextElementSibling;
+                sibling.classList.toggle("show");
+                event.preventDefault();
+                        });
+        });
+    }
+};
+
+/**
+ * Handle Click on Dropdown
+ *
+ */
+const initHandleDropdownFocusSearch = () => {
+
+
+    const checkboxes = document.querySelectorAll('.filterelement.filterouter');
+    if (checkboxes) {
+        Array.from(checkboxes).forEach(cb => {
+            cb.addEventListener('click', function(event) {
+                event.currentTarget.parentElement.parentElement.parentElement.firstElementChild.style.display = 'none';
+            });
+    });
+    }
+
+    const elements = document.querySelectorAll('.wunderbyteTableFilter #dropdownMenuButton');
+    if (elements) {
+        Array.from(elements).forEach(element => {
+            if (element.nextElementSibling.firstElementChild.children[1] &&
+                element.nextElementSibling.firstElementChild.children[1].hidden !== true) {
+                element.classList.add('hideFocus');
+            }
+            element.addEventListener('click', function(event) {
+                if (event.currentTarget == element) {
+                    setTimeout(() => {
+                        if (!element.nextElementSibling.firstElementChild.children[1].hidden) {
+                        element.nextElementSibling.firstElementChild.children[1].focus();
+                        element.nextElementSibling.firstElementChild.children[0].style.display = 'block';
+                        } else {
+                            element.nextElementSibling.firstElementChild.children[0].style.display = 'none';
+                        }
+                    }, 0);
+                }
+                        });
+        });
+    }
+};
+
 
 /**
  * Toggle aside block with filters.
@@ -168,6 +230,9 @@ function respondToVisibility(idstring, encodedtable, callback) {
             // As this can only be here once per table, we mark the table.
             addScrollFunctionality(idstring, encodedtable, element);
             initToggleAside(idstring);
+
+    initHandleDropdown();
+    initHandleDropdownFocusSearch();
         }
 
     }
