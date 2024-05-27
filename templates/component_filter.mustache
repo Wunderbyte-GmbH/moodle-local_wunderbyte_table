@@ -139,18 +139,17 @@
 {{#filter}}
     <div class="wunderbyteTableFilter row">
     {{#categories}}
-    <div class="col dropdowncontainer" id="dd">
+    <div class="col dropdowncontainer dd">
     <div class="dropdown">
-    <button class="btn dropdown-toggle" type="button" data-ident="{{name}}" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{name}}"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {{name}}
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
        <div class="mt-2 ml-2 mr-2 {{show}}" id="id_collapse_{{columnname}}">
            <label class="col-sm-2 labelsearch">
                 <span class="h6 small">{{ columnname }}</span> 
-                </label>
-                <input autofocus="autofocus" id="filtersearch" class="search form-control mb-2" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
-                </input>
+            </label>
+            <input class="search form-control mb-2 filtersearch" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
                 {{#default}}
                     <ul class="wunderbyterFilterList pt-2 list-group-flush">
                         {{#values}}

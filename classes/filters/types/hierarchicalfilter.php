@@ -138,7 +138,6 @@ class hierarchicalfilter extends base {
             foreach ($sortarray as $sortkey => $sortvalue) {
                 if (isset($values[$sortkey])) {
 
-
                     if (isset($sortvalue['localizedname'])) {
                         $localizedname = $sortvalue['localizedname'];
                     } else {
@@ -172,7 +171,6 @@ class hierarchicalfilter extends base {
             $values = array_combine(array_keys($values), array_keys($values));
         }
 
-
         foreach ($values as $subcategorykey => $subcategoryarray) {
 
             foreach ($subcategoryarray as $valuekey => $valuevalue) {
@@ -203,7 +201,8 @@ class hierarchicalfilter extends base {
             }
 
             // Make the arrays mustache ready, we have to jump through loops.
-            $categoryobject['hierarchy'][$subcategorykey]['values'] = array_values($categoryobject['hierarchy'][$subcategorykey]['values']);
+            $categoryobject['hierarchy'][$subcategorykey]['values'] =
+            array_values($categoryobject['hierarchy'][$subcategorykey]['values']);
             $categoryobject['hierarchy'][$subcategorykey]['label'] = $subcategorykey;
             $categoryobject['hierarchy'][$subcategorykey]['id'] = 'subcategorykey_' . $subcategorykey;
 

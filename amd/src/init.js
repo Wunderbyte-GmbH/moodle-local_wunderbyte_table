@@ -93,12 +93,10 @@ export const init = (idstring, encodedtable) => {
  *
  */
 const initHandleDropdown = () => {
-    console.log('initdropdown');
     const elements = document.querySelectorAll('.hierarchy > button');
     if (elements) {
         elements.forEach(element => {
             element.addEventListener('click', function(event) {
-                console.log(event.currentTarget.dataset.ident, element.dataset.ident);
                 event.stopPropagation();
                 const sibling = element.nextElementSibling;
                 sibling.classList.toggle("show");
@@ -124,7 +122,7 @@ const initHandleDropdownFocusSearch = () => {
     });
     }
 
-    const elements = document.querySelectorAll('.wunderbyteTableFilter #dropdownMenuButton');
+    const elements = document.querySelectorAll('.wunderbyteTableFilter .dropdownMenuButton');
     if (elements) {
         Array.from(elements).forEach(element => {
             if (element.nextElementSibling.firstElementChild.children[1] &&
@@ -231,8 +229,8 @@ function respondToVisibility(idstring, encodedtable, callback) {
             addScrollFunctionality(idstring, encodedtable, element);
             initToggleAside(idstring);
 
-    initHandleDropdown();
-    initHandleDropdownFocusSearch();
+            initHandleDropdown();
+            initHandleDropdownFocusSearch();
         }
 
     }
