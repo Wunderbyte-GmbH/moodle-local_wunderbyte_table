@@ -90,7 +90,6 @@ export function initializeFilterSearch(containerselector) {
                 }
 
                 if (inputElement.value.length === 0 && inputElement.nextElementSibling.dataset.moodletype == 'hierarchylist') {
-                    // searchstring = null;
                     match = false;
                 }
 
