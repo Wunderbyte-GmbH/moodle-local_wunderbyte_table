@@ -42,12 +42,4 @@ $functions = [
                 'ajax' => true,
                 'loginrequired' => false,
         ],
-        'local_wunderbyte_table_sort_rows' => [
-                'classname' => 'local_wunderbyte_table\external\sort_rows',
-                'description' => 'Sorts rows',
-                'type' => 'write',
-                'capabilities' => '',
-                'ajax' => true,
-                'loginrequired' => false,
-        ],
 ];
