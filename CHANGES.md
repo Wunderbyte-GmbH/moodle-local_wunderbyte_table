@@ -1,3 +1,7 @@
+## Version 2.0.7 (2024061200)
+* Improvement: New filterdesign.
+* Improvement: Name attribute added to toggle filter button (accessibility).
+
 ## Version 2.0.6 (2024042600)
 * Bugfix: Fix hourlist filter for timezone (bugs with summer time / winter time remain).
 * Bugfix: Fix MariaDB SQL errors with reserved keywords.
