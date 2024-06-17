@@ -26,6 +26,7 @@
 namespace local_wunderbyte_table\output;
 
 use core_plugin_manager;
+use local_wunderbyte_table\local\settings\tablesettings;
 use local_wunderbyte_table\wunderbyte_table;
 use renderable;
 use renderer_base;
@@ -117,11 +118,25 @@ class table implements renderable, templatable {
     private $showreloadbutton = true;
 
     /**
+     * Allow editing of filter & table
+     *
+     * @var bool
+     */
+    private $edittable = true;
+
+    /**
      * Button to print table.
      *
      * @var bool
      */
     private $showdownloadbutton = true;
+
+    /**
+     * Applyfilterondownload.
+     *
+     * @var bool
+     */
+    private $applyfilterondownload = false;
 
     /**
      * Countlabel.
@@ -197,7 +212,7 @@ class table implements renderable, templatable {
     /**
      * Number of rows diplayed per page in table.
      *
-     * @var boolean
+     * @var bool
      */
     public $showrowcountselect = false;
 
@@ -250,12 +265,19 @@ class table implements renderable, templatable {
 
         // If we have filtercolumns defined, we add the filter key to the output.
         $this->categories = $this->applyfilterselection($table);
-
         $this->printoptions = $this->return_dataformat_selector();
 
         $this->showdownloadbutton = $table->showdownloadbutton;
-
+        $this->applyfilterondownload = $table->applyfilterondownload;
         $this->showreloadbutton = $table->showreloadbutton;
+
+        if (get_config('local_wunderbyte_table', 'allowedittable')
+            && has_capability('local/wunderbyte_table:canedittable', $table->context)) {
+
+                $this->edittable = true;
+        } else {
+            $this->edittable = false;
+        }
 
         $this->showcountlabel = $table->showcountlabel;
 
@@ -572,6 +594,7 @@ class table implements renderable, templatable {
             'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
             'showrowcountselect' => $this->showcountselect(),
             'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
+            'showspinner' => true,
             ];
 
         // Only if we want to show the searchfield, we actually add the key.
@@ -600,6 +623,11 @@ class table implements renderable, templatable {
             $data['reload'] = true;
         }
 
+        // Only if we want to show the searchfield, we actually add the key.
+        if ($this->edittable) {
+            $data['edit'] = true;
+        }
+
         if ($this->showcountlabel) {
             $data['countlabel'] = true;
         }
@@ -616,6 +644,9 @@ class table implements renderable, templatable {
         if ($this->showdownloadbutton) {
             $data['print'] = true;
             $data['printoptions'] = $this->printoptions;
+            if (!empty($this->applyfilterondownload)) {
+                $data['applyfilterondownload'] = "1";
+            }
         }
 
         if (!empty($this->categories)) {
@@ -820,7 +851,8 @@ class table implements renderable, templatable {
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
                             foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {
-                                if ($value['key'] === $filter) {
+                                if ($value['key'] == $filter
+                                    || $value['value'] == $filter) {
                                     // If we find the filter, we add the checked value...
                                     // ...and key to the initial tableobject array at the right place.
                                     $tableobject[$tokey]['default']['values'][$vkey]['checked'] = 'checked';

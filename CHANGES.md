@@ -1,3 +1,39 @@
+## Version 2.0.6 (2024042600)
+* Bugfix: Fix hourlist filter for timezone (bugs with summer time / winter time remain).
+* Bugfix: Fix MariaDB SQL errors with reserved keywords.
+
+## Version 2.0.5 (2024042200)
+* Bugfix: Fix strings for AMOS.
+* Bugfix: MariaDB does not allow alias in DELETE statement.
+
+## Version 2.0.3 (2024041000)
+* Improvement: Update callback to purge caches and delete filter and sql hashes
+from DB when allowedittable is turned off or on.
+
+## Version 2.0.2 (2024040200)
+* Improvement: Triggering reload on all tables will now reload all rows of an infinite table.
+
+## Version 2.0.1 (2024032700)
+* Improvement: Show spinner when we trigger ajax call.
+* Improvement: Add "apply filtersetting" to download table.
+* Bugfix: Remove console logs that had null pointer problems.
+
+## Version 2.0.0 (2024032500)
+* New feature: Now you can individually configure filters and settings for each Wunderbyte Table.
+(Setting has to be turned on in config settings of Wunderbyte Table.)
+* Improvement: Lots of little improvements that were necessary to get new settings to work correctly.
+
+## Version 1.9.18 (2024031800)
+* Improvement: New filter classes for better handling of filters
+* Improvement: First steps to edit filter on the fly (experimental)
+* Improvement: Add generic reordering of list items (experimental)
+
+## Version 1.9.17 (2024031400)
+* Improvement: More explanation on how to integrate a form.
+* Improvement: Add demo how to order by default for more than one columns.
+* Bugfix: Fix string confusion (English, German) - closes #51.
+* Bugfix: Namespace.
+
 ## Version 1.9.16 (2024022900)
 * Improvement: Show cards right next to each other (CSS fix).
 * Bugfix: Add missing cache definitions.

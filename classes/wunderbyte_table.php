@@ -39,11 +39,24 @@ use local_wunderbyte_table\output\viewtable;
 use moodle_url;
 use stdClass;
 use coding_exception;
+use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\filters\types\standardfilter;
+use local_wunderbyte_table\local\settings\tablesettings;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
 class wunderbyte_table extends table_sql {
+
+    /**
+     * Provide const for sortorder ASC.
+     */
+    public const SORTORDER_ASC = 4;
+
+    /**
+     * Provide const for sortorder DESC.
+     */
+    public const SORTORDER_DESC = 3;
 
     // This variable overrides the one in table_sql. We also need the filter field.
     /**
@@ -55,6 +68,7 @@ class wunderbyte_table extends table_sql {
      * @var string Id of this table.
      */
     public $idstring = '';
+
     /**
      * @var string classname of possible subclass.
      */
@@ -102,6 +116,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Apply filter on download.
+     */
+    public $applyfilterondownload = false;
+
+    /**
+     *
      * @var bool Show elements to reload the table.
      */
     public $showreloadbutton = false;
@@ -123,6 +143,12 @@ class wunderbyte_table extends table_sql {
      * @var bool Add checkboxes to select single columns.
      */
     public $addcheckboxes = false;
+
+    /**
+     *
+     * @var bool Rows can be sorted.
+     */
+    public $sortablerows = false;
 
     /**
      *
@@ -261,14 +287,14 @@ class wunderbyte_table extends table_sql {
     /**
      * Number of rows diplayed per page in table.
      *
-     * @var boolean
+     * @var bool
      */
     public $showrowcountselect = false;
 
     /**
      * Inactive filter display on load.
      *
-     * @var boolean
+     * @var bool
      */
     public $filteronloadinactive = false;
 
@@ -331,6 +357,9 @@ class wunderbyte_table extends table_sql {
 
         // This is a fallback for the downloading function. A different baseurl can be defined later in the process.
         $this->define_baseurl(new moodle_url('/local/wunderbyte_table/download.php'));
+
+        $standardfilter = new standardfilter('id');
+        $this->add_filter($standardfilter);
     }
 
     /**
@@ -434,6 +463,10 @@ class wunderbyte_table extends table_sql {
 
         global $DB;
 
+        $encodedtable = $this->return_encoded_table();
+
+        tablesettings::apply_setting($this);
+
         if (!$this->columns) {
             $onerow = $DB->get_record_sql("SELECT {$this->sql->fields} FROM {$this->sql->from} WHERE {$this->sql->where}",
                 $this->sql->params, IGNORE_MULTIPLE);
@@ -453,12 +486,19 @@ class wunderbyte_table extends table_sql {
             $this->headers = $headers;
         }
 
+        // At this point, we check if we need to add the drag areas.
+        if ($this->sortablerows && !$this->is_downloading()) {
+            $columns = array_keys($this->columns);
+            $headers = $this->headers;
+            array_unshift($columns, 'wbsortableitem');
+            array_unshift($headers, get_string('tableheadersortableitem', 'local_wunderbyte_table'));
+            $this->columns = [];
+            $this->define_columns($columns);
+            $this->headers = $headers;
+        }
+
         $this->pagesize = $pagesize;
         $this->setup();
-
-        $this->recreateidstring();
-
-        $encodedtable = $this->return_encoded_table();
 
         // First we query without the filter.
         $this->query_db_cached($this->pagesize, $useinitialsbar);
@@ -472,7 +512,7 @@ class wunderbyte_table extends table_sql {
     /**
      * You should call this to finish outputting the table data after adding
      * data to the table with add_data or add_data_keyed.
-     * @param boolean $closeexportclassdoc
+     * @param bool $closeexportclassdoc
      * @param string $encodedtable
      * @return table
      */
@@ -595,7 +635,7 @@ class wunderbyte_table extends table_sql {
     /** This overrides the classic define columns functions.
      * In the new table, one wouldn't use it but expose it here for backward compatibility.
      * @param array $columns
-     * @param boolean $usestandardclasses
+     * @param bool $usestandardclasses
      * @return void
      */
     public function define_columns($columns, $usestandardclasses = true) {
@@ -615,7 +655,7 @@ class wunderbyte_table extends table_sql {
      * In the new table, one wouldn't use it but expose it here for backward compatibility.
      *
      * @param array $columns
-     * @param boolean $usestandardclasses
+     * @param bool $usestandardclasses
      * @return void
      */
     public function define_headers($columns, $usestandardclasses = true) {
@@ -633,7 +673,7 @@ class wunderbyte_table extends table_sql {
      * @param string $subcolumnsidentifier
      * @param array $classes
      * @param array|null $subcolumns
-     * @param boolean $replace
+     * @param bool $replace
      * @return void
      */
     public function add_classes_to_subcolumns(
@@ -728,17 +768,29 @@ class wunderbyte_table extends table_sql {
      * Define the columns for which an automatic filter should be generated.
      * We just store them as subcolumns of type datafields. In the mustache template these fields must be added to every...
      * ... row or card element, so it can be hidden or shown via the integrated filter mechanism..
-     *
-     * The filtercolumns can, suppelementary to just the values...
-     * ... also hold more information about the way the categories are displayed.
-     * First we can add a sortorder, second we can add a string for localisation.
-     * @param array $filtercolumns
+     * @param base $filter
+     * @param bool $invisible
      * @return void
+     * @throws moodle_exception
      */
-    public function define_filtercolumns(array $filtercolumns) {
+    public function add_filter(base $filter, $invisible = false) {
+
+        $filtercolumns = $this->subcolumns['datafields'] ?? [];
+
+        $filter->add_filter($filtercolumns, $invisible);
 
         $this->add_subcolumns('datafields', $filtercolumns, false);
+    }
 
+    /**
+     * Hides the entire filter.
+     * This is not like toggling on and off on start, but there will be just no filter at all.
+     * @return void
+     * @throws moodle_exception
+     */
+    public function hide_filter() {
+
+        $this->subcolumns['datafields']['id']['id_wb_checked'] = 0;
     }
 
     /**
@@ -803,7 +855,7 @@ class wunderbyte_table extends table_sql {
      * This function can and should be overriden if your plugin needs different cache treatment.
      *
      * @param int $pagesize
-     * @param boolean $useinitialsbar
+     * @param bool $useinitialsbar
      * @return void
      */
     public function query_db_cached($pagesize, $useinitialsbar=true) {
@@ -850,8 +902,11 @@ class wunderbyte_table extends table_sql {
 
             // If we hit the cache, we may increase the count for debugging reasons.
             if (count($this->rawdata) > 0) {
-                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey], 'id, count')) {
-                    $record->count++;
+                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey],
+                    'id, \'count\'')) {
+                    $count = $record->count + 1;
+                    unset($record->count);
+                    $record->{'\'count\''} = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
                     $record->timemodified = time();
                     $DB->update_record('local_wunderbyte_table', $record);
                 }
@@ -894,16 +949,23 @@ class wunderbyte_table extends table_sql {
                             'tablehash' => $this->tablecachehash,
                             'idstring' => $this->idstring,
                             'userid' => 0,
-                            'page' => $url,
+                            'page' => (string) $this->context->id,
                             'jsonstring' => json_encode($this->sql),
-                            'sql' => $sql,
-                            'usermodified' => $USER->id,
+                            '\'sql\'' => $sql, // SQL is a reserved keyword in MariaDB, so use quotes.
+                            'usermodified' => (int) $USER->id,
                             'timecreated' => $now,
                             'timemodified' => $now,
-                            'count' => 1,
+                            '\'count\'' => 1, // COUNT is a reserved keyword in MariaDB, so use quotes.
                         ];
-                        if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey], 'id, count')) {
-                            $record->count++;
+                        if ($record = $DB->get_record('local_wunderbyte_table',
+                                [
+                                    'hash' => $cachekey,
+                                    'page' => $this->context->id,
+                                ],
+                                'id, \'count\'')) { // COUNT is a reserved keyword in MariaDB, so use quotes.
+                            $count = $record->count + 1;
+                            unset($record->count);
+                            $record->{'\'count\''} = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
                             $record->timemodified = time();
                             $DB->update_record('local_wunderbyte_table', $record);
                             $dontinsert = true;
@@ -1050,6 +1112,8 @@ class wunderbyte_table extends table_sql {
         if (!isset($filterobject)) {
             $filterobject = new stdClass;
         }
+
+        $_POST['wbtfilter'] = $filter;
 
         if (get_config('local_wunderbyte_table', 'allowsearchincolumns')) {
             if (!$searchtext == '') {
@@ -1234,8 +1298,12 @@ class wunderbyte_table extends table_sql {
                     } else if (is_numeric($value)) {
 
                         // Here we check if it's an hourslist filter.
-                        if (isset($this->subcolumns['datafields'][$categorykey]['hourlist'])) {
+                        if (isset($this->subcolumns['datafields'][$categorykey]['local_wunderbyte_table\filters\types\hourlist'])) {
                             $filter .= filter::apply_hourlist_filter($categorykey, ":$paramsvaluekey");
+
+                            $delta = filter::get_timezone_offset();
+                            $value = $value + $delta;
+
                             $this->sql->params[$paramsvaluekey] = "". $value;
                         } else {
                             $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
@@ -1442,6 +1510,8 @@ class wunderbyte_table extends table_sql {
         // We don't want errormessage in the encoded table.
         $this->errormessage = '';
 
+        $this->recreateidstring();
+
         if (empty($this->tablecachehash) || $newcache) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
 
@@ -1517,6 +1587,26 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * This handles the colum checkboxes.
+     *
+     * @param stdClass $values
+     * @return void
+     */
+    public function col_wbsortableitem($values) {
+
+        global $OUTPUT;
+
+        $data['id'] = $values->id;
+        $data['label'] = '';
+        $data['name'] = 'row-'.$this->uniqueid.'-'.$values->id;
+        $data['checkboxclass'] = '';
+        $data['checked'] = !empty($values->checkbox) ? true : false;
+        $data['tableid'] = $this->idstring;
+
+        return $OUTPUT->render_from_template('local_wunderbyte_table/col_sortableitem', $data);;
+    }
+
+    /**
      * Change number of rows. Uses the transmitaction pattern (actionbutton).
      * @param int $id
      * @param string $data
@@ -1536,6 +1626,24 @@ class wunderbyte_table extends table_sql {
             'message' => 'Did work',
         ];
     }
+
+    /**
+     * Change number of rows. Uses the transmitaction pattern (actionbutton).
+     * @param int $id
+     * @param string $data
+     * @return array
+     */
+    public function action_reorderrows(int $id, string $data): array {
+
+        $jsonobject = json_decode($data);
+        $ids = $jsonobject->ids;
+
+        return [
+            'success' => 1,
+            'message' => 'This is just a demo, reordering has to be implemented for each table',
+        ];
+    }
+
     /**
      * This returns an instance of wunderbyte table or child class.
      *
@@ -1689,7 +1797,6 @@ class wunderbyte_table extends table_sql {
      */
     public function recreateidstring() {
 
-        global $PAGE;
         // This creates a hash from the sql settings.
         $cachekey = $this->create_cachekey(true);
 

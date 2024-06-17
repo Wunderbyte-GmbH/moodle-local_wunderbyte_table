@@ -33,4 +33,11 @@ $capabilities = [
             'user' => CAP_ALLOW,
         ],
     ],
+    'local/wunderbyte_table:canedittable' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 ];

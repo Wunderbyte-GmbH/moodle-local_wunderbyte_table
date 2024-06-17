@@ -26,25 +26,28 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Wunderbyte Table';
+
+// General strings.
+$badgeexp = '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
+$string['changesortorder'] = "Ändere die Sortierungsrichtung";
+$string['couldnotloaddata'] = "Konnte keine Daten laden";
+$string['customizewbtable'] = 'Wunderbyte Table anpassen';
+$string['downloadas'] = "Tabelle laden als";
+$string['edittable'] = "Editieren";
+$string['filter'] = 'Tabelle filtern';
 $string['loading'] = 'Laden...';
+$string['noentriesfound'] = "Keine Einträge gefunden";
+$string['norecords'] = "Keine Daten gefunden.";
+$string['orderdown'] = "Von Z nach A sortiert";
+$string['orderup'] = "Von A nach Z sortiert";
+$string['print'] = "Tabelle herunterladen";
+$string['reload'] = "Tabelle neu laden";
 $string['search'] = 'Suchen';
 $string['sortby'] = 'Sortieren nach...';
-$string['changesortorder'] = "Ändere die Sortierungsrichtung";
-$string['orderup'] = "Von A nach Z sortiert";
-$string['orderdown'] = "Von Z nach A sortiert";
-
-$string['noentriesfound'] = "Keine Einträge gefunden";
-$string['couldnotloaddata'] = "Konnte keine Daten laden";
-
-$string['filter'] = 'Tabelle filtern';
-$string['reload'] = "Tabelle neu laden";
-$string['print'] = "Tabelle herunterladen";
-$string['downloadas'] = "Tabelle laden als";
-
-$string['norecords'] = "Keine Daten gefunden.";
 
 // Capabilities.
 $string['wunderbyte_table:canaccess'] = 'Kann auf Wunderbyte Table zugreifen';
+$string['wunderbyte_table:canedittable'] = 'Kann auf Wunderbyte Table editieren';
 
 // Caches.
 $string['cachedef_cachedfulltable'] = 'Wunderbyte Table: Cache für die ganze Tabelle';
@@ -102,9 +105,67 @@ $string['action_executed'] = 'Aktion ausgeführt';
 $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname}" in der folgenden Tabelle ausgeführt: "{$a->tablename}"';
 
 // Settings.
-$string['savesettingstodb'] = 'Speichere Wunderbyte Table-Einstellungen in der Datenbank (Experimentell)';
-$string['logfiltercaches'] = 'Debug feature: Speichere query hashes in der DB. Das hat negative Auswirkugen auf die Performance (Experimentell)';
-$string['allowsearchincolumns'] = 'Allow search in columsn via ":" (Experimentell)';
+$string['logfiltercaches'] = 'Debug-Feature: Speichere Query-Hashes in der DB.
+Das hat negative Auswirkugen auf die Performance ' . $badgeexp;
+$string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" ' . $badgeexp;
+
+// Hourlist filter.
+$string['from0to1'] = "00:00 - 01:00";
+$string['from1to2'] = "01:00 - 02:00";
+$string['from2to3'] = "02:00 - 03:00";
+$string['from3to4'] = "03:00 - 04:00";
+$string['from4to5'] = "04:00 - 05:00";
+$string['from5to6'] = "05:00 - 06:00";
+$string['from6to7'] = "06:00 - 07:00";
+$string['from7to8'] = "07:00 - 08:00";
+$string['from8to9'] = "08:00 - 09:00";
+$string['from9to10'] = "09:00 - 10:00";
+$string['from10to11'] = "10:00 - 11:00";
+$string['from11to12'] = "11:00 - 12:00";
+$string['from12to13'] = "12:00 - 13:00";
+$string['from13to14'] = "13:00 - 14:00";
+$string['from14to15'] = "14:00 - 15:00";
+$string['from15to16'] = "15:00 - 16:00";
+$string['from16to17'] = "16:00 - 17:00";
+$string['from17to18'] = "17:00 - 18:00";
+$string['from18to19'] = "18:00 - 19:00";
+$string['from19to20'] = "19:00 - 20:00";
+$string['from20to21'] = "20:00 - 21:00";
+$string['from21to22'] = "21:00 - 22:00";
+$string['from22to23'] = "22:00 - 23:00";
+$string['from23to24'] = "23:00 - 24:00";
+
+// Edit filter.
+$string['wbtablefiltersettingsheader'] = 'Filter anpassen';
+$string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';
+$string['filterinactive'] = 'Verberge den Filter';
+$string['showfilter'] = 'Zeige diesen Filter';
+$string['editfiltername'] = 'Bearbeite den Filternamen';
+$string['allowedittable'] = 'Bearbeite Tabelleneinstellungen (zum Testen, nicht auf produktiven Websites verwenden) ' . $badgeexp;
+$string['showdownloadbutton'] = 'Download-Button anzeigen';
+$string['applyfilterondownload'] = 'Filter auf Download anwenden';
+$string['showreloadbutton'] = 'Reload-Button anzeigen';
+$string['showcountlabel'] = 'Anzahl der gefundenen Einträge anzeigen';
+$string['stickyheader'] = 'Header fixieren (sticky header)';
+$string['showrowcountselect'] = 'Dropdown für Anzahl der anzuzeigenden Zeilen anzeigen';
+$string['placebuttonandpageelementsontop'] = 'Buttons und Elemente oben statt unten anzeigen';
+$string['tableheight'] = 'Tabellen-Höhe';
+$string['tableheight_help'] = 'Die Tabellenhöhe wird in Pixel angegeben, sinnvolle Werte beginnen daher bei ca. 300.
+Bei 0 wird die Höhe automatisch anhand der angezeigten Tabellen berechnet.';
+$string['pagesize'] = 'Anzahl der Einträge pro Seite';
+$string['addcheckboxes'] = 'Für jede Zeile eine Checkbox anzeigen';
+$string['filteronloadinactive'] = 'Filter standardmäßig zugeklappt';
+$string['infinitescroll'] = 'Dynamisches Weiterscrollen aktivieren (infinite scrolling)';
+
+$string['datepicker'] = 'Datumsfilter';
+$string['hourlist'] = 'Stundenlistenfilter';
+$string['standardfilter'] = 'Standardfilter';
+$string['weekdays'] = 'Wochentagefilter';
+
+$string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sortieren"></i>';
+
+// Errors.
+$string['valuehastobeint'] = "Wert muss eine Zahl sein";
 
 // Bewlow this line, there are only strings for the demo site.
 // Action Buttons demo names.

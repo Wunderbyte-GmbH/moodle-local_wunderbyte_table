@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_wunderbyte_table';
-$plugin->release = '1.9.16';
-$plugin->version = 2024022900;
-$plugin->requires = 2020061500;
+$plugin->release = '2.0.6';
+$plugin->version = 2024042600;
+$plugin->requires = 2022112800; // Requires this Moodle version. Current: Moodle 4.1.
 $plugin->maturity = MATURITY_STABLE;

@@ -65,6 +65,9 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 2;
  */
  export function initializeSearch(containerselector, idstring, encodedtable) {
 
+  // eslint-disable-next-line no-console
+  console.log('initializeSearch', idstring);
+
     const inputElement = document.querySelector(containerselector + ' input.search');
 
     if (!inputElement) {

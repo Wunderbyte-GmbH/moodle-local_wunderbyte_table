@@ -114,5 +114,5 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I press the pagedown key
     # Ensure of available / not yet loaded records:
     And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r16']" "xpath_element" should not exist
-    And I wait "3" seconds
+    And I wait "1" seconds
     And I should see "user20" in the "#demotable_4_r16" "css_element"

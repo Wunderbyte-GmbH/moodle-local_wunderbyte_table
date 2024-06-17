@@ -76,9 +76,11 @@
      {{#table}}
 
      {{#infinitescroll}}
-          <div>
-          {{> local_wunderbyte_table/component_actionbutton }}
-          </div>
+          {{^displayelementsontop}}
+               <div>
+               {{> local_wunderbyte_table/component_actionbutton }}
+               </div>
+          {{/displayelementsontop}}
      {{/infinitescroll}}
      {{#displayelementsontop}}
           <div>
@@ -92,8 +94,8 @@
      {{/displayelementsontop}}
      <div class="wunderbyte-table-table {{moodleversionminfourtwo}}">
           {{> local_wunderbyte_table/component_countlabel }}
-          <div {{#stickyheader}} class="scroll-y" {{/stickyheader}} {{#tableheight}}
-          style="height: {{tableheight}};" {{/tableheight}}>
+          <div {{#stickyheader}} class="scroll-y" {{#tableheight}}
+          style="height: {{tableheight}}px;" {{/tableheight}}{{/stickyheader}}>
                <table class="table" id="{{uniqueid}}">
                     <thead>
                          <tr>

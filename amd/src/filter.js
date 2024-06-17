@@ -465,6 +465,61 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
   window.history.pushState(null, null, url.toString());
 }
 
+/**
+ * Generating and displaying filterparams in URL.
+ * @param {string} idstring
+ * @param {string} filterobjects
+ * @param {string} searchstring
+ * @param {string} sort
+ * @param {*} dir
+ */
+export function updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, searchstring, sort, dir) {
+
+  // The container will hold wunderbyteTableClass, wunderbyteTableFilter, wunderbyteTableSearch classes.
+  let container = document.querySelector(".wunderbyte_table_container_" + idstring);
+  if (!container) {
+      return;
+  }
+
+  let url = '';
+  let formelement = null;
+  try {
+    formelement = container.querySelector('form.wb-table-download-buttons');
+    url = new URL(formelement.getAttribute('action'));
+  } catch (e) {
+
+    // eslint-disable-next-line no-console
+    console.log(e);
+    return;
+  }
+
+  let params = url.searchParams;
+
+  // We don't actually want to delete all url params, only those we don't use for searching.
+  params.delete('wbtfilter');
+  params.delete('wbtsearch');
+  params.delete('tsort');
+  params.delete('tdir');
+
+  if (filterobjects) {
+    url.searchParams.append('wbtfilter', filterobjects);
+  }
+  if (searchstring !== "" &&
+  searchstring !== null) {
+    url.searchParams.append('wbtsearch', searchstring);
+  }
+  if (sort !== "" &&
+  sort !== null) {
+    url.searchParams.append('tsort', sort);
+  }
+  if (dir !== null &&
+    dir > 0) {
+    url.searchParams.append('tdir', dir);
+  }
+
+  formelement.action = url.toString();
+}
+
   /**
    * Gets an array of checkboxes for every table by idstring.
    * @param {*} name

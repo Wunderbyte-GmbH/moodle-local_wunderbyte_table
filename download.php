@@ -18,6 +18,7 @@
  * Baseurl of wunderbyte_table will always point to this file for download.
  * @copyright 2023 Wunderbyte Gmbh <info@wunderbyte.at>
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package local_wunderbyte_table
  */
 
 use local_wunderbyte_table\wunderbyte_table;

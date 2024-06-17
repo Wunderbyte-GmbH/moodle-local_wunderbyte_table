@@ -41,13 +41,17 @@
                 "label": "Option 2"
             }
             ],
-            "str": "Print"
+            "str": "Print",
+            "applyfilterondownload": "1"
         }
     }
 }}
 
 {{#print}}
-    <form method="post" action="{{baseurl}}" class="dataformatselector mt-2">
+    <form method="post"
+          action="{{baseurl}}"
+          class="dataformatselector wb-table-download-buttons mt-2"
+          {{#applyfilterondownload}}data-applyfilter="1"{{/applyfilterondownload}}>
         <div class="form-inline text-xs-right">
             <input type="hidden" name="sesskey" value="{{sesskey}}">
             <input type="hidden" name="idstring" value="{{idstring}}">

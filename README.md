@@ -146,7 +146,9 @@ You can also use actionbuttons in a column to treat the corresponding record.
 ## Filter, Sort and Search
 WB Table provides direct filter, search and sort functionality.
 
-    $table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
+    $standardfilter = new standardfilter('username', get_string('username', 'my_plugin'));
+    $table->add_filter($standardfilter);
+
     $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
     $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 
@@ -163,56 +165,45 @@ As for the filter, you have these further functionalities:
 Here is an example how to set this up:
 By the way: 'id' will aways be obmitted, as it is not a useful filter in any case.
 
-    $table->define_filtercolumns([
-        'id', 'sport' => [
-            'localizedname' => get_string('sport', 'mod_myplugin')
-        ], 'dayofweek' => [
-            'localizedname' => get_string('dayofweek', 'mod_myplugin'),
-            'monday' => get_string('monday', 'mod_myplugin'),
-            'tuesday' => get_string('tuesday', 'mod_myplugin'),
-            'wednesday' => get_string('wednesday', 'mod_myplugin'),
-            'thursday' => get_string('thursday', 'mod_myplugin'),
-            'friday' => get_string('friday', 'mod_myplugin'),
-            'saturday' => get_string('saturday', 'mod_myplugin'),
-            'sunday' => get_string('sunday', 'mod_myplugin')
-        ],  'location' => [
-            'localizedname' => get_string('location', 'mod_myplugin')
-        ],
-    ]);
+    $standardfilter = new standardfilter('sport', get_string('sport', 'my_plugin'));
+    $table->add_filter($standardfilter);
+
+    // This filter works, when you have a column with english weekdays.
+    // They will be localized to the users language.
+    $weekdays = new weekdays('weekday', get_string('weekday', 'my_plugin'));
+    $table->add_filter($weekdays);
 
 For columns that contain date and time values (as Unix timestamp) you can enable a datepicker to allow users to filter the values:
 
-    $table->define_filtercolumns([
-                'startdate' => [ // Columns containing Unix timestamps can be filtered.
-                    'localizedname' => get_string('startdate'),
-                    'datepicker' => [
-                        'from time' => [ // Can be localized and like "Courses starting after:".
-                            'operator' => '>', // Must be defined, can be any SQL comparison operator.
-                            'defaultvalue' => 'now', // Can also be Unix timestamp or string "now".
-                        ],
-                        'end time' => [ // Can be localized and like "Courses starting after:".
-                            'operator' => '<',
-                            'defaultvalue' => '1670999000', // Can also be Unix timestamp or string "now".
-                        ]
-                    ]
-                ],
-    ]);
+    $datepicker = new datepicker('enddate', get_string('enddate'));
+    // For the datepicker, we need to add special options.
+    $datepicker->add_options(
+        'standard',
+        '<',
+        get_string('apply_filter', 'local_wunderbyte_table'),
+        'now',
+    );
+    $table->add_filter($datepicker);
+
 
 A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after' and 'flexoverlap'.
 "Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan. "Flexoverlap" will include all kinds of overlaping: overlapping the beginning, the end, both sides or within.
 The possibleoperations array is containing a whitelist, if none specified, all are applied.
-    'datepicker' => [
-                    'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
-                        'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap'], // Will be displayed in select to choose from.
-                        'columntimestart' => 'startdate', // Columnname as is query with lower value. Column has to be defined in $table->define_columns().
-                        'columntimeend' => 'enddate', // Columnname as is query with higher value. Column has to be defined in $table->define_columns().
-                        'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
-                        'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
-                        'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'), // Can also be Unix timestamp or string "now".
-                        'defaultvalueend' => 'now', // Can also be Unix timestamp or string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the checkbox.
-                        ]
-                    ]
+
+    $datepicker = new datepicker(
+            'startdate',
+            get_string('timespan', 'local_wunderbyte_table'),
+            'enddate'
+        );
+    // For the datepicker, we need to add special options.
+    $datepicker->add_options(
+        'in between',
+        '<',
+        get_string('apply_filter', 'local_wunderbyte_table'),
+        '1680130800',
+        'now'
+    );
+    $table->add_filter($datepicker);
 
 By default filters are displayed next to the table and can be hidden with the filterbutton. If you want them to be hidden on load, set filteronloadinactive = true in the instance of your table.
 
@@ -222,39 +213,8 @@ This only works with mariadb, mysql and postgres db.
 
 Example of a filter json for this:
 
-    $filtercolumns = [
-        'id' => [
-            'localizedname' => get_string('id', 'local_wunderbyte_table')
-        ],
-        'timemodified' => [ // Columns containing Unix timestamps can be filtered.
-            'localizedname' => get_string('hourlastmodified', 'local_wunderbyte_table'),
-            'hourlist' => true,
-            0  => '00:00 - 01:00',
-            1  => '01:00 - 02:00',
-            2  => '02:00 - 03:00',
-            3  => '03:00 - 04:00',
-            4  => '04:00 - 05:00',
-            5  => '05:00 - 06:00',
-            6  => '06:00 - 07:00',
-            7  => '07:00 - 08:00',
-            8  => '08:00 - 09:00',
-            9  => '09:00 - 10:00',
-            10 => '10:00 - 11:00',
-            11 => '11:00 - 12:00',
-            12 => '12:00 - 13:00',
-            13 => '13:00 - 14:00',
-            14 => '14:00 - 15:00',
-            15 => '15:00 - 16:00',
-            16 => '16:00 - 17:00',
-            17 => '17:00 - 18:00',
-            18 => '18:00 - 19:00',
-            19 => '19:00 - 20:00',
-            20 => '20:00 - 21:00',
-            21 => '21:00 - 22:00',
-            22 => '22:00 - 23:00',
-            23 => '23:00 - 00:00',
-        ],
-    ];
+    $hourslistfilter = new hourlist('timemodified', get_string('hourlastmodified', 'local_wunderbyte_table'));
+    $table->add_filter($hourslistfilter);
 
 ## Sorting
 
@@ -277,7 +237,17 @@ The fulltext search is triggerd when more than 3 characters are typed into the s
 If you want to look for values in a specific column, use columnname:searchterm. This can be applied for numerous queries and combined with regular fulltext search. Combinations are seperated via whitespace and/or comma. If you want to use values containing whitespaces, use double (or single) quotes ie. "Localized Column":"value including whitespace". Searchterms will be used like wildcards, while quoted values and numbers trigger exact search (no wildcard).
 If the "Enter" key is pressed, search will be toggled immediately, no matter how many characters are set.
 
+## Reordering
+
+WB Table has implemented the javascript and most of the php to support reordering out of the box. To turn this on, just use this command:
+
+    $table->sortablerows = true;
+
+This will add a column with drag n drop handles. But you will need to add a method "action_reorderrows" to actually do the reordering to your wb table child class. For obvious reasons, this can't be done generically.
+You'll find a non functional template for this method in your wunderbyte_table.php in the classes folder.
+
 ### Display
+
 If you want to display multiple tables on one page, tabs can be enabled in templates.
 
 For the display of localized names in tableheaders, use the define_headers function.
@@ -294,36 +264,29 @@ For the display of localized names in tableheaders, use the define_headers funct
     $table->define_columns(array_keys($columns));
 
 ### Exploding strings for columns storing multiple values
-The define_filtercolumns function also supports columns with multiple values stored as string with a separator.
+The filter function also supports columns with multiple values stored as string with a separator.
 
 You can define the separator like this:
 
-    $table->define_filtercolumns([
-        'mycolname' => [
-            'localizedname' => get_string('mystring', 'mod_myplugin'),
+    $standardfilter = new standardfilter('mycolname', get_string('mystring', 'mod_myplugin'));
+    $standardfilter->add_options(
+        [
             'explode' => ',', // In this example, a comma is the separator, you might need another one.
-        ],
-        'mytimestampcolumn' => [
-            'localizedname' => get_string('mystring', 'mod_myplugin'),
-            'datepicker' => [
-                'label' => [ // Can be localized and like "Courses starting after:".
-                    'operator' => '<',
-                    'defaultvalue' => '1680130800', // Can also be string "now".
-                ]
-            ]
-        ],
-    ]);
+        ]
+    );
+    $table->add_filter($standardfilter);
 
 ### Handle JSON objects
-The define_filtercolumns function also supports columns storing one or multiple JSON objects.
+The filter function also supports columns storing one or multiple JSON objects.
 You can define the attribute of the JSON object which should be used for the filter:
 
-    $table->define_filtercolumns([
-        'mycolname' => [
-            'localizedname' => get_string('mystring', 'mod_myplugin'),
+    $standardfilter = new standardfilter('mycolname', get_string('mystring', 'mod_myplugin'));
+    $standardfilter->add_options(
+        [
             'jsonattribute' => 'name', // Replace 'name' with the actual attribute name.
-        ],
-    ]);
+        ]
+    );
+    $table->add_filter($standardfilter);
 
 
 ## Lazy loading vs. direct out

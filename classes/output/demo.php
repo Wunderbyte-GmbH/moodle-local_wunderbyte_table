@@ -27,6 +27,10 @@
 namespace local_wunderbyte_table\output;
 
 use local_wunderbyte_table\demo_table;
+use local_wunderbyte_table\filters\types\datepicker;
+use local_wunderbyte_table\filters\types\hourlist;
+use local_wunderbyte_table\filters\types\standardfilter;
+use local_wunderbyte_table\wunderbyte_table;
 use renderable;
 use renderer_base;
 use templatable;
@@ -119,58 +123,27 @@ class demo implements renderable, templatable {
         // $table->set_tableclass('cardheaderclass', 'card-header d-md-none bg-warning');
         // $table->set_tableclass('cardbodyclass', 'card-body row');
 
-        $filtercolumns = [
-            'id' => [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
-            ],
-            'username' => [
-                'localizedname' => get_string('username')
-            ],
-            'firstname' => [
-                'localizedname' => get_string('firstname')
-            ],
-            'lastname' => [
-                'localizedname' => get_string('lastname')
-            ],
-            'email' => [
-                'localizedname' => get_string('email')
-            ],
-            'timemodified' => [ // Columns containing Unix timestamps can be filtered.
-                'localizedname' => get_string('hourlastmodified', 'local_wunderbyte_table'),
-                'hourlist' => true,
-                0  => '00:00 - 01:00',
-                1  => '01:00 - 02:00',
-                2  => '02:00 - 03:00',
-                3  => '03:00 - 04:00',
-                4  => '04:00 - 05:00',
-                5  => '05:00 - 06:00',
-                6  => '06:00 - 07:00',
-                7  => '07:00 - 08:00',
-                8  => '08:00 - 09:00',
-                9  => '09:00 - 10:00',
-                10 => '10:00 - 11:00',
-                11 => '11:00 - 12:00',
-                12 => '12:00 - 13:00',
-                13 => '13:00 - 14:00',
-                14 => '14:00 - 15:00',
-                15 => '15:00 - 16:00',
-                16 => '16:00 - 17:00',
-                17 => '17:00 - 18:00',
-                18 => '18:00 - 19:00',
-                19 => '19:00 - 20:00',
-                20 => '20:00 - 21:00',
-                21 => '21:00 - 22:00',
-                22 => '22:00 - 23:00',
-                23 => '23:00 - 00:00',
-            ],
-        ];
+        $standardfilter = new standardfilter('username', get_string('username'));
+        $table->add_filter($standardfilter);
 
-        $table->define_filtercolumns($filtercolumns);
+        $standardfilter = new standardfilter('firstname', get_string('firstname'));
+        $table->add_filter($standardfilter);
+
+        $standardfilter = new standardfilter('lastname', get_string('lastname'));
+        $table->add_filter($standardfilter);
+
+        $standardfilter = new standardfilter('email', get_string('email'));
+        $table->add_filter($standardfilter);
+
+        $hourslistfilter = new hourlist('timemodified', get_string('hourlastmodified', 'local_wunderbyte_table'));
+        $table->add_filter($hourslistfilter);
+
         $table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
-        $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
+        $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname', 'email']);
 
         // When true and action buttons are present, checkboxes will be rendered to every line / record.
         $table->addcheckboxes = true;
+        // $table->sortablerows = true;
 
         // Add action buttons to bottom of table. Demo of all defined types.
         // Define if it triggers a modal, if records need to be selected
@@ -232,6 +205,28 @@ class demo implements renderable, templatable {
             'href' => '#',
             'methodname' => 'additem',
             // 'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
+            'nomodal' => false,
+            'id' => -1,
+            'selectionmandatory' => false,
+            'data' => [
+                'id' => 'id',
+                // 'title' => get_string('title'), Localized title to be displayed as title in dynamic form (formname).
+                'titlestring' => 'deletedatatitle',
+                'bodystring' => 'adddatabody',
+                'submitbuttonstring' => 'deletedatasubmit',
+                'component' => 'local_wunderbyte_table',
+                'labelcolumn' => 'firstname',
+                'noselectionbodystring' => 'adddatabody',
+            ]
+        ];
+        // This is for calling a form.
+        // When id is set to -1, the key checkedids will hold comma separated string with the ids.
+        $table->actionbuttons[] = [
+            'label' => 'myform', // '+Modal, SingleCall, NoSelection'
+            'class' => 'btn btn-warning',
+            'href' => '#',
+            // 'methodname' => 'additem',
+            'formname' => 'local_wunderbyte_table\\form\\edittable', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'id' => -1,
             'selectionmandatory' => false,
@@ -317,7 +312,17 @@ class demo implements renderable, templatable {
             ]
         ];
 
-        // Set default sortcolumn and sortorder.
+        // Way to sort by default for more than one columns.
+        // $table->set_sortdata([
+        //     [
+        //         'sortby' => 'username',
+        //         'sortorder' => wunderbyte_table::SORTORDER_ASC,
+        //     ],
+        //     [
+        //         'sortby' => 'firstname',
+        //         'sortorder' => wunderbyte_table::SORTORDER_DESC,
+        //     ],
+        // ]);
         $table->sort_default_column = 'username';
         $table->sort_default_order = SORT_ASC; // Or SORT_DESC.
 
@@ -361,53 +366,41 @@ class demo implements renderable, templatable {
             'enddate' => get_string('enddate'),
         ];
 
-        $filtercolumns = [
-            'id' => [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
-            ],
-            'fullname' => [
-                'localizedname' => get_string('fullname')
-            ],
-            'shortname' =>  [
-                'localizedname' => get_string('shortname')
-            ],
-            'enddate' => [ // Columns containing Unix timestamps can be filtered.
-                'localizedname' => get_string('enddate'),
-                'datepicker' => [
-                    'label' => [ // Can be localized and like "Courses starting after:".
-                        'operator' => '<',
-                        'defaultvalue' => '1680130800', // Can also be string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'), // Can be localized and will be displayed next to the filter checkbox (ie 'apply filter').
-                    ]
-                ]
-            ],
-            'startdate' => [
-                'localizedname' => get_string('timespan', 'local_wunderbyte_table'),
+        $standardfilter = new standardfilter('fullname', get_string('fullname'));
+        $table->add_filter($standardfilter);
 
-                'datepicker' => [
-                    'In between' => [ // Timespan filter with two datepicker-filtercontainer applying to two columns (i.e. startdate, enddate).
-                        'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap'], // Will be displayed in select to choose from.
-                        'columntimestart' => 'startdate', // Columnname as is DB query with lower value. Column has to be defined in $table->define_columns().
-                        'columntimeend' => 'enddate', // Columnname as is DB query with higher value. Column has to be defined in $table->define_columns().
-                        'labelstartvalue' => get_string('startvalue', 'local_wunderbyte_table'),
-                        'defaultvaluestart' => '1670999000', // Can also be Unix timestamp or string "now".
-                        'labelendvalue' => get_string('endvalue', 'local_wunderbyte_table'),
-                        'defaultvalueend' => 'now', // Can also be Unix timestamp or string "now".
-                        'checkboxlabel' => get_string('apply_filter', 'local_wunderbyte_table'),
-                    ]
-                ]
+        $standardfilter = new standardfilter('shortname', get_string('shortname'));
+        $table->add_filter($standardfilter);
 
-            ],
-        ];
+        $datepicker = new datepicker('enddate', get_string('enddate'));
+        // For the datepicker, we need to add special options.
+        $datepicker->add_options(
+            'standard',
+            '<',
+            get_string('apply_filter', 'local_wunderbyte_table'),
+            'now',
+        );
+        $table->add_filter($datepicker);
 
-        $fulltextsearchcolumns = $filtercolumns;
-        array_shift($fulltextsearchcolumns);
+        $datepicker = new datepicker(
+            'startdate',
+            get_string('timespan', 'local_wunderbyte_table'),
+            'enddate'
+        );
+        // For the datepicker, we need to add special options.
+        $datepicker->add_options(
+            'in between',
+            '<',
+            get_string('apply_filter', 'local_wunderbyte_table'),
+            '1680130800',
+            'now'
+        );
+        $table->add_filter($datepicker);
 
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
 
-        $table->define_filtercolumns($filtercolumns);
-        $table->define_fulltextsearchcolumns(array_keys($filtercolumns));
+        $table->define_fulltextsearchcolumns(['fullname', 'shortname']);
         $table->define_sortablecolumns($columns);
 
         // When true and action buttons are present, checkboxes will be rendered to every line.
@@ -484,19 +477,13 @@ class demo implements renderable, templatable {
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
 
-        $filtercolumns = [
-            'id' => [
-                'localizedname' => get_string('id', 'local_wunderbyte_table')
-            ],
-            'course' => [
-                'localizedname' => get_string('course')
-            ],
-            'module' => [
-                'localizedname' => get_string('module', 'local_wunderbyte_table')
-            ],
-        ];
+        $filtercolumns = [];
 
-        $table->define_filtercolumns($filtercolumns);
+        $standardfilter = new standardfilter('course', get_string('course'));
+        $table->add_filter($standardfilter);
+        $standardfilter = new standardfilter('module',  get_string('module', 'local_wunderbyte_table'));
+        $table->add_filter($standardfilter);
+
         //$table->define_fulltextsearchcolumns(array_keys($filtercolumns));
         $table->define_sortablecolumns(['id', 'course', 'module']);
 
@@ -570,6 +557,8 @@ class demo implements renderable, templatable {
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
 
+        // $table->hide_filter();
+
         // To lazy load wunderbyte table (eg. for loading in tabs or modals)
         // you need to call $table->lazyout() instead of $table->out.
         // While out will return the html to echo, lazyout echos right away.
@@ -593,7 +582,15 @@ class demo implements renderable, templatable {
         $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
         $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
 
-        $table->define_filtercolumns(['id', 'username', 'firstname', 'lastname', 'email']);
+        $standardfilter = new standardfilter('username',  get_string('username'));
+        $table->add_filter($standardfilter);
+        $standardfilter = new standardfilter('firstname',  get_string('firstname'));
+        $table->add_filter($standardfilter);
+        $standardfilter = new standardfilter('lastname',  get_string('lastname'));
+        $table->add_filter($standardfilter);
+        $standardfilter = new standardfilter('email', get_string('email'));
+        $table->add_filter($standardfilter);
+
         //$table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
 

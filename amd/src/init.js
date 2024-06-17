@@ -28,8 +28,12 @@ import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
 import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
+import {initializeEditTableButton} from 'local_wunderbyte_table/edittable';
+import {initializeReordering} from 'local_wunderbyte_table/reordering';
 import {initializeRowsSelect} from './rowsdisplayselect';
-import {initializeResetFilterButton, updateUrlWithFilterSearchSort} from './filter';
+import {initializeResetFilterButton,
+    updateUrlWithFilterSearchSort,
+    updateDownloadUrlWithFilterSearchSort} from './filter';
 import {initializeFilterSearch} from './filtersearch';
 
 import {get_string as getString} from 'core/str';
@@ -46,6 +50,7 @@ export const SELECTORS = {
     CONTAINER: ".wunderbyte_table_container_",
     FILTER: " .wunderbyteTableFilter",
     WBTABLE: "wunderbyte-table-",
+    DOWNLOADELEMENT: "form.wb-table-download-buttons",
 };
 
 /**
@@ -271,6 +276,17 @@ export const callLoadData = (
         updateUrlWithFilterSearchSort(filterobjects, searchtext, tsort, tdir);
     }
 
+    let container = document.querySelector(".wunderbyte_table_container_" + idstring);
+    if (container) {
+
+        const downloadelement = container.querySelector(SELECTORS.DOWNLOADELEMENT);
+
+        if (downloadelement && downloadelement.dataset.applyfilter) {
+
+            updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, searchtext, tsort, tdir);
+        }
+    }
+
     // This is now the individual spinner from the wunderbyte table template.
     let spinner = document.querySelector('#a' + idstring + 'spinner .spinner-border');
 
@@ -280,6 +296,13 @@ export const callLoadData = (
         if (spinner) {
             spinner.classList.remove('hidden');
         }
+    }
+
+    // We also have the indidual load spinner.
+    // Show the call spinner.
+    let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+    if (callspinner) {
+        callspinner.classList.remove('hidden');
     }
 
     // This is used to store information for reload etc.
@@ -313,6 +336,11 @@ export const callLoadData = (
             'searchtext': searchtext
         },
         done: async function(res) {
+            // Hide the call spinner.
+            let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+            if (callspinner) {
+                callspinner.classList.add('hidden');
+            }
 
             let jsonobject = '';
             try {
@@ -508,6 +536,7 @@ export const callLoadData = (
             const y = await promises[1];
         },
         fail: function(err) {
+
             // If we have an error, resetting the table might be enough. we do that.
             // To avoid a loop, we only do this in special cases.
             if ((treset != 1)) {
@@ -519,6 +548,12 @@ export const callLoadData = (
                 table.appendChild(node);
                 spinner.classList.add('hidden');
                 table.classList.remove('hidden');
+
+                // Hide the call spinner.
+                let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
+                if (callspinner) {
+                    callspinner.classList.add('hidden');
+                }
             }
         }
     }]);
@@ -670,7 +705,7 @@ function addLinksToPagination(idstring, encodedtable, frag) {
  * @param {string} idstring
  * @returns {bool}
  */
-function infinitescrollEnabled(idstring) {
+export function infinitescrollEnabled(idstring) {
     // If we don't find the infinitescrollelement, we don#t add the listener.
     const selector = ".wunderbyte_table_container_" + idstring;
     if (document.querySelector(selector + ' div.infinitescroll_enabled')) {
@@ -693,6 +728,8 @@ function initializeComponents(idstring, encodedtable) {
         initializeRowsSelect(selector, idstring, encodedtable);
         initializeFilterSearch(selector, idstring, encodedtable);
         initializeResetFilterButton(selector, idstring, encodedtable);
+        initializeEditTableButton(selector, idstring, encodedtable);
+        initializeReordering(selector, idstring, encodedtable);
 
         // A very strange error leads to a failed import from the reloadTable.js under some circumstances.
         // Reload has to be called with this precaution therefore.
