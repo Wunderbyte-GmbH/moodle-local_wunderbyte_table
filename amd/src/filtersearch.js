@@ -76,7 +76,7 @@ export function initializeFilterSearch(containerselector) {
             let records = parentElement.querySelectorAll('input.filterelement.form-check-input[type="checkbox"]');
 
             // Display searchfield with minimum of 13 records.
-            if (records.length > 12) {
+            if (records.length > 0) {
                 inputElement.removeAttribute('hidden');
             }
 

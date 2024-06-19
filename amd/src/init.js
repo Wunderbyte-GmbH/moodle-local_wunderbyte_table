@@ -90,10 +90,10 @@ export const init = (idstring, encodedtable) => {
 
 /**
  * Handle Click on Dropdown
- *
+ * @param {string} idstring
  */
-const initHandleDropdown = () => {
-    const elements = document.querySelectorAll('.hierarchy > button');
+const initHandleDropdown = (idstring) => {
+    const elements = document.querySelectorAll('.wunderbyte_table_container_' + idstring + ' .hierarchy > button');
     if (elements) {
         elements.forEach(element => {
             element.addEventListener('click', function(event) {
@@ -229,7 +229,7 @@ function respondToVisibility(idstring, encodedtable, callback) {
             addScrollFunctionality(idstring, encodedtable, element);
             initToggleAside(idstring);
 
-            initHandleDropdown();
+            initHandleDropdown(idstring);
             initHandleDropdownFocusSearch();
         }
 
