@@ -44,6 +44,7 @@ $string['print'] = "Download table";
 $string['reload'] = "Reload table";
 $string['search'] = 'Search';
 $string['sortby'] = 'Sort by...';
+$string['filter_heading'] = 'Filters';
 
 // Capabilities.
 $string['wunderbyte_table:canaccess'] = 'Can access Wunderbyte Table';
