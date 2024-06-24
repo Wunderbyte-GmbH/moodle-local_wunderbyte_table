@@ -1307,6 +1307,10 @@ class wunderbyte_table extends table_sql {
 
                     if ($datecomparison == true) {
                         $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
+                    } else if (isset($this->subcolumns['datafields'][$categorykey]['explode'])
+                    || isset($this->subcolumns['datafields'][$categorykey]['jsonattribute'])) {
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+                        $this->sql->params[$paramsvaluekey] = "%$value%";
                     } else if (is_numeric($value)) {
 
                         // Here we check if it's an hourslist filter.
@@ -1321,10 +1325,6 @@ class wunderbyte_table extends table_sql {
                             $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
                             $this->sql->params[$paramsvaluekey] = "". $value;
                         }
-                    } else if (isset($this->subcolumns['datafields'][$categorykey]['explode'])
-                    || isset($this->subcolumns['datafields'][$categorykey]['jsonattribute'])) {
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
-                        $this->sql->params[$paramsvaluekey] = "%$value%";
                     } else {
 
                         // We want to find the value in an array of values.
