@@ -116,6 +116,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Show the Components toggle.
+     */
+    public $showfilterbutton = true;
+
+    /**
+     *
      * @var bool Show elements to download the table.
      */
     public $showdownloadbutton = false;
