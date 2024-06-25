@@ -678,14 +678,14 @@ class wunderbyte_table extends table_sql {
      *
      * @param string $subcolumnsidentifier
      * @param array $classes
-     * @param array|null $subcolumns
+     * @param ?array $subcolumns
      * @param bool $replace
      * @return void
      */
     public function add_classes_to_subcolumns(
                 string $subcolumnsidentifier,
                 array $classes,
-                array $subcolumns = null,
+                ?array $subcolumns = null,
                 $replace = false) {
         if (strlen($subcolumnsidentifier) == 0) {
             throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
@@ -751,11 +751,11 @@ class wunderbyte_table extends table_sql {
      * Having this cache will acutally avoid running the likely expensive "build_table" function.
      *
      * @param string $componentname
-     * @param string|null $rawcachename
-     * @param string|null $renderedcachename
+     * @param ?string $rawcachename
+     * @param ?string $renderedcachename
      * @return void
      */
-    public function define_cache(string $componentname, string $rawcachename = null, string $renderedcachename = null) {
+    public function define_cache(string $componentname, ?string $rawcachename = null, ?string $renderedcachename = null) {
 
         if ($rawcachename && $componentname) {
             $this->cachecomponent = $componentname;
