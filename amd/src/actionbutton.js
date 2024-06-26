@@ -385,14 +385,17 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
   // Event detail will contain everything the process() function returned:
   modalForm.addEventListener(modalForm.events.FORM_SUBMITTED, (e) => {
 
-    // eslint-disable-next-line no-console
-    console.log(e.detail);
+    const data = e.detail;
 
-    if (e.detail.reload) {
+    if (data.reload) {
       // Reload whole site.
       window.location.reload();
     } else {
       reloadAllTables();
+    }
+
+    if (data.message && data.message.length > 0) {
+      showNotification(data.message, data.success == 1 ? 'success' : 'danger');
     }
   });
 
