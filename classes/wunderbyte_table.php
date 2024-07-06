@@ -870,7 +870,7 @@ class wunderbyte_table extends table_sql {
      * @param bool $useinitialsbar
      * @return void
      */
-    public function query_db_cached($pagesize, $useinitialsbar=true) {
+    public function query_db_cached($pagesize, $useinitialsbar = true) {
 
         global $CFG, $DB, $PAGE, $USER;
 
@@ -914,8 +914,13 @@ class wunderbyte_table extends table_sql {
 
             // If we hit the cache, we may increase the count for debugging reasons.
             if (count($this->rawdata) > 0) {
-                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey],
-                    'id, \'count\'')) {
+                if (
+                    $record = $DB->get_record(
+                        'local_wunderbyte_table',
+                        ['hash' => $cachekey],
+                        'id, \'count\''
+                    )
+                ) {
                     $count = $record->count + 1;
                     unset($record->count);
                     $record->{'\'count\''} = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
