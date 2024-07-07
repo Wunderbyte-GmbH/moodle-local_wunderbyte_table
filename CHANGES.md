@@ -1,3 +1,8 @@
+## Version 2.0.8 (2024070700)
+* Improvement: Always explode multi entry strings, even when they are int values
+* Improvement: Add possibility to return message on Form (Add message AND success value!)
+* Improvement: Add show filter button functionality
+
 ## Version 2.0.7 (2024061200)
 * Improvement: New filterdesign.
 * Improvement: Name attribute added to toggle filter button (accessibility).
