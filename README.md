@@ -119,7 +119,8 @@ If you want your Action Button to trigger a form instead of a simple modal, hand
     $mytable->actionbuttons[] = [
             'formname' => 'local_myplugin\\form\\edit_mytableentry', // To include a dynamic form to open and edit entry in modal.
             'data' => [
-                'title' => get_string('title'), // Localized title to be displayed as title in dynamic form (formname).
+                'title' => get_string('title'), // Localized title to be displayed as title in dynamic form (formname). Default is "title".
+                'submitbuttonstring' => get_string('send'), // Localized title to be displayed in submit button in dynamic form (formname). Default is "Save changes".
             ]
     ]
 

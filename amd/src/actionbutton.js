@@ -111,7 +111,11 @@ export function initializeActionButton(selector, idstring, encodedtable) {
         if (target.dataset.title !== undefined) {
           title = target.dataset.title;
         }
-        showEditFormModal(button, title, 'body', 'button', idstring, encodedtable);
+        let saveButtonText = 'button';
+        if (target.dataset.submitbuttonstring !== undefined) {
+          saveButtonText = target.dataset.submitbuttonstring;
+        }
+        showEditFormModal(button, title, 'body', saveButtonText, idstring, encodedtable);
       });
     }
   });
@@ -369,17 +373,33 @@ function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring
   }
   // eslint-disable-next-line no-console
   console.log(data);
-
   let modalForm = new ModalForm({
     // Name of the class where form is defined (must extend \core_form\dynamic_form):
     formClass: formname,
     // Add as many arguments as you need, they will be passed to the form:
     args: data,
     // Pass any configuration settings to the modal dialogue, for example, the title:
-    modalConfig: {title: titleText},
+    modalConfig: {
+      title: titleText
+    },
     // DOM element that should get the focus after the modal dialogue is closed:
     returnFocus: button,
   });
+  if (saveButtonText != 'button') {
+    modalForm = new ModalForm({
+      // Name of the class where form is defined (must extend \core_form\dynamic_form):
+      formClass: formname,
+      // Add as many arguments as you need, they will be passed to the form:
+      args: data,
+      // Pass any configuration settings to the modal dialogue, for example, the title:
+      modalConfig: {
+        title: titleText
+      },
+      saveButtonText: saveButtonText,
+      // DOM element that should get the focus after the modal dialogue is closed:
+      returnFocus: button,
+    });
+  }
 
   // Listen to events if you want to execute something on form submit.
   // Event detail will contain everything the process() function returned:
