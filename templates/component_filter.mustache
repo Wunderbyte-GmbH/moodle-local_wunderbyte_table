@@ -141,7 +141,7 @@
     {{#categories}}
     <div class="col dropdowncontainer dd">
     <div class="dropdown">
-    <button 
+    <button
         {{#expanded}}
             aria-expanded="true"
         {{/expanded}}
@@ -154,7 +154,7 @@
     <div class="dropdown-menu">
        <div class="mt-2 ml-2 mr-2 {{show}}" id="id_collapse_{{columnname}}">
            <label class="pl-4 labelsearch">
-                <span class="h6 small">{{ name }}</span> 
+                <span class="h6 small">{{ name }}</span>
             </label>
             <input class="search form-control mb-2 filtersearch" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
                 {{#default}}
@@ -171,7 +171,7 @@
                 {{/default}}
                 {{#hierarchy}}
                     <ul class="wunderbyterFilterList hierarchy pt-2" data-moodletype="hierarchylist">
-                        <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton"  data-ident="{{label}}" data-toggle="collapse" href="javascript:void(0)" role="button" aria-controls="collapseExample">
+                        <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton"  data-ident="{{label}}" data-toggle="collapse" role="button" role="button" aria-controls="collapseExample">
                             {{label}}
                         </button>
                         <div class="collapse" id="{{id}}">
@@ -226,9 +226,9 @@
                     {{/datepickers}}
                 {{/datepicker}}
             </div>
-    {{! <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a> }}
+    {{! <a class="dropdown-item" role="button">Action</a>
+    <a class="dropdown-item" role="button">Another action</a>
+    <a class="dropdown-item" role="button">Something else here</a> }}
     </div>
 </div>
 </div>

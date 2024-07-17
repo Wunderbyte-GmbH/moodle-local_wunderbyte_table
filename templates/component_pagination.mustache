@@ -46,21 +46,21 @@
     <nav aria-label="{{#str}} page, core {{/str}}">
     <ul class="pagination">
         <li class="page-item {{disableprevious}}" data-pagenumber="{{previouspage}}">
-            <a class="page-link" href="#" aria-label="{{#str}} previous, core {{/str}}">
+            <a class="page-link" role="button" aria-label="{{#str}} previous, core {{/str}}">
                 <span aria-hidden="true">&laquo;</span>
                 <span class="sr-only">{{#str}} previous, core {{/str}}</span>
             </a>
         </li>
         {{#pages}}
             {{^ellipsis}}
-                <li class="page-item {{active}}" data-pagenumber="{{pagenumber}}"><a class="page-link" href="#" aria-label="{{#str}} page, core {{/str}} {{pagenumber}}">{{pagenumber}}</a></li>
+                <li class="page-item {{active}}" data-pagenumber="{{pagenumber}}"><a class="page-link" role="button" aria-label="{{#str}} page, core {{/str}} {{pagenumber}}">{{pagenumber}}</a></li>
             {{/ellipsis}}
             {{#ellipsis}}
-                <li class="page-item disabled"><a class="page-link" href="#">…</a></li>
+                <li class="page-item disabled"><a class="page-link" role="button">…</a></li>
             {{/ellipsis}}
         {{/pages}}
         <li class="page-item {{disablenext}}" data-pagenumber="{{nextpage}}">
-            <a class="page-link" href="#" aria-label="{{#str}} next, core {{/str}}">
+            <a class="page-link" role="button" aria-label="{{#str}} next, core {{/str}}">
                 <span aria-hidden="true">&raquo;</span>
                 <span class="sr-only">{{#str}} next, core {{/str}}</span>
             </a></li>
