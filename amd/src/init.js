@@ -521,8 +521,6 @@ export const callLoadData = (
                 }));
             }
 
-            // let frag = container.querySelector(".wunderbyteTableClass");
-
             // If we called a sorting and the result is an empty array, we don't need to render.
             let rows = jsonobject.table.rows;
             if (tsort && (!rows || rows.length < 1)) {
