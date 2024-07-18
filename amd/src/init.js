@@ -521,7 +521,7 @@ export const callLoadData = (
                 }));
             }
 
-            let frag = container.querySelector(".wunderbyteTableClass");
+            // let frag = container.querySelector(".wunderbyteTableClass");
 
             // If we called a sorting and the result is an empty array, we don't need to render.
             let rows = jsonobject.table.rows;
@@ -541,18 +541,13 @@ export const callLoadData = (
                 promises.push(Templates.renderForPromise(rendertemplate, jsonobject).then(({html, js}) => {
 
                     if (componentscontainer) {
-                        // Now we clean the existing table.
-                        while (frag.firstChild) {
-                            frag.removeChild(frag.lastChild);
-                        }
 
-                        // Here we add the rendered content to the table div.
-                        Templates.appendNodeContents('#a' + idstring, html, js);
+                        Templates.replaceNodeContents(
+                            ".wunderbyte_table_container_" + idstring + " .wunderbyteTableClass", html, js);
+
                     } else {
-                        // Here we try to render the whole.hro
-                        const parent = container.parentElement;
-                        container.remove();
-                        Templates.appendNodeContents(parent, html, js);
+
+                        Templates.replaceNodeContents(".wunderbyte_table_container_" + idstring, html, js);
 
                         container = document.querySelector(".wunderbyte_table_container_" + idstring);
                     }
