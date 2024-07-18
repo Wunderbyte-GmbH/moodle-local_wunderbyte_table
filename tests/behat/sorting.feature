@@ -48,7 +48,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And ".demotable_1 th.id.asc" "css_element" should exist
     And I should see "guest" in the "#demotable_1_r1" "css_element"
-    And I follow "changesortorder-demotable_1"
+    And I click on "changesortorder-demotable_1" "button"
     And I wait "1" seconds
     And ".demotable_1 th.id.desc" "css_element" should exist
     And I should see "teacher1" in the "#demotable_1_r1" "css_element"
@@ -56,7 +56,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And ".demotable_1 th.username.desc" "css_element" should exist
     And I should see "user9" in the "#demotable_1_r1" "css_element"
-    And I follow "changesortorder-demotable_1"
+    And I click on "changesortorder-demotable_1" "button"
     And I wait "1" seconds
     And ".demotable_1 th.username.asc" "css_element" should exist
     And I should see "admin" in the "#demotable_1_r1" "css_element"
@@ -64,7 +64,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And ".demotable_1 th.lastname.asc" "css_element" should exist
     And I should see "guest" in the "#demotable_1_r1" "css_element"
-    And I follow "changesortorder-demotable_1"
+    And I click on "changesortorder-demotable_1" "button"
     And I wait "1" seconds
     And ".demotable_1 th.lastname.desc" "css_element" should exist
     And I should see "admin" in the "#demotable_1_r1" "css_element"
@@ -72,7 +72,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And ".demotable_1 th.firstname.desc" "css_element" should exist
     And I should see "user1" in the "#demotable_1_r1" "css_element"
-    And I follow "changesortorder-demotable_1"
+    And I click on "changesortorder-demotable_1" "button"
     And I wait "1" seconds
     And ".demotable_1 th.firstname.asc" "css_element" should exist
     And I should see "admin" in the "#demotable_1_r1" "css_element"
@@ -88,7 +88,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And ".demotable_2 th.id.asc" "css_element" should exist
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
     And I should see "Course 2" in the "#demotable_2_r3" "css_element"
-    And I follow "changesortorder-demotable_2"
+    And I click on "changesortorder-demotable_2" "button"
     And I wait "1" seconds
     And ".demotable_2 th.id.desc" "css_element" should exist
     And I should see "Course 2" in the "#demotable_2_r1" "css_element"
@@ -98,7 +98,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And ".demotable_2 th.fullname.desc" "css_element" should exist
     And I should see "Course 2" in the "#demotable_2_r1" "css_element"
     And I should see "Acceptance test site" in the "#demotable_2_r3" "css_element"
-    And I follow "changesortorder-demotable_2"
+    And I click on "changesortorder-demotable_2" "button"
     And I wait "1" seconds
     And ".demotable_2 th.fullname.asc" "css_element" should exist
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
@@ -108,7 +108,7 @@ Feature: Sorting functionality of wunderbyte_table works as expected
     And ".demotable_2 th.shortname.asc" "css_element" should exist
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
     And I should see "Course 2" in the "#demotable_2_r3" "css_element"
-    And I follow "changesortorder-demotable_2"
+    And I click on "changesortorder-demotable_2" "button"
     And I wait "1" seconds
     And ".demotable_2 th.shortname.desc" "css_element" should exist
     And I should see "Course 2" in the "#demotable_2_r1" "css_element"
