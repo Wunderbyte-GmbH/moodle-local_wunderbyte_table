@@ -77,9 +77,9 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
     And "//nav[@aria-label='Page']" "xpath_element" should exist
-    And I click on "2" "link" in the "ul.pagination" "css_element"
+    And I click on "2" "text" in the "ul.pagination" "css_element"
     And I should not see "guest"
-    And I click on "1" "link" in the "ul.pagination" "css_element"
+    And I click on "1" "text" in the "ul.pagination" "css_element"
     And I should see "guest"
 
   @javascript
