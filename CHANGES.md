@@ -1,3 +1,6 @@
+## Version 2.0.10 (2024071900)
+* Bugfix: Revert changes for node replacement in init.js.
+
 ## Version 2.0.9 (2024071800)
 * Improvement: Add possibility to define message on submitbutton for dynamicform
 * Improvement: Avoid scrolling when using pagination links.
