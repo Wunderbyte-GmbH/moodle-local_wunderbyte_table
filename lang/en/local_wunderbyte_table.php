@@ -26,9 +26,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Wunderbyte Table';
-
-// General strings.
-$badgeexp = '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['changesortorder'] = "Change sort order";
 $string['couldnotloaddata'] = "Could not load data";
 $string['customizewbtable'] = 'Customize Wunderbyte Table';
@@ -45,47 +42,33 @@ $string['reload'] = "Reload table";
 $string['search'] = 'Search';
 $string['sortby'] = 'Sort by...';
 $string['filter_heading'] = 'Filters';
-
-// Capabilities.
 $string['wunderbyte_table:canaccess'] = 'Can access Wunderbyte Table';
 $string['wunderbyte_table:canedittable'] = 'Can edit Wunderbyte table';
-
-// Caches.
 $string['cachedef_cachedfulltable'] = 'Wunderbyte Table: Cached full table';
 $string['cachedef_cachedrawdata'] = "Wunderbyte Table: Default cache";
 $string['cachedef_encodedtables'] = 'Wunderbyte Table: Cache for encoded tables';
 $string['cachedef_cachedfilters'] = 'Wunderbyte Table: Cache for filters';
-
-// Info messages over table.
 $string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found ';
 $string['filtercountmessage'] = '| {$a->filtersum} filter(s) on: {$a->filtercolumns} | ';
 $string['showallrecords'] = 'Show all records';
-
 $string['checkallcheckbox'] = "Check all";
 $string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheckbox">';
 $string['functiondoesntexist'] = "Function of action button doesn\'t exist.";
-
-// Example strings.
 $string['deletedatatitle'] = 'Do you really want to delete this data?';
 $string['deletedatabody'] = 'You are about to submit this data: <br> "{$a->data}"';
 $string['deletedatasubmit'] = 'Delete';
 $string['adddatabody'] = 'You are about to add a row';
-
 $string['generictitle'] = 'Do you really want to treat this data?';
 $string['genericbody'] = 'You are about to treat this rows: <br> "{$a->data}"';
 $string['noselectionbody'] = 'You are about make an action';
 $string['specialbody'] = 'Action will be applied!';
 $string['genericsubmit'] = 'Confirm';
-
 $string['somethingwentwrong'] = 'Something went wrong. Please contact your admin.';
 $string['nocheckboxchecked'] = 'No checkbox checked';
 $string['checkbox'] = 'Checkbox';
 $string['module'] = 'Module';
 $string['apply_filter'] = 'Apply Filter';
-
 $string['pagelabel'] = 'Show {$a} rows';
-
-// Filter for timespan.
 $string['displayrecords'] = 'Display records';
 $string['within'] = 'within';
 $string['overlapboth'] = 'overlapping both dates';
@@ -98,21 +81,14 @@ $string['endvalue'] = 'End';
 $string['selectedtimespan'] = 'selected timespan';
 $string['timespan'] = 'Timespan';
 $string['flexoverlap'] = 'overlapping';
-
 $string['change'] = 'Change';
 $string['hourlastmodified'] = 'Hour, last time updated';
-
-// Events.
 $string['table_viewed'] = 'Table viewed';
 $string['table_viewed_desc'] = 'The user viewed the table "{$a}"';
 $string['action_executed'] = 'Action executed';
 $string['action_executed_desc'] = 'The user executed an action "{$a->methodname}" on the table "{$a->tablename}"';
-
-// Settings.
-$string['logfiltercaches'] = 'Debug feature: Save queries to DB. Has negative impact on performance. ' . $badgeexp;
-$string['allowsearchincolumns'] = 'Allow search in columsn via ":" ' . $badgeexp;
-
-// Hourlist filter.
+$string['logfiltercaches'] = 'Debug feature: Save queries to DB. Has negative impact on performance. ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
+$string['allowsearchincolumns'] = 'Allow search in columsn via ":" ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['from0to1'] = "00:00 - 01:00";
 $string['from1to2'] = "01:00 - 02:00";
 $string['from2to3'] = "02:00 - 03:00";
@@ -137,14 +113,12 @@ $string['from20to21'] = "20:00 - 21:00";
 $string['from21to22'] = "21:00 - 22:00";
 $string['from22to23'] = "22:00 - 23:00";
 $string['from23to24'] = "23:00 - 24:00";
-
-// Edit filter.
 $string['wbtablefiltersettingsheader'] = 'Edit filters';
 $string['wbtabletablesettingsheader'] = 'More settings';
 $string['filterinactive'] = 'Hide the entire filter';
 $string['showfilter'] = 'Show this filter';
 $string['editfiltername'] = 'Edit filtername';
-$string['allowedittable'] = 'Edit table settings (only for testing, do not use on productive sites!) ' . $badgeexp;
+$string['allowedittable'] = 'Edit table settings (only for testing, do not use on productive sites!) ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['showdownloadbutton'] = 'Show download button';
 $string['applyfilterondownload'] = 'Apply filter on download';
 $string['showreloadbutton'] = 'Show reload button';
@@ -159,19 +133,12 @@ $string['pagesize'] = 'Number of records per page';
 $string['addcheckboxes'] = 'Add a checkbox to each row';
 $string['filteronloadinactive'] = 'Collapse filters when table is loaded';
 $string['infinitescroll'] = 'Infinite scrolling';
-
 $string['datepicker'] = 'Datepicker filter';
 $string['hourlist'] = 'Hourlist filter';
 $string['standardfilter'] = 'Standard filter';
 $string['weekdays'] = 'Weekdays filter';
-
 $string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sorting"></i>';
-
-// Errors.
 $string['valuehastobeint'] = "Value has to be a number";
-
-// Bewlow this line, there are only strings for the demo site.
-// Action Buttons demo names.
 $string['nmmcns'] = 'NoModal, MultipleCall, NoSelection';
 $string['nmscns'] = 'NoModal, SingleCall, NoSelection';
 $string['ymmcns'] = '+Modal, MultipleCall, NoSelection';
@@ -180,7 +147,6 @@ $string['nmmcys'] = 'NoModal, MultipleCall, Selection';
 $string['nmscys'] = 'NoModal, SingleCall, Selection';
 $string['ymmcys'] = '+Modal, MultipleCall, Selection';
 $string['ymscys'] = '+Modal, SingleCall, Selection';
-
 $string['table1name'] = 'Demo table 1';
 $string['table2name'] = 'Demo table 2';
 $string['table3name'] = 'Demo table 3';
