@@ -26,9 +26,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Wunderbyte Table';
-
-// General strings.
-$badgeexp = '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
 $string['changesortorder'] = "Ändere die Sortierungsrichtung";
 $string['couldnotloaddata'] = "Konnte keine Daten laden";
 $string['customizewbtable'] = 'Wunderbyte Table anpassen';
@@ -45,44 +42,30 @@ $string['reload'] = "Tabelle neu laden";
 $string['search'] = 'Suchen';
 $string['sortby'] = 'Sortieren nach...';
 $string['filter_heading'] = 'Filter';
-
-// Capabilities.
 $string['wunderbyte_table:canaccess'] = 'Kann auf Wunderbyte Table zugreifen';
 $string['wunderbyte_table:canedittable'] = 'Kann auf Wunderbyte Table editieren';
-
-// Caches.
 $string['cachedef_cachedfulltable'] = 'Wunderbyte Table: Cache für die ganze Tabelle';
 $string['cachedef_cachedrawdata'] = "Wunderbyte Table: Standard Cache";
 $string['cachedef_encodedtables'] = 'Wunderbyte Table: Cache für enkodierte Tabellen';
 $string['cachedef_cachedfilters'] = 'Wunderbyte Table: Cache für Filter';
-
-// Info messages over table.
 $string['countlabel'] = '{$a->filteredrecords} von {$a->totalrecords} Einträgen gefunden ';
 $string['filtercountmessage'] = '| {$a->filtersum} Filter auf: {$a->filtercolumns} | ';
 $string['showallrecords'] = 'Alle Einträge anzeigen';
-
 $string['checkallcheckbox'] = "Alles auswählen";
 $string['functiondoesntexist'] = "Funktion des Aktionsbuttons exisitert nicht.";
 $string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheckbox">';
-
-// Example strings.
 $string['deletedatatitle'] = 'Möchten Sie diese Daten wirklich löschen?';
 $string['deletedatabody'] = 'Sie sind dabei, diese Daten zu löschen: <br> "{$a->data}"';
 $string['deletedatasubmit'] = 'Löschen';
-
 $string['generictitle'] = 'Möchten Sie wirklich diese Daten bearbeiten?';
 $string['genericbody'] = 'Sie sind dabei, diese Zeilen zu bearbeiten: <br> "{$a->data}"';
 $string['genericsubmit'] = 'Bestätigen';
-
 $string['somethingwentwrong'] = 'Etwas ist schiefgelaufen. Melden Sie den Fehler ihrem Admin';
 $string['nocheckboxchecked'] = 'Keine checkbox ausgewählt';
 $string['checkbox'] = 'Checkbox';
 $string['module'] = 'Modul';
 $string['apply_filter'] = 'Filter anwenden';
-
 $string['pagelabel'] = 'Zeige {$a} Zeilen';
-
-// Filter for timespan.
 $string['displayrecords'] = 'Zeige Daten';
 $string['within'] = 'innerhalb';
 $string['overlapboth'] = 'überlappend mit';
@@ -95,22 +78,14 @@ $string['endvalue'] = 'Ende';
 $string['selectedtimespan'] = 'gewählter Zeitspanne';
 $string['timespan'] = 'Zeitspanne';
 $string['flexoverlap'] = 'überlappend mit';
-
 $string['change'] = 'Ändere';
 $string['hourlastmodified'] = 'Stunde, zu der zuletzt aktualisiert wurde';
-
-// Events.
 $string['table_viewed'] = 'Tabelle angesehen';
 $string['table_viewed_desc'] = 'Die NutzerIn hat folgende Tabelle angesehen: "{$a}"';
 $string['action_executed'] = 'Aktion ausgeführt';
 $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname}" in der folgenden Tabelle ausgeführt: "{$a->tablename}"';
-
-// Settings.
-$string['logfiltercaches'] = 'Debug-Feature: Speichere Query-Hashes in der DB.
-Das hat negative Auswirkugen auf die Performance ' . $badgeexp;
-$string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" ' . $badgeexp;
-
-// Hourlist filter.
+$string['logfiltercaches'] = 'Debug-Feature: Speichere Query-Hashes in der DB. Das hat negative Auswirkugen auf die Performance ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
+$string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
 $string['from0to1'] = "00:00 - 01:00";
 $string['from1to2'] = "01:00 - 02:00";
 $string['from2to3'] = "02:00 - 03:00";
@@ -135,14 +110,12 @@ $string['from20to21'] = "20:00 - 21:00";
 $string['from21to22'] = "21:00 - 22:00";
 $string['from22to23'] = "22:00 - 23:00";
 $string['from23to24'] = "23:00 - 24:00";
-
-// Edit filter.
 $string['wbtablefiltersettingsheader'] = 'Filter anpassen';
 $string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';
 $string['filterinactive'] = 'Verberge den Filter';
 $string['showfilter'] = 'Zeige diesen Filter';
 $string['editfiltername'] = 'Bearbeite den Filternamen';
-$string['allowedittable'] = 'Bearbeite Tabelleneinstellungen (zum Testen, nicht auf produktiven Websites verwenden) ' . $badgeexp;
+$string['allowedittable'] = 'Bearbeite Tabelleneinstellungen (zum Testen, nicht auf produktiven Websites verwenden) ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
 $string['showdownloadbutton'] = 'Download-Button anzeigen';
 $string['applyfilterondownload'] = 'Filter auf Download anwenden';
 $string['showreloadbutton'] = 'Reload-Button anzeigen';
@@ -152,25 +125,17 @@ $string['showrowcountselect'] = 'Dropdown für Anzahl der anzuzeigenden Zeilen a
 $string['placebuttonandpageelementsontop'] = 'Buttons und Elemente oben statt unten anzeigen';
 $string['showfilterontop'] = 'Filter über der Tabelle anzeigen';
 $string['tableheight'] = 'Tabellen-Höhe';
-$string['tableheight_help'] = 'Die Tabellenhöhe wird in Pixel angegeben, sinnvolle Werte beginnen daher bei ca. 300.
-Bei 0 wird die Höhe automatisch anhand der angezeigten Tabellen berechnet.';
+$string['tableheight_help'] = 'Die Tabellenhöhe wird in Pixel angegeben, sinnvolle Werte beginnen daher bei ca. 300. Bei 0 wird die Höhe automatisch anhand der angezeigten Tabellen berechnet.';
 $string['pagesize'] = 'Anzahl der Einträge pro Seite';
 $string['addcheckboxes'] = 'Für jede Zeile eine Checkbox anzeigen';
 $string['filteronloadinactive'] = 'Filter standardmäßig zugeklappt';
 $string['infinitescroll'] = 'Dynamisches Weiterscrollen aktivieren (infinite scrolling)';
-
 $string['datepicker'] = 'Datumsfilter';
 $string['hourlist'] = 'Stundenlistenfilter';
 $string['standardfilter'] = 'Standardfilter';
 $string['weekdays'] = 'Wochentagefilter';
-
 $string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sortieren"></i>';
-
-// Errors.
 $string['valuehastobeint'] = "Wert muss eine Zahl sein";
-
-// Bewlow this line, there are only strings for the demo site.
-// Action Buttons demo names.
 $string['nmmcns'] = 'Kein Modal, mehrere Requests, Keine Checkbox Auswahl';
 $string['nmscns'] = 'Kein Modal, ein Request, keine Checkbox Auswahl';
 $string['ymmcns'] = 'Modal, mehrere Requests, keine Checkbox Auswahl';
@@ -179,7 +144,6 @@ $string['nmmcys'] = 'Kein Modal, mehrere Requests, Checkbox Auswahl';
 $string['nmscys'] = 'Kein Modal, ein Request, Checkbox Auswahl';
 $string['ymmcys'] = 'Modal, mehrere Requests, Checkbox Auswahl';
 $string['ymscys'] = 'Modal, ein Request, Checkbox Auswahl';
-
 $string['table1name'] = 'Demo Tabelle 1';
 $string['table2name'] = 'Demo Tabelle 2';
 $string['table3name'] = 'Demo Tabelle 3';
