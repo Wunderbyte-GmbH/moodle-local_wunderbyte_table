@@ -16,6 +16,9 @@
 .wunderbyte_table_container aside {
     max-width: 400px;
     grid-area: aside;
+    padding: 30px;
+    padding-left: 60px;
+    padding-right: 20px;
 }
 
 .wb-records-count-label {
@@ -442,4 +445,172 @@
 
 .wb-table-sortable-drag {
     background-color: lightgrey;
+}
+
+/* Move filters on top of table */
+
+.wunderbyte_table_filter_on .wunderbyte_table_container.showontop {
+    display: block;
+}
+.wunderbyte_table_filter_on .wunderbyte_table_container.showontop aside {
+    max-width: 100%;
+}
+
+.wunderbyteTableFilter.row {
+    margin: 0;
+    flex-direction: column;
+}
+
+.showontop .wunderbyteTableFilter.row {
+    margin: 0;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.showontop aside {
+    padding: 0;
+}
+
+.wunderbyteTableFilter .dd {
+    padding: 10px;
+    background: transparent;
+    max-width: fit-content;
+}
+
+.wunderbyte_table_container .wunderbyteTableFilter .dropdownMenuButton {
+    background: #fff;
+    min-width: fit-content;
+    width: 250px;
+    text-align: start;
+    height: 46px;
+    border: 1px solid #d3d3d3bd;
+}
+
+.wunderbyte_table_container .wunderbyteTableFilter .dropdownMenuButton::after {
+    position: absolute;
+    right: 10px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    top: 0;
+    width: 20px;
+    font-size: 17px;
+}
+
+.dropdowncontainer .dropdown-menu.show {
+    width: 100%;
+}
+
+.dropdowncontainer .wunderbyterFilterList {
+    margin: 0;
+    padding: 0;
+}
+
+/* Berta related CSS ? */
+
+.wunderbyte_table_components {
+    background: #e9f0f3;
+}
+
+.wunderbyte_table_container.showontop .filterheader {
+    background: #e9f0f3;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inactivefilter .wunderbyte_table_container.showontop .filterheader {
+    display: none;
+}
+
+.wunderbyte_table_container.showontop .filterheader .wunderbyte_table_components {
+    width: 100%;
+}
+
+.wunderbyteTableFilter .form-check-label {
+    color: black;
+}
+
+.hierarchybutton {
+    margin-bottom: 4px;
+    position: relative;
+}
+
+.hierarchy .hierarchybutton::after {
+    position: absolute;
+    right: 10px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    top: 0;
+}
+
+.dropdown-menu .filtersearch {
+    position: absolute;
+    height: 46px;
+    top: -49px;
+    left: -1px;
+    width: calc(100% + 2px);
+}
+
+.dropdown-menu .labelsearch {
+    display: none;
+    position: absolute;
+    height: 46px;
+    top: -60px;
+    z-index: 9999;
+}
+
+.dropdown-menu .labelsearch span {
+    position: relative;
+    color: rgba(15, 108, 191, .75);
+    font-weight: bold;
+}
+
+.dropdown-menu .labelsearch span::after {
+    position: absolute;
+    width: 140%;
+    height: 10px;
+    background: #fff;
+    content: '';
+    left: -20%;
+    top: 1px;
+    z-index: -10;
+    border-radius: 2px;
+}
+
+.wunderbyteTableFilter .dropdownMenuButton.hideFocus.btn:focus,
+.btn.focus {
+    box-shadow: none;
+}
+
+@media screen and (max-width: 991px) {
+    .wunderbyte_table_filter_on .wunderbyte_table_container {
+        display: block;
+    }
+
+    .wunderbyte_table_filter_on .wunderbyte_table_container aside {
+        max-width: 100%;
+    }
+
+    .wunderbyte_table_container .filterheader {
+        padding: 0;
+    }
+
+    .wunderbyte_table_container aside {
+        padding: 15px;
+    }
+
+    .wunderbyte_table_container .wunderbyteTableFilter .dd,
+    .wunderbyte_table_container .wunderbyteTableFilter .dropdownMenuButton {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .showontop .wunderbyteTableFilter.row {
+        flex-direction: column;
+    }
 }

@@ -118,6 +118,13 @@ class table implements renderable, templatable {
     private $showreloadbutton = true;
 
     /**
+     * Show filter button.
+     *
+     * @var bool
+     */
+    private $showfilterbutton = true;
+
+    /**
      * Allow editing of filter & table
      *
      * @var bool
@@ -186,6 +193,12 @@ class table implements renderable, templatable {
      * @var array
      */
     private $printoptions = [];
+
+    /**
+     *
+     * @var bool Show a label where number of totalrows and filtered rows are displayed.
+     */
+    public $showfilterontop = false;
 
     /**
      * Action buttons
@@ -268,6 +281,7 @@ class table implements renderable, templatable {
         $this->printoptions = $this->return_dataformat_selector();
 
         $this->showdownloadbutton = $table->showdownloadbutton;
+        $this->showfilterbutton = $table->showfilterbutton;
         $this->applyfilterondownload = $table->applyfilterondownload;
         $this->showreloadbutton = $table->showreloadbutton;
 
@@ -280,6 +294,8 @@ class table implements renderable, templatable {
         }
 
         $this->showcountlabel = $table->showcountlabel;
+
+        $this->showfilterontop = $table->showfilterontop;
 
         $this->tableheight = $table->tableheight;
 
@@ -593,6 +609,7 @@ class table implements renderable, templatable {
             'filter' => $this->categories ?? null,
             'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
             'showrowcountselect' => $this->showcountselect(),
+            'showfitlerontop' => $this->showfilterontop,
             'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
             'showspinner' => true,
             ];
@@ -653,11 +670,11 @@ class table implements renderable, templatable {
             // If there there is a filterobject, we check if on load filters should be hidden or displayed (default).
             if ($this->categories['filterinactive'] == true) {
                 $data['showcomponentstoggle'] = false;
-                $data['showfilterbutton'] = true;
+                $data['showfilterbutton'] = $this->showfilterbutton;
                 $data['filterdeactivated'] = true;
             } else {
                 $data['showcomponentstoggle'] = true;
-                $data['showfilterbutton'] = true;
+                $data['showfilterbutton'] = $this->showfilterbutton;
             }
         }
 

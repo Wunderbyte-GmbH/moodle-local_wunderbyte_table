@@ -110,6 +110,18 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Show a label where number of totalrows and filtered rows are displayed.
+     */
+    public $showfilterontop = false;
+
+    /**
+     *
+     * @var bool Show the Components toggle.
+     */
+    public $showfilterbutton = true;
+
+    /**
+     *
      * @var bool Show elements to download the table.
      */
     public $showdownloadbutton = false;
@@ -672,14 +684,14 @@ class wunderbyte_table extends table_sql {
      *
      * @param string $subcolumnsidentifier
      * @param array $classes
-     * @param array|null $subcolumns
+     * @param ?array $subcolumns
      * @param bool $replace
      * @return void
      */
     public function add_classes_to_subcolumns(
                 string $subcolumnsidentifier,
                 array $classes,
-                array $subcolumns = null,
+                ?array $subcolumns = null,
                 $replace = false) {
         if (strlen($subcolumnsidentifier) == 0) {
             throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
@@ -745,11 +757,11 @@ class wunderbyte_table extends table_sql {
      * Having this cache will acutally avoid running the likely expensive "build_table" function.
      *
      * @param string $componentname
-     * @param string|null $rawcachename
-     * @param string|null $renderedcachename
+     * @param ?string $rawcachename
+     * @param ?string $renderedcachename
      * @return void
      */
-    public function define_cache(string $componentname, string $rawcachename = null, string $renderedcachename = null) {
+    public function define_cache(string $componentname, ?string $rawcachename = null, ?string $renderedcachename = null) {
 
         if ($rawcachename && $componentname) {
             $this->cachecomponent = $componentname;
@@ -858,7 +870,7 @@ class wunderbyte_table extends table_sql {
      * @param bool $useinitialsbar
      * @return void
      */
-    public function query_db_cached($pagesize, $useinitialsbar=true) {
+    public function query_db_cached($pagesize, $useinitialsbar = true) {
 
         global $CFG, $DB, $PAGE, $USER;
 
@@ -902,8 +914,13 @@ class wunderbyte_table extends table_sql {
 
             // If we hit the cache, we may increase the count for debugging reasons.
             if (count($this->rawdata) > 0) {
-                if ($record = $DB->get_record('local_wunderbyte_table', ['hash' => $cachekey],
-                    'id, \'count\'')) {
+                if (
+                    $record = $DB->get_record(
+                        'local_wunderbyte_table',
+                        ['hash' => $cachekey],
+                        'id, \'count\''
+                    )
+                ) {
                     $count = $record->count + 1;
                     unset($record->count);
                     $record->{'\'count\''} = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
@@ -1295,6 +1312,10 @@ class wunderbyte_table extends table_sql {
 
                     if ($datecomparison == true) {
                         $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
+                    } else if (isset($this->subcolumns['datafields'][$categorykey]['explode'])
+                    || isset($this->subcolumns['datafields'][$categorykey]['jsonattribute'])) {
+                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
+                        $this->sql->params[$paramsvaluekey] = "%$value%";
                     } else if (is_numeric($value)) {
 
                         // Here we check if it's an hourslist filter.
@@ -1309,10 +1330,6 @@ class wunderbyte_table extends table_sql {
                             $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
                             $this->sql->params[$paramsvaluekey] = "". $value;
                         }
-                    } else if (isset($this->subcolumns['datafields'][$categorykey]['explode'])
-                    || isset($this->subcolumns['datafields'][$categorykey]['jsonattribute'])) {
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
-                        $this->sql->params[$paramsvaluekey] = "%$value%";
                     } else {
 
                         // We want to find the value in an array of values.

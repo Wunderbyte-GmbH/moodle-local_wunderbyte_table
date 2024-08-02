@@ -28,6 +28,7 @@ namespace local_wunderbyte_table\output;
 
 use local_wunderbyte_table\demo_table;
 use local_wunderbyte_table\filters\types\datepicker;
+use local_wunderbyte_table\filters\types\hierarchicalfilter;
 use local_wunderbyte_table\filters\types\hourlist;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\wunderbyte_table;
@@ -126,8 +127,22 @@ class demo implements renderable, templatable {
         $standardfilter = new standardfilter('username', get_string('username'));
         $table->add_filter($standardfilter);
 
-        $standardfilter = new standardfilter('firstname', get_string('firstname'));
-        $table->add_filter($standardfilter);
+        $hierarchicalfilter = new hierarchicalfilter('firstname', get_string('firstname'));
+        $hierarchicalfilter->add_options([
+            'Anna' => 'Anna localized',
+        ]);
+        $hierarchicalfilter->add_options([
+            'Anna' => [
+                'parent' => 'A',
+            ],
+            'Billy' => [
+                'parent' => 'A',
+            ],
+            'other' => [
+                'localizedname' => get_string('other', 'local_wunderbyte_table'),
+            ]
+        ]);
+        $table->add_filter($hierarchicalfilter);
 
         $standardfilter = new standardfilter('lastname', get_string('lastname'));
         $table->add_filter($standardfilter);
@@ -337,6 +352,7 @@ class demo implements renderable, templatable {
 
         $table->stickyheader = true;
         $table->showcountlabel = true;
+        // $table->showfilterontop = true;
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;

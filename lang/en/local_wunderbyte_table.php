@@ -44,6 +44,7 @@ $string['print'] = "Download table";
 $string['reload'] = "Reload table";
 $string['search'] = 'Search';
 $string['sortby'] = 'Sort by...';
+$string['filter_heading'] = 'Filters';
 
 // Capabilities.
 $string['wunderbyte_table:canaccess'] = 'Can access Wunderbyte Table';
@@ -151,6 +152,7 @@ $string['showcountlabel'] = 'Show numer of records found';
 $string['stickyheader'] = 'Make header sticky';
 $string['showrowcountselect'] = 'Show dropdown for number of rows';
 $string['placebuttonandpageelementsontop'] = 'Show buttons and page elements on top (instead of bottom)';
+$string['showfilterontop'] = 'Show filters on top of table';
 $string['tableheight'] = 'Table height';
 $string['tableheight_help'] = 'Tableheight is set in pixels. Useful values start at about 300. 0 means the height is calculated automatically.';
 $string['pagesize'] = 'Number of records per page';
@@ -184,6 +186,7 @@ $string['table2name'] = 'Demo table 2';
 $string['table3name'] = 'Demo table 3';
 $string['table4name'] = 'Demo table 4';
 $string['id'] = 'ID';
+$string['other'] = 'Other';
 
 // GDPR
 $string['privacy:metadata:local_wunderbyte_table'] = 'Store settings for tables';

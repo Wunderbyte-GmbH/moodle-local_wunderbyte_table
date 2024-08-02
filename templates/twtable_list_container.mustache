@@ -109,11 +109,21 @@
                     </div>
                </div>
           </div>
-          <div class="wunderbyte_table_container {{uniqueid}}">
+          <div class="wunderbyte_table_container {{uniqueid}} {{#showfitlerontop}}showontop{{/showfitlerontop}}">
+               {{#showfitlerontop}}
+               <div class="filterheader">
+                <aside class="wunderbyte_table_components{{^showcomponentstoggle}} inactive{{/showcomponentstoggle}}">
+                    {{> local_wunderbyte_table/component_filter }}
+                    {{> local_wunderbyte_table/component_infinitescroll }}
+               </aside>
+               </div>
+               {{/showfitlerontop}}
+               {{^showfitlerontop}}
                <aside class="wunderbyte_table_components{{^showcomponentstoggle}} inactive{{/showcomponentstoggle}}">
                     {{> local_wunderbyte_table/component_filter }}
                     {{> local_wunderbyte_table/component_infinitescroll }}
                </aside>
+               {{/showfitlerontop}}
                <div class= "wunderbyteTableClass {{uniqueid}}" id="a{{idstring}}">
                          {{> local_wunderbyte_table/twtable_list }}
                </div>

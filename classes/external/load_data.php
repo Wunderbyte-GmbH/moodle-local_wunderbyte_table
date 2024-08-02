@@ -84,15 +84,17 @@ class load_data extends external_api {
      * @param string $searchtext
      * @return array
      */
-    public static function execute($encodedtable = null,
-            $page = null,
-            $tsort = null,
-            $thide = null,
-            $tshow = null,
-            $tdir = null,
-            $treset = null,
-            $filterobjects = null,
-            $searchtext = null) {
+    public static function execute(
+        $encodedtable = null,
+        $page = null,
+        $tsort = null,
+        $thide = null,
+        $tshow = null,
+        $tdir = null,
+        $treset = null,
+        $filterobjects = null,
+        $searchtext = null
+    ) {
 
         global $CFG, $PAGE;
 

@@ -1,3 +1,19 @@
+## Version 2.0.10 (2024071900)
+* Bugfix: Revert changes for node replacement in init.js.
+
+## Version 2.0.9 (2024071800)
+* Improvement: Add possibility to define message on submitbutton for dynamicform
+* Improvement: Avoid scrolling when using pagination links.
+
+## Version 2.0.8 (2024070700)
+* Improvement: Always explode multi entry strings, even when they are int values
+* Improvement: Add possibility to return message on Form (Add message AND success value!)
+* Improvement: Add show filter button functionality
+
+## Version 2.0.7 (2024061200)
+* Improvement: New filterdesign.
+* Improvement: Name attribute added to toggle filter button (accessibility).
+
 ## Version 2.0.6 (2024042600)
 * Bugfix: Fix hourlist filter for timezone (bugs with summer time / winter time remain).
 * Bugfix: Fix MariaDB SQL errors with reserved keywords.

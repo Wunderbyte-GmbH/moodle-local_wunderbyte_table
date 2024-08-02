@@ -76,16 +76,21 @@ export function initializeFilterSearch(containerselector) {
             let records = parentElement.querySelectorAll('input.filterelement.form-check-input[type="checkbox"]');
 
             // Display searchfield with minimum of 13 records.
-            if (records.length > 12) {
+            if (records.length > 0) {
                 inputElement.removeAttribute('hidden');
             }
 
             inputElement.addEventListener('keyup', () => {
 
                 let searchstring = null;
-                if (inputElement.value.length > 2
+                let match = false;
+                if (inputElement.value.length > 1
                     || inputElement.value.length === 0) {
                     searchstring = inputElement.value;
+                }
+
+                if (inputElement.value.length === 0 && inputElement.nextElementSibling.dataset.moodletype == 'hierarchylist') {
+                    match = false;
                 }
 
                 // Check if value of records contains searchstring.
@@ -94,9 +99,16 @@ export function initializeFilterSearch(containerselector) {
                     let value = record.value.toLowerCase();
                     const listelement = record.parentNode;
                     if (value.includes(searchstring.toLowerCase())) {
+                        match = true;
                         listelement.removeAttribute('hidden');
                     } else {
                         listelement.setAttribute('hidden', '');
+                    // For hierarchy filter. Only do once for current parent.
+                }
+                    if (match === true) {
+                        listelement.parentNode.parentNode.classList.add('show');
+                    } else {
+                        listelement.parentNode.parentNode.classList.remove('show');
                     }
                 });
                 return;

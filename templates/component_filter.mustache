@@ -137,52 +137,58 @@
 }}
 
 {{#filter}}
-    <div class="wunderbyteTableFilter">
+    <div class="wunderbyteTableFilter row">
     {{#categories}}
-    <div class="border mb-4 wbtablefilter-{{columnname}}">
-        <div class="form-group m-0">
-        <div class="p-4 align-items-center collapse-accordion-toggle text-left {{collapsed}}" title="filterbtn-{{uniqueid}}"
-        data-toggle="collapse" data-target="#id_collapse_{{columnname}}" role="button"
+    <div class="col dropdowncontainer dd">
+    <div class="dropdown">
+    <button
         {{#expanded}}
             aria-expanded="true"
         {{/expanded}}
         {{^expanded}}
             aria-expanded="false"
         {{/expanded}}
-        aria-controls="id_collapse_{{columnname}}">
-            <div class="position-relative d-flex ftoggler align-items-center position-relative mr-1">
-                <div class="d-flex align-self-stretch align-items-center mb-0 filtertitle" aria-hidden="true">
-                    {{name}}
-                </div>
-                <span class="ml-auto">
-                        <!-- Icon -->
-                        <svg width="15" height="2" viewBox="0 0 15 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="15" height="2" fill="currentColor"></rect>
-                        </svg>
-
-                        <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0 7H15V9H0V7Z" fill="currentColor"></path>
-                            <path d="M6 16L6 8.74228e-08L8 0L8 16H6Z" fill="currentColor"></path>
-                        </svg>
-
-                </span>
-            </div>
-        </div>
-        </div>
-            <div class="collapse mt-2 ml-2 mr-2 {{show}}" id="id_collapse_{{columnname}}">
-                <input class="search form-control mb-2" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
+    aria-controls="id_collapse_{{columnname}}" class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{name}}" data-toggle="dropdown" aria-haspopup="true">
+        {{name}}
+    </button>
+    <div class="dropdown-menu">
+       <div class="mt-2 ml-2 mr-2 {{show}}" id="id_collapse_{{columnname}}">
+           <label class="pl-4 labelsearch">
+                <span class="h6 small">{{ name }}</span>
+            </label>
+            <input class="search form-control mb-2 filtersearch" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
                 {{#default}}
-                <ul class="wunderbyterFilterList pt-2">
-                    {{#values}}
-                        <li class="form-check">
-                                <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
-                                <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
-                                    {{key}} {{#count}}({{count}}){{/count}}
-                                </label>
-                        </li>
-                    {{/values}}
-                </ul>
+                    <ul class="wunderbyterFilterList pt-2 list-group-flush">
+                        {{#values}}
+                            <li class="form-check list-group-item dropdown-item">
+                                    <input class="filterelement filterouter form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
+                                    <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
+                                        {{key}} {{#count}}({{count}}){{/count}}
+                                    </label>
+                            </li>
+                        {{/values}}
+                    </ul>
                 {{/default}}
+                {{#hierarchy}}
+                    <ul class="wunderbyterFilterList hierarchy pt-2" data-moodletype="hierarchylist">
+                        <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton"  data-ident="{{label}}" data-toggle="collapse" role="button" role="button" aria-controls="collapseExample">
+                            {{label}}
+                        </button>
+                        <div class="collapse" id="{{id}}">
+                            <div class="card card-body">
+                                {{#values}}
+                                    <li class="form-check">
+                                            <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
+                                            <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
+                                                {{key}} {{#count}}({{count}}){{/count}}
+                                            </label>
+                                    </li>
+                                {{/values}}
+                            </div>
+                        </div>
+
+                    </ul>
+                {{/hierarchy}}
                 {{#datepicker}}
                     {{#datepickers}}
                         <form class="datepickerform">
@@ -220,7 +226,12 @@
                     {{/datepickers}}
                 {{/datepicker}}
             </div>
-        </div>
+    {{! <a class="dropdown-item" role="button">Action</a>
+    <a class="dropdown-item" role="button">Another action</a>
+    <a class="dropdown-item" role="button">Something else here</a> }}
+    </div>
+</div>
+</div>
     {{/categories}}
     </div>
 {{/filter}}
