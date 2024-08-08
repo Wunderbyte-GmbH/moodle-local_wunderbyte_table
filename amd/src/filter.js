@@ -123,7 +123,35 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
       "",
       "");
   });
+
 }
+
+  export function checkAll(selector, idstring, colname) {
+  const wbTable = document.querySelector(selector);
+  const filterContainer = document.querySelector(selector + SELECTORS.FILTER);
+  // Get all Names
+  // const filterElements = filterContainer.querySelectorAll("input[class^='filterelement']");
+  const namesArray = [];
+
+  checked[idstring][colname] = Array.from(
+    wbTable.querySelectorAll("input[name=" + colname + "]")
+  ).filter(function(el) {
+    el.checked = true;
+    return el;
+  }).map(function(el) {
+    return el.value;
+  });
+
+// // Loop over each element and get its 'name' attribute.
+// filterElements.forEach(element => {
+//   if (element.hasAttribute('name')) {
+//     namesArray.push(element.getAttribute('name'));
+//   }
+// });
+
+console.log(namesArray);
+}
+
 /**
  * Eventhandler
  * @param {*} e
@@ -140,7 +168,13 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
     // Check if Checkbox corresponds to datepicker
     if (e.target.dataset.dateelement == 'dateelement') {
       getDates(e, idstring);
-    } else {
+    } else if(e.target.name && e.target.name.includes('checkAll')) {
+      const name = e.target.name;
+      const prefix = 'checkAll_';
+      const colname = name.substring(name.indexOf(prefix) + prefix.length);
+      checkAll(selector, idstring, colname);
+    }
+    else {
       getChecked(e.target.name, selector, idstring);
     }
 
