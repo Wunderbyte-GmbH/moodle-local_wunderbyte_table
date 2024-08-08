@@ -126,9 +126,16 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
 
 }
 
-  export function checkAll(selector, idstring, colname) {
+  /**
+   * Checks or unchecks All.
+   * @param {*} selector
+   * @param {*} idstring
+   * @param {*} colname
+   * @param {*} checkedall
+   */
+  export function checkAll(selector, idstring, colname, checkedall) {
   const wbTable = document.querySelector(selector);
-  const filterContainer = document.querySelector(selector + SELECTORS.FILTER);
+  // const filterContainer = document.querySelector(selector + SELECTORS.FILTER);
   // Get all Names
   // const filterElements = filterContainer.querySelectorAll("input[class^='filterelement']");
   const namesArray = [];
@@ -136,8 +143,12 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
   checked[idstring][colname] = Array.from(
     wbTable.querySelectorAll("input[name=" + colname + "]")
   ).filter(function(el) {
-    el.checked = true;
-    return el;
+    if (checkedall === true ) {
+      el.checked = true;
+    } else {
+      el.checked = false;
+    }
+    return el.checked;
   }).map(function(el) {
     return el.value;
   });
@@ -172,7 +183,7 @@ console.log(namesArray);
       const name = e.target.name;
       const prefix = 'checkAll_';
       const colname = name.substring(name.indexOf(prefix) + prefix.length);
-      checkAll(selector, idstring, colname);
+      checkAll(selector, idstring, colname, e.target.checked);
     }
     else {
       getChecked(e.target.name, selector, idstring);
