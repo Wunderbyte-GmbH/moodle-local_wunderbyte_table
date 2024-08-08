@@ -135,10 +135,6 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
    */
   export function checkAll(selector, idstring, colname, checkedall) {
   const wbTable = document.querySelector(selector);
-  // const filterContainer = document.querySelector(selector + SELECTORS.FILTER);
-  // Get all Names
-  // const filterElements = filterContainer.querySelectorAll("input[class^='filterelement']");
-  const namesArray = [];
 
   checked[idstring][colname] = Array.from(
     wbTable.querySelectorAll("input[name=" + colname + "]")
@@ -152,15 +148,6 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
   }).map(function(el) {
     return el.value;
   });
-
-// // Loop over each element and get its 'name' attribute.
-// filterElements.forEach(element => {
-//   if (element.hasAttribute('name')) {
-//     namesArray.push(element.getAttribute('name'));
-//   }
-// });
-
-console.log(namesArray);
 }
 
 /**
