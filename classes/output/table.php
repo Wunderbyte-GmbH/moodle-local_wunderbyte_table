@@ -839,7 +839,10 @@ class table implements renderable, templatable {
 
                 if (isset($filterarray[$tempfiltercolumn])) {
                     // We create an array to fetch human readable data.
-                    $filtercountarray[$potentialfiltercolumn['name']] = count((array)$filterarray[$tempfiltercolumn]);
+                    $filtercounts = count((array)$filterarray[$tempfiltercolumn]);
+                    $filtercountarray[$potentialfiltercolumn['name']] = $filtercounts;
+                    $tableobject[$tokey]['filtercounter']
+                        = $filtercounts > 0 ? $filtercounts : false;
 
                     foreach ($filterarray[$tempfiltercolumn] as $sfkey => $filter) {
 

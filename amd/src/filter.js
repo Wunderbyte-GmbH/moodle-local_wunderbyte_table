@@ -223,8 +223,6 @@ function compareDateValues(e, filtercontainer) {
 
   // We make sure the entered enddate is after 2020, to avoid triggering change while date setting is not finished yet.
   if ((enddate / 1000 > 1577836800) && (startdate > enddate)) {
-    // eslint-disable-next-line no-console
-    console.error("starttime should be before endtime");
     // Apply change.
     setDateAndTimePickerDataFromUnix(filtercontainer, 'startdate', enddate);
   }
@@ -315,8 +313,6 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
       secondoperator = "fo";
       break;
     default:
-    // eslint-disable-next-line no-console
-    console.error("Value of selection not readable");
     break;
   }
   applySpanfilter(firstcolumn, valuefirstcolumn, filtername, firstoperator, additionalFirstColumnValues, idstring);
@@ -544,6 +540,8 @@ export function updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, s
     if (checked[idstring][name].length < 1) {
       delete checked[idstring][name];
     }
+
+    updateFilterCounter(name, selector, idstring);
   }
 
 /**
@@ -602,3 +600,42 @@ export function getFilterObjects(idstring) {
         console.log(e);
     });
 };
+
+/**
+     * Update Filter counter.
+     *
+   * @param {*} name
+   * @param {*} selector
+   * @param {*} idstring
+     *
+     * @return void]
+     *
+     */
+function updateFilterCounter(name, selector, idstring) {
+
+  const wbTable = document.querySelector(selector);
+  const counter = checked[idstring][name] ? checked[idstring][name].length : 0;
+
+  const labelElement = wbTable.querySelector('[data-ident=' + name + '] span.filtercounter');
+
+  if (labelElement) {
+
+    if (counter > 0) {
+      labelElement.classList.remove('hidden');
+    } else {
+      labelElement.classList.add('hidden');
+    }
+    labelElement.textContent = counter;
+  }
+
+  const totalfiltercounter = checked[idstring] ? Object.keys(checked[idstring]).length : 0;
+  const resetElement = wbTable.querySelector('.reset-filter-button');
+
+  if (resetElement) {
+    if (totalfiltercounter > 0) {
+      resetElement.classList.remove('hidden');
+    } else {
+      resetElement.classList.add('hidden');
+    }
+  }
+}

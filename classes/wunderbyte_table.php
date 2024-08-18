@@ -931,7 +931,6 @@ class wunderbyte_table extends table_sql {
         } else {
             // If not, we query as usual.
             try {
-
                 $this->query_db($pagesize, $useinitialsbar);
 
             } catch (Exception $e) {
