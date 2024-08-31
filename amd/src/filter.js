@@ -54,6 +54,13 @@ var checked = {};
     checked[idstring] = {};
   }
 
+  // We run through all the filter elements and make sure that we store the state we received from php.
+  filterElements.forEach(element => {
+    // eslint-disable-next-line no-console
+    console.log(element.name);
+    getChecked(element.name, selector, idstring);
+  });
+
   applyChangelistener(filterElements, selector, idstring, encodedtable);
   applyChangelistener(selects, selector, idstring, encodedtable);
 
@@ -91,6 +98,9 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
     return;
   }
   let button = container.querySelector(".reset-filter-button");
+
+  // eslint-disable-next-line no-console
+  console.log(button);
 
   if (!button) {
     return;

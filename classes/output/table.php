@@ -866,13 +866,35 @@ class table implements renderable, templatable {
                             $tableobject[$tokey]['expanded'] = 'true';
                             continue;
                             // Then we check for the next filterparam.
-                        } else {
+                        } else if (isset($potentialfiltercolumn["hierarchy"])) {
+                            foreach ($potentialfiltercolumn["hierarchy"] as $hikey => $hivalue) {
+                                foreach ($hivalue['values'] as $vkey => $value) {
+                                    if (
+                                        $value['key'] == $filter
+                                        || $value['value'] == $filter
+                                    ) {
+                                        // If we find the filter, we add the checked value...
+                                        // ...and key to the initial tableobject array at the right place.
+                                        $tableobject[$tokey]['hierarchy'][$hikey]['values'][$vkey]['checked'] = 'checked';
+                                        // Expand the filter area.
+                                        $tableobject[$tokey]['hierarchy'][$hikey]['show'] = 'show';
+                                        $tableobject[$tokey]['hierarchy'][$hikey]['collapsed'] = '';
+                                        $tableobject[$tokey]['hierarchy'][$hikey]['expanded'] = 'true';
 
+                                        continue;
+                                        // Then we check for the next filterparam.
+                                    }
+                                }
+                            }
+
+                        } else {
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
                             foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {
-                                if ($value['key'] == $filter
-                                    || $value['value'] == $filter) {
+                                if (
+                                    $value['key'] == $filter
+                                    || $value['value'] == $filter
+                                ) {
                                     // If we find the filter, we add the checked value...
                                     // ...and key to the initial tableobject array at the right place.
                                     $tableobject[$tokey]['default']['values'][$vkey]['checked'] = 'checked';
