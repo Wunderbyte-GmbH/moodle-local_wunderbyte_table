@@ -97,7 +97,8 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "user15" in the "#demotable_1_r2" "css_element"
     And I should see "2 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "2 filter(s) on: Username" in the ".tab-pane.active .wb-records-count-label" "css_element"
-    And I follow "Show all records"
+    ## And I press "Show all records"
+    And I click on "Show all records" "text" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I wait until the page is ready
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
