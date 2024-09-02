@@ -482,7 +482,8 @@
     min-width: fit-content;
     width: 250px;
     text-align: start;
-    height: 46px;
+    height: auto;
+    white-space: normal;
     border: 1px solid #d3d3d3bd;
 }
 
@@ -568,16 +569,17 @@
     position: relative;
     color: rgba(15, 108, 191, .75);
     font-weight: bold;
+    white-space: nowrap;
 }
 
 .dropdown-menu .labelsearch span::after {
     position: absolute;
-    width: 140%;
+    width: 110%;
     height: 10px;
     background: #fff;
     content: '';
-    left: -20%;
-    top: 1px;
+    left: -5%;
+    bottom: 2%;
     z-index: -10;
     border-radius: 2px;
 }
@@ -586,6 +588,12 @@
 .btn.focus {
     box-shadow: none;
 }
+
+.wunderbyteTableFilter .dropdown-item .form-check-label {
+    white-space: wrap;
+    word-break: break-all;
+  }
+  
 
 @media screen and (max-width: 991px) {
     .wunderbyte_table_filter_on .wunderbyte_table_container {
@@ -613,4 +621,5 @@
     .showontop .wunderbyteTableFilter.row {
         flex-direction: column;
     }
+
 }
