@@ -134,7 +134,19 @@ const initHandleDropdownFocusSearch = () => {
                     setTimeout(() => {
                         if (!element.nextElementSibling.firstElementChild.children[1].hidden) {
                         element.nextElementSibling.firstElementChild.children[1].focus();
+                        const buttonHeight = element.clientHeight;
+                        element.nextElementSibling.firstElementChild.children[1].style.height = buttonHeight + 'px';
+                        const heightWm = buttonHeight + 3;
+                        if (element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML &&
+                            element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML.length > 28) {
+                                element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML =
+                                element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML
+                                .substring(0, 28);
+                        }
+                        element.nextElementSibling.firstElementChild.children[1].style.top = '-' + heightWm + 'px';
                         element.nextElementSibling.firstElementChild.children[0].style.display = 'block';
+                        const posLabel = buttonHeight + 20;
+                        element.nextElementSibling.firstElementChild.children[0].style.top = '-' + posLabel + 'px';
                         } else {
                             element.nextElementSibling.firstElementChild.children[0].style.display = 'none';
                         }
