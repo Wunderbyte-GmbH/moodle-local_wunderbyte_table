@@ -526,33 +526,33 @@ export function updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, s
   formelement.action = url.toString();
 }
 
-  /**
-   * Gets an array of checkboxes for every table by idstring.
-   * @param {*} name
-   * @param {*} selector
-   * @param {*} idstring
-   */
-   export function getChecked(name, selector, idstring) {
+/**
+ * Gets an array of checkboxes for every table by idstring.
+ * @param {*} name
+ * @param {*} selector
+ * @param {*} idstring
+ */
+export function getChecked(name, selector, idstring) {
 
-    // We might have more than one Table, therefore we first have to get all tables.
+  // We might have more than one Table, therefore we first have to get all tables.
 
-    const wbTable = document.querySelector(selector);
+  const wbTable = document.querySelector(selector);
 
-    checked[idstring][name] = Array.from(
-      wbTable.querySelectorAll("input[name=" + name + "]")
-    ).filter(function(el) {
-      return el.checked;
-    }).map(function(el) {
-      return el.value;
-    });
+  checked[idstring][name] = Array.from(
+    wbTable.querySelectorAll("input[name=" + name + "]")
+  ).filter(function (el) {
+    return el.checked;
+  }).map(function (el) {
+    return el.value;
+  });
 
-    // If there are no checked boxes, we unset the key alltogether.
-    if (checked[idstring][name].length < 1) {
-      delete checked[idstring][name];
-    }
-
-    updateFilterCounter(name, selector, idstring);
+  // If there are no checked boxes, we unset the key alltogether.
+  if (checked[idstring][name].length < 1) {
+    delete checked[idstring][name];
   }
+
+  updateFilterCounter(name, selector, idstring);
+}
 
 /**
  * Returns json of active filters as json.
@@ -586,41 +586,41 @@ export function getFilterObjects(idstring) {
  * @param {string} idstring
  * @param {string} encodedtable
  */
-    export const renderFilter = (filterjson, idstring, encodedtable) => {
+export const renderFilter = (filterjson, idstring, encodedtable) => {
 
-    // We render the filter only once, so if we find it already, we don't render it.
+  // We render the filter only once, so if we find it already, we don't render it.
 
-    const selector = SELECTORS.CONTAINER + idstring;
-    const container = document.querySelector(selector);
-    const filtercontainer = container.querySelector(SELECTORS.FILTER);
+  const selector = SELECTORS.CONTAINER + idstring;
+  const container = document.querySelector(selector);
+  const filtercontainer = container.querySelector(SELECTORS.FILTER);
 
-    if (filtercontainer) {
-      return;
-    }
+  if (filtercontainer) {
+    return;
+  }
 
-    Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
+  Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({ html }) => {
 
-        container.insertAdjacentHTML('afterbegin', html);
+    container.insertAdjacentHTML('afterbegin', html);
 
-        initializeCheckboxes(selector, idstring, encodedtable);
+    initializeCheckboxes(selector, idstring, encodedtable);
 
-        return;
-    }).catch(e => {
-        // eslint-disable-next-line no-console
-        console.log(e);
-    });
+    return;
+  }).catch(e => {
+    // eslint-disable-next-line no-console
+    console.log(e);
+  });
 };
 
 /**
-     * Update Filter counter.
-     *
-   * @param {*} name
-   * @param {*} selector
-   * @param {*} idstring
-     *
-     * @return void]
-     *
-     */
+ * Update Filter counter.
+ *
+ * @param {*} name
+ * @param {*} selector
+ * @param {*} idstring
+ *
+ * @return void]
+ *
+ */
 function updateFilterCounter(name, selector, idstring) {
 
   const wbTable = document.querySelector(selector);
