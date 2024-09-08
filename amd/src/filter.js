@@ -540,9 +540,9 @@ export function getChecked(name, selector, idstring) {
 
   checked[idstring][name] = Array.from(
     wbTable.querySelectorAll("input[name=" + name + "]")
-  ).filter(function (el) {
+  ).filter(function(el) {
     return el.checked;
-  }).map(function (el) {
+  }).map(function(el) {
     return el.value;
   });
 
@@ -598,7 +598,7 @@ export const renderFilter = (filterjson, idstring, encodedtable) => {
     return;
   }
 
-  Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({ html }) => {
+  Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
 
     container.insertAdjacentHTML('afterbegin', html);
 
