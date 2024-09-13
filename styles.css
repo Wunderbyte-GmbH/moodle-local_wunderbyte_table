@@ -590,10 +590,9 @@
 }
 
 .wunderbyteTableFilter .dropdown-item .form-check-label {
-    white-space: wrap;
+    white-space: normal;
     word-break: break-all;
-  }
-  
+}
 
 @media screen and (max-width: 991px) {
     .wunderbyte_table_filter_on .wunderbyte_table_container {
