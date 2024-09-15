@@ -428,6 +428,35 @@ class wunderbyte_table extends table_sql {
         return $output->render_table($tableobject, $component . "/" . $template);
     }
 
+
+    /**
+     * With this function, the table can be returned as html without lazy loading.
+     * Can be overridden in child class with own renderer.
+     *
+     * @param int $pagesize
+     * @param bool $useinitialsbar
+     * @param string $downloadhelpbutton
+     * @param array $onlyfilters
+     * @return string
+     */
+    public function filterouthtml($pagesize, $useinitialsbar, $downloadhelpbutton = '', $onlyfilters = []) {
+
+        global $PAGE, $CFG;
+        $this->pagesize = $pagesize;
+        $this->useinitialsbar = $useinitialsbar;
+        $this->downloadhelpbutton = $downloadhelpbutton;
+
+        // In the following function we return the template we want to use.
+        // This function also checks, if there is a special container template present. If so, we use it instead.
+        [$component, $template] = $this->return_component_and_template();
+
+        $tableobject = $this->printtable($pagesize, $useinitialsbar);
+
+        $tableobject->filter_filter($onlyfilters);
+        $output = $PAGE->get_renderer('local_wunderbyte_table');
+        return $output->render_table($tableobject, $component . "/" . $template);
+    }
+
     /**
      * A version of the out function which does not actually echo but just returns the html plus the idnumber.
      * This is only used for lazy loading.

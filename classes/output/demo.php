@@ -131,16 +131,20 @@ class demo implements renderable, templatable {
         $hierarchicalfilter->add_options([
             'Anna' => 'Anna localized',
         ]);
-        $hierarchicalfilter->add_options([
-            'Anna' => [
-                'parent' => 'A',
-            ],
-            'Billy' => [
-                'parent' => 'A',
-            ],
-            'other' => [
-                'localizedname' => get_string('other', 'local_wunderbyte_table'),
-            ]
+        $hierarchicalfilter->add_options(
+            [
+                'Anna' => [
+                    'parent' => 'A',
+                ],
+                'Billy' => [
+                    'parent' => 'B',
+                ],
+                'Leon' => [
+                    'parent' => 'L',
+                ],
+                'other' => [
+                    'localizedname' => get_string('other', 'local_wunderbyte_table'),
+                ]
         ]);
         $table->add_filter($hierarchicalfilter);
 
