@@ -31,7 +31,6 @@ use local_wunderbyte_table\filters\base;
  * Wunderbyte table class is an extension of table_sql.
  */
 class hierarchicalfilter extends base {
-
     /**
      * This function takes a key value pair of options.
      * Only if there are actual results in the table, these options will be displayed.
@@ -66,13 +65,15 @@ class hierarchicalfilter extends base {
             return;
         }
 
-        // We might need to explode values, because of a multi-field.
-        if (isset($filtersettings[$fckey]['explode'])
-            || filter::check_if_multi_customfield($fckey)) {
+        $valueswithcount = [];
 
+        // We might need to explode values, because of a multi-field.
+        if (
+            isset($filtersettings[$fckey]['explode'])
+            || filter::check_if_multi_customfield($fckey)
+        ) {
             // We run through the array of values and explode each item.
             foreach ($values as $keytoexplode => $valuetoexplode) {
-
                 $separator = $filtersettings[$fckey]['explode'] ?? ',';
 
                 $explodedarray = explode($separator, $keytoexplode);
@@ -81,7 +82,6 @@ class hierarchicalfilter extends base {
                 if (count($explodedarray) > 1) {
                     // Run through all the keys.
                     foreach ($explodedarray as $explodeditem) {
-
                         // Make sure we don't have any empty values.
                         $explodeditem = trim($explodeditem);
 
@@ -90,6 +90,9 @@ class hierarchicalfilter extends base {
                         }
 
                         $values[$explodeditem] = true;
+                        $valueswithcount[$explodeditem] = $valuetoexplode;
+
+                        // We also add the count values to our array.
                     }
                     // We make sure the strings with more than one values are not treated anymore.
                     unset($values[$keytoexplode]);
@@ -97,6 +100,8 @@ class hierarchicalfilter extends base {
             }
 
             unset($filtersettings[$fckey]['explode']);
+        } else {
+            $valueswithcount = $values;
         }
 
         // If we have JSON, we need special treatment.
@@ -124,9 +129,10 @@ class hierarchicalfilter extends base {
         }
 
         // We have to check if we have a sortarray for this filtercolumn.
-        if (isset($filtersettings[$fckey])
-                    && count($filtersettings[$fckey]) > 0) {
-
+        if (
+            isset($filtersettings[$fckey])
+            && count($filtersettings[$fckey]) > 0
+        ) {
                             $sortarray = $filtersettings[$fckey];
         } else {
             $sortarray = null;
@@ -137,7 +143,6 @@ class hierarchicalfilter extends base {
             $sortedarray = [];
             foreach ($sortarray as $sortkey => $sortvalue) {
                 if (isset($values[$sortkey])) {
-
                     if (isset($sortvalue['localizedname'])) {
                         $localizedname = $sortvalue['localizedname'];
                     } else {
@@ -170,11 +175,10 @@ class hierarchicalfilter extends base {
         } else {
             $values = array_combine(array_keys($values), array_keys($values));
         }
-
+        $index = 1;
         foreach ($values as $subcategorykey => $subcategoryarray) {
-
+            $categorycount = 0;
             foreach ($subcategoryarray as $valuekey => $valuevalue) {
-
                 $itemobject = [
                     // We do not want to show html entities, so replace &amp; with &.
                     'key' => str_replace("&amp;", "&", $valuekey),
@@ -183,17 +187,23 @@ class hierarchicalfilter extends base {
                 ];
 
                 // Count may not be used, so we have an extra check.
-                if (!empty($filtercolumns[$fckey][$valuevalue])) {
-                    $itemobject['count'] = $filtercolumns[$fckey][$valuevalue];
+                if (!empty($valueswithcount[$itemobject['value']])) {
+                    $itemobject['count'] = $valueswithcount[$itemobject['value']] ?? false;
+
+                    if ($itemobject['count']) {
+                        $categorycount += (int)$itemobject['count'] ?? 0;
+                    }
                 }
 
                 $categoryobject['hierarchy'][$subcategorykey]['values'][$valuekey] = $itemobject;
             }
 
-            if (!isset($categoryobject['hierarchy'][$subcategorykey])
-             || count($categoryobject['hierarchy'][$subcategorykey]['values']) == 0) {
+            if (
+                !isset($categoryobject['hierarchy'][$subcategorykey])
+                || count($categoryobject['hierarchy'][$subcategorykey]['values']) == 0
+            ) {
                 // We don't add the filter if there is nothing in there.
-                return;
+                return [];
             }
 
             if ($sortarray == null) {
@@ -206,11 +216,12 @@ class hierarchicalfilter extends base {
             array_values($categoryobject['hierarchy'][$subcategorykey]['values']);
             $categoryobject['hierarchy'][$subcategorykey]['label'] = $subcategorykey;
             $categoryobject['hierarchy'][$subcategorykey]['id'] = 'subcategorykey_' . $subcategorykey;
-
+            $categoryobject['hierarchy'][$subcategorykey]['index'] = $index;
+            $categoryobject['hierarchy'][$subcategorykey]['count'] = $categorycount;
+            $index++;
         }
 
         // Make the arrays mustache ready, we have to jump through loops.
         $categoryobject['hierarchy'] = array_values($categoryobject['hierarchy']);
     }
-
 }

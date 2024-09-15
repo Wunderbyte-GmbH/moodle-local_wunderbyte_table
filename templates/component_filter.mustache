@@ -163,7 +163,7 @@
                             <li class="form-check list-group-item dropdown-item">
                                     <input class="filterelement filterouter form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
                                     <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
-                                        {{key}} {{#count}}({{count}}){{/count}}
+                                        <span class="filterkeylabel">{{key}}</span> <span class="filtercountlabel">{{#count}}({{count}}){{/count}}</span>
                                     </label>
                             </li>
                         {{/values}}
@@ -172,7 +172,7 @@
                 {{#hierarchy}}
                     <ul class="wunderbyterFilterList hierarchy pt-2" data-moodletype="hierarchylist">
                         <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton"  data-ident="{{columnname}}" data-toggle="collapse" role="button" role="button" aria-controls="collapseExample">
-                            {{label}}
+                            <span class="filtercategorykeylabel">{{label}}</span> <span class="filtercategorycountlabel">{{#count}}({{count}}){{/count}}</span>
                         </button>
                         <div class="collapse" id="{{id}}">
                             <div class="card card-body">
@@ -180,7 +180,7 @@
                                     <li class="form-check">
                                             <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{key}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
                                             <label class="form-check-label" for="{{key}}{{columnname}}{{idstring}}">
-                                                {{key}} {{#count}}({{count}}){{/count}}
+                                                <span class="filterkeylabel">{{key}}</span> <span class="filtercountlabel">{{#count}}({{count}}){{/count}}</span>
                                             </label>
                                     </li>
                                 {{/values}}

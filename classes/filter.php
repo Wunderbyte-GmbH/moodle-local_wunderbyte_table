@@ -128,7 +128,6 @@ class filter {
                     // Here the check if entries are set.
                     continue;
                 }
-
                 if (!isset($filtercolumns[$key][$row->{$key}])) {
                     $filtercolumns[$key][$row->{$key}] = $row->count ?? true;
                 }

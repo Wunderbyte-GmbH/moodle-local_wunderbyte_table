@@ -929,4 +929,26 @@ class table implements renderable, templatable {
         $categories['categories'] = $tableobject;
         return $categories;
     }
+
+    /**
+     * Reduce filter columns.
+     *
+     * @param array $onlyfilterforcolumns
+     *
+     * @return void
+     *
+     */
+    public function filter_filter($onlyfilterforcolumns = []) {
+        if (!empty($onlyfilterforcolumns)) {
+            foreach ($this->categories['categories'] as $key => $value) {
+                if (
+                    $value["columnname"] !== 'id'
+                    && !in_array($value["columnname"], $onlyfilterforcolumns)
+                ) {
+                    unset($this->categories['categories'][$key]);
+                }
+            }
+            $this->categories['categories'] = array_values($this->categories['categories']);
+        }
+    }
 }

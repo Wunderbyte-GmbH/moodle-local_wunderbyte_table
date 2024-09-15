@@ -35,7 +35,6 @@ use stdClass;
  * Wunderbyte table class is an extension of table_sql.
  */
 abstract class base {
-
     /**
      * @var string columnidentifier
      */
@@ -70,10 +69,12 @@ abstract class base {
      * @param string $secondcolumnlocalized
      * @return void
      */
-    public function __construct(string $columnidentifier,
-                                string $localizedstring = '',
-                                string $secondcolumnidentifier = '',
-                                string $secondcolumnlocalized = '') {
+    public function __construct(
+        string $columnidentifier,
+        string $localizedstring = '',
+        string $secondcolumnidentifier = '',
+        string $secondcolumnlocalized = ''
+    ) {
 
         $this->columnidentifier = $columnidentifier;
         $this->localizedstring = empty($localizedstring) ? $columnidentifier : $localizedstring;
@@ -96,14 +97,18 @@ abstract class base {
         $array = explode('\\', $classname);
         $classname = array_pop($array);
 
-        $mform->addElement('advcheckbox',
-                           $filter->columnidentifier . '_wb_checked',
-                           get_string('showfilter', 'local_wunderbyte_table'),
-                           $filter->localizedname);
-        $mform->addElement('text',
-                           $filter->columnidentifier . '_wb_localizedname',
-                           get_string('editfiltername', 'local_wunderbyte_table'),
-                           $filter->localizedname);
+        $mform->addElement(
+            'advcheckbox',
+            $filter->columnidentifier . '_wb_checked',
+            get_string('showfilter', 'local_wunderbyte_table'),
+            $filter->localizedname
+        );
+        $mform->addElement(
+            'text',
+            $filter->columnidentifier . '_wb_localizedname',
+            get_string('editfiltername', 'local_wunderbyte_table'),
+            $filter->localizedname
+        );
     }
 
 
@@ -119,7 +124,6 @@ abstract class base {
             = $filter->{$filter->columnidentifier . '_wb_checked'};
         $data->{$filter->columnidentifier . '_wb_localizedname'}
             = $filter->localizedname;
-
     }
 
     /**
@@ -157,7 +161,8 @@ abstract class base {
                 'local_wunderbyte_table',
                 '',
                 $this->columnidentifier,
-                'Every column can have only one filter applied');
+                'Every column can have only one filter applied'
+            );
         }
     }
 
@@ -191,13 +196,15 @@ abstract class base {
             return;
         }
 
-        // We might need to explode values, because of a multi-field.
-        if (isset($filtersettings[$fckey]['explode'])
-            || filter::check_if_multi_customfield($fckey)) {
+        $valueswithcount = $values;
 
+        // We might need to explode values, because of a multi-field.
+        if (
+            isset($filtersettings[$fckey]['explode'])
+            || filter::check_if_multi_customfield($fckey)
+        ) {
             // We run through the array of values and explode each item.
             foreach ($values as $keytoexplode => $valuetoexplode) {
-
                 $separator = $filtersettings[$fckey]['explode'] ?? ',';
 
                 $explodedarray = explode($separator, $keytoexplode);
@@ -206,7 +213,6 @@ abstract class base {
                 if (count($explodedarray) > 1) {
                     // Run through all the keys.
                     foreach ($explodedarray as $explodeditem) {
-
                         // Make sure we don't have any empty values.
                         $explodeditem = trim($explodeditem);
 
@@ -249,9 +255,10 @@ abstract class base {
         }
 
         // We have to check if we have a sortarray for this filtercolumn.
-        if (isset($filtersettings[$fckey])
-                    && count($filtersettings[$fckey]) > 0) {
-
+        if (
+            isset($filtersettings[$fckey])
+            && count($filtersettings[$fckey]) > 0
+        ) {
                             $sortarray = $filtersettings[$fckey];
         } else {
             $sortarray = null;
@@ -286,7 +293,6 @@ abstract class base {
         }
 
         foreach ($values as $valuekey => $valuevalue) {
-
             $itemobject = [
                 // We do not want to show html entities, so replace &amp; with &.
                 'key' => str_replace("&amp;", "&", $valuekey),
@@ -295,8 +301,8 @@ abstract class base {
             ];
 
             // Count may not be used, so we have an extra check.
-            if (!empty($filtercolumns[$fckey][$valuevalue])) {
-                $itemobject['count'] = $filtercolumns[$fckey][$valuevalue];
+            if (!empty($valueswithcount[$valuekey])) {
+                $itemobject['count'] = $valueswithcount[$valuekey];
             }
 
             $categoryobject['default']['values'][$valuekey] = $itemobject;
@@ -304,7 +310,7 @@ abstract class base {
 
         if (!isset($categoryobject['default']) || count($categoryobject['default']['values']) == 0) {
             // We don't add the filter if there is nothing in there.
-            return;
+            return [];
         }
 
         if ($sortarray == null) {
