@@ -30,6 +30,7 @@ use local_wunderbyte_table\demo_table;
 use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\hierarchicalfilter;
 use local_wunderbyte_table\filters\types\hourlist;
+use local_wunderbyte_table\filters\types\intrange;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\wunderbyte_table;
 use renderable;
@@ -602,14 +603,16 @@ class demo implements renderable, templatable {
         $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
         $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
 
-        $standardfilter = new standardfilter('username',  get_string('username'));
-        $table->add_filter($standardfilter);
+        // $standardfilter = new standardfilter('username',  get_string('username'));
+        // $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('firstname',  get_string('firstname'));
         $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('lastname',  get_string('lastname'));
         $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('email', get_string('email'));
         $table->add_filter($standardfilter);
+        $intrangefilter = new intrange('username', "Range of numbers given in Username");
+        $table->add_filter($intrangefilter);
 
         //$table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);

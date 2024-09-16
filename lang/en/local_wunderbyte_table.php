@@ -61,6 +61,7 @@ $string['filtercountmessage'] = '| {$a->filtersum} filter(s) on: {$a->filtercolu
 $string['filterinactive'] = 'Hide the entire filter';
 $string['filteronloadinactive'] = 'Collapse filters when table is loaded';
 $string['flexoverlap'] = 'overlapping';
+$string['from'] = "From";
 $string['from0to1'] = "00:00 - 01:00";
 $string['from10to11'] = "10:00 - 11:00";
 $string['from11to12'] = "11:00 - 12:00";
@@ -142,6 +143,7 @@ $string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sortin
 $string['tableheight'] = 'Table height';
 $string['tableheight_help'] = 'Tableheight is set in pixels. Useful values start at about 300. 0 means the height is calculated automatically.';
 $string['timespan'] = 'Timespan';
+$string['to'] = 'To';
 $string['valuehastobeint'] = "Value has to be a number";
 $string['wbtablefiltersettingsheader'] = 'Edit filters';
 $string['wbtabletablesettingsheader'] = 'More settings';

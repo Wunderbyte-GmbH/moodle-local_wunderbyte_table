@@ -60,6 +60,7 @@ $string['filtercountmessage'] = '| {$a->filtersum} Filter auf: {$a->filtercolumn
 $string['filterinactive'] = 'Verberge den Filter';
 $string['filteronloadinactive'] = 'Filter standardmäßig zugeklappt';
 $string['flexoverlap'] = 'überlappend mit';
+$string['from'] = "Von";
 $string['from0to1'] = "00:00 - 01:00";
 $string['from10to11'] = "10:00 - 11:00";
 $string['from11to12'] = "11:00 - 12:00";
@@ -139,6 +140,7 @@ $string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sortie
 $string['tableheight'] = 'Tabellen-Höhe';
 $string['tableheight_help'] = 'Die Tabellenhöhe wird in Pixel angegeben, sinnvolle Werte beginnen daher bei ca. 300. Bei 0 wird die Höhe automatisch anhand der angezeigten Tabellen berechnet.';
 $string['timespan'] = 'Zeitspanne';
+$string['to'] = 'Bis';
 $string['valuehastobeint'] = "Wert muss eine Zahl sein";
 $string['wbtablefiltersettingsheader'] = 'Filter anpassen';
 $string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';
