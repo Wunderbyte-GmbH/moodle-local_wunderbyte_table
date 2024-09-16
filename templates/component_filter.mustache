@@ -225,6 +225,18 @@
                         </form>
                     {{/datepickers}}
                 {{/datepicker}}
+                {{#intrange}}
+                    {{#intranges}}
+                        <form class="intrangeform">
+                                <input class="filterelement form-check-input" type="checkbox" id="{{label}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="intrangecheckbox" data-dateelement = "intrangeelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
+                                <label class="filterelement form-check-label" for="{{label}}{{columnname}}{{idstring}}">{{#str}} apply_filter, local_wunderbyte_table {{/str}}</label>
+                                <div class="filterelement intrange-label">{{#str}} from, local_wunderbyte_table {{/str}}</div>
+                                <input class="filterelement filterelement intrange-input" id="{{label}}{{columnname}}{{idstring}}intrangefilter_intrange-start" value="{{defaultvaluestart}}" name="intrange-start-{{columnname}}" data-intrangeelement = "intrangeelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
+                                <div class="filterelement intrange-label">{{#str}} to, local_wunderbyte_table {{/str}}</div>
+                                <input class="filterelement intrange-input" id="{{label}}{{columnname}}{{idstring}}intrangefilter_intrange-end" value="{{defaultvalueend}}" name="intrange-end-{{columnname}}" data-intrangeelement = "intrangeelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
+                        </form>
+                    {{/intranges}}
+                {{/intrange}}
             </div>
     {{! <a class="dropdown-item" role="button">Action</a>
     <a class="dropdown-item" role="button">Another action</a>

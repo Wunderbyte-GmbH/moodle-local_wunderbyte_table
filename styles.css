@@ -429,6 +429,38 @@
     box-shadow: 0 0 1px 1px #77838f;
 }
 
+.wunderbyteTableFilter .intrangeform {
+    margin: 20px;
+    padding: 10px;
+    position: relative;
+    display: block;
+    min-height: 1.6rem;
+    padding-left: 2rem;
+}
+
+.wunderbyteTableFilter .intrange-label {
+
+    color: #77838f;
+    font-size: 1rem;
+    padding-top: 6px;
+    padding-left: 6px;
+    position: relative;
+    margin-bottom: 6px;
+    vertical-align: top;
+}
+
+.wunderbyteTableFilter .intrange-input {
+
+    color: #77838f;
+    padding-left: 6px;
+    border: #77838f;
+    box-shadow: 0 0 1px 1px #98a3ad;
+}
+
+.wunderbyteTableFilter .intrange-input:hover {
+    box-shadow: 0 0 1px 1px #77838f;
+}
+
 .wunderbyteTableSearchIcon {
     padding-top: 7px;
     padding-right: 5px;
