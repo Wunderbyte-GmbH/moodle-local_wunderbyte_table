@@ -150,6 +150,10 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
     // Check if Checkbox corresponds to datepicker
     if (e.target.dataset.dateelement == 'dateelement') {
       getDates(e, idstring);
+    } else if (e.target.dataset.intrangeelement.includes('intrangeelement')) {
+      if (e.target.dataset.intrangeelement == 'intrangeelement-checkbox') {
+        getIntRange(e, idstring);
+      }
     } else {
       getChecked(e.target.name, selector, idstring);
     }
@@ -535,7 +539,6 @@ export function updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, s
 export function getChecked(name, selector, idstring) {
 
   // We might have more than one Table, therefore we first have to get all tables.
-
   const wbTable = document.querySelector(selector);
 
   checked[idstring][name] = Array.from(
@@ -552,6 +555,30 @@ export function getChecked(name, selector, idstring) {
   }
 
   updateFilterCounter(name, selector, idstring);
+}
+
+/**
+ * Gets the values of the checked intrange filter.
+ * @param {*} e
+ * @param {*} idstring
+ */
+export function getIntRange(e, idstring) {
+
+  // We might have more than one Table, therefore we first have to get all tables.
+  let filtercontainer = e.target.closest(".intrangeform");
+
+  let from = filtercontainer.querySelector('input[id*="intrangefilter_intrange-start"]');
+  let fromvalue = from.value;
+  let to = filtercontainer.querySelector('input[id*="intrangefilter_intrange-end"]');
+  let tovalue = to.value;
+  let colname = e.target.dataset.columnname;
+
+  checked[idstring][colname] = fromvalue + "," + tovalue;
+
+  // If there are no checked boxes, we unset the key alltogether.
+  if (checked[idstring][colname].length < 1) {
+    delete checked[idstring][colname];
+  }
 }
 
 /**
