@@ -150,7 +150,7 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
     // Check if Checkbox corresponds to datepicker
     if (e.target.dataset.dateelement == 'dateelement') {
       getDates(e, idstring);
-    } else if (e.target.dataset.intrangeelement.includes('intrangeelement')) {
+    } else if (e.target.dataset.intrangeelement && e.target.dataset.intrangeelement.includes('intrangeelement')) {
       if (e.target.dataset.intrangeelement == 'intrangeelement-checkbox') {
         getIntRange(e, idstring);
       }
