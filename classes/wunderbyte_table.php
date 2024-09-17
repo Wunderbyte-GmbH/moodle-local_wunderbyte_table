@@ -1150,6 +1150,9 @@ class wunderbyte_table extends table_sql {
     public function apply_filter(string $filter, string &$searchtext = '') {
 
         global $DB;
+        $lang = current_language();
+        $key = $this->tablecachehash . $lang . "_filterjson";
+        $filtersettings = editfilter::return_filtersettings($this, $key);
 
         if ($filter !== "" && !$filterobject = json_decode($filter)) {
             throw new moodle_exception('invalidfilterjson', 'local_wunderbyte_table');
@@ -1315,13 +1318,31 @@ class wunderbyte_table extends table_sql {
                 $paramcounter = 1;
                 $categorycounter = 1;
 
+                $filtersetting = $filtersettings[$categorykey];
+                $classname = $filtersetting['wbfilterclass'];
+
+                $class = new $classname($categorykey, $filtersetting['localizedname']);
+                $params = $class::apply_filter($filter, $categorykey, $categoryvalue, $paramcounter);
+                foreach ($params as $key => $value) {
+                    $this->sql->params[$key] = "". $value;
+                }
+                // TODO: Use apply_filter method for all other filter types.
+                // Eventually we will get rid of the following section.
+                // ... for the moment, make sure to escape it for classes already implementing the new way.
+                if (strpos($classname, "intrange")) {
+                    $filter .= " ) ";
+                    continue;
+                }
+
                 // We check if we are applying a timestamp comparison which is stored in an object.
+                // TODO: Better check if its a datepicker.
                 $datecomparison = false;
                 if (is_object($categoryvalue)) {
                     $datecomparison = true;
                 }
 
                 foreach ($categoryvalue as $key => $value) {
+
                     // We use the while function to find a param we can actually use.
                     $paramsvaluekey = $paramkey . $paramcounter;
 

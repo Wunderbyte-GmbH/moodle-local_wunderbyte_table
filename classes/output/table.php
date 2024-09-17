@@ -840,7 +840,7 @@ class table implements renderable, templatable {
                 if (isset($filterarray[$tempfiltercolumn])) {
                     // We create an array to fetch human readable data.
                     $filtercounts = count((array)$filterarray[$tempfiltercolumn]);
-                    $filtercountarray[$potentialfiltercolumn['name']] = $filtercounts;
+                    $filtercountarray[$potentialfiltercolumn['name']] = $filtercounts; // This is the localized string used as a key... not sure if thats intended.
                     $tableobject[$tokey]['filtercounter']
                         = $filtercounts > 0 ? $filtercounts : false;
 
@@ -887,6 +887,29 @@ class table implements renderable, templatable {
                                 }
                             }
 
+                        } else if (isset($potentialfiltercolumn["intrange"])) {
+                            // This is to apply preset filter.
+                            // Fetch the data given here probaly in intrange['intranges'][0] for start and [1] for end.
+
+                            // So we can now check all the entries in the filterobject...
+                            // ...to see if we find the concrete filter at the right place (values) in the tableobject.
+                            foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {
+                                if (
+                                    $value['key'] == $filter
+                                    || $value['value'] == $filter
+                                ) {
+                                    // If we find the filter, we add the checked value...
+                                    // ...and key to the initial tableobject array at the right place.
+                                    $tableobject[$tokey]['default']['values'][$vkey]['checked'] = 'checked';
+                                    // Expand the filter area.
+                                    $tableobject[$tokey]['show'] = 'show';
+                                    $tableobject[$tokey]['collapsed'] = '';
+                                    $tableobject[$tokey]['expanded'] = 'true';
+
+                                    continue;
+                                    // Then we check for the next filterparam.
+                                }
+                            }
                         } else {
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
