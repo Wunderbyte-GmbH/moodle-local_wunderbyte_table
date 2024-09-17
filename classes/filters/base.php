@@ -336,4 +336,19 @@ abstract class base {
 
         return get_string($classname, 'local_wunderbyte_table');
     }
+
+    /**
+     * Adds the specific part of SQL to the filterstring.
+     *
+     * @param string $filter
+     * @param string $columnname
+     * @param mixed $categoryvalue
+     * @param int $paramcounter
+     *
+     * @return array
+     *
+     */
+    public static function apply_filter(string &$filter, string $categorykey, mixed $categoryvalue, int &$paramcounter): array {
+        return [];
+    }
 }
