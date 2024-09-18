@@ -343,13 +343,18 @@ abstract class base {
      * @param string $filter
      * @param string $columnname
      * @param mixed $categoryvalue
-     * @param int $paramcounter
+     * @param wunderbyte_table $table
      *
-     * @return array
+     * @return void
      *
      */
-    public static function apply_filter(string &$filter, string $categorykey, mixed $categoryvalue, int &$paramcounter): array {
-        return [];
+    public static function apply_filter(
+        string &$filter,
+        string $columnname,
+        mixed $categoryvalue,
+        wunderbyte_table &$table
+    ): void {
+        return;
     }
 
     /**

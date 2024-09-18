@@ -338,6 +338,12 @@ class wunderbyte_table extends table_sql {
     public $context;
 
     /**
+     * We need to store the context in the class.
+     * @var int
+     */
+    public $paramcounter = 1;
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
@@ -1315,17 +1321,15 @@ class wunderbyte_table extends table_sql {
             if (!empty($categoryvalue)) {
                 // For the first filter in a category we append AND.
                 $filter .= " AND ( ";
-                $paramcounter = 1;
+                $paramcounter = $this->paramcounter;
                 $categorycounter = 1;
 
                 $filtersetting = $filtersettings[$categorykey];
                 $classname = $filtersetting['wbfilterclass'];
 
                 $class = new $classname($categorykey, $filtersetting['localizedname']);
-                $params = $class::apply_filter($filter, $categorykey, $categoryvalue, $paramcounter);
-                foreach ($params as $key => $value) {
-                    $this->sql->params[$key] = "". $value;
-                }
+                $class::apply_filter($filter, $categorykey, $categoryvalue, $this);
+
                 // TODO: Use apply_filter method for all other filter types.
                 // Eventually we will get rid of the following section.
                 // ... for the moment, make sure to escape it for classes already implementing the new way.
@@ -1891,5 +1895,25 @@ class wunderbyte_table extends table_sql {
                 }
             }
         }
+    }
+
+    /** Set params with key for table.
+     *
+     *
+     * @param string $paramkey
+     *
+     * @return string
+     *
+     */
+    public function set_params(string $value): string {
+
+        $paramsvaluekey = 'param1';
+        while (isset($this->sql->params['param' . $this->paramcounter])) {
+            $this->paramcounter++;
+            $paramsvaluekey = 'param' . $this->paramcounter;
+        }
+
+        $this->sql->params[$paramsvaluekey] = "$value";
+        return $paramsvaluekey;
     }
 }
