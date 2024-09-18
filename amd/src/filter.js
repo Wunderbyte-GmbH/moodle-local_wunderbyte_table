@@ -151,6 +151,8 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
     if (e.target.dataset.dateelement == 'dateelement') {
       getDates(e, idstring);
     } else if (e.target.dataset.intrangeelement && e.target.dataset.intrangeelement.includes('intrangeelement')) {
+      // eslint-disable-next-line no-console
+      console.log("intrangeelement");
       if (e.target.dataset.intrangeelement == 'intrangeelement-checkbox') {
         getIntRange(e, idstring);
       }
@@ -160,6 +162,8 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
 
     // Reload the filtered elements via ajax.
     const filterobjects = getFilterObjects(idstring);
+          // eslint-disable-next-line no-console
+          console.log("filterobjects: " + filterobjects);
     const searchstring = getSearchInput(idstring);
     const sort = getSortSelection(idstring);
 
@@ -575,8 +579,8 @@ export function getIntRange(e, idstring) {
 
   checked[idstring][colname] = fromvalue + "," + tovalue;
 
-  // If there are no checked boxes, we unset the key alltogether.
-  if (checked[idstring][colname].length < 1) {
+  // If there are no checked boxes, unset the key when the checkbox is unchecked.
+  if (!filtercontainer.querySelector('input[data-intrangeelement="intrangeelement-checkbox"]').checked) {
     delete checked[idstring][colname];
   }
 }
@@ -591,6 +595,9 @@ export function getFilterObjects(idstring) {
   if (!(idstring in checked)) {
     return '';
   }
+
+  // eslint-disable-next-line no-console
+  console.log(idstring);
 
   let hasvalues = false;
 
