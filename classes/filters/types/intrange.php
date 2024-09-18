@@ -169,15 +169,17 @@ class intrange extends base {
         global $DB;
 
         $dates = explode(",", $categoryvalue);
-        $from = $dates[0] ?? 0;
-        $to = $dates[1] ?? 0;
+
+        $from = self::return_int_values($dates[0]);
+        $to = self::return_int_values($dates[1]);
+
         if (empty($from) && empty($to)) {
             $filter .= "1 = 1";
             return;
         }
         $filter .= " ( ";
         // Set the params correctly.
-        $params = [$dates[0], $dates[1]];
+        $params = [$from, $to];
         $paramswithkeys = [];
         foreach ($params as $paramvalue) {
             $key = $table->set_params($paramvalue);
@@ -202,6 +204,25 @@ class intrange extends base {
             BETWEEN :" . $keys[0] . " AND :" . $keys[1];
         }
         $filter .= " ) ";
+    }
+
+    /**
+     * Make sure, only ints are handed over to query.
+     *
+     * @param mixed $value
+     *
+     * @return int
+     *
+     */
+    private static function return_int_values($value): int {
+        $matches = [];
+        if (preg_match_all('/\d+/', $value, $matches)) {
+            // If matches are found, join them and return as an integer.
+            return (int)implode('', $matches[0]);
+        } else {
+            // If no matches, return 0.
+            return 0;
+        }
     }
 
     /**
