@@ -155,43 +155,49 @@ class intrange extends base {
      * @param string $filter
      * @param string $columnname
      * @param mixed $categoryvalue
-     * @param int $paramcounter
+     * @param wunderbyte_table $table
      *
      * @return void
      *
      */
-    public static function apply_filter(string &$filter, string $columnname, mixed $categoryvalue, int &$paramcounter): array {
+    public static function apply_filter(
+        string &$filter,
+        string $columnname,
+        mixed $categoryvalue,
+        wunderbyte_table &$table
+    ): void {
         global $DB;
-        $filter .= " ( ";
 
         $dates = explode(",", $categoryvalue);
-        $from = $dates[0];
-        $to = $dates[1];
-        $key1 = 'param' . $paramcounter;
-        $paramcounter ++;
-        $key2 = 'param' . $paramcounter;
-        $paramcounter ++;
+        $from = $dates[0] ?? 0;
+        $to = $dates[1] ?? 0;
+        if (empty($from) && empty($to)) {
+            $filter .= "1 = 1";
+            return;
+        }
+        $filter .= " ( ";
+        $params = [$columnname, $columnname, $columnname, $dates[0], $dates[1]];
+        $paramswithkeys = [];
+        foreach ($params as $paramvalue) {
+            $key = $table->set_params($paramvalue);
+            $paramswithkeys[$key] = $paramvalue;
+        }
+        $keys = array_keys($paramswithkeys);
 
         if ($DB->get_dbfamily() === 'postgres') {
             // PostgreSQL: Extract numbers from the string and cast to integer for comparison.
             $filter .= "
-            REGEXP_REPLACE(username, '[^0-9]', '', 'g') IS NOT NULL
-            AND REGEXP_REPLACE(username, '[^0-9]', '', 'g') != ''
-            AND CAST(REGEXP_REPLACE(username, '[^0-9]', '', 'g') AS INTEGER) BETWEEN :$key1 AND :$key2
-            ";
+            REGEXP_REPLACE(:". $keys[0] . ", '[^0-9]', '', 'g') IS NOT NULL
+            AND REGEXP_REPLACE(:" . $keys[1] . ", '[^0-9]', '', 'g') != ''
+            AND CAST(REGEXP_REPLACE(:" . $keys[2] . ", '[^0-9]', '', 'g') AS INTEGER)
+            BETWEEN :" . $keys[3] . " AND :" . $keys[4];
         } else {
             $filter .= "";
             // MariaDB/MySQL: Extract numbers from the string using REGEXP and CAST to integer.
             // $filter .= "NULLIF(REGEXP_REPLACE(username, '[^0-9]', '', 'g'), '') IS NOT NULL
             // AND CAST(NULLIF(REGEXP_REPLACE(username, '[^0-9]', '', 'g'), '') AS INTEGER) BETWEEN :$key1 AND :$key2";
         }
-
         $filter .= " ) ";
-        // Return the params to set them into $this->params.
-        return [
-                $key1 => $from,
-                $key2 => $to,
-            ];
     }
 
     /**
