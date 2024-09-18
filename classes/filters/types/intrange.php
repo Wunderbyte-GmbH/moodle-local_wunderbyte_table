@@ -162,9 +162,7 @@ class intrange extends base {
      */
     public static function apply_filter(string &$filter, string $columnname, mixed $categoryvalue, int &$paramcounter): array {
         global $DB;
-        // $filter .= " ( ";
-
-        // Wird 2 Mal ausgeführt - Warum??
+        $filter .= " ( ";
 
         $dates = explode(",", $categoryvalue);
         $from = $dates[0];
@@ -179,7 +177,7 @@ class intrange extends base {
             $filter .= "
             REGEXP_REPLACE(username, '[^0-9]', '', 'g') IS NOT NULL
             AND REGEXP_REPLACE(username, '[^0-9]', '', 'g') != ''
-            AND CAST(REGEXP_REPLACE(username, '[^0-9]', '', 'g') AS INTEGER) BETWEEN $key1 AND $key2
+            AND CAST(REGEXP_REPLACE(username, '[^0-9]', '', 'g') AS INTEGER) BETWEEN :$key1 AND :$key2
             ";
         } else {
             $filter .= "";
