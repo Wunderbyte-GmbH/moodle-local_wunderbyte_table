@@ -176,7 +176,8 @@ class intrange extends base {
             return;
         }
         $filter .= " ( ";
-        $params = [$columnname, $columnname, $columnname, $dates[0], $dates[1]];
+        // Set the params correctly.
+        $params = [$dates[0], $dates[1]];
         $paramswithkeys = [];
         foreach ($params as $paramvalue) {
             $key = $table->set_params($paramvalue);
@@ -187,15 +188,18 @@ class intrange extends base {
         if ($DB->get_dbfamily() === 'postgres') {
             // PostgreSQL: Extract numbers from the string and cast to integer for comparison.
             $filter .= "
-            REGEXP_REPLACE(:". $keys[0] . ", '[^0-9]', '', 'g') IS NOT NULL
-            AND REGEXP_REPLACE(:" . $keys[1] . ", '[^0-9]', '', 'g') != ''
-            AND CAST(REGEXP_REPLACE(:" . $keys[2] . ", '[^0-9]', '', 'g') AS INTEGER)
-            BETWEEN :" . $keys[3] . " AND :" . $keys[4];
+            REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') IS NOT NULL
+            AND REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') != ''
+            AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') AS INTEGER)
+            BETWEEN :" . $keys[0] . " AND :" . $keys[1];
         } else {
-            $filter .= "";
-            // MariaDB/MySQL: Extract numbers from the string using REGEXP and CAST to integer.
-            // $filter .= "NULLIF(REGEXP_REPLACE(username, '[^0-9]', '', 'g'), '') IS NOT NULL
-            // AND CAST(NULLIF(REGEXP_REPLACE(username, '[^0-9]', '', 'g'), '') AS INTEGER) BETWEEN :$key1 AND :$key2";
+            // MariaDB/MySQL.
+            // TODO: Test if this works!!
+            $filter .= "
+            REGEXP_REPLACE($columnname, '[^0-9]', '') IS NOT NULL
+            AND REGEXP_REPLACE($columnname, '[^0-9]', '') != ''
+            AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '') AS SIGNED)
+            BETWEEN :" . $keys[0] . " AND :" . $keys[1];
         }
         $filter .= " ) ";
     }
