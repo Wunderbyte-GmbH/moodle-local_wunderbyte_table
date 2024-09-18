@@ -1248,7 +1248,7 @@ class wunderbyte_table extends table_sql {
         $filter = '';
         $paramkey = 'param';
 
-        // This handles the case of flexoverlap filter.
+        // This handles the case of flexoverlap filter. Datepicker.
         $foobject = [];
         foreach ($filterobject as $categorykey => $categoryvalue) {
             if (!is_object($categoryvalue)) {
@@ -1267,7 +1267,7 @@ class wunderbyte_table extends table_sql {
                 }
             }
         }
-        // Define the filter string.
+        // Define the filter string. Datepicker.
         if (count($foobject) > 1) {
             $sc = array_keys($foobject)[0]; // Startcolumn.
             $ec = array_keys($foobject)[1]; // Endcolumn.
