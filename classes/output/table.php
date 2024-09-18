@@ -26,6 +26,7 @@
 namespace local_wunderbyte_table\output;
 
 use core_plugin_manager;
+use local_wunderbyte_table\editfilter;
 use local_wunderbyte_table\local\settings\tablesettings;
 use local_wunderbyte_table\wunderbyte_table;
 use renderable;
@@ -843,6 +844,14 @@ class table implements renderable, templatable {
                     $filtercountarray[$potentialfiltercolumn['name']] = $filtercounts; // This is the localized string used as a key... not sure if thats intended.
                     $tableobject[$tokey]['filtercounter']
                         = $filtercounts > 0 ? $filtercounts : false;
+
+                    $filterclass = $potentialfiltercolumn['wbfilterclass'];
+                    $filter = new $filterclass($tempfiltercolumn, $potentialfiltercolumn['name']);
+                    $filter::prepare_filter_for_rendering($tableobject, $filterarray, $tokey);
+                    // TODO: Migrate these functions to the concerned filter classes and get rid of the following condition.
+                    if (str_contains($potentialfiltercolumn['wbfilterclass'], 'intrange')) {
+                        continue;
+                    }
 
                     foreach ($filterarray[$tempfiltercolumn] as $sfkey => $filter) {
 

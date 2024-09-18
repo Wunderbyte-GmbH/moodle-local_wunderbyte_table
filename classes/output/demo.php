@@ -607,8 +607,8 @@ class demo implements renderable, templatable {
         // $table->add_filter($standardfilter);
         // $standardfilter = new standardfilter('firstname',  get_string('firstname'));
         // $table->add_filter($standardfilter);
-        // $standardfilter = new standardfilter('lastname',  get_string('lastname'));
-        // $table->add_filter($standardfilter);
+        $standardfilter = new standardfilter('lastname',  get_string('lastname'));
+        $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('email', get_string('email'));
         $table->add_filter($standardfilter);
         $intrangefilter = new intrange('username', "Range of numbers given in Username");

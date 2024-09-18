@@ -162,7 +162,7 @@ class intrange extends base {
      */
     public static function apply_filter(string &$filter, string $columnname, mixed $categoryvalue, int &$paramcounter): array {
         global $DB;
-        $filter .= " ( ";
+        // $filter .= " ( ";
 
         // Wird 2 Mal ausgeführt - Warum??
 
@@ -176,8 +176,11 @@ class intrange extends base {
 
         if ($DB->get_dbfamily() === 'postgres') {
             // PostgreSQL: Extract numbers from the string and cast to integer for comparison.
-            $filter .= "NULLIF(REGEXP_REPLACE(username, '[^0-9]', '', 'g'), '') IS NOT NULL
-            AND CAST(NULLIF(REGEXP_REPLACE(username, '[^0-9]', '', 'g'), '') AS INTEGER) BETWEEN :$key1 AND :$key2";
+            $filter .= "
+            REGEXP_REPLACE(username, '[^0-9]', '', 'g') IS NOT NULL
+            AND REGEXP_REPLACE(username, '[^0-9]', '', 'g') != ''
+            AND CAST(REGEXP_REPLACE(username, '[^0-9]', '', 'g') AS INTEGER) BETWEEN $key1 AND $key2
+            ";
         } else {
             $filter .= "";
             // MariaDB/MySQL: Extract numbers from the string using REGEXP and CAST to integer.
@@ -191,5 +194,26 @@ class intrange extends base {
                 $key1 => $from,
                 $key2 => $to,
             ];
+    }
+
+    /**
+     * Add keys and values for applied filters. This will only be applied if filter is active.
+     *
+     * @param mixed $tableobject
+     * @param array $filterarray
+     * @param int $key
+     *
+     * @return void
+     *
+     */
+    public static function prepare_filter_for_rendering(&$tableobject, array $filterarray, int $key) {
+
+        // Expand the filter area.
+        $tableobject[$key]['show'] = 'show';
+        $tableobject[$key]['collapsed'] = '';
+        $tableobject[$key]['expanded'] = 'true';
+
+        // TODO: Apply filter values to fields.
+        return;
     }
 }

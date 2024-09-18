@@ -351,4 +351,18 @@ abstract class base {
     public static function apply_filter(string &$filter, string $categorykey, mixed $categoryvalue, int &$paramcounter): array {
         return [];
     }
+
+    /**
+     * Add keys and values for applied filters. This will only be applied if filter is active.
+     *
+     * @param mixed $tableobject
+     * @param array $filterarray
+     * @param int $key
+     *
+     * @return void
+     *
+     */
+    public static function prepare_filter_for_rendering(&$tableobject, array $filterarray, int $key) {
+        return;
+    }
 }
