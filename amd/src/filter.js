@@ -82,7 +82,9 @@ function applyChangelistener(nodelist, selector, idstring, encodedtable) {
       } else {
         el.dataset.idstring2 = idstring;
       }
-      el.addEventListener("change", (e) => toggleFilterelement(e, selector, idstring, encodedtable));
+      ["change", "keyup"].forEach(event => {
+        el.addEventListener(event, (e) => toggleFilterelement(e, selector, idstring, encodedtable));
+      });
     });
   }
 }
@@ -151,11 +153,9 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
     if (e.target.dataset.dateelement == 'dateelement') {
       getDates(e, idstring);
     } else if (e.target.dataset.intrangeelement && e.target.dataset.intrangeelement.includes('intrangeelement')) {
+      getIntRange(e, idstring);
       // eslint-disable-next-line no-console
       console.log("intrangeelement");
-      if (e.target.dataset.intrangeelement == 'intrangeelement-checkbox') {
-        getIntRange(e, idstring);
-      }
     } else {
       getChecked(e.target.name, selector, idstring);
     }
