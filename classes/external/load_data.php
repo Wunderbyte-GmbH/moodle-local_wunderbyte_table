@@ -167,13 +167,6 @@ class load_data extends external_api {
             $_POST[$key] = $value;
         }
 
-        // if (!empty($params['wbtfilter']) || $params['searchtext'] !== "") {
-        //     $table->apply_filter($params['wbtfilter'], $params['searchtext']);
-        // }
-        // if ($params['searchtext'] !== "") {
-        //     $table->apply_searchtext($params['searchtext']);
-        // }
-
         if (!empty($params['tsort'])) {
             $table->unset_sorting_settings();
         }
