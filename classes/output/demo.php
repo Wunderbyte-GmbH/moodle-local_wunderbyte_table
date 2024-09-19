@@ -700,11 +700,11 @@ class demo implements renderable, templatable {
      */
     public function return_as_array():array {
         $data = [
-            'table1' => '', //$this->render_table_1(),
+            'table1' => $this->render_table_1(),
             'tab1_name' => TABLE1NAME,
-            'table2' => '', //$this->render_table_2(),
+            'table2' => $this->render_table_2(),
             'tab2_name' => TABLE2NAME,
-            'table3' => '', //$this->render_table_3(),
+            'table3' => $this->render_table_3(),
             'tab3_name' => TABLE3NAME,
             'table4' => $this->render_table_4(),
             'tab4_name' => TABLE4NAME,

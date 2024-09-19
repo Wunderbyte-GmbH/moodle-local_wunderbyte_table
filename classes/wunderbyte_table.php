@@ -1850,7 +1850,8 @@ class wunderbyte_table extends table_sql {
      * You can use extra quotes added to the string or set the param without additional quotes.
      *
      *
-     * @param string $paramkey
+     * @param string $value
+     * @param bool $useextraquotes
      *
      * @return string
      *

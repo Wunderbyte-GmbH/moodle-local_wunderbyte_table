@@ -125,8 +125,6 @@ class intrange extends base {
 
         $intrangearray = $filtersettings[$fckey];
 
-        // TODO: Check if this is done correctly!!
-
         foreach ($intrangearray['intrange'] as $labelkey => $object) {
             // Prepare the array for output.
             $intrangeobject = [
