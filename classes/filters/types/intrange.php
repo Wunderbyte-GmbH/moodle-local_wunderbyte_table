@@ -160,7 +160,7 @@ class intrange extends base {
      * @return void
      *
      */
-    public static function apply_filter(
+    public function apply_filter(
         string &$filter,
         string $columnname,
         mixed $categoryvalue,

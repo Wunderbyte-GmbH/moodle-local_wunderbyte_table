@@ -1328,7 +1328,7 @@ class wunderbyte_table extends table_sql {
                 $classname = $filtersetting['wbfilterclass'];
 
                 $class = new $classname($categorykey, $filtersetting['localizedname']);
-                $class::apply_filter($filter, $categorykey, $categoryvalue, $this);
+                $class->apply_filter($filter, $categorykey, $categoryvalue, $this);
 
                 // TODO: Use apply_filter method for all other filter types.
                 // Eventually we will get rid of the following section.
