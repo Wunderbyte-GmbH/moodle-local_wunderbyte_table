@@ -151,9 +151,9 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
   setTimeout(() => {
     // Check if Checkbox corresponds to datepicker
     if (e.target.dataset.dateelement == 'dateelement') {
-      getDates(e, idstring);
+      getDates(e, selector, idstring);
     } else if (e.target.dataset.intrangeelement && e.target.dataset.intrangeelement.includes('intrangeelement')) {
-      getIntRange(e, idstring);
+      getIntRange(e, selector, idstring);
       // eslint-disable-next-line no-console
       console.log("intrangeelement");
     } else {
@@ -185,9 +185,10 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
 /**
  * Check if the checkbox of the filterparam is checked and if so write values from date- and timepicker into checked variable.
  * @param {*} e
+ * @param {*} selector
  * @param {*} idstring
  */
-export function getDates(e, idstring) {
+export function getDates(e, selector, idstring) {
 
   let name = e.target.dataset.columnname;
   let filtercontainer = e.target.closest(".datepickerform");
@@ -228,6 +229,7 @@ export function getDates(e, idstring) {
       }
     );
   }
+  updateFilterCounter(name, selector, idstring);
 }
 
 /**
@@ -564,9 +566,10 @@ export function getChecked(name, selector, idstring) {
 /**
  * Gets the values of the checked intrange filter.
  * @param {*} e
+ * @param {*} selector
  * @param {*} idstring
  */
-export function getIntRange(e, idstring) {
+export function getIntRange(e, selector, idstring) {
 
   // We might have more than one Table, therefore we first have to get all tables.
   let filtercontainer = e.target.closest(".intrangeform");
@@ -577,12 +580,15 @@ export function getIntRange(e, idstring) {
   let tovalue = to.value;
   let colname = e.target.dataset.columnname;
 
-  checked[idstring][colname] = fromvalue + "," + tovalue;
+  if (fromvalue.length > 0 || tovalue.length > 0) {
+    checked[idstring][colname] = fromvalue + "," + tovalue;
+  }
 
   // If there are no checked boxes, unset the key when the checkbox is unchecked.
   if (!filtercontainer.querySelector('input[data-intrangeelement="intrangeelement-checkbox"]').checked) {
     delete checked[idstring][colname];
   }
+  updateFilterCounter(colname, selector, idstring);
 }
 
 /**
@@ -652,13 +658,18 @@ export const renderFilter = (filterjson, idstring, encodedtable) => {
  * @param {*} selector
  * @param {*} idstring
  *
- * @return void]
  *
  */
 function updateFilterCounter(name, selector, idstring) {
 
   const wbTable = document.querySelector(selector);
-  const counter = checked[idstring][name] ? checked[idstring][name].length : 0;
+
+  let counter = checked[idstring][name] ? checked[idstring][name].length : 0;
+  if ((counter > 0 && typeof checked[idstring][name] === 'string') ||
+      typeof checked[idstring][name] === 'object') {
+        // Handle different cases of filters here (datepicker, intrange).
+    counter = 1;
+  }
 
   const labelElement = wbTable.querySelector('[data-ident=' + name + '] span.filtercounter');
 
