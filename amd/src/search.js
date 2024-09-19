@@ -69,6 +69,7 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 2;
   console.log('initializeSearch', idstring);
 
     const inputElement = document.querySelector(containerselector + ' input.search');
+    const buttonForSearch = document.querySelector(containerselector + ' .searchbutton');
 
     if (!inputElement) {
         return;
@@ -77,6 +78,46 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 2;
     if (!inputElement.dataset.initialized) {
 
       inputElement.dataset.initialized = true;
+
+      if (buttonForSearch) {
+        buttonForSearch.addEventListener('click', () => {
+          let minlength = 0;
+          let timeout = 400;
+
+          let now = Date.now();
+
+          lastsearchinputs[idstring] = now;
+
+          setTimeout(() => {
+
+            const searchstring = getSearchInput(idstring, minlength);
+
+            // If the timevalue after the wait is the same as before, we didn't have another input.
+            // we want to make sure we do no loading while we are waiting for the answer.
+            // And the iput string must be longer than 3.
+            if (lastsearchinputs[idstring] === now
+                && searchstring !== null) {
+
+              const filterobjects = getFilterObjects(idstring);
+              const sort = getSortSelection(idstring);
+
+              callLoadData(idstring,
+                encodedtable,
+                0, // We set page to 0 because we need to start the container anew.
+                null,
+                sort,
+                null,
+                null,
+                null,
+                filterobjects,
+                searchstring);
+
+            }
+          }, timeout);
+
+          return;
+        });
+      }
 
       inputElement.addEventListener('keyup', (e) => {
 
