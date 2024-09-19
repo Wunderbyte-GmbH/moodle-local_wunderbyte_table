@@ -176,6 +176,8 @@ class intrange extends base {
         if (empty($from) && empty($to)) {
             $filter .= "1 = 1";
             return;
+        } else if (empty($to)) {
+            $onlymingiven = true;
         }
         $filter .= " ( ";
         // Set the params correctly.
@@ -187,21 +189,34 @@ class intrange extends base {
         }
         $keys = array_keys($paramswithkeys);
 
+        // Will treat positive ints only, since everything except 0-9 is escaped.
         if ($DB->get_dbfamily() === 'postgres') {
             // PostgreSQL: Extract numbers from the string and cast to integer for comparison.
             $filter .= "
             REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') IS NOT NULL
             AND REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') != ''
-            AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') AS INTEGER)
-            BETWEEN :" . $keys[0] . " AND :" . $keys[1];
+            AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') AS INTEGER)";
+
+            if ($onlymingiven) {
+                $filter .= " > :" . $keys[0];
+            } else {
+                $filter .= "BETWEEN :" . $keys[0] . " AND :" . $keys[1];
+            }
+
         } else {
             // MariaDB/MySQL.
             // TODO: Test if this works!!
             $filter .= "
             REGEXP_REPLACE($columnname, '[^0-9]', '') IS NOT NULL
             AND REGEXP_REPLACE($columnname, '[^0-9]', '') != ''
-            AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '') AS SIGNED)
-            BETWEEN :" . $keys[0] . " AND :" . $keys[1];
+            AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '') AS SIGNED)";
+        }
+
+        // This part is identical for both db families.
+        if ($onlymingiven) {
+            $filter .= " > :" . $keys[0];
+        } else {
+            $filter .= "BETWEEN :" . $keys[0] . " AND :" . $keys[1];
         }
         $filter .= " ) ";
     }
