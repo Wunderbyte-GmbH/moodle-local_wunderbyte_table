@@ -1321,7 +1321,6 @@ class wunderbyte_table extends table_sql {
             if (!empty($categoryvalue)) {
                 // For the first filter in a category we append AND.
                 $filter .= " AND ( ";
-                $paramcounter = $this->paramcounter;
                 $categorycounter = 1;
 
                 $filtersetting = $filtersettings[$categorykey];
@@ -1347,9 +1346,6 @@ class wunderbyte_table extends table_sql {
 
                 foreach ($categoryvalue as $key => $value) {
 
-                    // We use the while function to find a param we can actually use.
-                    $paramsvaluekey = $paramkey . $paramcounter;
-
                     if ($datecomparison == false) {
                         // If there are more than one filter per category they will be concatenated via OR.
                         $filter .= $categorycounter == 1 ? "" : " OR ";
@@ -1358,30 +1354,23 @@ class wunderbyte_table extends table_sql {
                         $filter .= $categorycounter == 1 ? "" : " AND ";
                     }
 
-                    while (isset($this->sql->params[$paramkey . $paramcounter])) {
-                        $paramcounter++;
-                        $paramsvaluekey = $paramkey . $paramcounter;
-                    }
-
                     if ($datecomparison == true) {
                         $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
                     } else if (isset($this->subcolumns['datafields'][$categorykey]['explode'])
                     || isset($this->subcolumns['datafields'][$categorykey]['jsonattribute'])) {
+                        $paramsvaluekey = $this->set_params("%" . $value ."%");
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
-                        $this->sql->params[$paramsvaluekey] = "%$value%";
                     } else if (is_numeric($value)) {
 
                         // Here we check if it's an hourslist filter.
                         if (isset($this->subcolumns['datafields'][$categorykey]['local_wunderbyte_table\filters\types\hourlist'])) {
+                            $paramsvaluekey = $this->set_params((string) ($value + $delta), false);
                             $filter .= filter::apply_hourlist_filter($categorykey, ":$paramsvaluekey");
 
                             $delta = filter::get_timezone_offset();
-                            $value = $value + $delta;
-
-                            $this->sql->params[$paramsvaluekey] = "". $value;
                         } else {
+                            $paramsvaluekey = $this->set_params((string) $value, false);
                             $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
-                            $this->sql->params[$paramsvaluekey] = "". $value;
                         }
                     } else {
 
@@ -1390,48 +1379,21 @@ class wunderbyte_table extends table_sql {
                         // First, make sure we have enough params we can use..
 
                         $filter .= " ( ";
-
-                        while (isset($this->sql->params[$paramkey . $paramcounter])) {
-                            $paramcounter++;
-                            $paramsvaluekey = $paramkey . $paramcounter;
-                        }
-
+                        $paramsvaluekey = $this->set_params($value, true);
                         $escapecharacter = self::return_escape_character($value);
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
-                        $this->sql->params[$paramsvaluekey] = "$value";
 
                         $filter .= " OR ";
-
-                        // Make sure again we have enough params we can use..
-                        while (isset($this->sql->params[$paramkey . $paramcounter])) {
-                            $paramcounter++;
-                            $paramsvaluekey = $paramkey . $paramcounter;
-                        }
-
+                        $paramsvaluekey = $this->set_params($value . ",%", true);
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
-                        $this->sql->params[$paramsvaluekey] = "$value,%";
 
                         $filter .= " OR ";
-
-                        // Make sure again we have enough params we can use..
-                        while (isset($this->sql->params[$paramkey . $paramcounter])) {
-                            $paramcounter++;
-                            $paramsvaluekey = $paramkey . $paramcounter;
-                        }
-
+                        $paramsvaluekey = $this->set_params("%," . $value, true);
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
-                        $this->sql->params[$paramsvaluekey] = "%,$value";
 
                         $filter .= " OR ";
-
-                        // Make sure again we have enough params we can use..
-                        while (isset($this->sql->params[$paramkey . $paramcounter])) {
-                            $paramcounter++;
-                            $paramsvaluekey = $paramkey . $paramcounter;
-                        }
-
+                        $paramsvaluekey = $this->set_params("%," . $value . ",%", true);
                         $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
-                        $this->sql->params[$paramsvaluekey] = "%,$value,%";
 
                         $filter .= " ) ";
                     }
@@ -1484,21 +1446,8 @@ class wunderbyte_table extends table_sql {
         $filterarray = [];
 
         foreach ($searcharray as $searchword) {
-
-            // Make sure we can use the param.
-            $originalparamsvaluekey = 'param';
-            $paramsvaluekey = $originalparamsvaluekey;
-
-            $counter = 1;
-
-            while (isset($this->sql->params[$paramsvaluekey])) {
-                $paramsvaluekey = $originalparamsvaluekey . $counter;
-                $counter++;
-            }
-
+            $paramsvaluekey = $this->set_params("%" . $searchword . "%", true);
             $filterarray[] = $DB->sql_like("wbfulltextsearch", ":$paramsvaluekey", false);
-            $this->sql->params[$paramsvaluekey] = "%$searchword%";
-
         }
 
         // Now we have the filterarray with all the filters for every word.
@@ -1898,6 +1847,7 @@ class wunderbyte_table extends table_sql {
     }
 
     /** Set params with key for table.
+     * You can use extra quotes added to the string or set the param without additional quotes.
      *
      *
      * @param string $paramkey
@@ -1905,15 +1855,19 @@ class wunderbyte_table extends table_sql {
      * @return string
      *
      */
-    public function set_params(string $value): string {
+    public function set_params(string $value, bool $useextraquotes = true): string {
 
         $paramsvaluekey = 'param1';
         while (isset($this->sql->params['param' . $this->paramcounter])) {
             $this->paramcounter++;
             $paramsvaluekey = 'param' . $this->paramcounter;
         }
+        if ($useextraquotes) {
+            $this->sql->params[$paramsvaluekey] = "$value";
+        } else {
+            $this->sql->params[$paramsvaluekey] = $value;
+        }
 
-        $this->sql->params[$paramsvaluekey] = "$value";
         return $paramsvaluekey;
     }
 }
