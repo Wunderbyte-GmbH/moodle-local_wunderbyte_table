@@ -580,6 +580,19 @@ export function getIntRange(e, selector, idstring) {
   let tovalue = to.value;
   let colname = e.target.dataset.columnname;
 
+
+  // Add the alert if not all entries are ints (or empty).
+  const isInt = (str) => (!isNaN(parseInt(str)) && isFinite(str)) || (str.trim() === '') || (str === null);
+
+  const alertelement = filtercontainer.querySelector('div[id*="intrangefilter_alert"]');
+  if (!isInt(fromvalue)
+      || !isInt(tovalue)) {
+
+      alertelement.removeAttribute('hidden');
+  } else {
+      alertelement.setAttribute('hidden', 'true');
+  }
+
   if (fromvalue.length > 0 || tovalue.length > 0) {
     checked[idstring][colname] = fromvalue + "," + tovalue;
   }

@@ -234,6 +234,7 @@
                                 <input class="filterelement filterelement intrange-input" id="{{label}}{{columnname}}{{idstring}}intrangefilter_intrange-start" value="{{startvalue}}" name="intrange-start-{{columnname}}" data-intrangeelement = "intrangeelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
                                 <div class="filterelement intrange-label">{{#str}} to, local_wunderbyte_table {{/str}}</div>
                                 <input class="filterelement intrange-input" id="{{label}}{{columnname}}{{idstring}}intrangefilter_intrange-end" value="{{endvalue}}" name="intrange-end-{{columnname}}" data-intrangeelement = "intrangeelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
+                                <div class="filterelement alert alert-warning intrange" id="{{label}}{{columnname}}{{idstring}}intrangefilter_alert" hidden>{{#str}} alertentriessanitized, local_wunderbyte_table {{/str}}</div>
                         </form>
                     {{/intranges}}
                 {{/intrange}}
