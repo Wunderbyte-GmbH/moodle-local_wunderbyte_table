@@ -244,12 +244,20 @@ class intrange extends base {
      */
     public static function prepare_filter_for_rendering(&$tableobject, array $filterarray, int $key) {
 
-        // Expand the filter area.
+        // Expand the filter area. TODO: Fix this for all filters.
         $tableobject[$key]['show'] = 'show';
         $tableobject[$key]['collapsed'] = '';
         $tableobject[$key]['expanded'] = 'true';
 
-        // TODO: Apply filter values to fields.
+        // Set the checkbox checked.
+        $tableobject[$key]['intrange']['intranges'][0]['checked'] = 'checked';
+
+        // Apply values.
+        $filterstring = array_values($filterarray)[0];
+        $values = explode(",", $filterstring);
+        $tableobject[$key]['intrange']['intranges'][0]['startvalue'] = $values[0];
+        $tableobject[$key]['intrange']['intranges'][0]['endvalue'] = $values[1];
+
         return;
     }
 }
