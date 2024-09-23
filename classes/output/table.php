@@ -841,7 +841,8 @@ class table implements renderable, templatable {
                 if (isset($filterarray[$tempfiltercolumn])) {
                     // We create an array to fetch human readable data.
                     $filtercounts = count((array)$filterarray[$tempfiltercolumn]);
-                    $filtercountarray[$potentialfiltercolumn['name']] = $filtercounts; // This is the localized string used as a key... not sure if thats intended.
+                    // This is the localized string used as a key... not sure if thats intended.
+                    $filtercountarray[$potentialfiltercolumn['name']] = $filtercounts;
                     $tableobject[$tokey]['filtercounter']
                         = $filtercounts > 0 ? $filtercounts : false;
 
