@@ -160,3 +160,29 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I wait "1" seconds
     And I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
+
+  @javascript
+  Scenario: WBTable: Filter by intrange in username using sidebar filter controls
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    ## Filter panel being hidden by default on the Demo Table 4 tab
+    And I follow "Demo table 4"
+    And I click on ".asidecollapse-demotable_4" "css_element"
+    And I should see "Teacher" in the "#demotable_4_r3" "css_element"
+    And I click on ".tab-pane.active [aria-controls=\"id_collapse_username\"]" "css_element"
+    ##And I set the field "From" in the "#id_collapse_username" "css_element" to "1"
+    ##And I set the field "To" in the "#id_collapse_username" "css_element" to "3"
+    ##And I set the field "username" in the ".intrangeform input[data-intrangeelement=\"intrangeelement-checkbox\"]" "css_element" to "checked"
+    And I set the field with xpath "//input[contains(@id, 'intrangefilter_intrange-start')]" to "1"
+    And I set the field with xpath "//input[contains(@id, 'intrangefilter_intrange-end')]" to "3"
+    And I set the field with xpath "//input[@data-intrangeelement='intrangeelement-checkbox']" to "checked"
+    And I wait until the page is ready
+    And I should see "4 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I should see "Teacher" in the "#demotable_4_r1" "css_element"
+    And I should see "user3" in the "#demotable_4_r4" "css_element"
+    And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r5']" "xpath_element" should not exist
+    ## And I set the field "To" in the "#id_collapse_username" "css_element" to "2"
+    And I set the field with xpath "//input[contains(@id, 'intrangefilter_intrange-end')]" to "2"
+    And I wait until the page is ready
+    And I should see "user2" in the "#demotable_4_r3" "css_element"
+    And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r4']" "xpath_element" should not exist
