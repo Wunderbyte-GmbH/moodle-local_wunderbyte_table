@@ -170,7 +170,7 @@ class intrange extends base {
 
         $from = self::return_int_values($dates[0]);
         $to = self::return_int_values($dates[1]);
-
+        $onlymingiven = false;
         if (empty($from) && empty($to)) {
             $filter .= "1 = 1";
             return;
@@ -194,12 +194,6 @@ class intrange extends base {
             REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') IS NOT NULL
             AND REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') != ''
             AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') AS INTEGER)";
-
-            if ($onlymingiven) {
-                $filter .= " > :" . $keys[0];
-            } else {
-                $filter .= "BETWEEN :" . $keys[0] . " AND :" . $keys[1];
-            }
 
         } else {
             // MariaDB/MySQL.
