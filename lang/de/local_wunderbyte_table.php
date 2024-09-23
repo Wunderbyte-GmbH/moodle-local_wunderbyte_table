@@ -29,6 +29,7 @@ $string['action_executed'] = 'Aktion ausgeführt';
 $string['action_executed_desc'] = 'Die NutzerIn hat eine Aktion "{$a->methodname}" in der folgenden Tabelle ausgeführt: "{$a->tablename}"';
 $string['addcheckboxes'] = 'Für jede Zeile eine Checkbox anzeigen';
 $string['after'] = 'nach';
+$string['alertentriessanitized'] = 'Achtung: Von Ihren Eingaben werden nur die Ziffern 0-9 für den Filter berücksichtigt.';
 $string['allowedittable'] = 'Bearbeite Tabelleneinstellungen (zum Testen, nicht auf produktiven Websites verwenden) ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
 $string['allowsearchincolumns'] = 'Erlaube Suche in Spalten mittels ":" ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
 $string['apply_filter'] = 'Filter anwenden';

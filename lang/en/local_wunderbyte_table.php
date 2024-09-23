@@ -30,6 +30,7 @@ $string['action_executed_desc'] = 'The user executed an action "{$a->methodname}
 $string['addcheckboxes'] = 'Add a checkbox to each row';
 $string['adddatabody'] = 'You are about to add a row';
 $string['after'] = 'after';
+$string['alertentriessanitized'] = 'Warning: Only the digits 0-9 will be taken into account from your entry.';
 $string['allowedittable'] = 'Edit table settings (only for testing, do not use on productive sites!) ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['allowsearchincolumns'] = 'Allow search in columsn via ":" ' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['apply_filter'] = 'Apply Filter';

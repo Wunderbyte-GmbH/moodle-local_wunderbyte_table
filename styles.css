@@ -459,6 +459,10 @@
     box-shadow: 0 0 1px 1px #77838f;
 }
 
+.wunderbyteTableFilter .alert-warning {
+    margin-top: 20px;
+}
+
 .wunderbyteTableSearchIcon {
     padding-top: 7px;
     padding-right: 5px;
