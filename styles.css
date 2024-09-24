@@ -683,7 +683,7 @@ div[data-view="wb-filterview"] {
     }
     .event-list {
         margin-top: 10px;
-        padding: 0px;
+        padding: 0;
     }
 
     .event-list li {
@@ -692,35 +692,35 @@ div[data-view="wb-filterview"] {
         padding: 6px 0;
     }
 
-  /* For larger screens (768px and up) */
-  @media (min-width: 768px) {
-    .event-list li {
-        display: flex;
-        justify-content: space-between;
-        padding: 6px 0;
-    }
-  }
-
-  /* For smaller screens (below 768px) */
-  @media (max-width: 767px) {
-    .event-list li {
-        display: block;
-        padding: 6px 0;
+    /* For larger screens (768px and up) */
+    @media (min-width: 768px) {
+        .event-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+        }
     }
 
-    /* Ensure the key and event count are stacked */
-    .event-list li a {
-        display: block;
-        margin-bottom: 5px;
-    }
+    /* For smaller screens (below 768px) */
+    @media (max-width: 767px) {
+        .event-list li {
+            display: block;
+            padding: 6px 0;
+        }
 
-    .event-list .event-count {
-        display: block;
+        /* Ensure the key and event count are stacked */
+        .event-list li a {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .event-list .event-count {
+            display: block;
+        }
     }
-  }
 
     .event-list a {
-        color: #0063A6;
+        color: #0063a6;
         font-size: 18px;
         font-family: Roboto;
         font-weight: 600;
@@ -734,7 +734,7 @@ div[data-view="wb-filterview"] {
     }
 
     .event-count {
-        color: #242A3A;
+        color: #242a3a;
         font-size: 13px;
         font-family: Roboto;
         font-weight: 400;
@@ -742,4 +742,4 @@ div[data-view="wb-filterview"] {
         word-wrap: break-word;
         padding-right: 39px;
     }
-  }
+}
