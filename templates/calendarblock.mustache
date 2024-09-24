@@ -1,0 +1,37 @@
+<div class="">
+<p>{{{testdata}}}</p>
+    <div class="calendar" id="wb-calendar-{{uniqueid}}" data-rowswithdates="{{rowswithdates}}">
+      <div class="calendar-header">
+        <span class="month-picker" id="month-picker"> May </span>
+        <div class="year-picker" id="year-picker">
+          <span class="year-change" id="pre-year">
+            <pre><</pre>
+          </span>
+          <span id="year">2020 </span>
+          <span class="year-change" id="next-year">
+            <pre>></pre>
+          </span>
+        </div>
+      </div>
+
+      <div class="calendar-body">
+        <div class="calendar-week-days">
+        <div>{{#str}}sunday, local_wunderbyte_table{{/str}}</div>
+        <div>{{#str}}monday, local_wunderbyte_table{{/str}}</div>
+        <div>{{#str}}tuesday, local_wunderbyte_table{{/str}}</div>
+        <div>{{#str}}wednesday, local_wunderbyte_table{{/str}}</div>
+        <div>{{#str}}thursday, local_wunderbyte_table{{/str}}</div>
+        <div>{{#str}}friday, local_wunderbyte_table{{/str}}</div>
+        <div>{{#str}}saturday, local_wunderbyte_table{{/str}}</div>
+        </div>
+        <div class="calendar-days">
+        </div>
+      </div>
+      <div class="month-list"></div>
+    </div>
+  </div>
+{{#js}}
+      require(['local_wunderbyte_table/initcalendar'], function(fn) {
+            fn.init('wb-calendar-{{uniqueid}}');
+      });
+{{/js}}

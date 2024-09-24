@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table;
+use mod_booking\singleton_service;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -463,6 +464,54 @@ class wunderbyte_table extends table_sql {
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         return $output->render_table($tableobject, $component . "/" . $template);
     }
+
+    /**
+     * With this function, the table can be returned as html without lazy loading.
+     * Can be overridden in child class with own renderer.
+     *
+     * @param int $pagesize
+     * @param bool $useinitialsbar
+     * @param string $downloadhelpbutton
+     * @param array $onlyfilters
+     * @return string
+     */
+    public function calendarouthtml($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
+
+        global $PAGE, $OUTPUT;
+        $this->pagesize = 30;
+        $this->useinitialsbar = $useinitialsbar;
+        $this->downloadhelpbutton = $downloadhelpbutton;
+
+        // In the following function we return the template we want to use.
+        // This function also checks, if there is a special container template present. If so, we use it instead.
+        [$component, $template] = $this->return_component_and_template();
+
+        $tableobject = $this->printtable($pagesize, $useinitialsbar);
+        $data = $tableobject->return_as_list();
+
+        $rawdata = $this->rawdata;
+        $rowswithdates = [];
+        foreach ($rawdata as $rowraw) {
+
+            $rowdata = singleton_service::get_instance_of_booking_option_settings($rowraw->id);
+            if (count($rowdata->sessions) > 0) {
+                foreach ($rowdata->sessions as $session) {
+                    $url = new moodle_url('/mod/booking/optionview.php', ['optionid' => $rowdata->id,
+                                                                              'cmid' => $rowdata->cmid]);
+                    $session->url = $url->out(false);
+                    array_push($rowswithdates, $session );
+                }
+            }
+
+        }
+        $data['rowswithdates'] = json_encode($rowswithdates);
+        $allrows = $data['table']['rows'];
+        $data['table']['rows'] = array_slice($allrows, 0, 4);
+
+        return $OUTPUT->render_from_template($component . "/" . $template, $data);
+
+    }
+
 
     /**
      * A version of the out function which does not actually echo but just returns the html plus the idnumber.

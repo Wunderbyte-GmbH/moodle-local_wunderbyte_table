@@ -1,0 +1,31 @@
+<div class="container">
+<div class="row mt-4">
+  <div class="col-md-4 d-flex justify-content-center align-items-center">
+               {{> local_wunderbyte_table/calendarblock }}
+  </div>
+  <div class="col-md-8 d-flex flex-wrap" >
+  {{#table}}
+  {{#rows}}
+    <div class="col-md-6 mb-3">
+            <div class="urisecalendarcard">
+                <span class="topspan">
+                    {{#header}}
+                    {{#columnclass}}<span class="{{.}} {{key}}">{{/columnclass}}
+                        {{{value}}}
+                    {{#columnclass}}</span>{{/columnclass}}
+                    {{/header}}
+                </span>
+                {{#main}}
+                <div class="pt-2">
+                {{#columnclass}}<div class="{{.}} {{key}}">{{/columnclass}}
+                    {{{value}}}
+                {{#columnclass}}</div>{{/columnclass}}
+                </div>
+                {{/main}}
+            </div>
+    </div>
+  {{/rows}}
+  {{/table}}
+  </div>
+</div>
+</div>

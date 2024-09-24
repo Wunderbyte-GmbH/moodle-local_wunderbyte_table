@@ -581,7 +581,12 @@ class table implements renderable, templatable {
      * @return array
      */
     public function export_for_template(renderer_base $output) {
+        return $this->return_as_list();
+    }
+
+    public function return_as_list() {
         global $CFG;
+
         $data = [
             'idstring' => $this->idstring,
             'uniqueid' => $this->uniqueid,
