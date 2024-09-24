@@ -603,10 +603,8 @@ class demo implements renderable, templatable {
         $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
         $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
 
-        // $standardfilter = new standardfilter('username',  get_string('username'));
-        // $table->add_filter($standardfilter);
-        // $standardfilter = new standardfilter('firstname',  get_string('firstname'));
-        // $table->add_filter($standardfilter);
+        $standardfilter = new standardfilter('firstname',  get_string('firstname'));
+        $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('lastname',  get_string('lastname'));
         $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('email', get_string('email'));
