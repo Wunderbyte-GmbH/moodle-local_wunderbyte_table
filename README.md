@@ -223,7 +223,7 @@ For columns that contain date and time values (as Unix timestamp) you can enable
     );
     $table->add_filter($datepicker);
 
-### datepicker filter
+### Datepicker filter
 A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after' and 'flexoverlap'.
 "Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan. "Flexoverlap" will include all kinds of overlaping: overlapping the beginning, the end, both sides or within.
 The possibleoperations array is containing a whitelist, if none specified, all are applied.
@@ -253,6 +253,14 @@ Example of a filter json for this:
 
     $hourslistfilter = new hourlist('timemodified', get_string('hourlastmodified', 'local_wunderbyte_table'));
     $table->add_filter($hourslistfilter);
+
+### Intrange Filter
+The intrange filter takes the values of a column, filters the given integers (> 0) and allows to display records from within a range.
+Values entered in "From"-field work the minium value, values entered in "To"-field will be maximum.
+All characters different than 0-9 are ignored.
+
+        $intrangefilter = new intrange('coursenumber', get_string('filterforcoursenumber', 'my_plugin'));
+        $table->add_filter($intrangefilter);
 
 ### Exploding strings for columns storing multiple values
 The filter function also supports columns with multiple values stored as string with a separator.
