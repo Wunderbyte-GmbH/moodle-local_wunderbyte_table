@@ -351,7 +351,7 @@ abstract class base {
     public function apply_filter(
         string &$filter,
         string $columnname,
-        mixed $categoryvalue,
+        $categoryvalue,
         wunderbyte_table &$table
     ): void {
         return;

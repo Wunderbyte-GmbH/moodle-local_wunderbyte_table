@@ -850,7 +850,7 @@ class table implements renderable, templatable {
                     $filter = new $filterclass($tempfiltercolumn, $potentialfiltercolumn['name']);
                     $filter::prepare_filter_for_rendering($tableobject, $filterarray, $tokey);
                     // TODO: Migrate these functions to the concerned filter classes and get rid of the following condition.
-                    if (str_contains($potentialfiltercolumn['wbfilterclass'], 'intrange')) {
+                    if (strpos($potentialfiltercolumn['wbfilterclass'], 'intrange') !== false) {
                         continue;
                     }
 
