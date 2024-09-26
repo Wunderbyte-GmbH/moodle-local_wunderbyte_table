@@ -55,32 +55,55 @@
 }}
 {{#filter}}
     {{#categories}}
-        <div class="w-100" data-type="wb-filterview">
+        <div class="w-100 wrapfilter" data-type="wb-filterview">
             <div class="container py-80 ">
                 <div class="container" id="accordion-{{index}}">
+                <h2 class="lexa-h2" style="margin-bottom: 48px">Themen nach Kategorie</h2>
                     <div class="row">
-                    {{#hierarchy}}
                     <div class="col-lg-6">
-                        <div>
-                        <div class="category-item" type="button" data-toggle="collapse" data-target="#collapse-{{index}}" aria-expanded="false" aria-controls="collapse-{{index}}" style="width: 100%; text-decoration: none;">
-                                <h4>{{label}}</h4>
+                                        {{#lefthierarchy}}
+                        <div class="singlehierarchy">
+                        <div class="category-item d-flex" type="button" data-toggle="collapse" data-target="#collapse-{{index}}" aria-expanded="false" aria-controls="collapse-{{index}}" style="width: 100%; text-decoration: none;">
+                                <h4 class="lexa-h4">{{label}}</h4>
 
-                                <h4>
-                                <i class="fas fa-calendar-alt category-icon text-primary"></i>
+                                <h4 class="ml-auto lexa-h4">
+                                <img class="mr-2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIVSURBVHgBrVU7LARRFL0jI7GK2fgUfiNBQrGrWwViGwm2QkUpESNRkAgdGlRoFIptqHwan8Y3FCuh0EjMSEgQNoTEb1eChGTd+5ax5j27EnOS2Uzue/fceefcd1e6eXyKgAWja8ewbFzDVrcX4sEzvAlaVQFo3kJuLUmUELx/hvDLGyRCvH0y/ehXIdAvw2bw4iGaMLsXhEQ4uAqb+5yOZHxkqCjKBEmb2o34t8/ATvTUFIMErdMRnzsLBhtc5sLAosG+ZKGjPC6BZ2gT2lHfNm+BGSN/6ARMCiJW01LNxbw0B5yjHLExERQ8upIi/9inYi5BFiX01JaA9gfzqGtIVxGExFETxAmxUNN/PxHTmI7kTElM9BeEXt9YR7EvducqkP+pzX+ho+n65Sdxs0eFpjIV7MDo2hG7E0l8xRCs6Ndcws7JLVsTxYPYQVZwxF0z+9AyuYdVv0lCqFnjxC5UjwVQv/cY0jsWp8cKrit8pdnM7diuoHcaNDQbFMd3iitHgcqiDKjDnITEdB1FGKx3cTEqON9RIdwvnG52gCNeRePmBFONYqK4P3AqNJuTom/JYFqSfu5cJ4uReZ2z++zd5842dTawS/pxP3lC8yYuMWlpYJN/kRJIy+j0kyzmOaEX54oiuP58V2Bla3WCVsX//RB+M1umav7AGTu+HVgxblAaB0jjG4eRkfUjJH4BO0AfOoSyfQCffsc0IwCt1QAAAABJRU5ErkJggg==" alt="Base64 Icon">
                                 <span class="category-count text-primary">{{count}}</span>
-                                <i class="fa fa-chevron-down ml-2 text-primary" id="icon-{{index}}"></i>
+                                <i class="fa fa-chevron-down ml-2" id="icon-{{index}}"></i>
                                 </h4>
                         </div>
                         <div id="collapse-{{index}}" class="collapse" aria-labelledby="heading-{{index}}">
                             <ul class="list-unstyled event-list">
                                 {{#values}}
-                                <li><a href="#">{{key}}</a><span class="event-count">{{count}} Veranstaltungen</span></li>
+                                <li class="d-flex"><a href='{{baseurl}}&wbtfilter={"{{columnname}}":["{{value}}"]}' class="lexa-b1 text-underline">{{key}}</a><span class="event-count ml-auto lexa-info">{{count}} Veranstaltungen</span></li>
                                 {{/values}}
                             </ul>
                         </div>
                         </div>
+                         {{/lefthierarchy}}
                     </div>
-                    {{/hierarchy}}
+                    <div class="col-lg-6">
+                    {{#righthierarchy}}
+                               <div class="singlehierarchy">
+                        <div class="category-item d-flex" type="button" data-toggle="collapse" data-target="#collapse-{{index}}" aria-expanded="false" aria-controls="collapse-{{index}}" style="width: 100%; text-decoration: none;">
+                                <h4 class="lexa-h4">{{label}}</h4>
+
+                                <h4 class="ml-auto lexa-h4">
+                                <img class="mr-2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIVSURBVHgBrVU7LARRFL0jI7GK2fgUfiNBQrGrWwViGwm2QkUpESNRkAgdGlRoFIptqHwan8Y3FCuh0EjMSEgQNoTEb1eChGTd+5ax5j27EnOS2Uzue/fceefcd1e6eXyKgAWja8ewbFzDVrcX4sEzvAlaVQFo3kJuLUmUELx/hvDLGyRCvH0y/ehXIdAvw2bw4iGaMLsXhEQ4uAqb+5yOZHxkqCjKBEmb2o34t8/ATvTUFIMErdMRnzsLBhtc5sLAosG+ZKGjPC6BZ2gT2lHfNm+BGSN/6ARMCiJW01LNxbw0B5yjHLExERQ8upIi/9inYi5BFiX01JaA9gfzqGtIVxGExFETxAmxUNN/PxHTmI7kTElM9BeEXt9YR7EvducqkP+pzX+ho+n65Sdxs0eFpjIV7MDo2hG7E0l8xRCs6Ndcws7JLVsTxYPYQVZwxF0z+9AyuYdVv0lCqFnjxC5UjwVQv/cY0jsWp8cKrit8pdnM7diuoHcaNDQbFMd3iitHgcqiDKjDnITEdB1FGKx3cTEqON9RIdwvnG52gCNeRePmBFONYqK4P3AqNJuTom/JYFqSfu5cJ4uReZ2z++zd5842dTawS/pxP3lC8yYuMWlpYJN/kRJIy+j0kyzmOaEX54oiuP58V2Bla3WCVsX//RB+M1umav7AGTu+HVgxblAaB0jjG4eRkfUjJH4BO0AfOoSyfQCffsc0IwCt1QAAAABJRU5ErkJggg==" alt="Base64 Icon">
+                                <span class="category-count text-primary">{{count}}</span>
+                                <i class="fa fa-chevron-down ml-2" id="icon-{{index}}"></i>
+                                </h4>
+                        </div>
+                        <div id="collapse-{{index}}" class="collapse" aria-labelledby="heading-{{index}}">
+                            <ul class="list-unstyled event-list">
+                                {{#values}}
+                                <li class="d-flex"><a href='{{baseurl}}&wbtfilter={"{{columnname}}":["{{value}}"]}' class="lexa-b1 text-underline">{{key}}</a><span class="event-count ml-auto lexa-info">{{count}} Veranstaltungen</span></li>
+                                {{/values}}
+                            </ul>
+                        </div>
+                        </div>
+                     {{/righthierarchy}}
+                    </div>
                     </div>
                 </div>
             </div>

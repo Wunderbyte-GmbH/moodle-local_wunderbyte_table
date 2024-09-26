@@ -91,7 +91,7 @@ class table implements renderable, templatable {
     private $pagination = [];
 
     /**
-     * Categories are used for filter
+     * categories are used for filter
      *
      * @var array
      */
@@ -950,6 +950,8 @@ class table implements renderable, templatable {
      */
     public function filter_filter($onlyfilterforcolumns = []) {
         if (!empty($onlyfilterforcolumns)) {
+            $lefthierarchy = [];
+            $righthierarchy = [];
             foreach ($this->categories['categories'] as $key => $value) {
                 if (
                     $value["columnname"] !== 'id'
@@ -959,6 +961,19 @@ class table implements renderable, templatable {
                 }
             }
             $this->categories['categories'] = array_values($this->categories['categories']);
+            foreach ($this->categories['categories'] as $catkey => $category) {
+                $left = true;
+                foreach ($category['hierarchy'] as $value) {
+                    if ($left) {
+                        $lefthierarchy[] = $value;
+                    } else {
+                        $righthierarchy[] = $value;
+                    }
+                    $left = !$left;
+                }
+                $this->categories['categories'][$catkey]['lefthierarchy'] = array_values($lefthierarchy);
+                $this->categories['categories'][$catkey]['righthierarchy'] = array_values($righthierarchy);
+            }
         }
     }
 }

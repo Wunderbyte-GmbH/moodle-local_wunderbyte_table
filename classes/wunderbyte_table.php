@@ -459,6 +459,7 @@ class wunderbyte_table extends table_sql {
         $tableobject = $this->printtable($pagesize, $useinitialsbar);
 
         $tableobject->filter_filter($onlyfilters);
+
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         return $output->render_table($tableobject, $component . "/" . $template);
     }
