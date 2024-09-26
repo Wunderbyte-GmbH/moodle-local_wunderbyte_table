@@ -1332,7 +1332,7 @@ class wunderbyte_table extends table_sql {
                 // TODO: Use apply_filter method for all other filter types.
                 // Eventually we will get rid of the following section.
                 // ... for the moment, make sure to escape it for classes already implementing the new way.
-                if (strpos($classname, "intrange")) {
+                if (strpos($classname, "intrange") || strpos($classname, "standard")) {
                     $filter .= " ) ";
                     continue;
                 }
@@ -1372,30 +1372,6 @@ class wunderbyte_table extends table_sql {
                             $paramsvaluekey = $this->set_params((string) $value, false);
                             $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
                         }
-                    } else {
-
-                        // We want to find the value in an array of values.
-                        // Therefore, we have to use or as well.
-                        // First, make sure we have enough params we can use..
-
-                        $filter .= " ( ";
-                        $paramsvaluekey = $this->set_params($value, true);
-                        $escapecharacter = self::return_escape_character($value);
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
-
-                        $filter .= " OR ";
-                        $paramsvaluekey = $this->set_params($value . ",%", true);
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
-
-                        $filter .= " OR ";
-                        $paramsvaluekey = $this->set_params("%," . $value, true);
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
-
-                        $filter .= " OR ";
-                        $paramsvaluekey = $this->set_params("%," . $value . ",%", true);
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false, false, false, $escapecharacter);
-
-                        $filter .= " ) ";
                     }
                     $categorycounter++;
                 }
@@ -1712,7 +1688,7 @@ class wunderbyte_table extends table_sql {
      * @param string $paramvalue
      * @return string
      */
-    private static function return_escape_character($paramvalue) {
+    public static function return_escape_character($paramvalue) {
 
         $values = ['\\', '@', '~', '[', ']'];
 

@@ -24,6 +24,7 @@
 
 namespace local_wunderbyte_table\filters\types;
 use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\wunderbyte_table;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -45,6 +46,54 @@ class standardfilter extends base {
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }
+    }
+
+    /**
+     * Apply the filter of standardfilter class.
+     *
+     * @param string $filter
+     * @param string $columnname
+     * @param mixed $categoryvalue
+     * @param wunderbyte_table $table
+     *
+     * @return void
+     *
+     */
+    public function apply_filter(
+        string &$filter,
+        string $columnname,
+        $categoryvalue,
+        wunderbyte_table &$table
+    ): void {
+        global $DB;
+        $filtercounter = 1;
+        $filter .= " ( ";
+        foreach ($categoryvalue as $key => $value) {
+            // We want to find the value in an array of values.
+            // Therefore, we have to use or as well.
+            // First, make sure we have enough params we can use..
+            $filter .= $filtercounter == 1 ? "" : " OR ";
+            $filter .= " ( ";
+            $paramsvaluekey = $table->set_params($value, true);
+            $escapecharacter = wunderbyte_table::return_escape_character($value);
+            $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
+
+            $filter .= " OR ";
+            $paramsvaluekey = $table->set_params($value . ",%", true);
+            $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
+
+            $filter .= " OR ";
+            $paramsvaluekey = $table->set_params("%," . $value, true);
+            $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
+
+            $filter .= " OR ";
+            $paramsvaluekey = $table->set_params("%," . $value . ",%", true);
+            $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
+
+            $filter .= " ) ";
+            $filtercounter ++;
+        }
+        $filter .= " ) ";
     }
 
 }
