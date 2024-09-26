@@ -156,3 +156,4 @@ $string['ymmcns'] = '+Modal, MultipleCall, NoSelection';
 $string['ymmcys'] = '+Modal, MultipleCall, Selection';
 $string['ymscns'] = '+Modal, SingleCall, NoSelection';
 $string['ymscys'] = '+Modal, SingleCall, Selection';
+$string['themennachkategorie'] = 'Topics by Category';

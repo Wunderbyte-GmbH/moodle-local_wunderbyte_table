@@ -153,3 +153,4 @@ $string['ymmcns'] = 'Modal, mehrere Requests, keine Checkbox Auswahl';
 $string['ymmcys'] = 'Modal, mehrere Requests, Checkbox Auswahl';
 $string['ymscns'] = 'Modal, ein Request, keine Checkbox Auswahl';
 $string['ymscys'] = 'Modal, ein Request, Checkbox Auswahl';
+$string['themennachkategorie'] = 'Themen nach Kategorie';
