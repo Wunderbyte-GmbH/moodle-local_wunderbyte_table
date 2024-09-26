@@ -1,3 +1,20 @@
+## Version 2.0.15 (2024092600)
+* New Feature: filtertype intrange
+
+## Version 2.0.14 (2024092300)
+* Improvement: possibility to allow searchbutton in template
+
+## Version 2.0.13 (2024091000)
+* Improvement: make filters able to break line
+
+## Version 2.0.12 (2024090300)
+* Bugfix: Make sure that current filter state is also noticed by js. Support for hierarchical filters on url output
+* Bugfix: Delete last href call to anchor, which led to jump in page
+
+## Version 2.0.11 (2024081900)
+* New Feature: Show counter for checked filters directly on the label
+* Improvement: Sort strings alphabetically.
+
 ## Version 2.0.10 (2024071900)
 * Bugfix: Revert changes for node replacement in init.js.
 
