@@ -67,7 +67,16 @@ export const init = (idstring, encodedtable) => {
         checkInTable(idstring, encodedtable);
     }
 
-    if (Object.keys(queries).length > 1) {
+    // Check if there is more than 1 tables, excluding tables created because of search.
+    let counter = 0;
+    Object.entries(queries).forEach(([, value]) => {
+        if (value.searchtext === null || value.searchtext === "") {
+            // eslint-disable-next-line no-console
+            console.log("more tables found");
+            counter++;
+        }
+    });
+    if (counter > 1) {
         moreThanOneTable = true;
     }
 
