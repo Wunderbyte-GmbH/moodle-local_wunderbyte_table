@@ -621,7 +621,7 @@ class table implements renderable, templatable {
             'filter' => $this->categories ?? null,
             'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
             'showrowcountselect' => $this->showcountselect(),
-            'showfitlerontop' => $this->showfilterontop,
+            'showfilterontop' => $this->showfilterontop,
             'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
             'showspinner' => true,
             ];
