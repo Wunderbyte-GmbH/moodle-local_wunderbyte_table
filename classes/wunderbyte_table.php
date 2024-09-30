@@ -345,6 +345,12 @@ class wunderbyte_table extends table_sql {
     public $paramcounter = 1;
 
     /**
+     * Searchtext to be applied.
+     * @var string
+     */
+    public $searchtext = '';
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
@@ -1293,6 +1299,7 @@ class wunderbyte_table extends table_sql {
                 }
             }
             $searchtext = trim($remainingstring);
+            $this->searchtext = $searchtext;
         }
         // If we don't get filter values to apply from searchtext or filter, end of function.
         if (isset($initialsearchtext)) {
@@ -1450,7 +1457,7 @@ class wunderbyte_table extends table_sql {
         if (empty($searchtext)) {
             throw new moodle_exception('invalidsearchtext', 'local_wunderbyte_table');
         }
-
+        $this->searchtext = $searchtext;
         $this->setup_fulltextsearch();
 
         // Add the fields/Select to the FROM part.

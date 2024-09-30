@@ -322,7 +322,7 @@ class table implements renderable, templatable {
         if (!empty($table->fulltextsearchcolumns)) {
             $this->search = true;
         }
-
+        $this->searchtext = $table->searchtext;
         // To get the current sortcolum, we need to get the user prefs.
         $prefs = $SESSION->flextable[$table->uniqueid] ?? [];
         $sortcolumns = isset($prefs['sortby']) ? array_slice($prefs['sortby'], 0, 1) : [];
@@ -933,22 +933,42 @@ class table implements renderable, templatable {
                 }
             }
         }
+        $this->add_readable_info_about_filter_and_search($filtercountarray, $table);
+        $categories['categories'] = $tableobject;
+        return $categories;
+    }
 
+    /**
+     * Create string with human readable informations and add it to $this->filtercountstring.
+     *
+     * @param mixed $filtercountarray
+     *
+     * @return void
+     *
+     */
+    private function add_readable_info_about_filter_and_search($filtercountarray, $table) {
         // We collect human readable informations about applied filters.
         $filtercolumns = implode(', ', array_keys($filtercountarray));
         $filtersum = array_sum($filtercountarray);
-
+        $string = "";
         if ($filtersum > 0) {
-            $this->filtercountstring = get_string('filtercountmessage',
+            $string .= " | " .
+            get_string('filtercountmessage',
             'local_wunderbyte_table',
                 (object)[
                     'filtercolumns' => $filtercolumns,
                     'filtersum' => $filtersum,
                 ]);
         }
-
-        $categories['categories'] = $tableobject;
-        return $categories;
+        if (!empty($table->searchtext)) {
+            if (!empty($string)) {
+                $string .= " & ";
+            } else {
+                $string .= " | ";
+            }
+            $string .= get_string('searchcountmessage', 'local_wunderbyte_table', $table->searchtext);
+        }
+        $this->filtercountstring = $string . " | ";
     }
 
     /**
