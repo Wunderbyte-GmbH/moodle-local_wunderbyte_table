@@ -585,10 +585,10 @@ class table implements renderable, templatable {
     }
 
     /**
-     * Prepare data for use in a template
+     * Prepare data and return it as a list.
      *
-     * @param renderer_base $output
      * @return array
+     *
      */
     public function return_as_list() {
         global $CFG;
