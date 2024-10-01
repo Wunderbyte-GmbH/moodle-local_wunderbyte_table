@@ -841,7 +841,7 @@
 
 .month-list.hide {
     animation: to-right 1s forwards;
-    visibility: none;
+    visibility: hidden;
     pointer-events: none;
 }
 

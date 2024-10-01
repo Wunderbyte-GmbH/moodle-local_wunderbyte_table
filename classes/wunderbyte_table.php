@@ -478,7 +478,6 @@ class wunderbyte_table extends table_sql {
      * @param int $pagesize
      * @param bool $useinitialsbar
      * @param string $downloadhelpbutton
-     * @param array $onlyfilters
      * @return string
      */
     public function calendarouthtml($pagesize, $useinitialsbar, $downloadhelpbutton = '') {

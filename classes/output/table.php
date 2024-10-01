@@ -950,6 +950,7 @@ class table implements renderable, templatable {
      * Create string with human readable informations and add it to $this->filtercountstring.
      *
      * @param mixed $filtercountarray
+     * @param mixed $table
      *
      * @return void
      *
