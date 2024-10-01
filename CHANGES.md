@@ -1,3 +1,8 @@
+## Version 2.0.16 (2024100100)
+* Improvement: filterview with two columns
+* Bugfix: Apply filter to url for tables with search
+* Bugfix: write searchtext into search field on reload via url
+
 ## Version 2.0.15 (2024092600)
 * New Feature: filtertype intrange
 
