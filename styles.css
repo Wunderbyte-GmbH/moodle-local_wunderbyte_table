@@ -665,32 +665,32 @@
 
 }
 
-.calendar {
+.wunderbyte_table_calendar .calendar {
     height: 22rem;
     width: fit-content;
     background-color: white;
-    border-radius: 0px;
+    border-radius: 0;
     border: 1px solid black;
     overflow: hidden;
-    padding: 5px 5px 0px 5px;
+    padding: 5px 5px 0 5px;
     margin-bottom: 2rem;
 }
 
-.highlight-date {
-    font-weight: bold !important;
+.wunderbyte_table_calendar .calendar-days .highlight-date {
+    font-weight: bold;
     text-decoration: underline;
     /* Example text color */
 }
 
-.calendar {
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+.wunderbyte_table_calendar .calendar {
+    box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
 }
 
-.calendar-header {
+.wunderbyte_table_calendar .calendar-header {
     background: white;
     display: flex;
     justify-content: space-between;
-    border-radius: 0px;
+    border-radius: 0;
     align-items: center;
     font-weight: 700;
     color: black;
@@ -699,11 +699,11 @@
 
 }
 
-.calendar-body {
+.wunderbyte_table_calendar .calendar-body {
     padding: 10px;
 }
 
-.calendar-week-days {
+.wunderbyte_table_calendar .calendar-week-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     font-weight: 600;
@@ -711,27 +711,27 @@
     color: white;
 }
 
-.calendar-week-days div:hover {
+.wunderbyte_table_calendar .calendar-week-days div:hover {
     color: black;
     transform: scale(1.2);
     transition: all .2s ease-in-out;
 }
 
-.calendar-week-days div {
+.wunderbyte_table_calendar .calendar-week-days div {
     display: grid;
     place-items: center;
     color: black;
     height: 50px;
 }
 
-.calendar-days {
+.wunderbyte_table_calendar .calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
-    color: #0A0921;
+    color: #0a0921;
 }
 
-.calendar-days div {
+.wunderbyte_table_calendar .calendar-days div {
     width: 37px;
     height: 33px;
     display: flex;
@@ -746,34 +746,34 @@
     font-weight: 300;
 }
 
-.month-picker {
+.wunderbyte_table_calendar .month-picker {
     padding: 5px 10px;
     border-radius: 10px;
     cursor: pointer;
 }
 
-.year-picker {
+.wunderbyte_table_calendar .year-picker {
     display: flex;
     align-items: center;
 }
 
-.year-change {
+.wunderbyte_table_calendar .year-change {
     height: 30px;
     width: 30px;
     border-radius: 50%;
     display: grid;
     place-items: center;
-    margin: 0px 10px;
+    margin: 0 10px;
     cursor: pointer;
 }
 
-.year-change:hover {
+.wunderbyte_table_calendar .year-change:hover {
     background-color: #9796f0;
     transition: all .2s ease-in-out;
     transform: scale(1.12);
 }
 
-.calendar-footer {
+.wunderbyte_table_calendar .calendar-footer {
     padding: 10px;
     display: flex;
     justify-content: flex-end;
@@ -783,27 +783,21 @@
 #year:hover {
     cursor: pointer;
     transform: scale(1.2);
-    transition: all 0.2 ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
-.calendar-days div span {
+.wunderbyte_table_calendar .calendar-days div span {
     position: absolute;
 }
 
-.calendar-days div:hover {
+.wunderbyte_table_calendar .calendar-days div:hover {
     transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
     background-color: #0063a678;
     /* border-radius: 20%; */
     color: #f8fbff;
 }
 
-.calendar-days div.current-date {
-    /* color: #f8fbff;
-    background-color: #9796f0;
-    border-radius: 20%; */
-}
-
-.month-list {
+.wunderbyte_table_calendar .month-list {
     position: relative;
     left: 0;
     bottom: 180px;
@@ -815,34 +809,33 @@
     border-radius: 20px;
 }
 
-.month-list>div {
+.wunderbyte_table_calendar .month-list > div {
     display: grid;
     place-content: center;
     /* margin: 5px 10px; */
     transition: all 0.2s ease-in-out;
 }
 
-.month-list>div>div {
+.wunderbyte_table_calendar .month-list > div > div {
     border-radius: 15px;
     padding: 10px;
     cursor: pointer;
 }
 
-.month-list>div>div:hover {
-    background-color: var();
+.wunderbyte_table_calendar .month-list > div > div:hover {
     color: #f8fbff;
     transform: scale(0.9);
     transition: all 0.2s ease-in-out;
 }
 
-.month-list.show {
+.wunderbyte_table_calendar .month-list.show {
     visibility: visible;
     pointer-events: visible;
     transition: 0.6s ease-in-out;
     animation: to-left .71s forwards;
 }
 
-.month-list.hideonce {
+.wunderbyte_table_calendar .month-list.hideonce {
     visibility: hidden;
 }
 
@@ -852,7 +845,7 @@
     pointer-events: none;
 }
 
-.date-time-formate {
+.wunderbyte_table_calendar .date-time-formate {
     height: 4rem;
     width: 100%;
     font-family: Dubai Light, Century Gothic;
@@ -863,49 +856,49 @@
     align-items: center;
 }
 
-.day-text-formate {
+.wunderbyte_table_calendar .day-text-formate {
     font-family: Microsoft JhengHei UI;
     font-size: 1.4rem;
     padding-right: 5%;
     border-right: 3px solid #9796f0;
 }
 
-.date-time-value {
+.wunderbyte_table_calendar .date-time-value {
     display: block;
     position: relative;
     text-align: center;
     padding-left: 5%;
 }
 
-.time-formate {
+.wunderbyte_table_calendar .time-formate {
     font-size: 1.5rem;
 }
 
-.time-formate.hideTime {
+.wunderbyte_table_calendar .time-formate.hideTime {
     animation: hidetime 1.5s forwards;
 }
 
-.day-text-formate.hidetime {
+.wunderbyte_table_calendar .day-text-formate.hidetime {
     animation: hidetime 1.5s forwards;
 }
 
-.date-formate.hideTime {
+.wunderbyte_table_calendar .date-formate.hideTime {
     animation: hidetime 1.5s forwards;
 }
 
-.day-text-formate.showtime {
+.wunderbyte_table_calendar .day-text-formate.showtime {
     animation: showtime 1s forwards;
 }
 
-.time-formate.showtime {
+.wunderbyte_table_calendar .time-formate.showtime {
     animation: showtime 1s forwards;
 }
 
-.date-formate.showtime {
+.wunderbyte_table_calendar .date-formate.showtime {
     animation: showtime 1s forwards;
 }
 
-.year-change pre {
+.wunderbyte_table_calendar .year-change pre {
     margin: 0;
 }
 
@@ -923,48 +916,48 @@
 
 @keyframes to-left {
     0% {
-        transform: translatex(230%);
+        transform: translateX(230%);
         opacity: 1;
     }
 
     100% {
-        transform: translatex(0);
+        transform: translateX(0);
         opacity: 1;
     }
 }
 
 @keyframes to-right {
     10% {
-        transform: translatex(0);
+        transform: translateX(0);
         opacity: 1;
     }
 
     100% {
-        transform: translatex(-150%);
+        transform: translateX(-150%);
         opacity: 1;
     }
 }
 
 @keyframes showtime {
     0% {
-        transform: translatex(250%);
+        transform: translateX(250%);
         opacity: 1;
     }
 
     100% {
-        transform: translatex(0%);
+        transform: translateX(0%);
         opacity: 1;
     }
 }
 
 @keyframes hidetime {
     0% {
-        transform: translatex(0%);
+        transform: translateX(0%);
         opacity: 1;
     }
 
     100% {
-        transform: translatex(-370%);
+        transform: translateX(-370%);
         opacity: 1;
     }
 }
