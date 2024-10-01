@@ -245,11 +245,18 @@ class table implements renderable, templatable {
     private $pagesize = 10;
 
     /**
-     * Errormessage
+     * Info about filter applied.
      *
      * @var string
      */
     private $filtercountstring = '';
+
+    /**
+     * Searchtext.
+     *
+     * @var string
+     */
+    public $searchtext = '';
 
     /**
      * Constructor.
@@ -609,6 +616,7 @@ class table implements renderable, templatable {
                     'filteredrecords' => $this->totalrows,
                 ]),
             'filtercount' => $this->filtercountstring,
+            'searchtext' => $this->searchtext,
             'searchtextapplied' => $this->search,
             'pages' => $this->pagination['pages'] ?? null,
             'disableprevious' => $this->pagination['disableprevious'] ?? null,

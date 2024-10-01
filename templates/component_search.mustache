@@ -28,6 +28,7 @@
     {
        "search": true,
        "uniqueid": "fdaskjfdj"
+       "searchtext": "adminuser"
     }
 
 }}
@@ -35,6 +36,6 @@
 {{#search}}
     <div class="wunderbyteTableSearch text-right align-bottom" style="display:inline-flex;">
         <i class="{{searchiconclasses}} text-primary" aria-hidden="true"></i>
-        <input class="search form-control" name="search-{{uniqueid}}" placeholder="{{#str}} search, local_wunderbyte_table {{/str}}">
+        <input class="search form-control" name="search-{{uniqueid}}" placeholder="{{#str}} search, local_wunderbyte_table {{/str}}" value="{{searchtext}}">
     </div>
 {{/search}}
