@@ -351,6 +351,12 @@ class wunderbyte_table extends table_sql {
     public $searchtext = '';
 
     /**
+     * Show pagination
+     * @var string
+     */
+    public $showpagination = true;
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS

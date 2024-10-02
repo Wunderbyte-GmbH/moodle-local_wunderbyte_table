@@ -466,7 +466,9 @@ class table implements renderable, templatable {
 
         // Create pagination data.
         // We show ellipsis if there are more than the specified number of pages.
-        if ($table->use_pages && $table->infinitescroll == 0) {
+        if (!$table->showpagination) {
+            $this->pagination['nopages'] = 'nopages';
+        } else if ($table->use_pages && $table->infinitescroll == 0) {
             $pages = [];
             $numberofpages = ceil($table->totalrows / $table->pagesize);
             if ($numberofpages < 2) {
@@ -623,7 +625,7 @@ class table implements renderable, templatable {
             'disablenext' => $this->pagination['disablenext'] ?? null,
             'previouspage' => $this->pagination['previouspage'] ?? null,
             'nextpage' => $this->pagination['nextpage'] ?? null,
-            'nopages' => $this->pagination['nopages'] ?? null,
+            'nopages' => $this->pagination['nopages'] === 'nopages' ? true : false,
             'infinitescroll' => $this->pagination['infinitescroll'] ?? null,
             'sesskey' => sesskey(),
             'filter' => $this->categories ?? null,
