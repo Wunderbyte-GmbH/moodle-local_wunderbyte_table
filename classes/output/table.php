@@ -625,7 +625,7 @@ class table implements renderable, templatable {
             'disablenext' => $this->pagination['disablenext'] ?? null,
             'previouspage' => $this->pagination['previouspage'] ?? null,
             'nextpage' => $this->pagination['nextpage'] ?? null,
-            'nopages' => $this->pagination['nopages'] === 'nopages' ? true : false,
+            'nopages' => ($this->pagination['nopages'] ?? '') === 'nopages' ? true : false,
             'infinitescroll' => $this->pagination['infinitescroll'] ?? null,
             'sesskey' => sesskey(),
             'filter' => $this->categories ?? null,
