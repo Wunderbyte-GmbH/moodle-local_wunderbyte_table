@@ -184,6 +184,16 @@ If you only have 0 for inactive and 1 for active, you can use
         1 => get_string('active', 'myplugin'),
     ]);
 
+### Suppressing values in a filter
+The filter function can also suppress given values. This is useful if you have a filter with a lot of values, but you only want to show a few of them. The other values will be hidden in the filter panel.
+
+You can define the suppression like this.
+
+    $standardfilter->add_options([
+        0 => 'wbt_suppress',
+        1 => get_string('active', 'myplugin'),
+    ]);
+
 ### Hierarchical filter
 The hierarchical filter will allow to order your results in a special way. Assume you have the following values: one, two, three, four, five, six in your database. They belong to three different categories. You can then add the filter like this:
 

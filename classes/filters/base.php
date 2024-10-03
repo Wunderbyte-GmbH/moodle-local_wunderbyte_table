@@ -293,6 +293,10 @@ abstract class base {
         }
 
         foreach ($values as $valuekey => $valuevalue) {
+            if ($filtersettings[$fckey][$valuevalue] === 'wbt_suppress') {
+                continue;
+            }
+
             $itemobject = [
                 // We do not want to show html entities, so replace &amp; with &.
                 'key' => str_replace("&amp;", "&", $valuekey),
