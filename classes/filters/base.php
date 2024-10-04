@@ -293,7 +293,11 @@ abstract class base {
         }
 
         foreach ($values as $valuekey => $valuevalue) {
-            if ($filtersettings[$fckey][$valuevalue] === 'wbt_suppress') {
+            if (
+                isset($filtersettings[$fckey])
+                && isset($filtersettings[$fckey][$valuevalue])
+                && $filtersettings[$fckey][$valuevalue] === 'wbt_suppress'
+            ) {
                 continue;
             }
 
