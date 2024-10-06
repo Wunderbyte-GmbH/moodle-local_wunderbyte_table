@@ -1226,7 +1226,7 @@ class wunderbyte_table extends table_sql {
             throw new moodle_exception('invalidfilterjson', 'local_wunderbyte_table');
         }
         if (!isset($filterobject)) {
-            $filterobject = new stdClass;
+            $filterobject = new stdClass();
         }
 
         $_POST['wbtfilter'] = $filter;
@@ -1237,7 +1237,7 @@ class wunderbyte_table extends table_sql {
                 $separator = ":";
                 $remainingstring = $searchtext;
                 // If the separator is in the searchstring, we check if we get params to apply as filter.
-                if (strpos($searchtext, $separator) !== false ) {
+                if (strpos($searchtext, $separator) !== false) {
                     $characterstoreplace = ["'", '„', '“'];
                     $replacements = ['"', '"', '"'];
                     $searchtext = str_replace($characterstoreplace, $replacements, $searchtext);
@@ -1345,38 +1345,38 @@ class wunderbyte_table extends table_sql {
 
             // In order to make sure we are dealing with real column names and no sql injection...
             // ... we check against column names.
-            if (!in_array($sc, array_keys($this->columns))
-                || !in_array($ec, array_keys($this->columns))) {
-                throw new moodle_exception('novalidcolumnname', 'local_wunderbyte_table');
+            if (
+                in_array($sc, array_keys($this->columns))
+                && in_array($ec, array_keys($this->columns))
+            ) {
+                $fparam = 'fparam';
+                $fcounter = 1;
+                while (isset($this->sql->params[$fparam . 'sf1' . $fcounter])) {
+                    $fcounter++;
+                }
+
+                $sfkey1 = $fparam . 'sf1' . $fcounter;
+                $sfkey2 = $fparam . 'sf2' . $fcounter;
+                $sfkey3 = $fparam . 'sf3' . $fcounter;
+
+                $this->sql->params[$sfkey1] = $sf;
+                $this->sql->params[$sfkey2] = $sf;
+                $this->sql->params[$sfkey3] = $sf;
+
+                $efkey1 = $fparam . 'ef1' . $fcounter;
+                $efkey2 = $fparam . 'ef2' . $fcounter;
+                $efkey3 = $fparam . 'ef3' . $fcounter;
+
+                $this->sql->params[$efkey1] = $ef;
+                $this->sql->params[$efkey2] = $ef;
+                $this->sql->params[$efkey3] = $ef;
+
+                $filter .= " AND (
+                    (:$sfkey1 <= $sc AND :$efkey1 >= $sc) OR
+                    (:$sfkey2 <= $ec AND :$efkey2 >= $ec) OR
+                    (:$sfkey3 >= $sc AND :$efkey3 <= $ec)
+                ) ";
             }
-
-            $fparam = 'fparam';
-            $fcounter = 1;
-            while (isset($this->sql->params[$fparam . 'sf1' . $fcounter])) {
-                $fcounter++;
-            }
-
-            $sfkey1 = $fparam . 'sf1' . $fcounter;
-            $sfkey2 = $fparam . 'sf2' . $fcounter;
-            $sfkey3 = $fparam . 'sf3' . $fcounter;
-
-            $this->sql->params[$sfkey1] = $sf;
-            $this->sql->params[$sfkey2] = $sf;
-            $this->sql->params[$sfkey3] = $sf;
-
-            $efkey1 = $fparam . 'ef1' . $fcounter;
-            $efkey2 = $fparam . 'ef2' . $fcounter;
-            $efkey3 = $fparam . 'ef3' . $fcounter;
-
-            $this->sql->params[$efkey1] = $ef;
-            $this->sql->params[$efkey2] = $ef;
-            $this->sql->params[$efkey3] = $ef;
-
-            $filter .= " AND (
-                (:$sfkey1 <= $sc AND :$efkey1 >= $sc) OR
-                (:$sfkey2 <= $ec AND :$efkey2 >= $ec) OR
-                (:$sfkey3 >= $sc AND :$efkey3 <= $ec)
-            ) ";
         }
 
         foreach ($filterobject as $categorykey => $categoryvalue) {
@@ -1388,6 +1388,10 @@ class wunderbyte_table extends table_sql {
 
                 $filtersetting = $filtersettings[$categorykey];
                 $classname = $filtersetting['wbfilterclass'];
+
+                if (empty($classname)) {
+                    continue;
+                }
 
                 $class = new $classname($categorykey, $filtersetting['localizedname']);
                 $class->apply_filter($filter, $categorykey, $categoryvalue, $this);
