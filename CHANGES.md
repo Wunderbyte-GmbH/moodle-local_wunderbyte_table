@@ -1,3 +1,11 @@
+## Version 2.0.18 (2024100700)
+* Bugfix: Don't throw an error just because a column is not supported by the datepicker.
+
+## Version 2.0.17 (2024100400)
+* Improvement: Support shownopagination
+* Improvement: Add suppress functionality
+* Bugfix: Avoid accessing missing key in array
+
 ## Version 2.0.16 (2024100100)
 * Improvement: filterview with two columns
 * Bugfix: Apply filter to url for tables with search
