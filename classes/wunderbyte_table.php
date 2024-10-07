@@ -1387,21 +1387,20 @@ class wunderbyte_table extends table_sql {
                 $categorycounter = 1;
 
                 $filtersetting = $filtersettings[$categorykey];
+                // For filters treating two columns (i.e. datepickers), this will return empty.
                 $classname = $filtersetting['wbfilterclass'];
 
-                if (empty($classname)) {
-                    continue;
-                }
+                if (!empty($classname)) {
+                    $class = new $classname($categorykey, $filtersetting['localizedname']);
+                    $class->apply_filter($filter, $categorykey, $categoryvalue, $this);
 
-                $class = new $classname($categorykey, $filtersetting['localizedname']);
-                $class->apply_filter($filter, $categorykey, $categoryvalue, $this);
-
-                // TODO: Use apply_filter method for all other filter types.
-                // Eventually we will get rid of the following section.
-                // ... for the moment, make sure to escape it for classes already implementing the new way.
-                if (strpos($classname, "intrange") || strpos($classname, "standard")) {
-                    $filter .= " ) ";
-                    continue;
+                    // TODO: Use apply_filter method for all other filter types.
+                    // Eventually we will get rid of the following section.
+                    // ... for the moment, make sure to escape it for classes already implementing the new way.
+                    if (strpos($classname, "intrange") || strpos($classname, "standard")) {
+                        $filter .= " ) ";
+                        continue;
+                    }
                 }
 
                 // We check if we are applying a timestamp comparison which is stored in an object.
