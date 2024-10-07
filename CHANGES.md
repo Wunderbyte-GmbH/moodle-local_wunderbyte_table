@@ -1,3 +1,7 @@
+## Version 2.0.19 (2024100701)
+* Bugfix for filters addressing two columns
+* Bugfix: fetch other data from event correctly
+
 ## Version 2.0.18 (2024100700)
 * Bugfix: Don't throw an error just because a column is not supported by the datepicker.
 
