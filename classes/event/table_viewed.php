@@ -24,6 +24,7 @@
  */
 
 namespace local_wunderbyte_table\event;
+use local_wunderbyte_table\event\wbtable_event_base;
 
 /**
  * A wunderbyte table is viewed.
@@ -33,7 +34,7 @@ namespace local_wunderbyte_table\event;
  * @author     Georg Maißer
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class table_viewed extends \core\event\base {
+class table_viewed extends wbtable_event_base {
 
     /**
      * Init method.
@@ -59,7 +60,8 @@ class table_viewed extends \core\event\base {
      */
     public function get_description() {
         $data = $this->get_data();
-        $tablename = $data['other']['tablename'];
+        $otherdata = $this->get_other_data();
+        $tablename = $otherdata->tablename;
         return get_string('table_viewed_desc', 'local_wunderbyte_table', $tablename);
     }
 }

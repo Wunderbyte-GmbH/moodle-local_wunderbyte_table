@@ -24,6 +24,7 @@
  */
 
 namespace local_wunderbyte_table\event;
+use local_wunderbyte_table\event\wbtable_event_base;
 
 /**
  * An action button in a wunderbyte table was pressed.
@@ -33,7 +34,7 @@ namespace local_wunderbyte_table\event;
  * @author     Georg Maißer
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class action_executed extends \core\event\base {
+class action_executed extends wbtable_event_base {
 
     /**
      * Init method.
@@ -58,10 +59,10 @@ class action_executed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        $data = $this->get_data();
+        $otherdata = $this->get_other_data();
         $params = (object)[
-            'tablename' => $data['other']['tablename'],
-            'methodname' => $data['other']['methodname'],
+            'tablename' => $otherdata->tablename,
+            'methodname' => $otherdata->methodname,
         ];
         return get_string('action_executed_desc', 'local_wunderbyte_table', $params);
     }
