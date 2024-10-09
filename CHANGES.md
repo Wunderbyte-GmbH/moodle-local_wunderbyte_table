@@ -1,3 +1,7 @@
+## Version 2.0.20 (2024100900)
+* Bugfix: Avoid pipe if no filter/searchtext is selected
+* Bugfix: Fallback for empty data in event
+
 ## Version 2.0.19 (2024100701)
 * Bugfix for filters addressing two columns
 * Bugfix: fetch other data from event correctly
