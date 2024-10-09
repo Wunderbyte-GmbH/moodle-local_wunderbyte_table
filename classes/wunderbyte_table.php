@@ -517,8 +517,12 @@ class wunderbyte_table extends table_sql {
 
         }
         $data['rowswithdates'] = json_encode($rowswithdates);
-        $allrows = $data['table']['rows'];
-        $data['table']['rows'] = array_slice($allrows, 0, 4);
+        if (isset($data['table']['rows'])) {
+            $allrows = $data['table']['rows'];
+            if ($allrows && count($allrows) > 0) {
+                $data['table']['rows'] = array_slice($allrows, 0, 4);
+            }
+        }
 
         return $OUTPUT->render_from_template($component . "/" . $template, $data);
 
