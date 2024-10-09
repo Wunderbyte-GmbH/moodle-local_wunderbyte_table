@@ -61,8 +61,8 @@ class action_executed extends wbtable_event_base {
     public function get_description() {
         $otherdata = $this->get_other_data();
         $params = (object)[
-            'tablename' => $otherdata->tablename,
-            'methodname' => $otherdata->methodname,
+            'tablename' => $otherdata->tablename ?? '',
+            'methodname' => $otherdata->methodname ?? '',
         ];
         return get_string('action_executed_desc', 'local_wunderbyte_table', $params);
     }
