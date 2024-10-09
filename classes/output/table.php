@@ -979,7 +979,10 @@ class table implements renderable, templatable {
             }
             $string .= get_string('searchcountmessage', 'local_wunderbyte_table', $table->searchtext);
         }
-        $this->filtercountstring = $string . " | ";
+        $this->filtercountstring = $string;
+        if (!empty($string)) {
+            $this->filtercountstring .= " | ";
+        }
     }
 
     /**
