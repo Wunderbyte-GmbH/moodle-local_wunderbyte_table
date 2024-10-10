@@ -69,29 +69,38 @@ class standardfilter extends base {
         $filtercounter = 1;
         $filter .= " ( ";
         foreach ($categoryvalue as $key => $value) {
-            // We want to find the value in an array of values.
-            // Therefore, we have to use or as well.
-            // First, make sure we have enough params we can use..
-            $filter .= $filtercounter == 1 ? "" : " OR ";
-            $filter .= " ( ";
-            $paramsvaluekey = $table->set_params($value, true);
-            $escapecharacter = wunderbyte_table::return_escape_character($value);
-            $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
+            // Apply special filter here.
+            if (isset($table->subcolumns['datafields'][$columnname]['explode'])
+                || isset($table->subcolumns['datafields'][$columnname]['jsonattribute'])) {
+                    $filter .= $filtercounter == 1 ? "" : " OR ";
+                    $paramsvaluekey = $table->set_params("%" . $value ."%");
+                    $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false);
+                    $filtercounter ++;
+            } else {
+                // We want to find the value in an array of values.
+                // Therefore, we have to use or as well.
+                // First, make sure we have enough params we can use..
+                $filter .= $filtercounter == 1 ? "" : " OR ";
+                $filter .= " ( ";
+                $paramsvaluekey = $table->set_params($value, true);
+                $escapecharacter = wunderbyte_table::return_escape_character($value);
+                $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
 
-            $filter .= " OR ";
-            $paramsvaluekey = $table->set_params($value . ",%", true);
-            $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
+                $filter .= " OR ";
+                $paramsvaluekey = $table->set_params($value . ",%", true);
+                $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
 
-            $filter .= " OR ";
-            $paramsvaluekey = $table->set_params("%," . $value, true);
-            $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
+                $filter .= " OR ";
+                $paramsvaluekey = $table->set_params("%," . $value, true);
+                $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
 
-            $filter .= " OR ";
-            $paramsvaluekey = $table->set_params("%," . $value . ",%", true);
-            $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
+                $filter .= " OR ";
+                $paramsvaluekey = $table->set_params("%," . $value . ",%", true);
+                $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
 
-            $filter .= " ) ";
-            $filtercounter ++;
+                $filter .= " ) ";
+                $filtercounter ++;
+            }
         }
         $filter .= " ) ";
     }

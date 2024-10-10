@@ -1426,10 +1426,6 @@ class wunderbyte_table extends table_sql {
 
                     if ($datecomparison == true) {
                         $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
-                    } else if (isset($this->subcolumns['datafields'][$categorykey]['explode'])
-                    || isset($this->subcolumns['datafields'][$categorykey]['jsonattribute'])) {
-                        $paramsvaluekey = $this->set_params("%" . $value ."%");
-                        $filter .= $DB->sql_like("$categorykey", ":$paramsvaluekey", false);
                     } else if (is_numeric($value)) {
 
                         // Here we check if it's an hourslist filter.
