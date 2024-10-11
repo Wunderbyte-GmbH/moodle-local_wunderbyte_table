@@ -1390,9 +1390,9 @@ class wunderbyte_table extends table_sql {
                 $filter .= " AND ( ";
                 $categorycounter = 1;
 
-                $filtersetting = $filtersettings[$categorykey];
+                $filtersetting = $filtersettings[$categorykey] ?? [];
                 // For filters treating two columns (i.e. datepickers), this will return empty.
-                $classname = $filtersetting['wbfilterclass'];
+                $classname = $filtersetting['wbfilterclass'] ?? "";
 
                 if (!empty($classname)) {
                     $class = new $classname($categorykey, $filtersetting['localizedname']);
