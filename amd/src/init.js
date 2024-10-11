@@ -61,7 +61,7 @@ export const SELECTORS = {
 export const init = (idstring, encodedtable) => {
 
     // eslint-disable-next-line no-console
-    console.log('init booking ' + idstring);
+    console.log('init booking ' + idstring, moreThanOneTable);
 
     if (!queries[idstring]) {
         checkInTable(idstring, encodedtable);
@@ -69,17 +69,11 @@ export const init = (idstring, encodedtable) => {
 
     // Check if there is more than 1 tables, excluding tables created because of search.
     let counter = 0;
-    Object.entries(queries).forEach(([, value]) => {
-        if (value.searchtext === null || value.searchtext === "") {
-            // eslint-disable-next-line no-console
-            console.log("more tables found");
-            counter++;
-        }
-    });
+    counter = Object.entries(queries).length;
+
     if (counter > 1) {
         moreThanOneTable = true;
     }
-
 
     if (idstring && encodedtable) {
 
