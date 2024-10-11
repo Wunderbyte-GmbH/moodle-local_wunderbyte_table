@@ -166,6 +166,7 @@ $string['timespan'] = 'Timespan';
 $string['to'] = 'To';
 $string['tuesday'] = 'Tue';
 $string['valuehastobeint'] = "Value has to be a number";
+$string['veranstaltungen'] = "Events";
 $string['wbtablefiltersettingsheader'] = 'Edit filters';
 $string['wbtabletablesettingsheader'] = 'More settings';
 $string['wednesday'] = 'Wed';

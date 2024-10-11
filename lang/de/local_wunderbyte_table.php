@@ -163,6 +163,7 @@ $string['timespan'] = 'Zeitspanne';
 $string['to'] = 'Bis';
 $string['tuesday'] = 'Di';
 $string['valuehastobeint'] = 'Wert muss eine Zahl sein';
+$string['veranstaltungen'] = "Veranstaltungen";
 $string['wbtablefiltersettingsheader'] = 'Filter anpassen';
 $string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';
 $string['wednesday'] = 'Mi';
