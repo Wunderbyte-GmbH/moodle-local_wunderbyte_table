@@ -1,3 +1,7 @@
+## Version 2.0.21 (2024101100)
+* Bugfix: Filter for json dataattributes
+* Bugfix: Fallback empty calendar
+
 ## Version 2.0.20 (2024100900)
 * Bugfix: Avoid pipe if no filter/searchtext is selected
 * Bugfix: Fallback for empty data in event
