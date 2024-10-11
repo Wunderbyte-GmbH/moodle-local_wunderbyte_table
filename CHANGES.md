@@ -1,3 +1,8 @@
+## Version 2.0.22 (2024101101)
+* Improvement: Added support for filterview mobile changes
+* Bugfix: Fix wrong calculation of morethanonetable
+* Bugfix: Fallback for empty variables in timespan filter
+
 ## Version 2.0.21 (2024101100)
 * Bugfix: Filter for json dataattributes
 * Bugfix: Fallback empty calendar
