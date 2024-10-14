@@ -591,6 +591,12 @@ export function getIntRange(e, selector, idstring) {
       alertelement.removeAttribute('hidden');
   } else {
       alertelement.setAttribute('hidden', 'true');
+
+      // Stripping leading zeros.
+      fromvalue = parseInt(fromvalue, 10);
+      fromvalue = fromvalue.toString();
+      tovalue = parseInt(tovalue, 10);
+      tovalue = tovalue.toString();
   }
 
   if (fromvalue.length > 0 || tovalue.length > 0) {
