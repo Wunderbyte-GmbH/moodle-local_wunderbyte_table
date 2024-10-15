@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+use local_wunderbyte_table\filter;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
 
@@ -69,18 +70,26 @@ class standardfilter extends base {
         $filtercounter = 1;
         $filter .= " ( ";
         foreach ($categoryvalue as $key => $value) {
+            $filter .= $filtercounter == 1 ? "" : " OR ";
             // Apply special filter here.
             if (isset($table->subcolumns['datafields'][$columnname]['explode'])
                 || isset($table->subcolumns['datafields'][$columnname]['jsonattribute'])) {
-                    $filter .= $filtercounter == 1 ? "" : " OR ";
                     $paramsvaluekey = $table->set_params("%" . $value ."%");
                     $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false);
-                    $filtercounter ++;
+            } else if (is_numeric($value)) {
+                // Here we check if it's an hourslist filter.
+                if (isset($table->subcolumns['datafields'][$columnname]['local_wunderbyte_table\filters\types\hourlist'])) {
+                    $paramsvaluekey = $table->set_params((string) ($value + $delta), false);
+                    $filter .= filter::apply_hourlist_filter($columnname, ":$paramsvaluekey");
+                    $delta = filter::get_timezone_offset();
+                } else {
+                    $paramsvaluekey = $table->set_params((string) $value, false);
+                    $filter .= $DB->sql_like($DB->sql_concat($columnname), ":$paramsvaluekey", false);
+                }
             } else {
                 // We want to find the value in an array of values.
                 // Therefore, we have to use or as well.
                 // First, make sure we have enough params we can use..
-                $filter .= $filtercounter == 1 ? "" : " OR ";
                 $filter .= " ( ";
                 $paramsvaluekey = $table->set_params($value, true);
                 $escapecharacter = wunderbyte_table::return_escape_character($value);
@@ -99,8 +108,8 @@ class standardfilter extends base {
                 $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
 
                 $filter .= " ) ";
-                $filtercounter ++;
             }
+            $filtercounter ++;
         }
         $filter .= " ) ";
     }

@@ -1424,21 +1424,7 @@ class wunderbyte_table extends table_sql {
                         $filter .= $categorycounter == 1 ? "" : " AND ";
                     }
 
-                    if ($datecomparison == true) {
-                        $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
-                    } else if (is_numeric($value)) {
-
-                        // Here we check if it's an hourslist filter.
-                        if (isset($this->subcolumns['datafields'][$categorykey]['local_wunderbyte_table\filters\types\hourlist'])) {
-                            $paramsvaluekey = $this->set_params((string) ($value + $delta), false);
-                            $filter .= filter::apply_hourlist_filter($categorykey, ":$paramsvaluekey");
-
-                            $delta = filter::get_timezone_offset();
-                        } else {
-                            $paramsvaluekey = $this->set_params((string) $value, false);
-                            $filter .= $DB->sql_like($DB->sql_concat($categorykey), ":$paramsvaluekey", false);
-                        }
-                    }
+                    $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
                     $categorycounter++;
                 }
                 $filter .= " ) ";
