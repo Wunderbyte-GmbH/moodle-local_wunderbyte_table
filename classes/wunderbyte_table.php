@@ -1398,7 +1398,7 @@ class wunderbyte_table extends table_sql {
                     $class = new $classname($categorykey, $filtersetting['localizedname']);
                     $class->apply_filter($filter, $categorykey, $categoryvalue, $this);
 
-                    // TODO: Use apply_filter method for all other filter types.
+                    // TODO: Use apply_filter method for the remaining filter type datepicker.
                     // Eventually we will get rid of the following section.
                     // ... for the moment, make sure to escape it for classes already implementing the new way.
                     if (strpos($classname, "intrange") || strpos($classname, "standard")) {
@@ -1407,22 +1407,10 @@ class wunderbyte_table extends table_sql {
                     }
                 }
 
-                // We check if we are applying a timestamp comparison which is stored in an object.
-                // TODO: Better check if its a datepicker.
-                $datecomparison = false;
-                if (is_object($categoryvalue)) {
-                    $datecomparison = true;
-                }
-
                 foreach ($categoryvalue as $key => $value) {
 
-                    if ($datecomparison == false) {
-                        // If there are more than one filter per category they will be concatenated via OR.
-                        $filter .= $categorycounter == 1 ? "" : " OR ";
-                    } else {
-                        // Except if we filter for time values, in which case they will be concatenated via AND.
-                        $filter .= $categorycounter == 1 ? "" : " AND ";
-                    }
+                    // Time values will be concatenated via AND.
+                    $filter .= $categorycounter == 1 ? "" : " AND ";
 
                     $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
                     $categorycounter++;
