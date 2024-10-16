@@ -89,6 +89,7 @@ class demo implements renderable, templatable {
             'lastname' => get_string('lastname'),
             'email' => get_string('email'),
             'action' => get_string('action'),
+            'department' => get_string('department'),
 
         ];
 
@@ -153,6 +154,17 @@ class demo implements renderable, templatable {
         $table->add_filter($standardfilter);
 
         $standardfilter = new standardfilter('email', get_string('email'));
+        $table->add_filter($standardfilter);
+
+        // To test this explode filter, add values separeted with "," to the department field in users table. 1 & 2 will be translated as defined below.
+        $standardfilter = new standardfilter('department', get_string('department'));
+        $standardfilter->add_options(
+            [
+            'explode' => ',',
+            '1' => 'first department',
+            '2' => 'second department',
+
+        ]);
         $table->add_filter($standardfilter);
 
         $hourslistfilter = new hourlist('timemodified', get_string('hourlastmodified', 'local_wunderbyte_table'));
