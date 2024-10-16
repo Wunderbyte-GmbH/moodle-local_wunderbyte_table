@@ -1,3 +1,9 @@
+## Version 2.0.23 (2024101600)
+* Bugfix: Strip leading zeros from intrange filter input
+* Bugfix: standardfilter for ints (ids etc)
+* Bugfix: Correctly count values for explode filter
+* Bugfix: display filtercount label for standardfilter correctly
+
 ## Version 2.0.22 (2024101101)
 * Improvement: Added support for filterview mobile changes
 * Bugfix: Fix wrong calculation of morethanonetable
