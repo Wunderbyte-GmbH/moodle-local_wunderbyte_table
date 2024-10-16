@@ -261,7 +261,7 @@ abstract class base {
             isset($filtersettings[$fckey])
             && count($filtersettings[$fckey]) > 0
         ) {
-                            $sortarray = $filtersettings[$fckey];
+            $sortarray = $filtersettings[$fckey];
         } else {
             $sortarray = null;
         }
@@ -271,8 +271,12 @@ abstract class base {
             $sortedarray = [];
             foreach ($sortarray as $sortkey => $sortvalue) {
                 if (isset($values[$sortkey])) {
-                    $sortedarray[$sortvalue] = $sortkey;
+                    // Exchange the value in the valueswithcount array.
+                    $valueswithcount[$sortvalue] = $valueswithcount[$sortkey];
+                    unset($valueswithcount[$sortkey]);
 
+                    // And in the sortedarray.
+                    $sortedarray[$sortvalue] = $sortkey;
                     unset($values[$sortkey]);
                 }
             }
