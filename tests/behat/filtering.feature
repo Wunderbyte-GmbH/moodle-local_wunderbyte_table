@@ -3,29 +3,29 @@ Feature: Filtering functionality of wunderbyte_table works as expected
 
   Background:
     Given the following "users" exist:
-      | username | firstname | lastname |
-      | user1    | Username  | 1        |
-      | user2    | Username  | 2        |
-      | user3    | Username  | 3        |
-      | user4    | Username  | 4        |
-      | user5    | Username  | 5        |
-      | user6    | Username  | 6        |
-      | user7    | Username  | 7        |
-      | user8    | Username  | 8        |
-      | user9    | Username  | 9        |
-      | user10   | Username  | 10       |
-      | user11   | Username  | 11       |
-      | user12   | Username  | 12       |
-      | user13   | Username  | 13       |
-      | user14   | Username  | 14       |
-      | user15   | Username  | 15       |
-      | user16   | Username  | 16       |
-      | user17   | Username  | 17       |
-      | user18   | Username  | 18       |
-      | user19   | Username  | 19       |
-      | user20   | Username  | 20       |
-      | user21   | Username  | 21       |
-      | teacher1 | Teacher   | 1        |
+      | username | firstname | lastname | department |
+      | user1    | Username  | 1        | 1          |
+      | user2    | Username  | 2        | 2          |
+      | user3    | Username  | 3        | 3,4        |
+      | user4    | Username  | 4        | 1,2        |
+      | user5    | Username  | 5        | ,1         |
+      | user6    | Username  | 6        | 1,4        |
+      | user7    | Username  | 7        | 2          |
+      | user8    | Username  | 8        | 5          |
+      | user9    | Username  | 9        | 3          |
+      | user10   | Username  | 10       | 2          |
+      | user11   | Username  | 11       | 2          |
+      | user12   | Username  | 12       | 1,2        |
+      | user13   | Username  | 13       | 5          |
+      | user14   | Username  | 14       | 7          |
+      | user15   | Username  | 15       | 6,7        |
+      | user16   | Username  | 16       | 4,5,6,7,8  |
+      | user17   | Username  | 17       | 1          |
+      | user18   | Username  | 18       | 1          |
+      | user19   | Username  | 19       | 1          |
+      | user20   | Username  | 20       | 1          |
+      | user21   | Username  | 21       | 1          |
+      | teacher1 | Teacher   | 1        | 1          |
     And the following "courses" exist:
       | fullname | shortname |
       | Course 1 | C1        |
@@ -97,6 +97,27 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "user15" in the "#demotable_1_r2" "css_element"
     And I should see "2 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "2 filter(s) on: Username" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    ## And I press "Show all records"
+    And I click on "Show all records" "text" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I wait until the page is ready
+    And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+
+  @javascript
+  Scenario: Filter users table by department and reset filter
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Demo table 1"
+    And I click on "[aria-controls=\"id_collapse_department\"]" "css_element"
+    And I should see "first department (11)" in the "#id_collapse_department" "css_element"
+    And I should see "3 (3)" in the "#id_collapse_department" "css_element"
+    And I set the field "first department" in the "#id_collapse_department" "css_element" to "checked"
+    And I wait until the page is ready
+    And I should see "11 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I set the field "user1" in the "#id_collapse_username" "css_element" to "checked"
+    And I wait until the page is ready
+    And I should see "user1" in the "#demotable_1_r2" "css_element"
+    And I should see "1 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I should see "2 filter(s) on: Username, Department" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## And I press "Show all records"
     And I click on "Show all records" "text" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I wait until the page is ready
