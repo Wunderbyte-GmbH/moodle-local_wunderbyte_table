@@ -1401,7 +1401,7 @@ class wunderbyte_table extends table_sql {
                     // TODO: Use apply_filter method for the remaining filter type datepicker.
                     // Eventually we will get rid of the following section.
                     // ... for the moment, make sure to escape it for classes already implementing the new way.
-                    if (strpos($classname, "intrange") || strpos($classname, "standard")) {
+                    if (!strpos($classname, "datepicker")) {
                         $filter .= " ) ";
                         continue;
                     }

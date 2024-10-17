@@ -26,6 +26,7 @@ namespace local_wunderbyte_table\filters\types;
 
 use local_wunderbyte_table\filter;
 use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\wunderbyte_table;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -223,5 +224,27 @@ class hierarchicalfilter extends base {
 
         // Make the arrays mustache ready, we have to jump through loops.
         $categoryobject['hierarchy'] = array_values($categoryobject['hierarchy']);
+    }
+
+    /**
+     * Apply the filter of hierachical class. Logic of Standardfilter can be applied here.
+     *
+     * @param string $filter
+     * @param string $columnname
+     * @param mixed $categoryvalue
+     * @param wunderbyte_table $table
+     *
+     * @return void
+     *
+     */
+    public function apply_filter(
+        string &$filter,
+        string $columnname,
+        $categoryvalue,
+        wunderbyte_table &$table
+    ): void {
+
+        $standardfilter = new standardfilter($columnname);
+        $standardfilter->apply_filter($filter, $columnname, $categoryvalue, $table);
     }
 }
