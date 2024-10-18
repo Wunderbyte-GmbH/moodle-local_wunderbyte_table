@@ -129,7 +129,7 @@ class filter {
                     continue;
                 }
                 if (!isset($filtercolumns[$key][$row->{$key}])) {
-                    $filtercolumns[$key][$row->{$key}] = $row->count ?? true;
+                    $filtercolumns[$key][$row->{$key}] = $row->keycount ?? true;
                 }
             }
         }
@@ -206,7 +206,7 @@ class filter {
         global $DB;
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
-        $sql = " SELECT $key, COUNT($key)
+        $sql = " SELECT $key, COUNT($key) as keycount
                 FROM {$table->sql->from}
                 WHERE {$table->sql->where} AND $key IS NOT NULL
                 GROUP BY $key ORDER BY $key ASC";
