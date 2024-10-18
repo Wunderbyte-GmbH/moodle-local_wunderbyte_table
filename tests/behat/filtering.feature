@@ -111,20 +111,20 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "first department (11)" in the "#id_collapse_department" "css_element"
     And I should see "3 (2)" in the "#id_collapse_department" "css_element"
     And I set the field "first department" in the "#id_collapse_department" "css_element" to "checked"
-    And I wait until the page is ready
+    And I wait "1" seconds
     And I should see "11 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Hide filter - required for a new filter tool
     ## Workaround for case when hidden "search" "input" intercepts focus - so we cannot press "Teachers" "button"
     And I click on "//aside[contains(@class, 'wunderbyte_table_components')]" "xpath_element"
     And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
     And I set the field "user1" in the "#id_collapse_username" "css_element" to "checked"
-    And I wait until the page is ready
-    And I should see "user1" in the "#demotable_1_r2" "css_element"
+    And I wait "1" seconds
+    And I should see "user1" in the "#demotable_1_r1" "css_element"
     And I should see "1 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "2 filter(s) on: Username, Department" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## And I press "Show all records"
     And I click on "Show all records" "text" in the ".tab-pane.active .wb-records-count-label" "css_element"
-    And I wait until the page is ready
+    And I wait "1" seconds
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
   @javascript
