@@ -222,7 +222,7 @@ abstract class base {
 
                         $values[$explodeditem] = true;
                         $valueswithcount[$explodeditem] =
-                            isset($valueswithcount[$explodeditem]) ? $valueswithcount[$explodeditem] + 1 : 1;
+                            isset($valueswithcount[$explodeditem]) ? $valueswithcount[$explodeditem] + (int)$valuetoexplode : 1;
                     }
                     // We make sure the strings with more than one values are not treated anymore.
                     unset($values[$keytoexplode]);
