@@ -91,7 +91,11 @@ class hierarchicalfilter extends base {
                         }
 
                         $values[$explodeditem] = true;
-                        $valueswithcount[$explodeditem] = $valuetoexplode;
+                        if (empty($valueswithcount[$explodeditem])) {
+                            $valueswithcount[$explodeditem] = 1;
+                        } else {
+                            $valueswithcount[$explodeditem] += (int)$valuetoexplode;
+                        }
 
                         // We also add the count values to our array.
                     }
