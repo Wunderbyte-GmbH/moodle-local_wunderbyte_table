@@ -163,7 +163,6 @@ class demo implements renderable, templatable {
             'explode' => ',',
             '1' => 'first department',
             '2' => 'second department',
-
         ]);
         $table->add_filter($standardfilter);
 
