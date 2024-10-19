@@ -597,6 +597,13 @@ export const callLoadData = (
                     // This is the place where we are after lazyloading. We check if we need to reinitialize scrolllistener:
                     addScrollFunctionality(idstring, encodedtable, element);
 
+                    if (container) {
+                        container.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+
                     return true;
                 }).catch(ex => {
                     loadings[idstring] = false;
