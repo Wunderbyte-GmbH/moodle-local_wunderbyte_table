@@ -204,7 +204,7 @@ abstract class base {
             || filter::check_if_multi_customfield($fckey)
         ) {
             // We run through the array of values and explode each item.
-            foreach ($values as $keytoexplode => $valuetoexplode) {
+            foreach ($values as $keytoexplode => $recordscount) {
                 $separator = $filtersettings[$fckey]['explode'] ?? ',';
 
                 $explodedarray = explode($separator, $keytoexplode);
@@ -221,8 +221,10 @@ abstract class base {
                         }
 
                         $values[$explodeditem] = true;
+                        // Recordscount can be more than 1, since we use a group by query.
                         $valueswithcount[$explodeditem] =
-                            isset($valueswithcount[$explodeditem]) ? $valueswithcount[$explodeditem] + (int)$valuetoexplode : 1;
+                            isset($valueswithcount[$explodeditem])
+                                ? $valueswithcount[$explodeditem] + (int)$recordscount : (int)$recordscount;
                     }
                     // We make sure the strings with more than one values are not treated anymore.
                     unset($values[$keytoexplode]);
