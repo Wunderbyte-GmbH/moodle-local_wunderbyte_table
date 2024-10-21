@@ -99,6 +99,7 @@ $string['generictitle'] = 'Do you really want to treat this data?';
 $string['hourlastmodified'] = 'Hour, last time updated';
 $string['hourlist'] = 'Hourlist filter';
 $string['id'] = 'ID';
+$string['idnumber'] = 'IdNumber';
 $string['infinitescroll'] = 'Infinite scrolling';
 $string['january'] = 'January';
 $string['july'] = 'July';

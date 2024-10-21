@@ -503,6 +503,7 @@ class demo implements renderable, templatable {
             'id' => get_string('id', 'local_wunderbyte_table'),
             'course' => get_string('course'),
             'module' => get_string('module', 'local_wunderbyte_table'),
+            'idnumber' => get_string('module', 'local_wunderbyte_table'),
             'action' => get_string('action'),
         ];
 
@@ -515,9 +516,11 @@ class demo implements renderable, templatable {
         $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('module',  get_string('module', 'local_wunderbyte_table'));
         $table->add_filter($standardfilter);
+        $standardfilter = new standardfilter('idnumber',  get_string('idnumber', 'local_wunderbyte_table'));
+        $table->add_filter($standardfilter);
 
         //$table->define_fulltextsearchcolumns(array_keys($filtercolumns));
-        $table->define_sortablecolumns(['id', 'course', 'module']);
+        $table->define_sortablecolumns(['id', 'course', 'module'. 'idnumber']);
 
         // When true and action buttons are present, checkboxes will be rendered to every line.
         $table->addcheckboxes = true;
