@@ -1,3 +1,10 @@
+## Version 2.0.24 (2024102100)
+* Improvement: Extend tests for filters
+* Improvement: Scroll to upper margin on page switch
+* Bugfix: Apply hierarchical filter
+* Bugfix: Fix standardfilter, especially for explode
+* Bugfix: Correctly count values for filters
+
 ## Version 2.0.23 (2024101600)
 * Bugfix: Strip leading zeros from intrange filter input
 * Bugfix: standardfilter for ints (ids etc)
