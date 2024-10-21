@@ -38,7 +38,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
 
   @javascript
-  Scenario: Filter tables on different tabs using input field
+  Scenario: WB_Table: Filter tables on different tabs using input field
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
@@ -60,7 +60,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
 
   @javascript
-  Scenario: Filter users table by username via sidebar filter controls
+  Scenario: WB_Table: Filter users table by username via sidebar filter controls
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
@@ -85,7 +85,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
   @javascript
-  Scenario: Filter users table by username and reset filter
+  Scenario: WB_Table: Filter users table by username and reset filter
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
@@ -103,7 +103,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
   @javascript
-  Scenario: Filter users table by department and reset filter
+  Scenario: WB_Table: Filter users table by department and reset filter
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
@@ -128,7 +128,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
   @javascript
-  Scenario: Search username in sidebar filter controls and filter by it
+  Scenario: WB_Table: Search username in sidebar filter controls and filter by it
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
@@ -152,29 +152,37 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
   @javascript
-  Scenario: Filter multiple tables consequently using sidebar filter controls
-    Given I log in as "admin"
+  Scenario: WB_Table: Filter multiple tables consequently using sidebar filter controls
+    Given the following "activity" exists:
+      | activity       | url                 |
+      | course         | C1                  |
+      | idnumber       | MoodleSite          |
+      | name           | Moodle Site         |
+      | externalurl    | https://moodle.org/ |
+    And I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
+    ## Filter Table 4 - Infinite Scroll
     ## Filter panel being hidden by default on the Infinite Scroll tab
     And I follow "Demo table 4"
     And I click on ".asidecollapse-demotable_4" "css_element"
     And I should see "Teacher" in the "#demotable_4_r3" "css_element"
-    ##And I press "filterbtn-demotable_4"
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_firstname\"]" "css_element"
     And I should see "Teacher" in the ".tab-pane.active #id_collapse_firstname" "css_element"
     And I set the field "Teacher" in the ".tab-pane.active #id_collapse_firstname" "css_element" to "checked"
     And I wait until the page is ready
     And I should see "Teacher" in the "#demotable_4_r1" "css_element"
     And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r2']" "xpath_element" should not exist
+    ## Filter Table 1 - User
     ## Filter panel being hidden by default on the Users tab
     And I follow "Demo table 1"
     And I should see "guest" in the "#demotable_1_r2" "css_element"
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_username\"]" "css_element"
     And I should see "admin" in the ".tab-pane.active #id_collapse_username" "css_element"
     And I set the field "admin" in the ".tab-pane.active #id_collapse_username" "css_element" to "checked"
-    And I wait "1" seconds
+    And I wait until the page is ready
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
+    ## Filter Table 2 - Course
     ## Filter panel being hidden by default on the Course tab
     And I follow "Demo table 2"
     And I click on ".asidecollapse-demotable_2" "css_element"
@@ -182,9 +190,18 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I click on ".tab-pane.active [aria-controls=\"id_collapse_fullname\"]" "css_element"
     And I should see "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element"
     And I set the field "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element" to "checked"
-    And I wait "1" seconds
+    And I wait until the page is ready
     And I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
+    ## Filter Table 3 - Course Modules
+    And I follow "Demo table 3"
+    And I click on ".tab-pane.active [aria-controls=\"id_collapse_module\"]" "css_element"
+    And I should see "23 (1)" in the ".tab-pane.active #id_collapse_module" "css_element"
+    And I set the field "23 (1)" in the ".tab-pane.active #id_collapse_module" "css_element" to "checked"
+    And I wait until the page is ready
+    And I should see "23" in the "#demotable_3_r1" "css_element"
+    And "//*[contains(@id, 'demotable_3')]//tr[@id, 'demotable_3_r2']" "xpath_element" should not exist
+    And I should see "1 of 2 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
   @javascript
   Scenario: WBTable: Filter by intrange in username using sidebar filter controls
