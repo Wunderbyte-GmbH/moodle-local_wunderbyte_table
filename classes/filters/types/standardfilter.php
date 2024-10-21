@@ -89,24 +89,11 @@ class standardfilter extends base {
                 // We want to find the value in an array of values.
                 // Therefore, we have to use or as well.
                 // First, make sure we have enough params we can use..
-                $filter .= " ( ";
-                $paramsvaluekey = $table->set_params($value, true);
+                $separator = $table->subcolumns['datafields'][$columnname]['explode'] ?? ",";
+                $paramsvaluekey = $table->set_params('%' . $separator . $value . $separator . '%', true);
                 $escapecharacter = wunderbyte_table::return_escape_character($value);
-                $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
-
-                $filter .= " OR ";
-                $paramsvaluekey = $table->set_params($value . ",%", true);
-                $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
-
-                $filter .= " OR ";
-                $paramsvaluekey = $table->set_params("%," . $value, true);
-                $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
-
-                $filter .= " OR ";
-                $paramsvaluekey = $table->set_params("%," . $value . ",%", true);
-                $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false, false, false, $escapecharacter);
-
-                $filter .= " ) ";
+                $concatvalue = $DB->sql_concat("'$separator'", $columnname, "'$separator'");
+                $filter .= $DB->sql_like("$concatvalue", ":$paramsvaluekey", false, false, false, $escapecharacter);
             }
             $filtercounter++;
         }
