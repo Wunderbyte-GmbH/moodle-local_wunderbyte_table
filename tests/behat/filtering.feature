@@ -156,8 +156,8 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     Given the following "activity" exists:
       | activity       | url                 |
       | course         | C1                  |
-      | idnumber       | MoodleSite          |
-      | name           | Moodle Site         |
+      | idnumber       | URL1                |
+      | name           | Moodle URL          |
       | externalurl    | https://moodle.org/ |
     And I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -195,11 +195,12 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
     ## Filter Table 3 - Course Modules
     And I follow "Demo table 3"
-    And I click on ".tab-pane.active [aria-controls=\"id_collapse_module\"]" "css_element"
-    And I should see "23 (1)" in the ".tab-pane.active #id_collapse_module" "css_element"
-    And I set the field "23 (1)" in the ".tab-pane.active #id_collapse_module" "css_element" to "checked"
+    And I should see "PAGE1" in the "#demotable_3_r1" "css_element"
+    And I click on ".tab-pane.active [aria-controls=\"id_collapse_idnumber\"]" "css_element"
+    And I should see "URL1 (1)" in the ".tab-pane.active #id_collapse_idnumber" "css_element"
+    And I set the field "URL1 (1)" in the ".tab-pane.active #id_collapse_idnumber" "css_element" to "checked"
     And I wait until the page is ready
-    And I should see "23" in the "#demotable_3_r1" "css_element"
+    And I should see "URL1" in the "#demotable_3_r1" "css_element"
     And "//*[contains(@id, 'demotable_3')]//tr[@id, 'demotable_3_r2']" "xpath_element" should not exist
     And I should see "1 of 2 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
