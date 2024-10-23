@@ -31,7 +31,7 @@ import {
 import ModalForm from 'core_form/modalform';
 
 const SELECTOR = {
-  ACTIONBUTTON: '.wb_action_button',
+  ACTIONBUTTON: '[data-type="wb_action_button"]',
   CHECKBOX: 'input.wb-checkbox',
 };
 
@@ -104,7 +104,7 @@ export function initializeActionButton(selector, idstring, encodedtable) {
       // If it's not a methodname, we might have a form name a need to attach the right listener.
     } else if (button.dataset.formname && button.dataset.formname.length > 0) {
       button.addEventListener('click', e => {
-        const target = e.target;
+        const target = e.target.closest(SELECTOR.ACTIONBUTTON);
         // eslint-disable-next-line no-console
         console.log('transmit data', target);
         let title = 'title';
