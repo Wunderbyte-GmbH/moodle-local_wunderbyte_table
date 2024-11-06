@@ -902,6 +902,23 @@
     margin: 0;
 }
 
+
+.wbtablefilterview .category-item.collapsed .fa-chevron-down {
+    display: inline-block;
+}
+
+.wbtablefilterview .category-item:not(.collapsed) .fa-chevron-up {
+    display: inline-block;
+}
+
+.wbtablefilterview .category-item.collapsed .fa-chevron-up {
+    display: none;
+}
+
+.wbtablefilterview .category-item:not(.collapsed) .fa-chevron-down {
+    display: none;
+}
+
 @keyframes to-top {
     0% {
         transform: translateY(100%);

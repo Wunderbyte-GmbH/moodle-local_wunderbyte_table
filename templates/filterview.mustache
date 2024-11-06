@@ -55,7 +55,7 @@
 }}
 {{#filter}}
     {{#categories}}
-        <div class="w-100 wrapfilter" data-type="wb-filterview">
+        <div class="w-100 wrapfilter wbtablefilterview" data-type="wb-filterview">
             <div class="container py-80 ">
                 <div class="container" id="accordion-{{index}}">
                 <h2 class="lexa-h2" style="margin-bottom: 48px">{{#str}}themennachkategorie, local_wunderbyte_table{{/str}}</h2>
@@ -63,7 +63,7 @@
                     <div class="col-lg-6">
                                         {{#lefthierarchy}}
                         <div class="singlehierarchy">
-                        <div class="category-item d-flex" type="button" data-toggle="collapse" data-target="#collapse-{{index}}" aria-expanded="false" aria-controls="collapse-{{index}}" style="width: 100%; text-decoration: none;">
+                        <div class="category-item d-flex collapsed" type="button" data-toggle="collapse" data-target="#collapse-{{index}}" aria-expanded="false" aria-controls="collapse-{{index}}" style="width: 100%; text-decoration: none;">
                                 <h4 class="lexa-h4">{{label}}</h4>
 
                                 <h4 class="ml-auto lexa-h4">
@@ -95,6 +95,7 @@
 
                                 <span class="category-count text-primary">{{count}}</span>
                                 <i class="fa fa-chevron-down ml-2" id="icon-{{index}}"></i>
+                                <i class="fa fa-chevron-up ml-2" id="icon-{{index}}"></i>
                                 </h4>
                         </div>
                         <div id="collapse-{{index}}" class="collapse" aria-labelledby="heading-{{index}}">
@@ -110,7 +111,7 @@
                     <div class="col-lg-6">
                     {{#righthierarchy}}
                                <div class="singlehierarchy">
-                        <div class="category-item d-flex" type="button" data-toggle="collapse" data-target="#collapse-{{index}}" aria-expanded="false" aria-controls="collapse-{{index}}" style="width: 100%; text-decoration: none;">
+                        <div class="category-item d-flex collapsed" type="button" data-toggle="collapse" data-target="#collapse-{{index}}" aria-expanded="false" aria-controls="collapse-{{index}}" style="width: 100%; text-decoration: none;">
                                 <h4 class="lexa-h4">{{label}}</h4>
 
                                 <h4 class="ml-auto lexa-h4">
@@ -142,6 +143,7 @@
 
                                 <span class="category-count text-primary">{{count}}</span>
                                 <i class="fa fa-chevron-down ml-2" id="icon-{{index}}"></i>
+                                <i class="fa fa-chevron-up ml-2" id="icon-{{index}}"></i>
                                 </h4>
                         </div>
                         <div id="collapse-{{index}}" class="collapse" aria-labelledby="heading-{{index}}">
