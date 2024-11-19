@@ -1,3 +1,15 @@
+## Version 2.0.28 (2024111900)
+* Bugfix: Fix typo (dot instead of comma) breaking sortable columns and tests.
+* Bugfix: Add missing data-type for wb_action_button.
+
+## Version 2.0.27 (2024111100)
+* Improvement: Filterview flip arrows on collapse.
+
+## Version 2.0.26 (2024102900)
+* Bugfix: Fix action button selector.
+* Improvement: Change PNG to SVG in filterview template.
+* Tests: Adjust behat scenarios.
+
 ## Version 2.0.24 (2024102100)
 * Improvement: Extend tests for filters
 * Improvement: Scroll to upper margin on page switch
