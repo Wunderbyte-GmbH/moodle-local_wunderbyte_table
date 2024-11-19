@@ -959,5 +959,6 @@
     100% {
         transform: translateX(-370%);
         opacity: 1;
+        
     }
 }
