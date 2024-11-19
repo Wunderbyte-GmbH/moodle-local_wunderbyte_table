@@ -71,7 +71,8 @@
 {{#showactionbuttons}}
     {{^ischeckbox}}
     <span>
-        <a href="{{href}}" class="{{class}} wb_action_button "
+        <a href="{{href}}"
+            class="{{class}}"
             data-type="wb_action_button"
             title="{{methodname}}-{{name}}"
             data-id="{{id}}"
@@ -95,7 +96,8 @@
             type="checkbox"
             {{#checked}} checked {{/checked}}
             {{#disabled}} disabled {{/disabled}}
-            class="{{class}} form-check-input wb_action_button"
+            class="{{class}} form-check-input"
+            data-type="wb_action_button"
             data-id="{{id}}"
             data-ischeckbox = true
             data-methodname="{{methodname}}"
