@@ -72,7 +72,12 @@ export const init = (idstring, encodedtable) => {
     counter = Object.entries(queries).length;
 
     if (counter > 1) {
-        moreThanOneTable = true;
+        // Check if all have the same value for encodedtable.
+        const firstEncodedTable = Object.entries(queries)[0]?.encodedtable;
+        const allSame = Object.entries(queries).every(obj => obj.encodedtable === firstEncodedTable);
+        if (!allSame) {
+            moreThanOneTable = true;
+        }
     }
 
     if (idstring && encodedtable) {
