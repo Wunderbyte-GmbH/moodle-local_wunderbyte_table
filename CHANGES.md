@@ -1,3 +1,6 @@
+## Version 2.0.29 (2024112000)
+* Bugfix: Fix grunt "file is stale" errors.
+
 ## Version 2.0.28 (2024111900)
 * Bugfix: Fix typo (dot instead of comma) breaking sortable columns and tests.
 * Bugfix: Add missing data-type for wb_action_button.
