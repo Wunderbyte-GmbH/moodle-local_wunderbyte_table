@@ -193,47 +193,10 @@ abstract class base {
 
         // Don't treat this filter if there are no values here.
         if (!is_array($values)) {
-            return;
+            return [];
         }
 
-        $valueswithcount = $values;
-
-        // We might need to explode values, because of a multi-field.
-        if (
-            isset($filtersettings[$fckey]['explode'])
-            || filter::check_if_multi_customfield($fckey)
-        ) {
-            // We run through the array of values and explode each item.
-            foreach ($values as $keytoexplode => $recordscount) {
-                $separator = $filtersettings[$fckey]['explode'] ?? ',';
-
-                $explodedarray = explode($separator, $keytoexplode);
-
-                // Only if we have more than one item, we unset key and insert all the new keys we got.
-                if (count($explodedarray) > 1) {
-                    // Run through all the keys.
-                    foreach ($explodedarray as $explodeditem) {
-                        // Make sure we don't have any empty values.
-                        $explodeditem = trim($explodeditem);
-
-                        if (empty($explodeditem)) {
-                            continue;
-                        }
-
-                        $values[$explodeditem] = true;
-                        // Recordscount can be more than 1, since we use a group by query.
-                        $valueswithcount[$explodeditem] =
-                            isset($valueswithcount[$explodeditem])
-                                ? $valueswithcount[$explodeditem] + (int)$recordscount : (int)$recordscount;
-                    }
-                    // We make sure the strings with more than one values are not treated anymore.
-                    unset($values[$keytoexplode]);
-                }
-            }
-
-            unset($filtersettings[$fckey]['explode']);
-        }
-
+        $valueswithcount = self::apply_filtercount($values, $fckey, $filtersettings);
         // If we have JSON, we need special treatment.
         if (!empty($filtersettings[$fckey]['jsonattribute'])) {
             $valuescopy = $values;
@@ -336,6 +299,57 @@ abstract class base {
 
         // Make the arrays mustache ready, we have to jump through loops.
         $categoryobject['default']['values'] = array_values($categoryobject['default']['values']);
+    }
+
+    /**
+     * Check if values need to be exploded and count correctly.
+     *
+     * @param array $values
+     * @param string $fckey
+     * @param array $filtersettings
+     *
+     * @return array
+     *
+     */
+    public static function apply_filtercount(array &$values, string $fckey, array &$filtersettings): array {
+        $valueswithcount = $values;
+
+        // We might need to explode values, because of a multi-field.
+        if (
+            isset($filtersettings[$fckey]['explode'])
+            || filter::check_if_multi_customfield($fckey)
+        ) {
+            // We run through the array of values and explode each item.
+            foreach ($values as $keytoexplode => $recordscount) {
+                $separator = $filtersettings[$fckey]['explode'] ?? ',';
+
+                $explodedarray = explode($separator, $keytoexplode);
+
+                // Only if we have more than one item, we unset key and insert all the new keys we got.
+                if (count($explodedarray) > 1) {
+                    // Run through all the keys.
+                    foreach ($explodedarray as $explodeditem) {
+                        // Make sure we don't have any empty values.
+                        $explodeditem = trim($explodeditem);
+
+                        if (empty($explodeditem)) {
+                            continue;
+                        }
+
+                        $values[$explodeditem] = true;
+                        // Recordscount can be more than 1, since we use a group by query.
+                        $valueswithcount[$explodeditem] =
+                            isset($valueswithcount[$explodeditem])
+                                ? $valueswithcount[$explodeditem] + (int)$recordscount : (int)$recordscount;
+                    }
+                    // We make sure the strings with more than one values are not treated anymore.
+                    unset($values[$keytoexplode]);
+                }
+            }
+
+            unset($filtersettings[$fckey]['explode']);
+        }
+        return $valueswithcount;
     }
 
     /**

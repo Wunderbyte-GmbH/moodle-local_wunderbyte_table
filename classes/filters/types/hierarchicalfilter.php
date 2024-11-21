@@ -66,48 +66,7 @@ class hierarchicalfilter extends base {
             return;
         }
 
-        $valueswithcount = [];
-
-        // We might need to explode values, because of a multi-field.
-        if (
-            isset($filtersettings[$fckey]['explode'])
-            || filter::check_if_multi_customfield($fckey)
-        ) {
-            // We run through the array of values and explode each item.
-            foreach ($values as $keytoexplode => $valuetoexplode) {
-                $separator = $filtersettings[$fckey]['explode'] ?? ',';
-
-                $explodedarray = explode($separator, $keytoexplode);
-
-                // Only if we have more than one item, we unset key and insert all the new keys we got.
-                if (count($explodedarray) > 1) {
-                    // Run through all the keys.
-                    foreach ($explodedarray as $explodeditem) {
-                        // Make sure we don't have any empty values.
-                        $explodeditem = trim($explodeditem);
-
-                        if (empty($explodeditem)) {
-                            continue;
-                        }
-
-                        $values[$explodeditem] = true;
-                        if (empty($valueswithcount[$explodeditem])) {
-                            $valueswithcount[$explodeditem] = 1;
-                        } else {
-                            $valueswithcount[$explodeditem] += (int)$valuetoexplode;
-                        }
-
-                        // We also add the count values to our array.
-                    }
-                    // We make sure the strings with more than one values are not treated anymore.
-                    unset($values[$keytoexplode]);
-                }
-            }
-
-            unset($filtersettings[$fckey]['explode']);
-        } else {
-            $valueswithcount = $values;
-        }
+        $valueswithcount = base::apply_filtercount($values, $fckey, $filtersettings);
 
         // If we have JSON, we need special treatment.
         if (!empty($filtersettings[$fckey]['jsonattribute'])) {
