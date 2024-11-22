@@ -166,7 +166,14 @@ class intrange extends base {
     ): void {
         global $DB;
 
+        // Bugfix: Do not apply this filter, if categoryvalue is of another type than string.
+        if (!is_string($categoryvalue)) {
+            return;
+        }
         $dates = explode(",", $categoryvalue);
+        if (empty($dates)) {
+            return;
+        }
 
         $from = self::return_int_values($dates[0]);
         $to = self::return_int_values($dates[1]);
@@ -197,6 +204,7 @@ class intrange extends base {
 
         } else {
             // MariaDB/MySQL.
+            // phpcs:ignore moodle.Commenting.TodoComment.MissingInfoInline
             // TODO: Test if this works!!
             $filter .= "
             REGEXP_REPLACE($columnname, '[^0-9]', '') IS NOT NULL
@@ -254,6 +262,9 @@ class intrange extends base {
 
         // Apply values.
         $filterstring = array_values($filterarray)[0];
+        if (!is_string($filterstring)) {
+            return;
+        }
         $values = explode(",", $filterstring);
         $tableobject[$key]['intrange']['intranges'][0]['startvalue'] = $values[0];
         $tableobject[$key]['intrange']['intranges'][0]['endvalue'] = $values[1];

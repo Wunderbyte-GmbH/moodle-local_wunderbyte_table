@@ -1398,6 +1398,7 @@ class wunderbyte_table extends table_sql {
                     $class = new $classname($categorykey, $filtersetting['localizedname']);
                     $class->apply_filter($filter, $categorykey, $categoryvalue, $this);
 
+                    // phpcs:ignore moodle.Commenting.TodoComment.MissingInfoInline
                     // TODO: Use apply_filter method for the remaining filter type datepicker.
                     // Eventually we will get rid of the following section.
                     // ... for the moment, make sure to escape it for classes already implementing the new way.
