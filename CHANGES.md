@@ -1,3 +1,9 @@
+## Version 2.0.30 (2024112500)
+* Improvement: Add support for Moodle 4.5.
+* Bugfix: Correctly update URL from search (#67).
+* Bugfix: Correctly apply filtercount to hierarchical filter Wunderbyte-GmbH/moodle-moodle-local_wunderbyte_table#243.
+* Bugfix: Do not apply intrange filter when there is no string to explode. Wunderbyte-GmbH/Wunderbyte-GmbH#243.
+
 ## Version 2.0.29 (2024112000)
 * Bugfix: Fix grunt "file is stale" errors.
 
