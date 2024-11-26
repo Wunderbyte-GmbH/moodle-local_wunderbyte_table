@@ -357,6 +357,12 @@ class wunderbyte_table extends table_sql {
     public $showpagination = true;
 
     /**
+     * Additional template data.
+     * @var array
+     */
+    public $templatedata = [];
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
@@ -1887,5 +1893,15 @@ class wunderbyte_table extends table_sql {
         }
 
         return $paramsvaluekey;
+    }
+
+    /**
+     * Sets template data by key and value.
+     *
+     * @param string $key   The key under which the data will be stored.
+     * @param mixed  $value The value to be stored under the specified key.
+     */
+    public function set_template_data($key, $value) {
+        $this->templatedata[$key] = $value;
     }
 }

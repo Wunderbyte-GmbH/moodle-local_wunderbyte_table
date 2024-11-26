@@ -259,6 +259,12 @@ class table implements renderable, templatable {
     public $searchtext = '';
 
     /**
+     * Additional template data.
+     * @var array
+     */
+    public $templatedata = [];
+
+    /**
      * Constructor.
      *
      * @param wunderbyte_table $table
@@ -322,6 +328,8 @@ class table implements renderable, templatable {
         $this->pagesize = $table->pagesize;
 
         $this->totalrows = $table->totalrows;
+
+        $this->templatedata = $table->templatedata;
 
         list($this->totalrecords, $this->filteredrecords) = $table->return_records_count();
 
@@ -713,6 +721,8 @@ class table implements renderable, templatable {
               $data['moodleversionminfourtwo'] = 'moodleversionminfourtwo';
           }
 
+          $this->apply_template_data($data);
+
             return $data;
     }
 
@@ -870,6 +880,7 @@ class table implements renderable, templatable {
                     $filterclass = $potentialfiltercolumn['wbfilterclass'];
                     $filter = new $filterclass($tempfiltercolumn, $potentialfiltercolumn['name']);
                     $filter::prepare_filter_for_rendering($tableobject, $filterarray, $tokey);
+                    // phpcs:ignore moodle.Commenting.TodoComment.MissingInfoInline
                     // TODO: Migrate these functions to the concerned filter classes and get rid of the following condition.
                     if (strpos($potentialfiltercolumn['wbfilterclass'], 'intrange') !== false) {
                         continue;
@@ -1019,6 +1030,16 @@ class table implements renderable, templatable {
                 $this->categories['categories'][$catkey]['lefthierarchy'] = array_values($lefthierarchy);
                 $this->categories['categories'][$catkey]['righthierarchy'] = array_values($righthierarchy);
             }
+        }
+    }
+
+    /**
+     * Applies the template data.
+     * @param array $data template data
+     */
+    public function apply_template_data(array &$data) {
+        foreach ($this->templatedata as $key => $value) {
+            $data[$key] = $value;
         }
     }
 }
