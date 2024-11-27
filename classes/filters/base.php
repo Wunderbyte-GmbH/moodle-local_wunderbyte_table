@@ -263,6 +263,7 @@ abstract class base {
             $values = array_combine(array_keys($values), array_keys($values));
         }
 
+        $identifierarray = [];
         foreach ($values as $valuekey => $valuevalue) {
             if (
                 isset($filtersettings[$fckey])
@@ -272,10 +273,20 @@ abstract class base {
                 continue;
             }
 
+            $baseidentifier = preg_replace('/[^a-zA-Z0-9\-_\.]/', '-', 'id' . $valuekey);
+            $i = 1;
+            $identifier = $baseidentifier;
+            while (in_array($identifier, $identifierarray)) {
+                $identifier = $baseidentifier . $i;
+                $i++;
+            }
+            $identifierarray[] = $identifier;
+
             $itemobject = [
                 // We do not want to show html entities, so replace &amp; with &.
                 'key' => str_replace("&amp;", "&", $valuekey),
                 'value' => $valuevalue === true ? $valuekey : $valuevalue,
+                'identifier' => $identifier,
                 'category' => $fckey,
             ];
 
