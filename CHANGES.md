@@ -1,3 +1,9 @@
+## Version 2.0.31 (2024112800)
+* New feature: Add possibility to pass any template data.
+* Bugfix: Correct id for filter checkbox & label.
+* Bugfix: "Cannot read properties of null (reading 'childNodes')" JS error.
+* Bugfix: Grunt JS.
+
 ## Version 2.0.30 (2024112500)
 * Improvement: Add support for Moodle 4.5.
 * Bugfix: Correctly update URL from search (#67).
