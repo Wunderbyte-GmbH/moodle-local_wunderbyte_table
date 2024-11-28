@@ -1869,9 +1869,9 @@ class wunderbyte_table extends table_sql {
         }
     }
 
-    /** Set params with key for table.
+    /**
+     * Set params with key for table.
      * You can use extra quotes added to the string or set the param without additional quotes.
-     *
      *
      * @param string $value
      * @param bool $useextraquotes
