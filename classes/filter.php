@@ -129,7 +129,7 @@ class filter {
                     continue;
                 }
                 if (!isset($filtercolumns[$key][$row->{$key}])) {
-                    $filtercolumns[$key][$row->{$key}] = $row->keycount ?? true;
+                    $filtercolumns[$key][$row->{$key}] = $row->keycount ?? $row->count ?? true;
                 }
             }
         }

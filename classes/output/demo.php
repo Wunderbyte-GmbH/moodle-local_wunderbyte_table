@@ -518,6 +518,8 @@ class demo implements renderable, templatable {
         $table->add_filter($standardfilter);
         $standardfilter = new standardfilter('idnumber',  get_string('idnumber', 'local_wunderbyte_table'));
         $table->add_filter($standardfilter);
+        $hourslistfilter = new hourlist('added', "Added");
+        $table->add_filter($hourslistfilter);
 
         //$table->define_fulltextsearchcolumns(array_keys($filtercolumns));
         $table->define_sortablecolumns(['id', 'course', 'module', 'idnumber']);

@@ -201,4 +201,24 @@ class datepicker extends base {
             $categoryobject['datepicker']['datepickers'][] = $datepickerobject;
         }
     }
+
+    /**
+     * Filter isn't applied here.
+     *
+     * @param string $filter
+     * @param string $columnname
+     * @param mixed $categoryvalue
+     * @param wunderbyte_table $table
+     *
+     * @return void
+     *
+     */
+    public function apply_filter(
+        string &$filter,
+        string $columnname,
+        $categoryvalue,
+        wunderbyte_table &$table
+    ): void {
+        return;
+    }
 }
