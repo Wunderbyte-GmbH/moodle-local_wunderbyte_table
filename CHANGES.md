@@ -1,3 +1,7 @@
+## Version 2.0.33 (2024120500)
+* Improvement: change filterview template.
+* Bugfix: hourlist filter.
+
 ## Version 2.0.31 (2024112800)
 * New feature: Add possibility to pass any template data.
 * Bugfix: Correct id for filter checkbox & label.
