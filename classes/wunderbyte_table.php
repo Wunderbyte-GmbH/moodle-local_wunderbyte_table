@@ -1415,11 +1415,22 @@ class wunderbyte_table extends table_sql {
                 }
 
                 foreach ($categoryvalue as $key => $value) {
+                    $filter .= ($categorycounter == 1) ? "" : " AND ";
+                    $valuecounter = 1;
+                    if (is_object($value) || is_array($value)) {
+                        foreach ($value as $operator => $timestamp) {
+                            // Time values will be concatenated via AND.
+                            $filter .= ($valuecounter == 1) ? "" : " AND ";
 
-                    // Time values will be concatenated via AND.
-                    $filter .= $categorycounter == 1 ? "" : " AND ";
+                            $filter .= $categorykey . ' ' . $operator . ' ' . $timestamp;
+                            $valuecounter++;
+                        }
+                    } else {
+                        $filter .= $categorycounter == 1 ? "" : " AND ";
 
-                    $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
+                        $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
+                    }
+
                     $categorycounter++;
                 }
                 $filter .= " ) ";

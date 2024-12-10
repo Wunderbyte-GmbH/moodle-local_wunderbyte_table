@@ -887,21 +887,33 @@ class table implements renderable, templatable {
                     }
 
                     foreach ($filterarray[$tempfiltercolumn] as $sfkey => $filter) {
-
+                        $counter = 1;
                         // Apply filter for date and time value.
                         if (is_object($filter)) {
-                            $unixcode = current((array) $filter);
-                            $date = date('Y-m-d', $unixcode);
-                            $time = date('H:i', $unixcode);
-                            // We check which filter of the column is checked and apply the values.
-                            foreach ($tableobject[$tokey]['datepicker']['datepickers'] as $dkey => $dvalues) {
-                                if ($dvalues['label'] == $sfkey) {
-                                    $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['datereadable'] = $date;
-                                    $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['timereadable'] = $time;
-                                    $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['checked'] = 'checked';
-                                    continue;
+                            foreach ($filter as $filterdata) {
+                                $unixcode = $filterdata;
+                                $date = date('Y-m-d', $unixcode);
+                                $time = date('H:i', $unixcode);
+                                // We check which filter of the column is checked and apply the values.
+                                // TODO: Handle cases where we have a start- & enddate.
+                                foreach ($tableobject[$tokey]['datepicker']['datepickers'] as $dkey => $dvalues) {
+                                    if ($dvalues['label'] == $sfkey) {
+                                        $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['datereadable'] = $date;
+                                        $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['timereadable'] = $time;
+                                        $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['checked'] = 'checked';
+                                        if ($counter == 1) {
+                                            $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['startdatereadable'] = $date;
+                                            $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['starttimereadable'] = $time;
+                                        } else if ($counter == 2) {
+                                            $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['enddatereadable'] = $date;
+                                            $tableobject[$tokey]['datepicker']['datepickers'][$dkey]['endtimereadable'] = $time;
+                                        }
+                                        $counter++;
+                                        continue;
+                                    }
                                 }
                             }
+
                             // If a filter is selected, filter buttons will be expanded. Right checkbox will be checked.
                             $tableobject[$tokey]['show'] = 'show';
                             $tableobject[$tokey]['collapsed'] = '';
