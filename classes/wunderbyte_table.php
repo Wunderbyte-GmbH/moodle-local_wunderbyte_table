@@ -1395,6 +1395,7 @@ class wunderbyte_table extends table_sql {
                 // For the first filter in a category we append AND.
                 $filter .= " AND ( ";
                 $categorycounter = 1;
+                $valuecounter = 1;
 
                 $filtersetting = $filtersettings[$categorykey] ?? [];
                 // For filters treating two columns (i.e. datepickers), this will return empty.
@@ -1415,11 +1416,14 @@ class wunderbyte_table extends table_sql {
                 }
 
                 foreach ($categoryvalue as $key => $value) {
+                    $filter .= ($categorycounter == 1) ? "" : " AND ";
+                    foreach ($value as $operator => $timestamp) {
+                        // Time values will be concatenated via AND.
+                        $filter .= ($valuecounter == 1) ? "" : " AND ";
 
-                    // Time values will be concatenated via AND.
-                    $filter .= $categorycounter == 1 ? "" : " AND ";
-
-                    $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
+                        $filter .= $categorykey . ' ' . $operator . ' ' . $timestamp;
+                        $valuecounter++;
+                    }
                     $categorycounter++;
                 }
                 $filter .= " ) ";

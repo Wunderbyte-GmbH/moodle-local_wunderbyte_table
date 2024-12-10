@@ -335,6 +335,9 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
     default:
     break;
   }
+  if (!secondcolumn) {
+    secondcolumn = firstcolumn;
+  }
   applySpanfilter(firstcolumn, valuefirstcolumn, filtername, firstoperator, additionalFirstColumnValues, idstring);
   applySpanfilter(secondcolumn, valuesecondcolumn, filtername, secondoperator, additionalSecondColumnValues, idstring);
 
@@ -368,6 +371,13 @@ function resetCheckedObject(idstring, column = '', filtername = '') {
       }
       if (checked[idstring][column].hasOwnProperty(filtername + 'a')) {
         delete checked[idstring][column][filtername + 'a'];
+      }
+      if (
+        Array.isArray(checked[idstring][column]) &&
+        checked[idstring][column].length === 1 &&
+        checked[idstring][column][0] === 'datecheckbox'
+      ) {
+        delete checked[idstring][column];
       }
     }
   }
@@ -579,7 +589,6 @@ export function getIntRange(e, selector, idstring) {
   let to = filtercontainer.querySelector('input[id*="intrangefilter_intrange-end"]');
   let tovalue = to.value;
   let colname = e.target.dataset.columnname;
-
 
   // Add the alert if not all entries are ints (or empty).
   const isInt = (str) => (!isNaN(parseInt(str)) && isFinite(str)) || (str.trim() === '') || (str === null);
