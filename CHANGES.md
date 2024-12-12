@@ -1,3 +1,6 @@
+## Version 2.0.34 (2024121200)
+* Bugfix: Datepicker filter correctly applying enddate & unset Datepicker correctly
+
 ## Version 2.0.33 (2024120500)
 * Improvement: change filterview template.
 * Bugfix: hourlist filter.
