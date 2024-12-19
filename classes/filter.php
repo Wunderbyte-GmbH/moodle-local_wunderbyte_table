@@ -25,12 +25,11 @@
 namespace local_wunderbyte_table;
 
 use coding_exception;
-use core_component;
 use core_date;
 use DateTime;
 use DateTimeZone;
 use dml_exception;
-use stdClass;
+use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -136,8 +135,9 @@ class filter {
 
         $filterjson = ['categories' => []];
 
-        foreach ($filtercolumns as $fckey => $values) {
+        wbt_field_controller_info::instantiate_by_shortnames(array_keys($filtercolumns));
 
+        foreach ($filtercolumns as $fckey => $values) {
             // Special treatment for key localizedname.
             if (isset($filtersettings[$fckey]['localizedname'])) {
                 $localizedname = $filtersettings[$fckey]['localizedname'];

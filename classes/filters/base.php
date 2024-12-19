@@ -25,6 +25,7 @@
 namespace local_wunderbyte_table\filters;
 
 use coding_exception;
+use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 use local_wunderbyte_table\filter;
 use local_wunderbyte_table\wunderbyte_table;
 use moodle_exception;
@@ -282,9 +283,15 @@ abstract class base {
             }
             $identifierarray[] = $identifier;
 
+            // For custom fields, we get the actual string value from field controller.
+            $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname($fckey);
+            if (!empty($fieldcontroller)) {
+                $cfstringvalueforvaluekey = $fieldcontroller->get_option_value_by_key($valuekey);
+            }
+
             $itemobject = [
                 // We do not want to show html entities, so replace &amp; with &.
-                'key' => str_replace("&amp;", "&", $valuekey),
+                'key' => str_replace("&amp;", "&", $cfstringvalueforvaluekey ?? $valuekey),
                 'value' => $valuevalue === true ? $valuekey : $valuevalue,
                 'identifier' => $identifier,
                 'category' => $fckey,
