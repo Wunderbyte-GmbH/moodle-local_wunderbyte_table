@@ -44,6 +44,10 @@ class wbt_field_controller_info {
      */
     private static $instances = [];
 
+    /**
+     * @var string
+     */
+    public const WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND = 'wbtable_customfield_value_notfound';
 
     /**
      * Create a customfield field controller for a customfield db record.

@@ -28,6 +28,7 @@ namespace local_wunderbyte_table\local\customfield\field\select;
 // Important: Use the field controller for the right customfield.
 use customfield_select\field_controller;
 use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
+use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 use stdClass;
 
 /**
@@ -55,7 +56,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         }
         $i = $index - 1;
         if ($i < 0 || $i >= count($optionsarray)) {
-            return '';
+            return wbt_field_controller_info::WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND;
         }
         return format_string($optionsarray[$i]);
     }
