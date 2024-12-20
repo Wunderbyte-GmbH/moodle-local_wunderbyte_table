@@ -24,9 +24,9 @@
 
 namespace local_wunderbyte_table\filters\types;
 
-use local_wunderbyte_table\filter;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
+use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
