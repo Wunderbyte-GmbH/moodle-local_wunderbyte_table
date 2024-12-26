@@ -63,6 +63,13 @@ abstract class base {
     protected array $options = [];
 
     /**
+     * Property to indicate if class has implemented a callback
+     *
+     * @var bool
+     */
+    public $hascallback = false;
+
+    /**
      * Set the column which should be filtered and possibly localize it.
      * @param string $columnidentifier
      * @param string $localizedstring
@@ -168,6 +175,22 @@ abstract class base {
     }
 
     /**
+     * This function takes a key value pair of options.
+     * Only if there are actual results in the table, these options will be displayed.
+     * The keys are the results, the values are the localized strings.
+     * For the standard filter, it's not necessary to provide these options...
+     * They will be gathered automatically.
+     *
+     * @param array $options
+     * @return void
+     */
+    public function add_options(array $options = []) {
+        foreach ($options as $key => $value) {
+            $this->options[$key] = $value;
+        }
+    }
+
+    /**
      * Get standard filter options.
      * @param wunderbyte_table $table
      * @param string $key
@@ -191,7 +214,6 @@ abstract class base {
      * @return array
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
-
         // Don't treat this filter if there are no values here.
         if (!is_array($values)) {
             return [];
@@ -322,6 +344,7 @@ abstract class base {
 
         // Make the arrays mustache ready, we have to jump through loops.
         $categoryobject['default']['values'] = array_values($categoryobject['default']['values']);
+        return [];
     }
 
     /**
@@ -443,6 +466,16 @@ abstract class base {
     }
 
     /**
+     * Getter for column identifier string.
+     *
+     * @return string
+     *
+     */
+    public function return_columnidentifier() {
+        return $this->columnidentifier;
+    }
+
+    /**
      * Add keys and values for applied filters. This will only be applied if filter is active.
      *
      * @param mixed $tableobject
@@ -454,5 +487,19 @@ abstract class base {
      */
     public static function prepare_filter_for_rendering(&$tableobject, array $filterarray, int $key) {
         return;
+    }
+
+    /**
+     * Function to filter std Class records by the set callback.
+     * We have positiv & negativ filter.
+     *
+     * @param array $records
+     *
+     * @return array
+     *
+     */
+    public function filter_by_callback(array $records, $not = false) {
+        // In the base version, we do no filtering either way.
+        return $records;
     }
 }
