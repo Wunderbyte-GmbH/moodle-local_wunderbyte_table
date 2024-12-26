@@ -153,7 +153,6 @@ class load_data extends external_api {
         }
 
         if (empty($table->baseurl)) {
-
             if (!empty($table->baseurlstring)) {
                 $table->define_baseurl($table->baseurlstring);
             } else {

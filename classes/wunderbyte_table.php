@@ -266,6 +266,13 @@ class wunderbyte_table extends table_sql {
     public $filtersortorder = [];
 
     /**
+     * Filters.
+     *
+     * @var array
+     */
+    public $filters = [];
+
+    /**
      * Legacy from table_sql.
      *
      * @var bool
@@ -880,7 +887,6 @@ class wunderbyte_table extends table_sql {
         }
         // In many cases, everything will work fine without this cache being defined.
         $this->renderedcachename = $renderedcachename;
-
     }
 
     /**
@@ -899,6 +905,10 @@ class wunderbyte_table extends table_sql {
         $filter->add_filter($filtercolumns, $invisible);
 
         $this->add_subcolumns('datafields', $filtercolumns, false);
+
+        if ($filter->hascallback) {
+            $this->filters[$filter->return_columnidentifier()] = $filter;
+        }
     }
 
     /**
@@ -1011,7 +1021,7 @@ class wunderbyte_table extends table_sql {
 
         // And then we query our cache to see if we have it already.
         if ($this->cachecomponent && $this->rawcachename) {
-            $cache = \cache::make($this->cachecomponent, $this->rawcachename);
+            $cache = cache::make($this->cachecomponent, $this->rawcachename);
             $cachedrawdata = $cache->get($cachekey);
         } else {
             $cachedrawdata = false;
@@ -1060,10 +1070,11 @@ class wunderbyte_table extends table_sql {
 
             // After the query, we set the result to the.
             // But only, if we have a cache by now.
-            if ($this->cachecomponent
+            if (
+                $this->cachecomponent
                 && $this->rawcachename
-                && $cache) {
-
+                && $cache
+            ) {
                 // Only set cachekey when rawdata is bigger than 0.
                 if (count($this->rawdata) > 0) {
                     $cache->set($cachekey, $this->rawdata);
@@ -1087,12 +1098,16 @@ class wunderbyte_table extends table_sql {
                             'timemodified' => $now,
                             '\'count\'' => 1, // COUNT is a reserved keyword in MariaDB, so use quotes.
                         ];
-                        if ($record = $DB->get_record('local_wunderbyte_table',
+                        if (
+                            $record = $DB->get_record(
+                                'local_wunderbyte_table',
                                 [
                                     'hash' => $cachekey,
                                     'page' => $this->context->id,
                                 ],
-                                'id, \'count\'')) { // COUNT is a reserved keyword in MariaDB, so use quotes.
+                                'id, \'count\''
+                            )
+                        ) { // COUNT is a reserved keyword in MariaDB, so use quotes.
                             $count = $record->count + 1;
                             unset($record->count);
                             $record->{'\'count\''} = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
@@ -1110,6 +1125,13 @@ class wunderbyte_table extends table_sql {
                     $this->set_pagination_to_cache($cachekey);
                 }
             }
+        }
+
+        // The Callback filter is applied on the existing records.
+        // The callback filter updates $this->rawdata.
+
+        foreach ($this->filters as $filter) {
+            $this->rawdata = $filter->filter_by_callback($this->rawdata);
         }
 
         $this->filteredrecords = empty($filter) ? $this->totalrows : count($this->rawdata);
