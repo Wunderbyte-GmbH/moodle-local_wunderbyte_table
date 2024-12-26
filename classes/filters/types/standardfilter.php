@@ -31,22 +31,54 @@ use local_wunderbyte_table\wunderbyte_table;
  * Wunderbyte table class is an extension of table_sql.
  */
 class standardfilter extends base {
+    /**
+     * Property to indicate if class has implemented a callback
+     *
+     * @var bool
+     */
+    public $hascallback = false;
 
     /**
-     * This function takes a key value pair of options.
-     * Only if there are actual results in the table, these options will be displayed.
-     * The keys are the results, the values are the localized strings.
-     * For the standard filter, it's not necessary to provide these options...
-     * They will be gathered automatically.
+     * Callable function
      *
-     * @param array $options
-     * @return void
+     * @var callable|null
      */
-    public function add_options(array $options = []) {
+    public $callback = null;
 
-        foreach ($options as $key => $value) {
-            $this->options[$key] = $value;
-        }
+    /**
+     * SQL (including properties field, where, from) to append to table sql.
+     *
+     * @var \stdClass
+     */
+    private $sql;
+
+    /**
+     * This function adds sql to the table sql.
+     *
+     * @param wunderbyte_table $table
+     *
+     * @return void
+     *
+     */
+    public function add_sql(wunderbyte_table $table) {
     }
 
+    /**
+     * [Description for define_sql]
+     *
+     * @param string $field
+     * @param string $from
+     * @param string $where
+     *
+     * @return void
+     *
+     */
+    public function define_sql(string $field, string $from, string $where) {
+        $sql = [
+            'field' => $field,
+            'from' => $from,
+            'where' => $where,
+        ];
+        $this->sql = $sql;
+    }
 }
