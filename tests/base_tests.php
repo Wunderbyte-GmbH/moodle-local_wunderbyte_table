@@ -29,7 +29,9 @@ namespace local_wunderbyte_table;
 use advanced_testcase;
 use cache_helper;
 use coding_exception;
+use Exception;
 use local_wunderbyte_table\external\load_data;
+use local_wunderbyte_table\filters\types\standardfilter;
 use moodle_exception;
 
 defined('MOODLE_INTERNAL') || die();
@@ -54,7 +56,7 @@ final class base_tests extends advanced_testcase {
     }
 
     /**
-     * Test wb base functionality
+     * Test wb base functionality via webservice external class.
      *
      * @covers \wunderbyte_table::query_db_cached
      * @runInSeparateProcess
@@ -79,7 +81,7 @@ final class base_tests extends advanced_testcase {
         $this->assertEquals($nrofrows, 10);
 
         // Now we create another three courses.
-        $this->create_test_courses(3);
+        $this->create_test_courses(3, ['fullname' => 'filtercourse']);
 
         $table = $this->create_demo2_table();
         $nrofrows = $this->return_rows_for_table($table);
@@ -109,8 +111,30 @@ final class base_tests extends advanced_testcase {
         $table = $this->create_demo2_table();
         $nrofrows = $this->return_rows_for_table($table);
 
-        // Now we expect exactly 20 items, for pagesize.
         $this->assertEquals($nrofrows, 20);
+
+        // Now we fetch the third page. With 43 coures, we expect only three rows now.
+        $table = $this->create_demo2_table();
+        $nrofrows = $this->return_rows_for_table($table, 2);
+
+        $this->assertEquals($nrofrows, 3);
+
+        // Now we fetch the third page. With 43 coures, we expect only three rows now.
+        $table = $this->create_demo2_table();
+        $nrofrows = $this->return_rows_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            '{"fullname":["filtercourse"]}'
+        );
+
+        $this->assertEquals($nrofrows, 3);
+
+        // throw new moodle_exception('x', 'x', '', json_encode($table->rawdata));
     }
 
     /**
@@ -135,9 +159,14 @@ final class base_tests extends advanced_testcase {
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
 
+        $standardfilter = new standardfilter('fullname', 'fullname');
+        $table->add_filter($standardfilter);
+
         $table->set_filter_sql('*', "(SELECT * FROM {course} ORDER BY id ASC LIMIT 112) as s1", 'id > 1', '');
 
         $table->pageable(true);
+
+        $table->pagesize = 20;
 
         $table->stickyheader = false;
         $table->showcountlabel = true;
@@ -156,7 +185,7 @@ final class base_tests extends advanced_testcase {
      * @return array
      *
      */
-    public function create_test_courses(int $coursestocreate = 1): array {
+    public function create_test_courses(int $coursestocreate = 1, $options = []): array {
         global $DB;
 
         $returnarray = [];
@@ -164,7 +193,7 @@ final class base_tests extends advanced_testcase {
         $counter = 0;
         while ($counter < $coursestocreate) {
             $counter++;
-            $returnarray[] = $this->getDataGenerator()->create_course();
+            $returnarray[] = $this->getDataGenerator()->create_course($options);
         }
         return $returnarray;
     }
@@ -173,15 +202,47 @@ final class base_tests extends advanced_testcase {
      * Returns rows via webservice static function from given table.
      *
      * @param wunderbyte_table $table
+     * @param int $page
+     * @param string $tsort
+     * @param string $thide
+     * @param string $tshow
+     * @param int $tdir
+     * @param int $treset
+     * @param string $filterobjects
+     * @param string $searchtext
      *
      * @return int
      *
      */
-    public function return_rows_for_table(wunderbyte_table $table): int {
+    public function return_rows_for_table(
+        wunderbyte_table $table,
+        $page = null,
+        $tsort = null,
+        $thide = null,
+        $tshow = null,
+        $tdir = null,
+        $treset = null,
+        $filterobjects = null,
+        $searchtext = null
+    ): int {
 
         $encodedtable = $table->return_encoded_table();
-        $result = load_data::execute($encodedtable, 0);
+        $result = load_data::execute(
+            $encodedtable,
+            $page,
+            $tsort,
+            $thide,
+            $tshow,
+            $tdir,
+            $treset,
+            $filterobjects,
+            $searchtext
+        );
         $jsonobject = json_decode($result['content']);
+
+        if (!isset($jsonobject->table->rows)) {
+            throw new moodle_exception('test', 'test', '', json_encode($jsonobject));
+        }
         $rows = $jsonobject->table->rows;
 
         return count($rows);
