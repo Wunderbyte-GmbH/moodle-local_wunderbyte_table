@@ -37,6 +37,10 @@ use stdClass;
  */
 abstract class base {
     /**
+     * @var array instances
+     */
+    protected static array $instances = [];
+    /**
      * @var string columnidentifier
      */
     protected string $columnidentifier = '';
@@ -68,6 +72,13 @@ abstract class base {
      * @var bool
      */
     public $hascallback = false;
+
+    /**
+     * Expected value.
+     *
+     * @var string
+     */
+    public $expectedvalue;
 
     /**
      * Set the column which should be filtered and possibly localize it.
@@ -494,6 +505,7 @@ abstract class base {
      * We have positiv & negativ filter.
      *
      * @param array $records
+     * @param bool $not
      *
      * @return array
      *
@@ -501,5 +513,17 @@ abstract class base {
     public function filter_by_callback(array $records, $not = false) {
         // In the base version, we do no filtering either way.
         return $records;
+    }
+
+    /**
+     * The expected value.
+     *
+     * @param string $expectedvalue
+     *
+     * @return void
+     *
+     */
+    public function set_expected_value(string $expectedvalue) {
+        $this->expectedvalue = $expectedvalue;
     }
 }

@@ -1012,6 +1012,59 @@ class wunderbyte_table extends table_sql {
         // Apply filter and search text.
         $this->apply_filter_and_search_from_url();
 
+        // The Callback filter is applied on the existing records.
+        // The callback filter updates $this->rawdata.
+
+        $usepages = $this->use_pages || $this->infinitescroll > 0;
+        $repeat = true;
+        $initialcurrpage = $this->currpage;
+        while (
+            $repeat
+            || (
+                $usepages
+                && $this->pagesize > 0
+                && (count($this->rawdata) < $this->pagesize)
+                && ($this->totalrows > ($this->currpage * $this->pagesize))
+            )
+        ) {
+            if (!$repeat) {
+                   $this->currpage++;
+            }
+            $rawdata = $this->rawdata;
+            $this->query_db_cached_filtered($pagesize, $useinitialsbar, $totalcountsql);
+
+            foreach ($this->filters as $filter) {
+                $this->rawdata = $filter->filter_by_callback($this->rawdata);
+            }
+            // On the first run we don't need to act.
+            if (!$repeat) {
+                // We only add the number of elements we need to reach the pagesize.
+                $recordstoadd = $this->pagesize - count($rawdata);
+                $this->rawdata = array_merge($rawdata, array_slice($this->rawdata, 0, $recordstoadd));
+            } else {
+                // Repeat should be false on the second run.
+                $repeat = false;
+            }
+        }
+
+        // After the callback filter, we might have reduced the number of records.
+        // But we still want to return the correct number of records, we need to look at hte next page.
+        $this->currpage = $initialcurrpage;
+        $this->filteredrecords = empty($filter) ? $this->totalrows : count($this->rawdata);
+    }
+
+    /**
+     * More precise function to query the database and cache the results.
+     *
+     * @param int $pagesize
+     * @param bool $useinitialsbar
+     * @param string $totalcountsql
+     *
+     * @return void
+     *
+     */
+    private function query_db_cached_filtered(int $pagesize, bool $useinitialsbar, string $totalcountsql) {
+        global $DB, $USER, $CFG, $PAGE;
         // Now we proceed to the actual sql query.
         $filter = $this->sql->filter ?? '';
         $this->sql->where .= " $filter ";
@@ -1037,7 +1090,10 @@ class wunderbyte_table extends table_sql {
             $this->rawdata = (array)$cachedrawdata;
 
             // If we hit the cache, we may increase the count for debugging reasons.
-            if (count($this->rawdata) > 0) {
+            if (
+                get_config('local_wunderbyte_table', 'logfiltercaches')
+                && (count($this->rawdata) > 0)
+            ) {
                 if (
                     $record = $DB->get_record(
                         'local_wunderbyte_table',
@@ -1058,7 +1114,6 @@ class wunderbyte_table extends table_sql {
                 $this->query_db($pagesize, $useinitialsbar);
 
             } catch (Exception $e) {
-
                 if ($CFG->debug > 0) {
                     $this->errormessage .= $e->getMessage();
                 } else {
@@ -1126,15 +1181,6 @@ class wunderbyte_table extends table_sql {
                 }
             }
         }
-
-        // The Callback filter is applied on the existing records.
-        // The callback filter updates $this->rawdata.
-
-        foreach ($this->filters as $filter) {
-            $this->rawdata = $filter->filter_by_callback($this->rawdata);
-        }
-
-        $this->filteredrecords = empty($filter) ? $this->totalrows : count($this->rawdata);
     }
 
     /**
@@ -1419,7 +1465,6 @@ class wunderbyte_table extends table_sql {
         }
 
         foreach ($filterobject as $categorykey => $categoryvalue) {
-
             if (!empty($categoryvalue)) {
                 // For the first filter in a category we append AND.
                 $filter .= " AND ( ";
@@ -1430,7 +1475,11 @@ class wunderbyte_table extends table_sql {
                 $classname = $filtersetting['wbfilterclass'] ?? "";
 
                 if (!empty($classname)) {
-                    $class = new $classname($categorykey, $filtersetting['localizedname']);
+                    if (isset($this->filters[$categorykey])) {
+                        $class = $this->filters[$categorykey];
+                    } else {
+                        $class = new $classname($categorykey, $filtersetting['localizedname']);
+                    }
                     $class->apply_filter($filter, $categorykey, $categoryvalue, $this);
 
                     // phpcs:ignore moodle.Commenting.TodoComment.MissingInfoInline
@@ -1822,7 +1871,6 @@ class wunderbyte_table extends table_sql {
             $download = '';
             $pagesize = '';
         } else {
-
             // First create hash of all relevant entries.
             $sort = $this->get_sql_sort();
             if ($sort) {
