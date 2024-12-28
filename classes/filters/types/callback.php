@@ -86,6 +86,8 @@ class callback extends base {
     ): void {
         // Here, we just want to serve the necessary syntax, but we can't add sql.
         $filter .= "1 = 1";
+
+        $this->set_expected_value(reset($categoryvalue));
     }
 
     /**
@@ -105,21 +107,27 @@ class callback extends base {
      * We have positiv & negativ filter.
      *
      * @param array $records
+     * @param bool $not
      *
      * @return array
      *
      */
     public function filter_by_callback(array $records, $not = false) {
 
+        if ($this->expectedvalue === null) {
+            return $records;
+        }
+
+        $expectedvalue = $this->expectedvalue ?? 1;
         $returnarray = [];
         foreach ($records as $record) {
             if (!$not) {
                 $methodname = $this->callbackfunction;
-                if ($methodname($record)) {
+                if ($expectedvalue == $methodname($record)) {
                     $returnarray[] = $record;
                 }
             } else {
-                if (!$methodname($record)) {
+                if ($expectedvalue != $methodname($record)) {
                     $returnarray[] = $record;
                 }
             }
