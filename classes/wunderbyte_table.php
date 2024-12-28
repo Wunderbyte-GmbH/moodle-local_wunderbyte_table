@@ -1018,19 +1018,25 @@ class wunderbyte_table extends table_sql {
         $usepages = $this->use_pages || $this->infinitescroll > 0;
         $repeat = true;
         $initialcurrpage = $this->currpage;
+        $rawdata = [];
         while (
             $repeat
             || (
-                $usepages
+                // Rawdata must be bigger than 0 on the second run, else we simply ran out of records.
+                count($rawdata) == $pagesize
+                && $usepages
                 && $this->pagesize > 0
                 && (count($this->rawdata) < $this->pagesize)
                 && ($this->totalrows > ($this->currpage * $this->pagesize))
             )
         ) {
-            if (!$repeat) {
-                   $this->currpage++;
+            if (
+                !$repeat
+                // This is to protect against repeating the call when there are just not enough records.
+            ) {
+                $this->currpage++;
             }
-            $rawdata = $this->rawdata;
+            $rawdata = $this->rawdata ?? [];
             $this->query_db_cached_filtered($pagesize, $useinitialsbar, $totalcountsql);
 
             foreach ($this->filters as $filter) {
@@ -1041,6 +1047,7 @@ class wunderbyte_table extends table_sql {
                 // We only add the number of elements we need to reach the pagesize.
                 $recordstoadd = $this->pagesize - count($rawdata);
                 $this->rawdata = array_merge($rawdata, array_slice($this->rawdata, 0, $recordstoadd));
+                $rawdata = $this->rawdata;
             } else {
                 // Repeat should be false on the second run.
                 $repeat = false;
@@ -1112,7 +1119,6 @@ class wunderbyte_table extends table_sql {
             // If not, we query as usual.
             try {
                 $this->query_db($pagesize, $useinitialsbar);
-
             } catch (Exception $e) {
                 if ($CFG->debug > 0) {
                     $this->errormessage .= $e->getMessage();
@@ -1131,9 +1137,9 @@ class wunderbyte_table extends table_sql {
                 && $cache
             ) {
                 // Only set cachekey when rawdata is bigger than 0.
+
                 if (count($this->rawdata) > 0) {
                     $cache->set($cachekey, $this->rawdata);
-
                     if (get_config('local_wunderbyte_table', 'logfiltercaches')) {
                         $sql = $this->get_sql_for_cachekey();
 
