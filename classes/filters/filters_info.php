@@ -41,7 +41,6 @@ use stdClass;
  * @package local_wunderbyte_table
  */
 class filters_info {
-
     /**
      * Handles form definition of filter classes.
      * @param MoodleQuickForm $mform
@@ -105,7 +104,6 @@ class filters_info {
      * @return void
      */
     public static function validation(array $data, array $files, array &$errors) {
-
     }
 
     /**
