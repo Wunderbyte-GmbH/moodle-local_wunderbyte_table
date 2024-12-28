@@ -943,7 +943,6 @@ class wunderbyte_table extends table_sql {
     public function define_sortablecolumns(array $sortablecolumns) {
 
         $this->sortablecolumns = $sortablecolumns;
-
     }
 
     /**
@@ -1018,12 +1017,12 @@ class wunderbyte_table extends table_sql {
         $usepages = $this->use_pages || $this->infinitescroll > 0;
         $repeat = true;
         $initialcurrpage = $this->currpage;
-        $rawdata = [];
+        $unfilteredrawdata = [];
         while (
             $repeat
             || (
                 // Rawdata must be bigger than 0 on the second run, else we simply ran out of records.
-                count($rawdata) == $pagesize
+                count($unfilteredrawdata) == $pagesize
                 && $usepages
                 && $this->pagesize > 0
                 && (count($this->rawdata) < $this->pagesize)
@@ -1038,7 +1037,7 @@ class wunderbyte_table extends table_sql {
             }
             $rawdata = $this->rawdata ?? [];
             $this->query_db_cached_filtered($pagesize, $useinitialsbar, $totalcountsql);
-
+            $unfilteredrawdata = $this->rawdata;
             foreach ($this->filters as $filter) {
                 $this->rawdata = $filter->filter_by_callback($this->rawdata);
             }
@@ -1047,7 +1046,6 @@ class wunderbyte_table extends table_sql {
                 // We only add the number of elements we need to reach the pagesize.
                 $recordstoadd = $this->pagesize - count($rawdata);
                 $this->rawdata = array_merge($rawdata, array_slice($this->rawdata, 0, $recordstoadd));
-                $rawdata = $this->rawdata;
             } else {
                 // Repeat should be false on the second run.
                 $repeat = false;
