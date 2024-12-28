@@ -83,7 +83,6 @@ final class base_tests extends advanced_testcase {
         // Now we create another three courses.
         $this->create_test_courses(3, ['fullname' => 'filtercourse']);
 
-        $table = $this->create_demo2_table();
         $nrofrows = $this->return_rows_for_table($table);
 
         // Because of caching kicking in, we still get 10 items.
@@ -92,35 +91,27 @@ final class base_tests extends advanced_testcase {
         // Now we purge the cache.
         cache_helper::purge_by_event('changesinwunderbytetable');
 
-        $table = $this->create_demo2_table();
         $nrofrows = $this->return_rows_for_table($table);
 
         // After purging, we expect 13.
         $this->assertEquals($nrofrows, 13);
 
-        $this->setAdminUser();
-
         // Now we want to test pagination.
         $this->create_test_courses(30);
-
-        $this->setUser($user);
 
         // Now we purge the cache.
         cache_helper::purge_by_event('changesinwunderbytetable');
 
-        $table = $this->create_demo2_table();
         $nrofrows = $this->return_rows_for_table($table);
 
         $this->assertEquals($nrofrows, 20);
 
         // Now we fetch the third page. With 43 coures, we expect only three rows now.
-        $table = $this->create_demo2_table();
         $nrofrows = $this->return_rows_for_table($table, 2);
 
         $this->assertEquals($nrofrows, 3);
 
         // Now we fetch the third page. With 43 coures, we expect only three rows now.
-        $table = $this->create_demo2_table();
         $nrofrows = $this->return_rows_for_table(
             $table,
             0,
@@ -243,7 +234,7 @@ final class base_tests extends advanced_testcase {
         if (!isset($jsonobject->table->rows)) {
             throw new moodle_exception('test', 'test', '', json_encode($jsonobject));
         }
-        $rows = $jsonobject->table->rows;
+        $rows = $jsonobject->table->rows ?? 0;
 
         return count($rows);
     }
