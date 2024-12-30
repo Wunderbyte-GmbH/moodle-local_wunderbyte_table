@@ -760,16 +760,18 @@ class table implements renderable, templatable {
 
         global $SESSION;
 
-        if (empty($this->wbtable->sortablecolumns )) {
+        if (empty($this->wbtable->sortablecolumns)) {
             return null;
         }
+
+        $isassociative = array_keys($this->wbtable->sortablecolumns) !== range(0, count($this->wbtable->sortablecolumns) - 1);
 
         $sortarray['options'] = [];
         foreach ($this->wbtable->sortablecolumns as $key => $value) {
 
             // If we have an assoziative array, we have localized values.
             // Else, we need to use the same value twice.
-            if (!isset($this->wbtable->columns[$key])) {
+            if (!$isassociative) {
                 $key = $value;
             }
 
