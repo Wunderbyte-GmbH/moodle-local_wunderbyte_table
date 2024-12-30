@@ -1023,9 +1023,13 @@ class wunderbyte_table extends table_sql {
             || (
                 // Rawdata must be bigger than 0 on the second run, else we simply ran out of records.
                 count($unfilteredrawdata) == $pagesize
+                // If we don't use pages, we don't need to repeat.
                 && $usepages
+                // If we don't have a pagesize, we don't need to repeat.
                 && $this->pagesize > 0
+                // If we have less records than the pagesize, we don't need to repeat.
                 && (count($this->rawdata) < $this->pagesize)
+                   // If we have less total records than the pagesize times curr page, we don't need to repeat.
                 && ($this->totalrows > ($this->currpage * $this->pagesize))
             )
         ) {
