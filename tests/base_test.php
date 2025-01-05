@@ -34,9 +34,6 @@ use local_wunderbyte_table\external\load_data;
 use local_wunderbyte_table\filters\types\standardfilter;
 use moodle_exception;
 
-defined('MOODLE_INTERNAL') || die();
-global $CFG;
-
 /**
  * Test base functionality of wunderbyte_table
  *
@@ -46,7 +43,7 @@ global $CFG;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
-final class base_tests extends advanced_testcase {
+final class base_test extends advanced_testcase {
     /**
      * Tests set up.
      */
@@ -78,7 +75,7 @@ final class base_tests extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table);
 
         // Now we get back exactly 10.
-        $this->assertEquals($nrofrows, 10);
+        $this->assertEquals(10, $nrofrows);
 
         // Now we create another three courses.
         $this->create_test_courses(3, ['fullname' => 'filtercourse']);
@@ -86,7 +83,7 @@ final class base_tests extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table);
 
         // Because of caching kicking in, we still get 10 items.
-        $this->assertEquals($nrofrows, 10);
+        $this->assertEquals(10, $nrofrows);
 
         // Now we purge the cache.
         cache_helper::purge_by_event('changesinwunderbytetable');
@@ -94,7 +91,7 @@ final class base_tests extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table);
 
         // After purging, we expect 13.
-        $this->assertEquals($nrofrows, 13);
+        $this->assertEquals(13, $nrofrows);
 
         // Now we want to test pagination.
         $this->create_test_courses(30);
@@ -104,12 +101,12 @@ final class base_tests extends advanced_testcase {
 
         $nrofrows = $this->get_rowscount_for_table($table);
 
-        $this->assertEquals($nrofrows, 20);
+        $this->assertEquals(20, $nrofrows);
 
         // Now we fetch the third page. With 43 coures, we expect only three rows now.
         $nrofrows = $this->get_rowscount_for_table($table, 2);
 
-        $this->assertEquals($nrofrows, 3);
+        $this->assertEquals(3, $nrofrows);
 
         // Now we fetch the third page. With 43 coures, we expect only three rows now.
         $nrofrows = $this->get_rowscount_for_table(
@@ -123,9 +120,7 @@ final class base_tests extends advanced_testcase {
             '{"fullname":["filtercourse"]}'
         );
 
-        $this->assertEquals($nrofrows, 3);
-
-        // throw new moodle_exception('x', 'x', '', json_encode($table->rawdata));
+        $this->assertEquals(3, $nrofrows);
     }
 
     /**
@@ -173,6 +168,7 @@ final class base_tests extends advanced_testcase {
      * Create a defined number of testcourses.
      *
      * @param int $coursestocreate
+     * @param array $options
      * @return array
      *
      */
