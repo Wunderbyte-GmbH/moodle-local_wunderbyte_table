@@ -59,7 +59,7 @@ final class base_tests extends advanced_testcase {
      * Test wb base functionality via webservice external class.
      *
      * @covers \wunderbyte_table::query_db_cached
-     * @runInSeparateProcess
+     * // @runInSeparateProcess
      *
      * @throws \coding_exception
      * @throws \dml_exception
@@ -75,7 +75,7 @@ final class base_tests extends advanced_testcase {
         $this->setUser($user);
 
         $table = $this->create_demo2_table();
-        $nrofrows = $this->return_rows_for_table($table);
+        $nrofrows = $this->get_rowscount_for_table($table);
 
         // Now we get back exactly 10.
         $this->assertEquals($nrofrows, 10);
@@ -83,7 +83,7 @@ final class base_tests extends advanced_testcase {
         // Now we create another three courses.
         $this->create_test_courses(3, ['fullname' => 'filtercourse']);
 
-        $nrofrows = $this->return_rows_for_table($table);
+        $nrofrows = $this->get_rowscount_for_table($table);
 
         // Because of caching kicking in, we still get 10 items.
         $this->assertEquals($nrofrows, 10);
@@ -91,7 +91,7 @@ final class base_tests extends advanced_testcase {
         // Now we purge the cache.
         cache_helper::purge_by_event('changesinwunderbytetable');
 
-        $nrofrows = $this->return_rows_for_table($table);
+        $nrofrows = $this->get_rowscount_for_table($table);
 
         // After purging, we expect 13.
         $this->assertEquals($nrofrows, 13);
@@ -102,17 +102,17 @@ final class base_tests extends advanced_testcase {
         // Now we purge the cache.
         cache_helper::purge_by_event('changesinwunderbytetable');
 
-        $nrofrows = $this->return_rows_for_table($table);
+        $nrofrows = $this->get_rowscount_for_table($table);
 
         $this->assertEquals($nrofrows, 20);
 
         // Now we fetch the third page. With 43 coures, we expect only three rows now.
-        $nrofrows = $this->return_rows_for_table($table, 2);
+        $nrofrows = $this->get_rowscount_for_table($table, 2);
 
         $this->assertEquals($nrofrows, 3);
 
         // Now we fetch the third page. With 43 coures, we expect only three rows now.
-        $nrofrows = $this->return_rows_for_table(
+        $nrofrows = $this->get_rowscount_for_table(
             $table,
             0,
             null,
@@ -205,7 +205,7 @@ final class base_tests extends advanced_testcase {
      * @return int
      *
      */
-    public function return_rows_for_table(
+    public function get_rowscount_for_table(
         wunderbyte_table $table,
         $page = null,
         $tsort = null,
@@ -216,6 +216,49 @@ final class base_tests extends advanced_testcase {
         $filterobjects = null,
         $searchtext = null
     ): int {
+
+        $rows = $this->get_rows_for_table(
+            $table,
+            $page,
+            $tsort,
+            $thide,
+            $tshow,
+            $tdir,
+            $treset,
+            $filterobjects,
+            $searchtext
+        );
+
+        return count($rows);
+    }
+
+    /**
+     * Returns the actual rows for a table. This only retrieves the rows for the current page.
+     *
+     * @param wunderbyte_table $table
+     * @param int $page
+     * @param string $tsort
+     * @param string $thide
+     * @param string $tshow
+     * @param int $tdir
+     * @param int $treset
+     * @param string $filterobjects
+     * @param string $searchtext
+     *
+     * @return array
+     *
+     */
+    public function get_rows_for_table(
+        wunderbyte_table $table,
+        $page = null,
+        $tsort = null,
+        $thide = null,
+        $tshow = null,
+        $tdir = null,
+        $treset = null,
+        $filterobjects = null,
+        $searchtext = null
+    ): array {
 
         $encodedtable = $table->return_encoded_table();
         $result = load_data::execute(
@@ -235,7 +278,6 @@ final class base_tests extends advanced_testcase {
             throw new moodle_exception('test', 'test', '', json_encode($jsonobject));
         }
         $rows = $jsonobject->table->rows ?? 0;
-
-        return count($rows);
+        return $rows;
     }
 }
