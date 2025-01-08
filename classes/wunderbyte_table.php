@@ -1082,11 +1082,16 @@ class wunderbyte_table extends table_sql {
         $pagesize = $this->pagesize;
 
         // And then we query our cache to see if we have it already.
-        if ($this->cachecomponent && $this->rawcachename) {
+        if (
+            !get_config('local_wunderbyte_table', 'turnoffcaching')
+            && $this->cachecomponent
+            && $this->rawcachename
+        ) {
             $cache = cache::make($this->cachecomponent, $this->rawcachename);
             $cachedrawdata = $cache->get($cachekey);
         } else {
             $cachedrawdata = false;
+            $cache = false;
         }
 
         // Pagination might have been set independend from cachedrawdata.
@@ -1182,11 +1187,11 @@ class wunderbyte_table extends table_sql {
                         }
                     }
                 }
+            }
 
-                if (!$paginationset) {
-                    $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
-                    $this->set_pagination_to_cache($cachekey);
-                }
+            if (!$paginationset) {
+                $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
+                $this->set_pagination_to_cache($cachekey);
             }
         }
     }
