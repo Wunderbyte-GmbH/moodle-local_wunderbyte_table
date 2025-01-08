@@ -162,6 +162,7 @@ $string['thursday'] = 'Do';
 $string['timespan'] = 'Zeitspanne';
 $string['to'] = 'Bis';
 $string['tuesday'] = 'Di';
+$string['turnoffcaching'] = 'Keine Verwendung von Caching' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['valuehastobeint'] = 'Wert muss eine Zahl sein';
 $string['veranstaltungen'] = "Veranstaltungen";
 $string['wbtablefiltersettingsheader'] = 'Filter anpassen';

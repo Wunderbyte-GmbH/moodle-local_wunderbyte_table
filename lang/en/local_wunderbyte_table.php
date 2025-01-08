@@ -166,6 +166,7 @@ $string['thursday'] = 'Thu';
 $string['timespan'] = 'Timespan';
 $string['to'] = 'To';
 $string['tuesday'] = 'Tue';
+$string['turnoffcaching'] = 'Turn off caching' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['valuehastobeint'] = "Value has to be a number";
 $string['veranstaltungen'] = "Events";
 $string['wbtablefiltersettingsheader'] = 'Edit filters';
