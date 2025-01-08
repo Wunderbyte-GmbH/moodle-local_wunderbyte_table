@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table;
+use local_wunderbyte_table\local\sortables\sortable_info;
 use mod_booking\singleton_service;
 
 defined('MOODLE_INTERNAL') || die();
@@ -41,6 +42,7 @@ use moodle_url;
 use stdClass;
 use coding_exception;
 use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\local\sortables\base as basesort;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\local\settings\tablesettings;
 
@@ -162,6 +164,13 @@ class wunderbyte_table extends table_sql {
      * @var bool Rows can be sorted.
      */
     public $sortablerows = false;
+
+    /**
+     * Sortables.
+     *
+     * @var array
+     */
+    public $sortables = [];
 
     /**
      *
@@ -601,6 +610,8 @@ class wunderbyte_table extends table_sql {
             $this->define_columns(array_keys((array)$onerow));
         }
 
+        sortable_info::apply_sortables($this);
+
         // At this point, we check if we need to add the checkboxes.
         if ($this->addcheckboxes && !$this->is_downloading()) {
             $columns = array_keys($this->columns);
@@ -912,6 +923,28 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * Define the columns for which an automatic filter should be generated.
+     * We just store them as subcolumns of type datafields. In the mustache template these fields must be added to every...
+     * ... row or card element, so it can be hidden or shown via the integrated filter mechanism..
+     * @param base $filter
+     * @param bool $invisible
+     * @return void
+     * @throws moodle_exception
+     */
+    public function add_sortable(basesort $sortable) {
+
+        $sortablecolumns = $this->sortablecolumns ?? [];
+
+        $sortable->add_sortable($sortablecolumns);
+
+        // $this->add_subcolumns('invisiblesortcolumns', array_keys($sortablecolumns));
+
+        $this->sortablecolumns = $sortablecolumns;
+
+        $this->sortables[$sortable->return_columnidentifier()] = $sortable;
+    }
+
+    /**
      * Hides the entire filter.
      * This is not like toggling on and off on start, but there will be just no filter at all.
      * @return void
@@ -931,7 +964,6 @@ class wunderbyte_table extends table_sql {
     public function define_fulltextsearchcolumns(array $fulltextsearchcolumns) {
 
         $this->fulltextsearchcolumns = $fulltextsearchcolumns;
-
     }
 
     /**
@@ -942,13 +974,15 @@ class wunderbyte_table extends table_sql {
      */
     public function define_sortablecolumns(array $sortablecolumns) {
 
-        $this->sortablecolumns = $sortablecolumns;
+        foreach ($sortablecolumns as $key => $value) {
+            $this->sortablecolumns[$key] = $value;
+        }
     }
 
     /**
      * Add fulltext search.
      *
-     * @return void
+     * @return string
      */
     private function setup_fulltextsearch() {
 
@@ -980,9 +1014,9 @@ class wunderbyte_table extends table_sql {
 
             $searchcolumns = array_values($searchcolumns);
 
-            $this->sql->fields .= " , " . $DB->sql_concat_join("' '", $searchcolumns) . " as wbfulltextsearch ";
+            return  $DB->sql_concat_join("' '", $searchcolumns) . " as wbfulltextsearch ";
         }
-
+        return '';
     }
 
     /**
@@ -1011,24 +1045,48 @@ class wunderbyte_table extends table_sql {
         // Apply filter and search text.
         $this->apply_filter_and_search_from_url();
 
-        // The Callback filter is applied on the existing records.
-        // The callback filter updates $this->rawdata.
+        // When we have a callback sort in place, we need to fetch all records.
+        // In order to avoid overloading, it would be best to still have a limit (eg. 10000).
+        // So we set the pagesize to the right value.
 
         $usepages = $this->use_pages || $this->infinitescroll > 0;
+
+        // The Callback filter is applied on the existing records.
+        // The callback filter updates $this->rawdata.
+        $callbacksorting = false;
+
         $repeat = true;
         $initialcurrpage = $this->currpage;
         $unfilteredrawdata = [];
+
+        // Check if we'll use a callback filter.
+
+        $callbackfilter = false;
+        foreach ($this->filters as $filter) {
+            if ($filter->expectedvalue !== null) {
+                $callbackfilter = true;
+                // On a callbackfilter, we always need to start with a 0 page.
+                // We need to iterate through all pages.
+                if ($usepages) {
+                    $this->currpage = 0;
+                }
+                break;
+            }
+        }
+
         while (
             $repeat
+            || $callbacksorting
             || (
+                $callbackfilter
                 // Rawdata must be bigger than 0 on the second run, else we simply ran out of records.
-                count($unfilteredrawdata) == $pagesize
+                && count($unfilteredrawdata) == $this->pagesize
                 // If we don't use pages, we don't need to repeat.
                 && $usepages
                 // If we don't have a pagesize, we don't need to repeat.
                 && $this->pagesize > 0
                 // If we have less records than the pagesize, we don't need to repeat.
-                && (count($this->rawdata) < $this->pagesize)
+                // && (count($this->rawdata) < $this->pagesize)
                    // If we have less total records than the pagesize times curr page, we don't need to repeat.
                 && ($this->totalrows > ($this->currpage * $this->pagesize))
             )
@@ -1039,17 +1097,28 @@ class wunderbyte_table extends table_sql {
             ) {
                 $this->currpage++;
             }
-            $rawdata = $this->rawdata ?? [];
-            $this->query_db_cached_filtered($pagesize, $useinitialsbar, $totalcountsql);
+            // This previousrawdata is the one we got from the last iteration.
+            // It's already filtered.
+            $previousdata ??= [];
+            $this->query_db_cached_filtered($this->pagesize, $useinitialsbar, $totalcountsql);
             $unfilteredrawdata = $this->rawdata;
             foreach ($this->filters as $filter) {
                 $this->rawdata = $filter->filter_by_callback($this->rawdata);
             }
+
+            // We need to retrieve the id of the records. normally, it's 'id', but for sure it's the first column.
+            $probableid ??= array_key_first((array)reset($this->rawdata));
+            // Here we combine the data we got from the previous run and the current one.
+            foreach ($this->rawdata as $record) {
+                if (!isset($previousdata[$record->{$probableid}])) {
+                    $previousdata[$record->{$probableid}] = $record;
+                }
+            }
+
             // On the first run we don't need to act.
             if (!$repeat) {
                 // We only add the number of elements we need to reach the pagesize.
-                $recordstoadd = $this->pagesize - count($rawdata);
-                $this->rawdata = array_merge($rawdata, array_slice($this->rawdata, 0, $recordstoadd));
+                $this->rawdata = array_slice($previousdata, $initialcurrpage * $this->pagesize, $this->pagesize);
             } else {
                 // Repeat should be false on the second run.
                 $repeat = false;
@@ -1058,7 +1127,13 @@ class wunderbyte_table extends table_sql {
 
         // After the callback filter, we might have reduced the number of records.
         // But we still want to return the correct number of records, we need to look at hte next page.
-        $this->currpage = $initialcurrpage;
+
+        if ($this->currpage !== $initialcurrpage) {
+            $this->totalrows = count($previousdata);
+            // $this->rawdata = array_merge($previousdata, array_slice($this->rawdata, 0, $recordstoadd));
+            $this->currpage = $initialcurrpage;
+        }
+
         $this->filteredrecords = empty($filter) ? $this->totalrows : count($this->rawdata);
     }
 
@@ -1550,13 +1625,14 @@ class wunderbyte_table extends table_sql {
             throw new moodle_exception('invalidsearchtext', 'local_wunderbyte_table');
         }
         $this->searchtext = $searchtext;
-        $this->setup_fulltextsearch();
+        $newselect = $this->setup_fulltextsearch();
 
         // Add the fields/Select to the FROM part.
-        $from = " ( SELECT " . $this->sql->fields . " FROM " . $this->sql->from;
+        $from = " ( SELECT " . $this->sql->fields . " , $newselect FROM " . $this->sql->from;
 
         // Add the new container here.
         $fields = " DISTINCT fulltextsearchcontainer.* ";
+        $this->sql->fields = $fields;
 
         // And close it in from..
         $from .= " ) fulltextsearchcontainer ";
