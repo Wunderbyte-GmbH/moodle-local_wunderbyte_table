@@ -161,13 +161,12 @@ class load_data extends external_api {
             }
         }
 
+        // We need to support both keys, for legacy reasons.
+        $params['wbtsearch'] = $params['searchtext'];
+
         // The table lib class expects $_POST variables to be present, so we have to set them.
         foreach ($params as $key => $value) {
             $_POST[$key] = $value;
-        }
-
-        if ($params['searchtext'] !== "") {
-            $table->apply_searchtext($params['searchtext']);
         }
 
         if (!empty($params['tsort'])) {
