@@ -347,6 +347,27 @@ For the display of localized names in tableheaders, use the define_headers funct
 ## Lazy loading vs. direct out
 To lazy load wunderbyte table (eg. for loading in tabs or modals) you need to call $table->lazyout() instead of $table->out. While out will return the html to echo, lazyout echos right away. If you want the html of lazyout, use $table->lazyouthtml();
 
+## Sortable classes
+The sortable classes give you the possibility to
+- Add SQL Code which is only needed when a given sorting is applied
+- Use a different cache for this sorting
+
+Example for a sortable:
+    $standardsortable = new standardsortable(
+        'freeplaces',
+        get_string('freeplaces', 'local_musi')
+    );
+    $select = '(SELECT COALESCE(NULLIF(s1.maxanswers, 0), 999999) - COUNT(ba.id)
+                FROM {booking_answers} ba
+                WHERE ba.optionid = s1.id AND ba.waitinglist < 3) AS freeplaces';
+    $from = '';
+    $where = '';
+    $standardsortable->define_sql($select, $from, $where);
+
+    $standardsortable->define_cache('mod_booking', 'bookedusertable');
+    $table->add_sortable($standardsortable);
+
+
 ## Installing via uploaded ZIP file ##
 1. Log in to your Moodle site as an admin and go to _Site administration >
    Plugins > Install plugins_.

@@ -30,7 +30,7 @@ $definitions = [
         'mode' => cache_store::MODE_APPLICATION,
         'simplekeys' => true,
         'staticacceleration' => true,
-        'staticaccelerationsize' => 100,
+        'staticaccelerationsize' => 500,
         'invalidationevents' => ['changesinwunderbytetable'],
     ],
     'cachedfulltable' => [
