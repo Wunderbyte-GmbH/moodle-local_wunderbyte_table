@@ -422,9 +422,9 @@ abstract class base {
             ) {
                 // Known issue. See https://github.com/Wunderbyte-GmbH/Wunderbyte-GmbH/issues/304.
                 // Here we check if it's an hourslist filter.
+                $delta = filter::get_timezone_offset(); // Timezone might vary according to location.
                 $paramsvaluekey = $table->set_params((string) ($value + $delta), false);
                 $filter .= filter::apply_hourlist_filter($columnname, ":$paramsvaluekey");
-                $delta = filter::get_timezone_offset();
             } else {
                 // We want to find the value in an array of values.
                 // Therefore, we have to use or as well.
