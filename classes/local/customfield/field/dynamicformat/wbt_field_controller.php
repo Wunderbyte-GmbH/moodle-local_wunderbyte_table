@@ -26,7 +26,7 @@
 namespace local_wunderbyte_table\local\customfield\field\dynamicformat;
 
 // Important: Use the field controller for the right customfield.
-use local_wunderbyte_table\local\customfield\field\dynamic\wbt_field_controller as wbtfieldcontrollerdynamic;
+use customfield_dynamicformat\field_controller;
 use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
 
 /**
@@ -37,5 +37,27 @@ use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
  * @author     Bernhard Fischer-Sengseis
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class wbt_field_controller extends wbtfieldcontrollerdynamic implements wbt_field_controller_base {
+class wbt_field_controller extends field_controller implements wbt_field_controller_base {
+
+    /**
+     * Get the actual string value of the customfield by index.
+     *
+     * @param string $key
+     * @return string the string value for the index
+     */
+    public function get_option_value_by_key(string $key): string {
+        global $DB;
+
+        $sql = $this->get_configdata_property('dynamicsql');
+        try {
+            $records = $DB->get_records_sql($sql);
+        } catch (\Throwable $th) {
+            return $key;
+        }
+        if (isset($records[$key])) {
+            return format_string($records[$key]->data ?? $key);
+        } else {
+            return $key;
+        }
+    }
 }
