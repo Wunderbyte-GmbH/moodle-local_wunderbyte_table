@@ -1,3 +1,11 @@
+## Version 2.0.35 (2025010900)
+* Improvement: Implement generic classes for customfields in wunderbyte table and get the string values to be shown in filter from field controller.
+* Improvement: Do not show rows for empty or not found values.
+* Improvement: Add field controllers for text and textarea and return text controller as fallback.
+* Bugfix: Add missing import of wbt_field_controller_info.
+* Bugfix: Correct searchfield SQL for elder moodle with mysql #68.
+* Bugfix: Custom field dynamic needs its own field controller as customfield dynamic might not be installed.
+
 ## Version 2.0.34 (2024121200)
 * Bugfix: Datepicker filter correctly applying enddate & unset Datepicker correctly
 
