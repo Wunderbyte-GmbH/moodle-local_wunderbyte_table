@@ -60,7 +60,8 @@ class wbt_field_controller_info {
         if (class_exists($class)) {
             return new $class($record->id, $record);
         }
-        return null;
+        // By default, we return the text controller.
+        return new \local_wunderbyte_table\local\customfield\field\text\wbt_field_controller($record->id, $record);
     }
 
     /**
@@ -96,7 +97,23 @@ class wbt_field_controller_info {
     public static function get_instance_by_shortname(string $shortname) {
         if (!empty(self::$instances[$shortname])) {
             return self::$instances[$shortname];
+        } else {
+            global $DB;
+            $sql = "SELECT cf.shortname AS filtercolumn, cf.*
+                FROM {customfield_field} cf
+                WHERE cf.shortname = :shortname";
+            $params = ['shortname' => $shortname];
+            if ($record = $DB->get_record_sql($sql, $params)) {
+                // We only add the instance, if a field controller exists.
+                if ($instance = self::create($record)) {
+                    self::$instances[$record->shortname] = $instance;
+                    return $instance;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
         }
-        return null;
     }
 }
