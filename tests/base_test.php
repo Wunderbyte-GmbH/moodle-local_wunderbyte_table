@@ -93,6 +93,33 @@ final class base_test extends advanced_testcase {
         // After purging, we expect 13.
         $this->assertEquals(13, $nrofrows);
 
+        // Search for courses by name.
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            'filtercourse'
+        );
+        $this->assertEquals(3, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            'Test course 9'
+        );
+        $this->assertEquals(1, $nrofrows);
+
         // Now we want to test pagination.
         $this->create_test_courses(30);
 
@@ -144,6 +171,9 @@ final class base_test extends advanced_testcase {
         // Number of items must be equal.
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
+
+        $table->define_fulltextsearchcolumns(['fullname', 'shortname']);
+        $table->define_sortablecolumns($columns);
 
         $standardfilter = new standardfilter('fullname', 'fullname');
         $table->add_filter($standardfilter);
