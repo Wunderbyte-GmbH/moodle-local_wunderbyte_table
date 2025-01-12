@@ -31,8 +31,10 @@ use cache_helper;
 use coding_exception;
 use Exception;
 use local_wunderbyte_table\external\load_data;
+use local_wunderbyte_table\filters\types\callback;
 use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\standardfilter;
+use local_wunderbyte_table\local\sortables\types\standardsortable;
 use moodle_exception;
 
 /**
@@ -61,6 +63,7 @@ final class base_test extends advanced_testcase {
         parent::tearDown();
         // Mandatory clean-up.
         cache_helper::purge_by_event('changesinwunderbytetable');
+        $_POST = [];
     }
 
     /**
@@ -116,6 +119,146 @@ final class base_test extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table, 2);
 
         $this->assertEquals(3, $nrofrows);
+    }
+
+    /**
+     * Test wb filter functionality via webservice external class.
+     *
+     * @covers \wunderbyte_table::query_db_cached
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     *
+     */
+    public function test_sortable(): void {
+
+        // First, we create ten courses.
+        $courses = $this->create_test_courses(45);
+
+        $user1 = $this->getDataGenerator()->create_user();
+        $user2 = $this->getDataGenerator()->create_user();
+        $user3 = $this->getDataGenerator()->create_user();
+
+        // We enrol users to the course in order to test sorting.
+        $this->getDataGenerator()->enrol_user($user1->id, $courses[8]->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $courses[8]->id);
+        $this->getDataGenerator()->enrol_user($user3->id, $courses[8]->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $courses[5]->id);
+        $this->getDataGenerator()->enrol_user($user3->id, $courses[5]->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $courses[4]->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $courses[3]->id);
+
+        $this->setAdminUser();
+
+        $table = $this->create_demo2_table();
+
+        $table->pagesize = 10;
+        $nrofrows = $this->get_rowscount_for_table($table);
+
+        // Now we get back exactly 10.
+        $this->assertEquals(10, $nrofrows);
+
+        // On the 5th page, we expect exactly 5 items.
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            4,
+            null,
+        );
+        // Now we get back exactly 10.
+        $this->assertEquals(5, $nrofrows);
+
+        $rows = $this->get_rows_for_table(
+            $table,
+            null,
+            'fullname',
+        );
+
+        $fullname = $rows[0]->datafields[1]->value;
+        // Sorted by fullname, we get Test course 1 as first item.
+        $this->assertEquals("Test course 1", $fullname);
+
+        $rows = $this->get_rows_for_table(
+            $table,
+            null,
+            'enrolledusers',
+            null,
+            null,
+            SORT_DESC
+        );
+
+        // Sorted by enrolled users, we get Test course 8 as first item.
+        $fullname = $rows[0]->datafields[1]->value;
+        $this->assertEquals("Test course 8", $fullname);
+
+        // The second item will be Test course 5.
+        $fullname = $rows[1]->datafields[1]->value;
+        $this->assertEquals("Test course 5", $fullname);
+    }
+
+    /**
+     * Test wb filter functionality via webservice external class.
+     *
+     * @covers \wunderbyte_table\filters\types\callback
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     *
+     */
+    public function test_callbackfilter(): void {
+
+        // First, we create ten courses.
+        $courses = $this->create_test_courses(45);
+
+        $user1 = $this->getDataGenerator()->create_user();
+        $user2 = $this->getDataGenerator()->create_user();
+        $user3 = $this->getDataGenerator()->create_user();
+
+        // We enrol users to the course in order to test sorting.
+        $this->getDataGenerator()->enrol_user($user1->id, $courses[8]->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $courses[8]->id);
+        $this->getDataGenerator()->enrol_user($user3->id, $courses[8]->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $courses[5]->id);
+        $this->getDataGenerator()->enrol_user($user3->id, $courses[5]->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $courses[4]->id);
+        $this->getDataGenerator()->enrol_user($user2->id, $courses[3]->id);
+
+        $this->setAdminUser();
+
+        $table = $this->create_demo2_table();
+
+        $table->pagesize = 30;
+        $nrofrows = $this->get_rowscount_for_table($table);
+
+        // Now we get back exactly 10.
+        $this->assertEquals(30, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "{\"iddivisblebythree\":[\"0\"]}",
+        );
+
+        // Now we get back exactly 30.
+        $this->assertEquals(30, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "{\"iddivisblebythree\":[\"1\"]}",
+        );
+
+        // Now we get back exactly 15.
+        $this->assertEquals(15, $nrofrows);
     }
 
     /**
@@ -232,9 +375,22 @@ final class base_test extends advanced_testcase {
             null,
             null,
             //'{"enddate":{"Course end date":{"<":' . strtotime('today') . '}}}'
-            "{\"enddate\":{\"Course end date\":{\"<\":1763528940}}}"
+            '{"enddate":{"Course end date":{"<":1763528940}}}'
         );
-        $this->assertEquals(2, $nrofrows);
+        $this->assertEquals(15, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            //'{"enddate":{"Course end date":{"<":' . strtotime('today') . '}}}'
+            '{"enddate":{"Course end date":{">":1763528940}}}'
+        );
+        $this->assertEquals(1, $nrofrows);
     }
 
     /**
@@ -262,8 +418,32 @@ final class base_test extends advanced_testcase {
         $table->define_fulltextsearchcolumns(['fullname', 'shortname']);
         $table->define_sortablecolumns($columns);
 
+        $standardsortable = new standardsortable(
+            'enrolledusers',
+            'enrolledusers'
+        );
+        $select = '(SELECT COUNT(ue.id)
+                    FROM {user_enrolments} ue
+                    JOIN {enrol} e ON ue.enrolid = e.id
+                    WHERE e.courseid = s1.id) AS enrolledusers';
+        $from = '';
+        $where = '';
+        $standardsortable->define_sql($select, $from, $where);
+
+        $table->add_sortable($standardsortable);
+
         $standardfilter = new standardfilter('fullname', 'fullname');
         $table->add_filter($standardfilter);
+
+        $callbackfilter = new callback('iddivisblebythree', 'iddivisblebythree');
+        $callbackfilter->add_options([
+            0 => 'notdivisblebythree',
+            1 => 'divisblebythree',
+        ]);
+        // This filter expects a record from booking options table.
+        // We check if it is bookable for the user.
+        $callbackfilter->define_callbackfunction('local_wunderbyte_table\base_test::filter_iddivisiblebythree');
+        $table->add_filter($callbackfilter);
 
         $datepicker = new datepicker('enddate', get_string('enddate'));
         // For the datepicker, we need to add special options.
@@ -307,7 +487,12 @@ final class base_test extends advanced_testcase {
         $counter = 0;
         while ($counter < $coursestocreate) {
             $counter++;
-            $returnarray[] = $this->getDataGenerator()->create_course($options);
+
+            $courseoptions = $options;
+            if (!isset($options['fullname'])) {
+                $courseoptions['fullname'] = 'Test course ' . $counter;
+            }
+            $returnarray[$counter] = $this->getDataGenerator()->create_course($courseoptions);
         }
         return $returnarray;
     }
@@ -402,5 +587,17 @@ final class base_test extends advanced_testcase {
         }
         $rows = $jsonobject->table->rows ?? 0;
         return $rows;
+    }
+
+    /**
+     * Function to be used by the callback filter.
+     *
+     * @param mixed $record
+     *
+     * @return bool
+     *
+     */
+    public static function filter_iddivisiblebythree($record): bool {
+        return $record->id % 3 === 0;
     }
 }
