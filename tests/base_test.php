@@ -374,7 +374,6 @@ final class base_test extends advanced_testcase {
             null,
             null,
             null,
-            //'{"enddate":{"Course end date":{"<":' . strtotime('today') . '}}}'
             '{"enddate":{"Course end date":{"<":1763528940}}}'
         );
         $this->assertEquals(15, $nrofrows);
@@ -387,7 +386,6 @@ final class base_test extends advanced_testcase {
             null,
             null,
             null,
-            //'{"enddate":{"Course end date":{"<":' . strtotime('today') . '}}}'
             '{"enddate":{"Course end date":{">":1763528940}}}'
         );
         $this->assertEquals(1, $nrofrows);
