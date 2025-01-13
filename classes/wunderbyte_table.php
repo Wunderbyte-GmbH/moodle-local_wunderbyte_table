@@ -926,18 +926,16 @@ class wunderbyte_table extends table_sql {
      * Define the columns for which an automatic filter should be generated.
      * We just store them as subcolumns of type datafields. In the mustache template these fields must be added to every...
      * ... row or card element, so it can be hidden or shown via the integrated filter mechanism..
-     * @param base $filter
-     * @param bool $invisible
+     * @param basesort $sortable
+     *
      * @return void
-     * @throws moodle_exception
+     *
      */
     public function add_sortable(basesort $sortable) {
 
         $sortablecolumns = $this->sortablecolumns ?? [];
 
         $sortable->add_sortable($sortablecolumns);
-
-        // $this->add_subcolumns('invisiblesortcolumns', array_keys($sortablecolumns));
 
         $this->sortablecolumns = $sortablecolumns;
 
@@ -1127,10 +1125,8 @@ class wunderbyte_table extends table_sql {
 
         // After the callback filter, we might have reduced the number of records.
         // But we still want to return the correct number of records, we need to look at hte next page.
-
         if ($this->currpage !== $initialcurrpage) {
             $this->totalrows = count($previousdata);
-            // $this->rawdata = array_merge($previousdata, array_slice($this->rawdata, 0, $recordstoadd));
             $this->currpage = $initialcurrpage;
         }
 
