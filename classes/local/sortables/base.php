@@ -98,9 +98,11 @@ abstract class base {
 
     /**
      * Add the filter to the array.
-     * @param array $filter
+     *
+     * @param array $sortables
+     *
      * @return void
-     * @throws moodle_exception
+     *
      */
     public function add_sortable(array &$sortables) {
         $sortables[$this->columnidentifier] = $this->localizedstring;
