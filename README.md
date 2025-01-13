@@ -72,9 +72,9 @@ If you don't use infinite scroll, pagination options will be displayed at the bo
 
 
 ## Action buttons
-You can add a number of action buttons to your table. If you combine them with "$yourtable->addcheckbox = true", you will be able to select single lines and execute your function with it. The methods will need to be implemented in your child class of wunderbyte table and they will be called via ajax. Example:
+You can add a number of action buttons to your table. If you combine them with "$yourtable->addcheckboxes = true", you will be able to select single lines and execute your function with it. The methods will need to be implemented in your child class of wunderbyte table and they will be called via ajax. Example:
 
-    $mytable->addcheckbox = true;
+    $mytable->addcheckboxes = true;
     $mytable->actionbuttons[] = [
         'label' => get_string('deleterow', 'mod_myproject'), // Name of your action button.
         'methodname' => 'deleterow', // The method needs to be added to your child of wunderbyte_table class including "action_" prefix ie action_deleterow.
