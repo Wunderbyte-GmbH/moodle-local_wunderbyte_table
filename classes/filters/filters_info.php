@@ -58,7 +58,7 @@ class filters_info {
         $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
         // We need to localize the filter for every user.
-        $lang = current_language();
+        $lang = filter::current_language();
         $key = $table->tablecachehash . $lang . '_filterjson';
 
         // We want the live and uncached datafields.
@@ -121,7 +121,7 @@ class filters_info {
         // And fill in the data form.
 
         // We need to localize the filter for every user.
-        $lang = current_language();
+        $lang = filter::current_language();
         $key = $table->tablecachehash . $lang . '_filterjson';
 
         $filtersettings = editfilter::return_filtersettings($table, $key);

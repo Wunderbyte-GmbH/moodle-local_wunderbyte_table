@@ -50,7 +50,7 @@ class filter {
         if (!$table->filterjson) {
 
             // We need to localize the filter for every user.
-            $lang = current_language();
+            $lang = self::current_language();
             $key = $table->tablecachehash . $lang . '_filterjson';
 
             $table->filterjson = editfilter::get_userspecific_filterjson($table, $key);
@@ -368,5 +368,26 @@ class filter {
         $delta = $gmttime - $userhour;
 
         return $delta;
+    }
+
+    /**
+     * As there seems to be the possibility that current_language() does not return the same as used by getstring...
+     * ... this function tries to avoid any problems.
+     *
+     * @return string
+     *
+     */
+    public static function current_language() {
+        // We need to localize the filter for every user.
+        $lang = get_string('thislanguage', 'langconfig');
+        // Convert the string to lowercase.
+        $lowercase = strtolower($lang);
+        // Remove any character that is not a-z.
+        $lang = preg_replace('/[^a-z]/', '', $lowercase);
+
+        if (empty($lang)) {
+            $lang = current_language();
+        }
+        return $lang;
     }
 }

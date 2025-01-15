@@ -1235,7 +1235,7 @@ class wunderbyte_table extends table_sql {
     public function apply_filter(string $filter, string &$searchtext = '') {
 
         global $DB;
-        $lang = current_language();
+        $lang = filter::current_language();
         $key = $this->tablecachehash . $lang . "_filterjson";
         $filtersettings = editfilter::return_filtersettings($this, $key);
 

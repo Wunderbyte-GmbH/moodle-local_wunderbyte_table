@@ -59,8 +59,10 @@ class tablesettings {
      */
     public static function apply_setting(wunderbyte_table $table) {
 
-        // We need to localize the filter for every user.
-        $lang = current_language();
+        global $CFG;
+
+        $lang = filter::current_language();
+
         $key = $table->tablecachehash . $lang . '_filterjson';
 
         $jsontablesettings = self::return_jsontablesettings_from_db(0, $key);
@@ -188,7 +190,7 @@ class tablesettings {
     public static function set_data(stdClass &$data, wunderbyte_table $table) {
 
         // We need to localize the filter for every user.
-        $lang = current_language();
+        $lang = filter::current_language();
         $key = $table->tablecachehash . $lang . '_filterjson';
 
         $jsontablesettings = self::return_jsontablesettings_from_db(0, $key, 0);
@@ -273,7 +275,7 @@ class tablesettings {
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($formdata->encodedtable);
         // We need to localize the filter for every user.
-        $lang = current_language();
+        $lang = filter::current_language();
         $cachekey = $table->tablecachehash . $lang . '_filterjson';
 
         filter::save_settings($table,
