@@ -46,8 +46,6 @@ class wbt_field_controller extends field_controller implements wbt_field_control
      * @return string the string value
      */
     public function get_option_value_by_key(string $key): string {
-        global $DB;
-
         if (!empty($key)) {
             // For normal text fields we need format_string.
             return format_string($key);

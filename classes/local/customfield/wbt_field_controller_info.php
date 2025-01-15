@@ -25,6 +25,7 @@
 
 namespace local_wunderbyte_table\local\customfield;
 
+use local_wunderbyte_table\local\customfield\field\text\wbt_field_controller;
 use stdClass;
 use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
 
@@ -109,11 +110,15 @@ class wbt_field_controller_info {
                     self::$instances[$record->shortname] = $instance;
                     return $instance;
                 } else {
-                    return null;
+                    // Fallback: By default, we return text controller.
+                    return new wbt_field_controller();
                 }
             } else {
-                return null;
+                // Fallback: By default, we return text controller.
+                return new wbt_field_controller();
             }
         }
+        // Fallback: By default, we return text controller.
+        return new wbt_field_controller();
     }
 }
