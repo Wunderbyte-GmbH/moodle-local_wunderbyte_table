@@ -125,6 +125,8 @@ final class base_test extends advanced_testcase {
      * Test wb filter functionality via webservice external class.
      *
      * @covers \wunderbyte_table::query_db_cached
+     * @covers \wunderbyte_table::define_sortablecolumns
+     * @covers \local_wunderbyte_table\local\sortables\types\standardsortable
      *
      * @throws \coding_exception
      * @throws \dml_exception
@@ -198,7 +200,7 @@ final class base_test extends advanced_testcase {
     /**
      * Test wb filter functionality via webservice external class.
      *
-     * @covers \wunderbyte_table\filters\types\callback
+     * @covers \local_wunderbyte_table\filters\types\callback
      *
      * @throws \coding_exception
      * @throws \dml_exception
@@ -264,7 +266,7 @@ final class base_test extends advanced_testcase {
     /**
      * Test wb datepicker filter functionality via webservice external class.
      *
-     * @covers \wunderbyte_table\filters\types\datepicker
+     * @covers \local_wunderbyte_table\filters\types\datepicker
      *
      * @throws \coding_exception
      * @throws \dml_exception
@@ -297,6 +299,7 @@ final class base_test extends advanced_testcase {
         $this->setUser($user);
 
         $table = $this->create_demo2_table();
+        $table->pagesize = 20;
 
         $nrofrows = $this->get_rowscount_for_table(
             $table,
@@ -336,38 +339,88 @@ final class base_test extends advanced_testcase {
     }
 
     /**
-     * Test wb base search and filtering functionality via webservice external class.
+     * Test wb base full text search.
      *
-     * @covers \wunderbyte_table::query_db_cached
-     * // @runInSeparateProcess
+     * @covers \local_wunderbyte_table\filters\types\standardfilter
      *
      * @throws \coding_exception
      * @throws \dml_exception
      *
      */
-    public function test_basic_search_filtering_cached(): void {
+    public function test_filter_standardfilter(): void {
         // First, we create ten courses.
         $this->create_test_courses(10);
-        // Now we create another three courses for basic searching and filtering.
+        // Now we create another six courses for basic searching and filtering.
         $this->create_test_courses(3, ['fullname' => 'filtercourse']);
-        // Create 2 courses for end date filtering.
-        $this->create_test_courses(1, [
-            'fullname' => 'ended1',
-            'startdate' => strtotime('2 May 2010'),
-            'enddate' => strtotime('20 May 2010'),
-        ]);
-        $this->create_test_courses(1, [
-            'fullname' => 'ended2',
-            'startdate' => strtotime('5 Jun 2020 14:00'),
-            'enddate' => strtotime('15 Jun 2020 15:00'),
-        ]);
-        $plusfifftymonth = strtotime('+50 month');
-        $plussixtymonth = strtotime('+60 month');
-        $this->create_test_courses(1, [
-            'fullname' => 'future1',
-            'startdate' => $plusfifftymonth,
-            'enddate' => $plussixtymonth,
-        ]);
+        $this->create_test_courses(1, ['fullname' => 'ended1']);
+        $this->create_test_courses(1, ['fullname' => 'ended2']);
+        $this->create_test_courses(1, ['fullname' => 'future1']);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+        $table->pagesize = 20;
+
+        $nrofrows = $this->get_rowscount_for_table($table);
+        $this->assertEquals(16, $nrofrows);
+
+        // Validate basic filtering by course fullname.
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            '{"fullname":["filtercourse"]}'
+        );
+        $this->assertEquals(3, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            '{"fullname":["ended2"]}'
+        );
+        $this->assertEquals(1, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            '{"fullname":["ended%"]}'
+        );
+        $this->assertEquals(2, $nrofrows);
+    }
+
+    /**
+     * Test wb base full text search.
+     *
+     * @covers \wunderbyte_table::query_db_cached
+     * @covers \wunderbyte_table::define_fulltextsearchcolumns
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     *
+     */
+    public function test_fulltextsearchcolumns(): void {
+        // First, we create ten courses.
+        $this->create_test_courses(10);
+        // Now we create another six courses for basic searching and filtering.
+        $this->create_test_courses(3, ['fullname' => 'filtercourse']);
+        $this->create_test_courses(1, ['fullname' => 'ended1']);
+        $this->create_test_courses(1, ['fullname' => 'ended2']);
+        $this->create_test_courses(1, ['fullname' => 'future1']);
 
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
