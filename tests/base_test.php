@@ -374,7 +374,19 @@ final class base_test extends advanced_testcase {
             null,
             null,
             null,
-            '{"enddate":{"Course end date":{"<":1763528940}}}'
+            '{"enddate":{"Course end date":{"<":' . strtotime('25 Jun 2020') . '}}}'
+        );
+        $this->assertEquals(15, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            '{"enddate":{"Course end date":{"<":' . strtotime('+1 year') . '}}}'
         );
         $this->assertEquals(15, $nrofrows);
 
