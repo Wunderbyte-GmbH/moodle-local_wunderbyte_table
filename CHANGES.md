@@ -1,3 +1,7 @@
+## Version 2.0.36 (2025011600)
+* Bugfix: Fix README - table setting is called "addcheckboxes".
+* Bugfix: Add fallback for field controller, so we always have at least the text controller.
+
 ## Version 2.0.35 (2025010900)
 * Improvement: Implement generic classes for customfields in wunderbyte table and get the string values to be shown in filter from field controller.
 * Improvement: Do not show rows for empty or not found values.
