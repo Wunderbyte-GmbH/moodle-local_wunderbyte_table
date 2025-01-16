@@ -204,9 +204,9 @@ final class base_test extends advanced_testcase {
      * @throws \dml_exception
      *
      */
-    public function test_callbackfilter(): void {
+    public function test_filter_callback(): void {
 
-        // First, we create ten courses.
+        // First, we create default test courses.
         $courses = $this->create_test_courses(45);
 
         $user1 = $this->getDataGenerator()->create_user();
@@ -259,6 +259,82 @@ final class base_test extends advanced_testcase {
 
         // Now we get back exactly 15.
         $this->assertEquals(15, $nrofrows);
+    }
+
+    /**
+     * Test wb datepicker filter functionality via webservice external class.
+     *
+     * @covers \wunderbyte_table\filters\types\datepicker
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     *
+     */
+    public function test_filter_datepicker(): void {
+
+        // First, we create default test courses.
+        $courses = $this->create_test_courses(10);
+        // Create 3 courses for end date filtering.
+        $this->create_test_courses(1, [
+            'fullname' => 'ended1',
+            'startdate' => strtotime('2 May 2010'),
+            'enddate' => strtotime('20 May 2010'),
+        ]);
+        $this->create_test_courses(1, [
+            'fullname' => 'ended2',
+            'startdate' => strtotime('5 Jun 2020 14:00'),
+            'enddate' => strtotime('15 Jun 2020 15:00'),
+        ]);
+        $plusfifftymonth = strtotime('+50 month');
+        $plussixtymonth = strtotime('+60 month');
+        $this->create_test_courses(1, [
+            'fullname' => 'future1',
+            'startdate' => $plusfifftymonth,
+            'enddate' => $plussixtymonth,
+        ]);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            '{"enddate":{"Course end date":{">":' . $plusfifftymonth . '}}}'
+            //'{"enddate":{"Course end date":{">":1772323200}}}'
+        );
+        $this->assertEquals(1, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            //'{"enddate":{"Course end date":{"<":' . strtotime('25 Jun 2020') . '}}}'
+            '{"enddate":{"Course end date":{"<":1593043200}}}'
+        );
+        $this->assertEquals(2, $nrofrows);
+
+        $nrofrows = $this->get_rowscount_for_table(
+            $table,
+            0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            '{"enddate":{"Course end date":{"<":' . strtotime('+1 year') . '}}}'
+        );
+        $this->assertEquals(12, $nrofrows);
     }
 
     /**
@@ -365,42 +441,6 @@ final class base_test extends advanced_testcase {
             null,
             null,
             '{"fullname":["ended2"]}'
-        );
-        $this->assertEquals(1, $nrofrows);
-
-        $nrofrows = $this->get_rowscount_for_table(
-            $table,
-            0,
-            null,
-            null,
-            null,
-            null,
-            null,
-            '{"enddate":{"Course end date":{"<":' . strtotime('25 Jun 2020') . '}}}'
-        );
-        $this->assertEquals(15, $nrofrows);
-
-        $nrofrows = $this->get_rowscount_for_table(
-            $table,
-            0,
-            null,
-            null,
-            null,
-            null,
-            null,
-            '{"enddate":{"Course end date":{"<":' . strtotime('+1 year') . '}}}'
-        );
-        $this->assertEquals(15, $nrofrows);
-
-        $nrofrows = $this->get_rowscount_for_table(
-            $table,
-            0,
-            null,
-            null,
-            null,
-            null,
-            null,
-            '{"enddate":{"Course end date":{">":' . $plusfifftymonth . '}}}'
         );
         $this->assertEquals(1, $nrofrows);
     }
