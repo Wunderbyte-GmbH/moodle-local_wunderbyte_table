@@ -145,7 +145,7 @@ class hierarchicalfilter extends base {
             foreach ($subcategoryarray as $valuekey => $valuevalue) {
 
                 // For custom fields, we get the actual string value from field controller.
-                $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname($valuekey);
+                $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname($fckey);
                 if (!empty($fieldcontroller)) {
                     $cfstringvalueforvaluekey = $fieldcontroller->get_option_value_by_key($valuekey);
                     if ($cfstringvalueforvaluekey == wbt_field_controller_info::WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND) {
@@ -154,8 +154,8 @@ class hierarchicalfilter extends base {
                 }
 
                 $itemobject = [
-                    // We do not want to show html entities, so replace &amp; with &.
-                    'key' => str_replace("&amp;", "&", $cfstringvalueforvaluekey ?? $valuekey),
+                    // We do not want to show HTML tags or HTML entities, so replace &amp; with &.
+                    'key' => strip_tags(str_replace("&amp;", "&", $cfstringvalueforvaluekey ?? $valuekey)),
                     'value' => $valuevalue === true ? $valuekey : $valuevalue,
                     'category' => $fckey,
                 ];

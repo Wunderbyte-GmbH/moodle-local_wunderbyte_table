@@ -293,8 +293,8 @@ abstract class base {
             }
 
             $itemobject = [
-                // We do not want to show html entities, so replace &amp; with &.
-                'key' => str_replace("&amp;", "&", $cfstringvalueforvaluekey ?? $valuekey),
+                // We do not want to show HTML tags or HTML entities, so replace &amp; with &.
+                'key' => strip_tags(str_replace("&amp;", "&", $cfstringvalueforvaluekey ?? $valuekey)),
                 'value' => $valuevalue === true ? $valuekey : $valuevalue,
                 'identifier' => $identifier,
                 'category' => $fckey,
