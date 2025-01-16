@@ -1,3 +1,8 @@
+## Version 2.0.38 (2025011602)
+* Bugfix: Make sure that field controller is only applied if the string is not yet localized and sorted with sortedarray.
+* Bugfix: Make sure we use the correct language prefix for storing filter & such
+* Improvement: Apply timezone offset for hourlist filter.
+
 ## Version 2.0.37 (2025011601)
 * Bugfix: Fixes for filters using wbt_field_controller.
 
