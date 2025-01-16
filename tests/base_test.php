@@ -287,10 +287,12 @@ final class base_test extends advanced_testcase {
             'startdate' => strtotime('5 Jun 2020 14:00'),
             'enddate' => strtotime('15 Jun 2020 15:00'),
         ]);
+        $plusfifftymonth = strtotime('+50 month');
+        $plussixtymonth = strtotime('+60 month');
         $this->create_test_courses(1, [
             'fullname' => 'future1',
-            'startdate' => strtotime('1 March 2050 14:00'),
-            'enddate' => strtotime('10 March 2050 15:00'),
+            'startdate' => $plusfifftymonth,
+            'enddate' => $plussixtymonth,
         ]);
 
         $user = $this->getDataGenerator()->create_user();
@@ -398,7 +400,7 @@ final class base_test extends advanced_testcase {
             null,
             null,
             null,
-            '{"enddate":{"Course end date":{">":1763528940}}}'
+            '{"enddate":{"Course end date":{">":' . $plusfifftymonth . '}}}'
         );
         $this->assertEquals(1, $nrofrows);
     }
