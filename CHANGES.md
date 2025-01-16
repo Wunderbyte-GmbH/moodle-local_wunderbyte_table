@@ -1,3 +1,6 @@
+## Version 2.0.37 (2025011601)
+* Bugfix: Fixes for filters using wbt_field_controller.
+
 ## Version 2.0.36 (2025011600)
 * Bugfix: Fix README - table setting is called "addcheckboxes".
 * Bugfix: Add fallback for field controller, so we always have at least the text controller.
