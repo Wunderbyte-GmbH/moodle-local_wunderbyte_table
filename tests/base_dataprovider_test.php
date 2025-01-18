@@ -45,6 +45,9 @@ use moodle_exception;
  * @copyright 2025 Wunderbyte GmbH <info@wunderbyte.at>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
+ * @runInSeparateProcess
+ * @runTestsInSeparateProcesses
+ *
  */
 final class base_dataprovider_test extends advanced_testcase {
     /**
@@ -355,7 +358,7 @@ final class base_dataprovider_test extends advanced_testcase {
         ]);
         // This filter expects a record from booking options table.
         // We check if it is bookable for the user.
-        $callbackfilter->define_callbackfunction('local_wunderbyte_table\base_test_dataprovider::filter_iddivisiblebythree');
+        $callbackfilter->define_callbackfunction('local_wunderbyte_table\base_dataprovider_test::filter_iddivisiblebythree');
         $table->add_filter($callbackfilter);
 
         $datepicker = new datepicker('enddate', get_string('enddate'));
