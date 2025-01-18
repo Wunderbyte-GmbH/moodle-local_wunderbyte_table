@@ -271,8 +271,10 @@ final class base_dataprovider_test extends advanced_testcase {
      * @param array $coursedata
      * @param array $expected
      *
-     * @covers \wunderbyte_table::query_db_cached
-     * @covers \wunderbyte_table::define_fulltextsearchcolumns
+     * @covers \local_wunderbyte_table\wunderbyte_table::query_db_cached
+     * @covers \local_wunderbyte_table\wunderbyte_table::define_fulltextsearchcolumns
+     * @covers \local_wunderbyte_table\filters\types\standardfilter
+     * @covers \local_wunderbyte_table\filters\types\datepicker
      *
      * @throws \coding_exception
      * @throws \dml_exception
@@ -368,6 +370,21 @@ final class base_dataprovider_test extends advanced_testcase {
             '<',
             get_string('apply_filter', 'local_wunderbyte_table'),
             'now',
+        );
+        $table->add_filter($datepicker);
+
+        $datepicker = new datepicker(
+            'startdate',
+            get_string('timespan', 'local_wunderbyte_table'),
+            'enddate'
+        );
+        // For the datepicker, we need to add special options.
+        $datepicker->add_options(
+            'in between',
+            '<',
+            get_string('apply_filter', 'local_wunderbyte_table'),
+            '1680130800',
+            'now'
         );
         $table->add_filter($datepicker);
 
@@ -563,8 +580,8 @@ final class base_dataprovider_test extends advanced_testcase {
             [
                 'coursestocreate' => 1,
                 'fullname' => 'ended1',
-                'startdate' => strtotime('2 May 2010'),
-                'enddate' => strtotime('20 May 2010'),
+                'startdate' => strtotime('2 May 2010 13:00'),
+                'enddate' => strtotime('20 May 2010 14:20'),
                 'users' => $standardusers,
             ],
             [
@@ -583,9 +600,107 @@ final class base_dataprovider_test extends advanced_testcase {
             ],
         ];
 
+        // Some pre-defined filter strings.
+        $timespanwithin1 = '{"startdate":{"Timespan":{">=":' . strtotime('4 May 2010')
+            . '}},"enddate":{"Timespan":{"<=":' . strtotime('18 May 2010') . '}}}';
+        $timespanwithin2 = '{"startdate":{"Timespan":{">=":' . strtotime('1 May 2010')
+            . '}},"enddate":{"Timespan":{"<=":' . strtotime('21 May 2010') . '}}}';
+        $timespanwithin3 = '{"startdate":{"Timespan":{">=":' . strtotime('1 May 2010 13:00')
+            . '}},"enddate":{"Timespan":{"<=":' . strtotime('20 Jun 2020 14:20') . '}}}';
+        $timespanoverlapboth = '{"startdate":{"Timespan":{"<=":' . strtotime('4 May 2010')
+            . '}},"enddate":{"Timespan":{">=":' . strtotime('18 May 2010') . '}}}';
+        $timespanoverlapbeginning1 = '{"startdate":{"Timespan":{"<=":' . strtotime('4 May 2010')
+            . '}},"enddate":{"Timespan":{"<=":' . strtotime('22 May 2010') . '},"Timespana":{">=":'
+            . strtotime('4 May 2010') . '}}}';
+        $timespanoverlapbeginning2 = '{"startdate":{"Timespan":{"<=":' . strtotime('7 Jun 2020')
+            . '}},"enddate":{"Timespan":{"<=":' . strtotime('22 Jun 2020') . '},"Timespana":{">=":'
+            . strtotime('7 Jun 2020') . '}}}';
+        $timespanoverlapending1 = '{"startdate":{"Timespan":{">=":' . strtotime('1 May 2010')
+            . '},"Timespana":{"<=":' . strtotime('18 May 2010') . '}},"enddate":{"Timespan":{">=":'
+            . strtotime('18 May 2010') . '}}}';
+        $timespanoverlapending2 = '{"startdate":{"Timespan":{">=":' . strtotime('3 Jun 2020')
+            . '},"Timespana":{"<=":' . strtotime('12 Jun 2020') . '}},"enddate":{"Timespan":{">=":'
+            . strtotime('12 Jun 2020') . '}}}';
+        $timespanbefore1 = '{"startdate":{"Timespan":{"<":' . strtotime('4 May 2015')
+            . '}},"enddate":{"Timespan":{"<":' . strtotime('5 May 2015') . '},"Timespana":{"<=":'
+            . strtotime('4 May 2015') . '}}}';
+        $timespanbefore2 = '{"startdate":{"Timespan":{"<":' . strtotime('4 May 2022')
+            . '}},"enddate":{"Timespan":{"<":' . strtotime('5 May 2022') . '},"Timespana":{"<=":'
+            . strtotime('4 May 2022') . '}}}';
+        $timespanafter1 = '{"startdate":{"Timespan":{">":' . strtotime('10 April 2010')
+            . '},"Timespana":{">=":' . strtotime('18 April 2010') . '}},"enddate":{"Timespan":{">=":'
+            . strtotime('18 April 2010') . '}}}';
+        $timespanafter2 = '{"startdate":{"Timespan":{">":' . strtotime('10 April 2015')
+            . '},"Timespana":{">=":' . strtotime('18 April 2015') . '}},"enddate":{"Timespan":{">=":'
+            . strtotime('18 April 2015') . '}}}';
+        $timespanoverlap = '{"startdate":{"Timespan":{"fo":' . strtotime('8 Jun 2020')
+            . '}},"enddate":{"Timespan":{"fo":' . strtotime('13 Jun 2020') . '}}}';
+
         // Array of tests.
         $returnarray = [
             // Test name (description).
+            'filter_datepicker_in_between' => [
+                'courses' => $standardcourses,
+                'expected' => [
+                    'getrowscount' => [
+                        [
+                            'assert' => 16,
+                        ],
+                        [
+                            'filterobjects' => $timespanwithin1,
+                            'assert' => 13, // Because default courses has dates == 0.
+                        ],
+                        [
+                            'filterobjects' => $timespanwithin2,
+                            'assert' => 14,
+                        ],
+                        [
+                            'filterobjects' => $timespanwithin3,
+                            'assert' => 15,
+                        ],
+                        [
+                            'filterobjects' => $timespanoverlapboth,
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => $timespanoverlapbeginning1,
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => $timespanoverlapbeginning2,
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => $timespanoverlapending1,
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => $timespanoverlapending2,
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => $timespanbefore1,
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => $timespanbefore2,
+                            'assert' => 2,
+                        ],
+                        [
+                            'filterobjects' => $timespanafter1,
+                            'assert' => 3,
+                        ],
+                        [
+                            'filterobjects' => $timespanafter2,
+                            'assert' => 2,
+                        ],
+                        [
+                            'filterobjects' => $timespanoverlap,
+                            'assert' => 1,
+                        ],
+                    ],
+                ],
+            ],
             'fulltextsearchcolumns' => [
                 'courses' => $standardcourses,
                 'expected' => [
