@@ -627,6 +627,10 @@ final class base_dataprovider_test extends advanced_testcase {
                             'filterobjects' => '{"fullname":["ended%"]}',
                             'assert' => 2,
                         ],
+                        [
+                            'filterobjects' => '{"fullname":["filtercourse","ended%"]}',
+                            'assert' => 5,
+                        ],
                     ],
                 ],
             ],
