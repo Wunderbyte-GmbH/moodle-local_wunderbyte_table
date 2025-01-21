@@ -96,7 +96,7 @@ export function initializeFilterSearch(containerselector) {
                 // Check if value of records contains searchstring.
                 // If contained, display it, else hide.
                 records.forEach(function(record) {
-                    let value = record.value.toLowerCase();
+                    let value = record.dataset.key.toLowerCase();
                     const listelement = record.parentNode;
                     if (value.includes(searchstring.toLowerCase())) {
                         match = true;
