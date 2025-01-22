@@ -1,3 +1,6 @@
+## Version 2.0.39 (2025012200)
+* Bugfix: Hierarchical filter search in menu (#75).
+
 ## Version 2.0.38 (2025011602)
 * Bugfix: Make sure that field controller is only applied if the string is not yet localized and sorted with sortedarray.
 * Bugfix: Make sure we use the correct language prefix for storing filter & such
