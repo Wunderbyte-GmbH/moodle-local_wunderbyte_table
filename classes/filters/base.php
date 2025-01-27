@@ -110,7 +110,6 @@ abstract class base {
      * @throws coding_exception
      */
     public static function definition(MoodleQuickForm &$mform, array &$formdata, stdClass $filter) {
-
         $classname = get_called_class();
         // We only want the last part of the classname.
         $array = explode('\\', $classname);
@@ -192,9 +191,7 @@ abstract class base {
      * @return array
      */
     public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
-
         $returnarray = filter::get_db_filter_column($table, $key);
-
         return $returnarray ?? [];
     }
 
@@ -387,7 +384,6 @@ abstract class base {
                     unset($values[$keytoexplode]);
                 }
             }
-
             unset($filtersettings[$fckey]['explode']);
         }
         return $valueswithcount;
@@ -500,5 +496,36 @@ abstract class base {
      */
     public function set_expected_value(string $expectedvalue) {
         $this->expectedvalue = $expectedvalue;
+    }
+
+    /**
+     * The expected value.
+     * @return string
+     */
+    public static function render_mandatory_fields() {
+        $mform = new MoodleQuickForm('dynamicform', 'post', '');
+        $mform->addElement(
+            'static',
+            'user_information',
+            '',
+            'No additional fields needed'
+        );
+        return $mform;
+    }
+
+    /**
+     * The expected value.
+     * @return array
+     */
+    public static function validate_filter_data($data) {
+        return ['name' => 'error'];
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     */
+    public static function get_dynamic_values($fieldsandsubmitteddata) {
+        return [];
     }
 }

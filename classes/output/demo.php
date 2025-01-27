@@ -154,10 +154,10 @@ class demo implements renderable, templatable {
                     'localizedname' => get_string('other', 'local_wunderbyte_table'),
                 ]
         ]);
-        $table->add_filter($hierarchicalfilter);
+        //$table->add_filter($hierarchicalfilter);
 
         $standardfilter = new standardfilter('lastname', get_string('lastname'));
-        $table->add_filter($standardfilter);
+        //$table->add_filter($standardfilter);
 
         $standardfilter = new standardfilter('email', get_string('email'));
         $table->add_filter($standardfilter);
@@ -735,13 +735,17 @@ class demo implements renderable, templatable {
         $data = [
             'table1' => $this->render_table_1(),
             'tab1_name' => TABLE1NAME,
-            'table2' => $this->render_table_2(),
-            'tab2_name' => TABLE2NAME,
-            'table3' => $this->render_table_3(),
-            'tab3_name' => TABLE3NAME,
-            'table4' => $this->render_table_4(),
-            'tab4_name' => TABLE4NAME,
         ];
+        // $data = [
+        //     'table1' => $this->render_table_1(),
+        //     'tab1_name' => TABLE1NAME,
+        //     'table2' => $this->render_table_2(),
+        //     'tab2_name' => TABLE2NAME,
+        //     'table3' => $this->render_table_3(),
+        //     'tab3_name' => TABLE3NAME,
+        //     'table4' => $this->render_table_4(),
+        //     'tab4_name' => TABLE4NAME,
+        // ];
 
         return $data;
     }

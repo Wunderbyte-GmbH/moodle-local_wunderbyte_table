@@ -23,14 +23,27 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
-use local_wunderbyte_table\filter;
 use local_wunderbyte_table\filters\base;
-use local_wunderbyte_table\wunderbyte_table;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
 class standardfilter extends base {
+    /**
+     *
+     * @var string
+     */
+    public static $groupname = 'standardfiltergroup';
+
+    /**
+     *
+     * @var array
+     */
+    public static $grouplabels = [
+        'key',
+        'value',
+    ];
+
     /**
      * Property to indicate if class has implemented a callback
      *
@@ -96,5 +109,122 @@ class standardfilter extends base {
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }
+    }
+
+    /**
+     * The expected value.
+     * @return \MoodleQuickForm
+     */
+    public static function render_mandatory_fields() {
+        $mform = new \MoodleQuickForm('dynamicform', 'post', '');
+        $groupelements = [];
+        foreach (self::$grouplabels as $grouplabel) {
+            $labelelement = $mform->createElement(
+                'static',
+                "{$grouplabel}label",
+                '',
+                get_string("standardfilter{$grouplabel}label", 'local_wunderbyte_table')
+            );
+            $inputelement = $mform->createElement('text', $grouplabel, '', ['size' => '20']);
+            $mform->setType($grouplabel, PARAM_TEXT);
+            $groupelements[] = $labelelement;
+            $groupelements[] = $inputelement;
+        }
+
+        $mform->addGroup(
+            $groupelements,
+            self::$groupname,
+            get_string('standardfiltergrouplabel', 'local_wunderbyte_table'),
+            [' '],
+            false
+        );
+        return $mform;
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     * @return array
+     */
+    public static function validate_filter_data($data) {
+        $errors = [];
+        self::validation_check_name($data, $errors);
+        self::validation_check_key_value_pair($data, $errors);
+        return $errors;
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     */
+    private static function validation_check_name($data, &$errors) {
+        if (empty($data['new_filter_name'])) {
+            $errors['new_filter_name'] = 'Name is empty';
+        }
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     */
+    private static function validation_check_key_value_pair($data, &$errors) {
+        if (self::only_partial_submitted($data)) {
+            $errors['key'] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+            $errors['value'] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+        }
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     */
+    private static function only_partial_submitted($data) {
+        if (
+            self::only_key_submitted($data) ||
+            self::only_value_submitted($data)
+        ) {
+            return true;
+        }
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     */
+    private static function only_key_submitted($data) {
+        if (!empty($data['key']) && empty($data['value'])) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     */
+    private static function only_value_submitted($data) {
+        if (empty($data['key']) && !empty($data['value'])) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     */
+    public static function get_dynamic_values($fieldsandsubmitteddata) {
+        $mandatoryfields = $fieldsandsubmitteddata['form'];
+        $filtergroup = $mandatoryfields->getElement(self::$groupname);
+        if ($filtergroup) {
+            foreach ($filtergroup->_elements as $groupelement) {
+                $label = $groupelement->_attributes['name'];
+                if (in_array($label, self::$grouplabels)) {
+                    $groupelement->_attributes['value'] = $fieldsandsubmitteddata['data'][$label] ?? null;
+                    $mandatoryfields->setElementError(self::$groupname, $fieldsandsubmitteddata['errors'][$label]);
+                }
+            }
+        }
+        return $mandatoryfields;
     }
 }

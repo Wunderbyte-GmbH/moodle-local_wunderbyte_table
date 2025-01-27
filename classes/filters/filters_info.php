@@ -24,8 +24,6 @@
 
 namespace local_wunderbyte_table\filters;
 
-use cache;
-use cache_helper;
 use coding_exception;
 use core_component;
 use dml_exception;

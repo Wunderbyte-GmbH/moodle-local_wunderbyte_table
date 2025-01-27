@@ -16,6 +16,8 @@
 
 namespace local_wunderbyte_table\form;
 
+use local_wunderbyte_table\filters\filter_form_operator;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -36,38 +38,23 @@ use stdClass;
  * @package     local_wunderbyte_table
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class edittable extends dynamic_form {
+class addfitlertable extends dynamic_form {
     /**
      * {@inheritdoc}
      * @see moodleform::definition()
      */
     public function definition() {
+        global $PAGE;
 
         $mform = $this->_form;
-
         $customdata = $this->_customdata;
         $ajaxformdata = $this->_ajaxformdata;
-
         $data = $ajaxformdata ?? $customdata;
 
-        // If we open an existing campaign, we need to save the id right away.
         if (!empty($ajaxformdata['id'])) {
             $mform->addElement('hidden', 'id', $ajaxformdata['id']);
         }
-
-        $mform->addElement(
-            'header',
-            'wbtablefiltersettingsheader',
-            get_string('wbtablefiltersettingsheader', 'local_wunderbyte_table')
-        );
-        filters_info::defintion($mform, $data);
-
-        $mform->addElement(
-            'header',
-            'wbtabletablesettingsheader',
-            get_string('wbtabletablesettingsheader', 'local_wunderbyte_table')
-        );
-        tablesettings::definition($mform, (array)$data);
+        filter_form_operator::generate_form($mform, $data);
     }
 
     /**
@@ -78,9 +65,12 @@ class edittable extends dynamic_form {
      */
     public function definition_after_data() {
         $mform = $this->_form;
-        $customdata = $this->_customdata;
-        $ajaxformdata = $this->_ajaxformdata;
+        $submitteddata = $this->_ajaxformdata;
+        if (!empty($submitteddata)) {
+            filter_form_operator::persist_input_values($mform, $submitteddata);
+        }
     }
+
 
     /**
      * Process data for dynamic submission
@@ -90,9 +80,7 @@ class edittable extends dynamic_form {
         $data = parent::get_data();
 
         $newdata = new stdClass();
-
         filters_info::process_data($data, $newdata);
-
         tablesettings::process_data($data, $newdata);
 
         return $newdata;
@@ -107,14 +95,11 @@ class edittable extends dynamic_form {
         $data = (object)$this->_ajaxformdata;
 
         $encodedtable = $data->encodedtable;
-        if (empty($encodedtable)) {
-            // Do nothing if table is missing.
-            return;
-        }
         $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
         filters_info::set_data($data, $table);
         tablesettings::set_data($data, $table);
+
         $this->set_data($data);
     }
 
@@ -127,18 +112,7 @@ class edittable extends dynamic_form {
      *
      */
     public function validation($data, $files) {
-        $errors = [];
-
-        $errors['gs_wb_pagesize'] = get_string('valuehastobeint', 'local_wunderbyte_table');
-        if (!is_number($data['gs_wb_pagesize'])) {
-            $errors['gs_wb_pagesize'] = get_string('valuehastobeint', 'local_wunderbyte_table');
-        }
-
-        if (!is_number($data['gs_wb_infinitescroll'])) {
-            $errors['gs_wb_infinitescroll'] = get_string('valuehastobeint', 'local_wunderbyte_table');
-        }
-
-        return $errors;
+        return filter_form_operator::validation($this->_ajaxformdata);
     }
 
 
