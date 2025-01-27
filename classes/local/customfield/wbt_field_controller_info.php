@@ -74,6 +74,10 @@ class wbt_field_controller_info {
     public static function instantiate_by_shortnames(array $shortnames) {
         global $DB;
 
+        if (empty($shortnames)) {
+            return;
+        }
+
         [$inorequal, $inparams] = $DB->get_in_or_equal($shortnames, SQL_PARAMS_NAMED);
 
         $sql = "SELECT cf.shortname AS filtercolumn, cf.*
