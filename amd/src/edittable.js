@@ -20,9 +20,11 @@
  */
 import ModalForm from 'core_form/modalform';
 import {get_string as getString} from 'core/str';
+import {init as filterFieldsInit} from 'local_wunderbyte_table/filterfieldsreload';
 
 const SELECTORS = {
     EDITTABLEBUTTON: ' .wb_edit_button',
+    ADDFILTERBUTTON: ' .wb_add_filter_button',
 };
 
 /**
@@ -49,6 +51,71 @@ export function initializeEditTableButton(selector, idstring, encodedtable) {
     }
 
     button.addEventListener('click', (e) => editTableModal(e, idstring, encodedtable));
+    addFilterButtonListener(selector, idstring, encodedtable);
+
+}
+
+/**
+ * Edit Table Modal.
+ * @param {*} selector
+ * @param {*} idstring
+ * @param {*} encodedtable
+ */
+export function addFilterButtonListener(selector, idstring, encodedtable) {
+    const button = verifyValidButtonInitialisation(selector);
+    if (button) {
+        button.addEventListener('click', (e) => addFilterTableModal(e, idstring, encodedtable));
+    }
+    return;
+}
+
+/**
+ * Edit Table Modal.
+ * @param {*} selector
+ */
+export function verifyValidButtonInitialisation(selector) {
+    const button = document.querySelector(selector + SELECTORS.ADDFILTERBUTTON);
+    if (!button) {
+        return false;
+    }
+    if (button.initialized) {
+        return false;
+    } else {
+        button.initialized = true;
+    }
+    return button;
+}
+
+/**
+ * Edit Table Modal.
+ * @param {*} event
+ * @param {*} idstring
+ * @param {*} encodedtable
+ */
+export function addFilterTableModal(event, idstring, encodedtable) {
+    // We two parents up, we find the right element with the necessary information.
+    const element = event.target;
+    const modalForm = new ModalForm({
+        formClass: "local_wunderbyte_table\\form\\addfitlertable",
+        args: {
+            idstring,
+            encodedtable,
+        },
+        modalConfig: {title: getString('addwbtablefilter', 'local_wunderbyte_table')},
+        returnFocus: element
+    });
+    // eslint-disable-next-line no-console
+    console.log('Modal shown. Initializing filterfieldsreload script..........', modalForm.events);
+    // Add event listener for when the modal is shown
+    modalForm.addEventListener('core_form_modalform_loaded', () => {
+        filterFieldsInit();
+    });
+    modalForm.addEventListener(modalForm.events.FORM_SUBMITTED, response => {
+        // eslint-disable-next-line no-console
+        console.log('form submitted response: ', response);
+        window.location.reload();
+    });
+    modalForm.show();
 }
 
 /**
