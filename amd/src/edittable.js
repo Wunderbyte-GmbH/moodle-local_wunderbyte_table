@@ -41,9 +41,6 @@ export function initializeEditTableButton(selector, idstring, encodedtable) {
         return;
     }
 
-    // eslint-disable-next-line no-console
-    console.log('run initializeEditTableButton');
-
     if (button.initialized) {
         return;
     } else {
@@ -104,9 +101,6 @@ export function addFilterTableModal(event, idstring, encodedtable) {
         modalConfig: {title: getString('addwbtablefilter', 'local_wunderbyte_table')},
         returnFocus: element
     });
-    // eslint-disable-next-line no-console
-    console.log('Modal shown. Initializing filterfieldsreload script..........', modalForm.events);
-    // Add event listener for when the modal is shown
     modalForm.addEventListener('core_form_modalform_loaded', () => {
         filterFieldsInit();
     });

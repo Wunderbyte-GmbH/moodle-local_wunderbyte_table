@@ -37,7 +37,6 @@ export const init = () => {
                 }
             });
         });
-
         observer.observe(document.body, {childList: true, subtree: true});
     };
 
@@ -48,12 +47,9 @@ export const init = () => {
                 methodname: 'local_wunderbyte_table_get_filter_fields',
                 args: {filtertype: selectedValue},
                 done: (response) => {
-                    // eslint-disable-next-line no-console
-                    console.log('Web service response:', response);
-
                     const placeholder = document.getElementById('filter-mandatory-fields');
                     if (placeholder) {
-                        placeholder.innerHTML = response.html; // Assuming response contains an 'html' property
+                        placeholder.innerHTML = response.html;
                     }
                 },
                 fail: (error) => {

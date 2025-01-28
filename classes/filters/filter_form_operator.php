@@ -116,6 +116,7 @@ class filter_form_operator {
     /**
      * Validation.
      * @param \MoodleQuickForm $mform
+     * @param string $dynamichtml
      */
     private static function set_dynamic_fields_inside_div(&$mform, $dynamichtml) {
         foreach ($mform->_elements as $element) {
