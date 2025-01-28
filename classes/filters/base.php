@@ -500,7 +500,7 @@ abstract class base {
 
     /**
      * The expected value.
-     * @return string
+     * @return mixed
      */
     public static function render_mandatory_fields() {
         $mform = new MoodleQuickForm('dynamicform', 'post', '');
@@ -515,6 +515,7 @@ abstract class base {
 
     /**
      * The expected value.
+     * @param array $data
      * @return array
      */
     public static function validate_filter_data($data) {
@@ -523,7 +524,7 @@ abstract class base {
 
     /**
      * The expected value.
-     * @param array $data
+     * @param array $fieldsandsubmitteddata
      */
     public static function get_dynamic_values($fieldsandsubmitteddata) {
         return [];

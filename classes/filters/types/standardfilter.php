@@ -156,16 +156,18 @@ class standardfilter extends base {
     /**
      * The expected value.
      * @param array $data
+     * @param array $errors
      */
     private static function validation_check_name($data, &$errors) {
         if (empty($data['new_filter_name'])) {
-            $errors['new_filter_name'] = 'Name is empty';
+            $errors['new_filter_name'] = get_string('filteremptynameerror', 'local_wunderbyte_table');
         }
     }
 
     /**
      * The expected value.
      * @param array $data
+     * @param array $errors
      */
     private static function validation_check_key_value_pair($data, &$errors) {
         if (self::only_partial_submitted($data)) {
@@ -177,6 +179,7 @@ class standardfilter extends base {
     /**
      * The expected value.
      * @param array $data
+     * @return bool
      */
     private static function only_partial_submitted($data) {
         if (
@@ -190,6 +193,7 @@ class standardfilter extends base {
     /**
      * The expected value.
      * @param array $data
+     * @return bool
      */
     private static function only_key_submitted($data) {
         if (!empty($data['key']) && empty($data['value'])) {
@@ -201,6 +205,7 @@ class standardfilter extends base {
     /**
      * The expected value.
      * @param array $data
+     * @return bool
      */
     private static function only_value_submitted($data) {
         if (empty($data['key']) && !empty($data['value'])) {
@@ -211,7 +216,8 @@ class standardfilter extends base {
 
     /**
      * The expected value.
-     * @param array $data
+     * @param array $fieldsandsubmitteddata
+     * @return mixed
      */
     public static function get_dynamic_values($fieldsandsubmitteddata) {
         $mandatoryfields = $fieldsandsubmitteddata['form'];

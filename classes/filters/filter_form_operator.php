@@ -88,7 +88,8 @@ class filter_form_operator {
 
     /**
      * Validation.
-     * @param array $data
+     * @param MoodleQuickForm $mform
+     * @param array $submitteddata
      */
     public static function persist_input_values($mform, $submitteddata) {
         $peristingvalues = [

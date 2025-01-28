@@ -57,6 +57,7 @@ class filter_manager {
 
     /**
      * Handles form definition of filter classes.
+     * @param string $classname
      * @return \MoodleQuickForm
      */
     public static function get_mandetory_filter_fields($classname) {
@@ -66,6 +67,7 @@ class filter_manager {
 
     /**
      * Handles form definition of filter classes.
+     * @param array $data
      * @return array
      */
     public static function get_data_validation($data) {
@@ -75,9 +77,30 @@ class filter_manager {
 
     /**
      * Handles form definition of filter classes.
+     * @param \MoodleQuickForm $mandatoryfields
+     * @param array $submitteddata
+     * @param array $errors
+     */
+    public static function set_peristing_values($mandatoryfields, $submitteddata, $errors) {
+        self::execute_static_function(
+            $submitteddata['filter_options'],
+            'get_dynamic_values',
+            [
+                'form' => $mandatoryfields,
+                'data' => $submitteddata,
+                'errors' => $errors,
+            ]
+        );
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param string $classname
+     * @param string $staticfunction
+     * @param array $data
      * @return mixed|null
      */
-    private static function execute_static_function($classname, $staticfunction, $data = null) {
+    private static function execute_static_function($classname, $staticfunction, $data = []) {
         if (class_exists($classname)) {
             try {
                 $reflection = new ReflectionClass($classname);
@@ -94,20 +117,5 @@ class filter_manager {
             }
         }
         return null;
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     */
-    public static function set_peristing_values($mandatoryfields, $submitteddata, $errors) {
-        self::execute_static_function(
-            $submitteddata['filter_options'],
-            'get_dynamic_values',
-            [
-                'form' => $mandatoryfields,
-                'data' => $submitteddata,
-                'errors' => $errors,
-            ]
-        );
     }
 }
