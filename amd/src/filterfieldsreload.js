@@ -25,9 +25,6 @@ import Ajax from 'core/ajax';
  * Initialise it all.
  */
 export const init = () => {
-    // eslint-disable-next-line no-console
-    console.log('Initializing filterfieldsreload script...');
-
     const observeDOMChanges = (callback) => {
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
@@ -41,22 +38,19 @@ export const init = () => {
             });
         });
 
-        observer.observe(document.body, { childList: true, subtree: true });
+        observer.observe(document.body, {childList: true, subtree: true});
     };
 
     observeDOMChanges((dropdown) => {
         dropdown.addEventListener('change', (event) => {
             const selectedValue = event.target.value;
-            // eslint-disable-next-line no-console
-            console.log('Dropdown value changed to:', selectedValue);
             Ajax.call([{
-                methodname: 'local_wunderbyte_table_get_filter_fields', // Web service method name
-                args: {filtertype: selectedValue}, // Pass the selected filter type as argument
+                methodname: 'local_wunderbyte_table_get_filter_fields',
+                args: {filtertype: selectedValue},
                 done: (response) => {
                     // eslint-disable-next-line no-console
                     console.log('Web service response:', response);
 
-                    // Example: Dynamically update the mandatory fields placeholder
                     const placeholder = document.getElementById('filter-mandatory-fields');
                     if (placeholder) {
                         placeholder.innerHTML = response.html; // Assuming response contains an 'html' property
