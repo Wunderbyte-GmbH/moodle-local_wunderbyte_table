@@ -56,8 +56,6 @@ var checked = {};
 
   // We run through all the filter elements and make sure that we store the state we received from php.
   filterElements.forEach(element => {
-    // eslint-disable-next-line no-console
-    console.log(element.name);
     getChecked(element.name, selector, idstring);
   });
 

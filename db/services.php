@@ -50,4 +50,12 @@ $functions = [
                 'ajax' => true,
                 'loginrequired' => false,
         ],
+        'local_wunderbyte_table_get_filter_column_data' => [
+                'classname' => 'local_wunderbyte_table\external\get_filter_column_data',
+                'description' => 'Get mandatory fields for a specific filter type',
+                'type' => 'write',
+                'capabilities' => '',
+                'ajax' => true,
+                'loginrequired' => false,
+        ],
 ];
