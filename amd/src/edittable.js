@@ -21,6 +21,7 @@
 import ModalForm from 'core_form/modalform';
 import {get_string as getString} from 'core/str';
 import {init as filterFieldsInit} from 'local_wunderbyte_table/filterfieldsreload';
+import {init as filterColumnsInit} from 'local_wunderbyte_table/filtercolumnsreload';
 
 const SELECTORS = {
     EDITTABLEBUTTON: ' .wb_edit_button',
@@ -103,6 +104,7 @@ export function addFilterTableModal(event, idstring, encodedtable) {
     });
     modalForm.addEventListener('core_form_modalform_loaded', () => {
         filterFieldsInit();
+        filterColumnsInit(encodedtable);
     });
     modalForm.addEventListener(modalForm.events.FORM_SUBMITTED, response => {
         // eslint-disable-next-line no-console

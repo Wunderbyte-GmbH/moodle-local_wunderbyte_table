@@ -117,6 +117,15 @@ class standardfilter extends base {
      */
     public static function render_mandatory_fields() {
         $mform = new \MoodleQuickForm('dynamicform', 'post', '');
+        self::generate_mandatory_fields($mform);
+        return $mform;
+    }
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     */
+    public static function generate_mandatory_fields(&$mform, $data = []) {
         $groupelements = [];
         foreach (self::$grouplabels as $grouplabel) {
             $labelelement = $mform->createElement(
@@ -138,7 +147,6 @@ class standardfilter extends base {
             [' '],
             false
         );
-        return $mform;
     }
 
     /**
