@@ -24,6 +24,7 @@
 
 namespace local_wunderbyte_table\filters;
 
+use local_wunderbyte_table\wunderbyte_table;
 use MoodleQuickForm;
 
 /**
@@ -40,12 +41,34 @@ class filter_form_operator {
     public static function generate_form(MoodleQuickForm &$mform, array &$formdata) {
         $encodedtable = $formdata['encodedtable'];
         $mform->addElement('hidden', 'encodedtable', json_encode($encodedtable));
+
         self::set_filter_name_field($mform);
-        self::set_filter_types($mform);
+        self::set_filter_columns($mform, $formdata);
+
         $mform->addElement(
             'html',
-            '<div id="filter-mandatory-fields"></div>'
+            '<div id="filter-edit-fields"></div>'
         );
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param MoodleQuickForm $mform
+     */
+    public static function set_filter_columns(MoodleQuickForm &$mform, $formdata) {
+        $encodedtable = $formdata['encodedtable'];
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
+        $filterablecolumns = $table->subcolumns['datafields'];
+        $options = filter_manager::get_all_filter_columns($filterablecolumns);
+        if ($options) {
+            $mform->addElement(
+                'select',
+                'filter_columns',
+                get_string('setwbtablefiltercolumn', 'local_wunderbyte_table'),
+                $options
+            );
+            $mform->setType('filter_columns', PARAM_INT);
+        }
     }
 
     /**
@@ -68,13 +91,15 @@ class filter_form_operator {
      */
     public static function set_filter_types(MoodleQuickForm &$mform) {
         $options = filter_manager::get_all_filter_types();
-        $mform->addElement(
-            'select',
-            'filter_options',
-            get_string('setwbtablefiltertype', 'local_wunderbyte_table'),
-            $options
-        );
-        $mform->setType('filter_options', PARAM_INT);
+        if ($options) {
+            $mform->addElement(
+                'select',
+                'filter_options',
+                get_string('setwbtablefiltertype', 'local_wunderbyte_table'),
+                $options
+            );
+            $mform->setType('filter_options', PARAM_INT);
+        }
     }
 
     /**
@@ -94,7 +119,7 @@ class filter_form_operator {
     public static function persist_input_values($mform, $submitteddata) {
         $peristingvalues = [
             'new_filter_name',
-            'filter_options',
+            'filter_columns',
         ];
         $filtertype = $submitteddata['filter_options'];
         if (!empty($filtertype)) {
@@ -104,12 +129,12 @@ class filter_form_operator {
                 }
             }
 
-            $mandatoryfields = filter_manager::get_mandetory_filter_fields($filtertype);
-            $errors = self::validation($submitteddata);
-            filter_manager::set_peristing_values($mandatoryfields, $submitteddata, $errors);
+            // $mandatoryfields = filter_manager::get_mandetory_filter_fields($filtertype);
+            // $errors = self::validation($submitteddata);
+            // filter_manager::set_peristing_values($mandatoryfields, $submitteddata, $errors);
 
-            $dynamichtml = $mandatoryfields->toHtml();
-            self::set_dynamic_fields_inside_div($mform, $dynamichtml);
+            // $dynamichtml = $mandatoryfields->toHtml();
+            // self::set_dynamic_fields_inside_div($mform, $dynamichtml);
         }
     }
 
@@ -123,9 +148,9 @@ class filter_form_operator {
             if (
                 $element->_type === 'html' &&
                 isset($element->_text) &&
-                strpos($element->_text, 'filter-mandatory-fields') !== false
+                strpos($element->_text, 'filter-edit-fields') !== false
             ) {
-                $element->_text = '<div id="filter-mandatory-fields"> ' . $dynamichtml . '</div>';
+                $element->_text = '<div id="filter-edit-fields"> ' . $dynamichtml . '</div>';
                 break;
             }
         }

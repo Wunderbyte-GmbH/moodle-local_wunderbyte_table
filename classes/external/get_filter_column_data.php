@@ -31,7 +31,7 @@ use external_api;
 use external_function_parameters;
 use external_value;
 use external_single_structure;
-use local_wunderbyte_table\filters\filter_manager;
+use local_wunderbyte_table\filters\column_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -45,7 +45,7 @@ require_once($CFG->libdir . '/externallib.php');
  * @author    Georg Maißer
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_filter_fields extends external_api {
+class get_filter_column_data extends external_api {
     /**
      * Describes the parameters this webservice.
      *
@@ -53,7 +53,8 @@ class get_filter_fields extends external_api {
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'filtertype'  => new external_value(PARAM_TEXT, 'Filter type', VALUE_REQUIRED),
+            'filtercolumn'  => new external_value(PARAM_TEXT, 'Filter column', VALUE_REQUIRED),
+            'encodedtable'  => new external_value(PARAM_TEXT, 'Encodedtable', VALUE_REQUIRED),
         ]);
     }
 
@@ -63,18 +64,21 @@ class get_filter_fields extends external_api {
      * @return array
      */
     public static function execute(
-        string $filtertype
+        string $filtercolumn,
+        string $encodedtable
     ) {
         global $PAGE;
         $PAGE->set_context(\context_system::instance());
 
         $params = [
-            'filtertype' => $filtertype,
+            'filtercolumn' => $filtercolumn,
+            'encodedtable' => $encodedtable,
         ];
         $params = self::validate_parameters(self::execute_parameters(), $params);
-        //$mandatoryfields = filter_manager::get_mandetory_filter_fields($params['filtertype']);
+        $columnmanager = new column_manager($params);
+        $filteredcolumnform = $columnmanager->get_filtered_column_form();
         return [
-            'html' => 'TESTING',
+            'html' => '<div>' . $filteredcolumnform->toHtml() . '</div>',
         ];
     }
 

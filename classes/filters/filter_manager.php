@@ -40,7 +40,7 @@ class filter_manager {
     public static function get_all_filter_types() {
         $typesdirectory = __DIR__ . '/types';
         $filtertypes = [
-            'nothing' => 'Please select a type',
+            '' => get_string('setwbtablefiltertypeoption', 'local_wunderbyte_table'),
         ];
         $foundfiltertypes = [];
         foreach (scandir($typesdirectory) as $file) {
@@ -53,6 +53,35 @@ class filter_manager {
             }
         }
         return array_merge($filtertypes, $foundfiltertypes);
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $filterablecolumns
+     * @return array
+     */
+    public static function get_all_filter_columns($filterablecolumns) {
+        $options = [
+            '' => get_string('setwbtablefiltercolumnoption', 'local_wunderbyte_table'),
+        ];
+        foreach ($filterablecolumns as $key => $filterablecolumn) {
+            if (isset($filterablecolumn['wbfilterclass'])) {
+                $options[$key] = $filterablecolumn['localizedname'];
+            }
+        }
+        return $options;
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $filterablecolumns
+     * @return array
+     */
+    public static function get_filtered_column_form($filterablecolumns) {
+        $options = [
+            '' => get_string('setwbtablefiltercolumnoption', 'local_wunderbyte_table'),
+        ];
+        return $options;
     }
 
     /**

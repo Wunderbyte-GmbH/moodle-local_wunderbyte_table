@@ -21,17 +21,15 @@
 
 import Ajax from 'core/ajax';
 
-/**
- * Initialise it all.
- */
-export const init = () => {
+/** @param {string} encodedtable */
+export const init = (encodedtable) => {
     const observeDOMChanges = (callback) => {
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.addedNodes) {
                     mutation.addedNodes.forEach((node) => {
-                        if (node instanceof HTMLElement && node.querySelector('[name="filter_options"]')) {
-                            callback(node.querySelector('[name="filter_options"]'));
+                        if (node instanceof HTMLElement && node.querySelector('[name="filter_columns"]')) {
+                            callback(node.querySelector('[name="filter_columns"]'));
                         }
                     });
                 }
@@ -39,16 +37,22 @@ export const init = () => {
         });
         observer.observe(document.body, {childList: true, subtree: true});
     };
-
     observeDOMChanges((dropdown) => {
         dropdown.addEventListener('change', (event) => {
             const selectedValue = event.target.value;
+            // eslint-disable-next-line no-console
+            console.log('inside', selectedValue);
             Ajax.call([{
-                methodname: 'local_wunderbyte_table_get_filter_fields',
-                args: {filtertype: selectedValue},
+                methodname: 'local_wunderbyte_table_get_filter_column_data',
+                args: {
+                    filtercolumn: selectedValue,
+                    encodedtable: encodedtable
+                },
                 done: (response) => {
-                    // eslint-disable-next-line no-console
-                    console.log('Web service error:', response);
+                    const placeholder = document.getElementById('filter-edit-fields');
+                    if (placeholder) {
+                        placeholder.innerHTML = response.html;
+                    }
                 },
                 fail: (error) => {
                     // eslint-disable-next-line no-console
