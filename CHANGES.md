@@ -1,3 +1,6 @@
+## Version 2.0.40 (2025012900)
+* Bugfix: Avoid empty get_in_or_equal error in function instantiate_by_shortnames of wbt_field_controller_info.
+
 ## Version 2.0.39 (2025012200)
 * Bugfix: Hierarchical filter search in menu (#75).
 
