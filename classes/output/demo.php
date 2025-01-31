@@ -94,6 +94,7 @@ class demo implements renderable, templatable {
             'email' => get_string('email'),
             'action' => get_string('action'),
             'department' => get_string('department'),
+            'timemodified' => get_string('modified'),
 
         ];
 
