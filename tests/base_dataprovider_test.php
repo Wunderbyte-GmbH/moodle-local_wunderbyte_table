@@ -200,72 +200,6 @@ final class base_dataprovider_test extends advanced_testcase {
     }
 
     /**
-     * Test wb filter functionality via webservice external class.
-     *
-     * @covers \local_wunderbyte_table\filters\types\callback
-     *
-     * @throws \coding_exception
-     * @throws \dml_exception
-     *
-     */
-    public function test_filter_callback(): void {
-
-        // First, we create default test courses.
-        $courses = $this->create_test_courses(45);
-
-        $user1 = $this->getDataGenerator()->create_user();
-        $user2 = $this->getDataGenerator()->create_user();
-        $user3 = $this->getDataGenerator()->create_user();
-
-        // We enrol users to the course in order to test sorting.
-        $this->getDataGenerator()->enrol_user($user1->id, $courses[8]->id);
-        $this->getDataGenerator()->enrol_user($user2->id, $courses[8]->id);
-        $this->getDataGenerator()->enrol_user($user3->id, $courses[8]->id);
-        $this->getDataGenerator()->enrol_user($user2->id, $courses[5]->id);
-        $this->getDataGenerator()->enrol_user($user3->id, $courses[5]->id);
-        $this->getDataGenerator()->enrol_user($user2->id, $courses[4]->id);
-        $this->getDataGenerator()->enrol_user($user2->id, $courses[3]->id);
-
-        $this->setAdminUser();
-
-        $table = $this->create_demo2_table();
-
-        $table->pagesize = 30;
-        $nrofrows = $this->get_rowscount_for_table($table);
-
-        // Now we get back exactly 10.
-        $this->assertEquals(30, $nrofrows);
-
-        $nrofrows = $this->get_rowscount_for_table(
-            $table,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "{\"iddivisblebythree\":[\"0\"]}",
-        );
-
-        // Now we get back exactly 30.
-        $this->assertEquals(30, $nrofrows);
-
-        $nrofrows = $this->get_rowscount_for_table(
-            $table,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "{\"iddivisblebythree\":[\"1\"]}",
-        );
-
-        // Now we get back exactly 15.
-        $this->assertEquals(15, $nrofrows);
-    }
-
-    /**
      * Test wb base full text search.
      *
      * @param array $coursedata
@@ -639,6 +573,24 @@ final class base_dataprovider_test extends advanced_testcase {
         // Array of tests.
         $returnarray = [
             // Test name (description).
+            'filter_callback' => [
+                'courses' => $standardcourses,
+                'expected' => [
+                    'getrowscount' => [
+                        [
+                            'assert' => 16,
+                        ],
+                        [
+                            'filterobjects' => '{"iddivisblebythree":["0"]}',
+                            'assert' => 10,
+                        ],
+                        [
+                            'filterobjects' => '{"iddivisblebythree":["1"]}',
+                            'assert' => 6,
+                        ],
+                    ],
+                ],
+            ],
             'filter_datepicker_in_between' => [
                 'courses' => $standardcourses,
                 'expected' => [
