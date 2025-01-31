@@ -34,6 +34,7 @@ use local_wunderbyte_table\external\load_data;
 use local_wunderbyte_table\filters\types\callback;
 use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\standardfilter;
+use local_wunderbyte_table\filters\types\hierarchicalfilter;
 use local_wunderbyte_table\local\sortables\types\standardsortable;
 use moodle_exception;
 
@@ -284,6 +285,22 @@ final class base_dataprovider_test extends advanced_testcase {
 
         $table->add_sortable($standardsortable);
 
+        $hierarchicalfilter = new hierarchicalfilter('shortname', get_string('shortname'));
+        $hierarchicalfilter->add_options(
+            [
+                'short-ended1' => [
+                    'parent' => 'e',
+                ],
+                'short-future1' => [
+                    'parent' => 'f',
+                ],
+                'other' => [
+                    'localizedname' => get_string('other', 'local_wunderbyte_table'),
+                ],
+            ]
+        );
+        $table->add_filter($hierarchicalfilter);
+
         $standardfilter = new standardfilter('fullname', 'fullname');
         $table->add_filter($standardfilter);
 
@@ -514,6 +531,7 @@ final class base_dataprovider_test extends advanced_testcase {
             [
                 'coursestocreate' => 1,
                 'fullname' => 'ended1',
+                'shortname' => 'short-ended1',
                 'startdate' => strtotime('2 May 2010 13:00'),
                 'enddate' => strtotime('20 May 2010 14:20'),
                 'users' => $standardusers,
@@ -521,6 +539,7 @@ final class base_dataprovider_test extends advanced_testcase {
             [
                 'coursestocreate' => 1,
                 'fullname' => 'ended2',
+                'shortname' => 'short-ended2',
                 'startdate' => strtotime('5 Jun 2020 14:00'),
                 'enddate' => strtotime('15 Jun 2020 15:00'),
                 'users' => $standardusers,
@@ -528,6 +547,7 @@ final class base_dataprovider_test extends advanced_testcase {
             [
                 'coursestocreate' => 1,
                 'fullname' => 'future1',
+                'shortname' => 'short-future1',
                 'startdate' => $plusfifftymonth,
                 'enddate' => $plussixtymonth,
                 'users' => $standardusers,
@@ -573,6 +593,32 @@ final class base_dataprovider_test extends advanced_testcase {
         // Array of tests.
         $returnarray = [
             // Test name (description).
+            'filter_hierarchicalfilter' => [
+                'courses' => $standardcourses,
+                'expected' => [
+                    'getrowscount' => [
+                        [
+                            'assert' => 16,
+                        ],
+                        [
+                            'filterobjects' => '{"shortname":["short-future1"]}',
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => '{"shortname":["short-ended1"]}',
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => '{"shortname":["short-ended%"]}',
+                            'assert' => 2,
+                        ],
+                        [
+                            'filterobjects' => '{"shortname":["filtercourse","tc_%"]}',
+                            'assert' => 13,
+                        ],
+                    ],
+                ],
+            ],
             'filter_callback' => [
                 'courses' => $standardcourses,
                 'expected' => [
