@@ -628,11 +628,11 @@ final class base_dataprovider_test extends advanced_testcase {
                         ],
                         [
                             'filterobjects' => '{"iddivisblebythree":["0"]}',
-                            'assert' => 10,
+                            'assert' => 11,
                         ],
                         [
                             'filterobjects' => '{"iddivisblebythree":["1"]}',
-                            'assert' => 6,
+                            'assert' => 5,
                         ],
                     ],
                 ],
