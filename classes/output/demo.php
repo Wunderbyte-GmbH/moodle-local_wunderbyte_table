@@ -32,6 +32,7 @@ use local_wunderbyte_table\filters\types\hierarchicalfilter;
 use local_wunderbyte_table\filters\types\hourlist;
 use local_wunderbyte_table\filters\types\intrange;
 use local_wunderbyte_table\filters\types\standardfilter;
+use local_wunderbyte_table\filters\types\weekdays;
 use local_wunderbyte_table\wunderbyte_table;
 use renderable;
 use renderer_base;
@@ -618,8 +619,8 @@ class demo implements renderable, templatable {
         // It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
         $table = new demo_table('demotable_4');
 
-        $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
-        $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action']);
+        $table->define_headers(['id', 'username', 'firstname', 'lastname', 'email', 'action', 'timecreated', 'timemodified']);
+        $table->define_columns(['id', 'username', 'firstname', 'lastname', 'email', 'action', 'timecreated', 'timemodified']);
 
         $standardfilter = new standardfilter('firstname',  get_string('firstname'));
         $table->add_filter($standardfilter);
@@ -629,6 +630,13 @@ class demo implements renderable, templatable {
         $table->add_filter($standardfilter);
         $intrangefilter = new intrange('username', "Range of numbers given in Username");
         $table->add_filter($intrangefilter);
+        $weekdaysfilter = new weekdays(
+            'timecreated',
+            get_string('timecreated'),
+            'timemodified',
+            get_string('modified')
+        );
+        $table->add_filter($weekdaysfilter);
 
         //$table->define_fulltextsearchcolumns(['username', 'firstname', 'lastname']);
         $table->define_sortablecolumns(['id', 'username', 'firstname', 'lastname']);
