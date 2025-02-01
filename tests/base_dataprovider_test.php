@@ -203,6 +203,7 @@ final class base_dataprovider_test extends advanced_testcase {
     /**
      * Test wb base full text search.
      *
+     * @param string $tablecallback
      * @param array $coursedata
      * @param array $expected
      *
@@ -216,7 +217,7 @@ final class base_dataprovider_test extends advanced_testcase {
      *
      * @dataProvider wb_table_common_settings_provider
      */
-    public function test_dataprovider(array $coursedata, array $expected): void {
+    public function test_dataprovider(string $tablecallback, array $coursedata, array $expected): void {
         // Create the courses, depending on data provider.
         $courses = [];
         foreach ($coursedata as $coursearray) {
@@ -225,7 +226,7 @@ final class base_dataprovider_test extends advanced_testcase {
 
         $this->setAdminUser();
 
-        $table = $this->create_demo2_table();
+        $table = $this->{$tablecallback}();
 
         // Set pagesize.
         $table->pagesize = $expected['pagesize'] ?? 20;
@@ -594,6 +595,7 @@ final class base_dataprovider_test extends advanced_testcase {
         $returnarray = [
             // Test name (description).
             'filter_hierarchicalfilter' => [
+                'tablecallback' => 'create_demo2_table',
                 'courses' => $standardcourses,
                 'expected' => [
                     'getrowscount' => [
@@ -620,6 +622,7 @@ final class base_dataprovider_test extends advanced_testcase {
                 ],
             ],
             'filter_callback' => [
+                'tablecallback' => 'create_demo2_table',
                 'courses' => $standardcourses,
                 'expected' => [
                     'getrowscount' => [
@@ -638,6 +641,7 @@ final class base_dataprovider_test extends advanced_testcase {
                 ],
             ],
             'filter_datepicker_in_between' => [
+                'tablecallback' => 'create_demo2_table',
                 'courses' => $standardcourses,
                 'expected' => [
                     'getrowscount' => [
@@ -700,6 +704,7 @@ final class base_dataprovider_test extends advanced_testcase {
                 ],
             ],
             'fulltextsearchcolumns' => [
+                'tablecallback' => 'create_demo2_table',
                 'courses' => $standardcourses,
                 'expected' => [
                     'getrowscount' => [
@@ -722,6 +727,7 @@ final class base_dataprovider_test extends advanced_testcase {
                 ],
             ],
             'filter_standardfilter' => [
+                'tablecallback' => 'create_demo2_table',
                 'courses' => $standardcourses,
                 'expected' => [
                     'getrowscount' => [
@@ -748,6 +754,7 @@ final class base_dataprovider_test extends advanced_testcase {
                 ],
             ],
             'filter_datepicker' => [
+                'tablecallback' => 'create_demo2_table',
                 'courses' => $standardcourses,
                 'expected' => [
                     'getrowscount' => [
