@@ -651,6 +651,29 @@ final class base_dataprovider_test extends advanced_testcase {
         // Array of tests.
         $returnarray = [
             // Test name (description).
+            'filter_intrange' => [
+                'tablecallback' => 'create_demo_table',
+                'courses' => $standardcourses,
+                'expected' => [
+                    'getrowscount' => [
+                        [
+                            'assert' => 16,
+                        ],
+                        [
+                            'filterobjects' => '{"fullname":"1,3"}',
+                            'assert' => 6,
+                        ],
+                        [
+                            'filterobjects' => '{"fullname":"3,5"}',
+                            'assert' => 3,
+                        ],
+                        [
+                            'filterobjects' => '{"fullname":"9,11"}',
+                            'assert' => 2,
+                        ],
+                    ],
+                ],
+            ],
             'filter_hierarchicalfilter' => [
                 'tablecallback' => 'create_demo2_table',
                 'courses' => $standardcourses,
