@@ -35,6 +35,8 @@ use local_wunderbyte_table\filters\types\callback;
 use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\filters\types\hierarchicalfilter;
+use local_wunderbyte_table\filters\types\intrange;
+use local_wunderbyte_table\filters\types\weekdays;
 use local_wunderbyte_table\local\sortables\types\standardsortable;
 use moodle_exception;
 
@@ -253,8 +255,63 @@ final class base_dataprovider_test extends advanced_testcase {
      * @return wunderbyte_table
      *
      */
-    public function create_demo2_table() {
+    public function create_demo_table() {
         $table = new demo_table('demotable_1');
+
+        $columns = [
+            'id' => get_string('id', 'local_wunderbyte_table'),
+            'fullname' => get_string('fullname'),
+            'shortname' => get_string('shortname'),
+            'action' => get_string('action'),
+            'startdate' => get_string('startdate'),
+            'enddate' => get_string('enddate'),
+        ];
+
+        // Number of items must be equal.
+        $table->define_headers(array_values($columns));
+        $table->define_columns(array_keys($columns));
+
+        $table->define_fulltextsearchcolumns(['fullname', 'shortname']);
+        $table->define_sortablecolumns($columns);
+
+        $intrangefilter = new intrange('fullname', "Range of numbers given in course fullname");
+        $table->add_filter($intrangefilter);
+
+        $weekdaysfilter = new weekdays(
+            'startdate',
+            get_string('startdate'),
+            'enddate',
+            get_string('enddate')
+        );
+        $table->add_filter($weekdaysfilter);
+
+        $standardfilter = new standardfilter('shortname', 'shortname');
+        $table->add_filter($standardfilter);
+
+        $table->set_filter_sql('*', "(SELECT * FROM {course} ORDER BY id ASC LIMIT 112) as s1", 'id > 1', '');
+
+        $table->pageable(true);
+
+        $table->pagesize = 20;
+
+        $table->stickyheader = false;
+        $table->showcountlabel = true;
+        $table->showdownloadbutton = true;
+        $table->showreloadbutton = true;
+        $table->showrowcountselect = true;
+        $table->filteronloadinactive = true;
+
+        return $table;
+    }
+
+    /**
+     * Function to create and return wunderbyte table class.
+     *
+     * @return wunderbyte_table
+     *
+     */
+    public function create_demo2_table() {
+        $table = new demo_table('demotable_2');
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
@@ -521,7 +578,7 @@ final class base_dataprovider_test extends advanced_testcase {
         $standardcourses = [
             [
                 'coursestocreate' => 10,
-                'fullname' => 'Test Course',
+                // No fullname, so default 'Test Course xx' will be applied.
                 'users' => $standardusers,
             ],
             [
