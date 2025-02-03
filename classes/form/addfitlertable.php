@@ -17,6 +17,7 @@
 namespace local_wunderbyte_table\form;
 
 use local_wunderbyte_table\filters\filter_form_operator;
+use local_wunderbyte_table\filters\wunderbyte_table_db_operator;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -25,11 +26,8 @@ global $CFG;
 use context;
 use context_system;
 use core_form\dynamic_form;
-use local_wunderbyte_table\filters\filters_info;
-use local_wunderbyte_table\local\settings\tablesettings;
 use local_wunderbyte_table\wunderbyte_table;
 use moodle_url;
-use stdClass;
 
 /**
  * Dynamic edit table form.
@@ -77,13 +75,18 @@ class addfitlertable extends dynamic_form {
      * @return object $data
      */
     public function process_dynamic_submission() {
-        $data = parent::get_data();
+        $data = (object)$this->_ajaxformdata;
+        $encodedtable = $data->encodedtable;
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
-        $newdata = new stdClass();
-        filters_info::process_data($data, $newdata);
-        tablesettings::process_data($data, $newdata);
+        $wunderbyteoperator = new wunderbyte_table_db_operator($data, $table);
+        $wunderbyteoperator->set_existing_key_value_pairs();
+        $wunderbyteoperator->save_new_filter_options();
 
-        return $newdata;
+        //filters_info::process_data($data, $newdata);
+        //tablesettings::process_data($data, $newdata);
+
+        return $data;
     }
 
     /**
@@ -91,15 +94,7 @@ class addfitlertable extends dynamic_form {
      * @return void
      */
     public function set_data_for_dynamic_submission(): void {
-
         $data = (object)$this->_ajaxformdata;
-
-        $encodedtable = $data->encodedtable;
-        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
-
-        filters_info::set_data($data, $table);
-        tablesettings::set_data($data, $table);
-
         $this->set_data($data);
     }
 
