@@ -125,7 +125,7 @@ class standardfilter extends base {
      * The expected value.
      * @param \MoodleQuickForm $mform
      */
-    public static function generate_mandatory_fields(&$mform, $data = []) {
+    public static function generate_mandatory_fields(&$mform) {
         $groupelements = [];
         foreach (self::$grouplabels as $grouplabel) {
             $labelelement = $mform->createElement(
@@ -148,80 +148,41 @@ class standardfilter extends base {
             false
         );
     }
-
     /**
      * The expected value.
-     * @param array $data
-     * @return array
+     * @param \MoodleQuickForm $mform
      */
-    public static function validate_filter_data($data) {
-        $errors = [];
-        self::validation_check_name($data, $errors);
-        self::validation_check_key_value_pair($data, $errors);
-        return $errors;
-    }
+    public static function generate_mandatory_fields_with_data(&$mform, $data) {
+        $mform->addElement('header', 'existing_pairs', 'Existing key value pairs');
+        $groupedelements = [];
 
-    /**
-     * The expected value.
-     * @param array $data
-     * @param array $errors
-     */
-    private static function validation_check_name($data, &$errors) {
-        if (empty($data['new_filter_name'])) {
-            $errors['new_filter_name'] = get_string('filteremptynameerror', 'local_wunderbyte_table');
+        foreach ($data as $key => $value) {
+            $keylabel = $mform->createElement('static', "{$key}_key_label", '', 'Key');
+            $keyinput = $mform->createElement('text', "key[{$key}]", '', ['size' => '20']);
+            $mform->setType("key[{$key}]", PARAM_TEXT);
+            $mform->setDefault("key[{$key}]", $key);
+
+            $valuelabel = $mform->createElement('static', "{$key}_value_label", '', 'Value');
+            $valueinput = $mform->createElement('text', "value[{$key}]", '', ['size' => '20']);
+            $mform->setType("value[{$key}]", PARAM_TEXT);
+            $mform->setDefault("value[{$key}]", $value);
+
+            $trashicon = '<i class="fa fa-trash"></i>';
+            $removebutton = $mform->createElement('button', "remove[{$key}]", $trashicon, ['class' => 'btn']);
+
+            $groupedelements[] = $mform->createElement('group', "group_{$key}", '', [
+                $keylabel, $keyinput, $valuelabel, $valueinput, $removebutton,
+            ], ' ', false);
         }
-    }
 
-    /**
-     * The expected value.
-     * @param array $data
-     * @param array $errors
-     */
-    private static function validation_check_key_value_pair($data, &$errors) {
-        if (self::only_partial_submitted($data)) {
-            $errors['key'] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
-            $errors['value'] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
-        }
+        $mform->addGroup(
+            $groupedelements,
+            self::$groupname,
+            '',
+            [' '],
+            false
+        );
     }
-
-    /**
-     * The expected value.
-     * @param array $data
-     * @return bool
-     */
-    private static function only_partial_submitted($data) {
-        if (
-            self::only_key_submitted($data) ||
-            self::only_value_submitted($data)
-        ) {
-            return true;
-        }
-    }
-
-    /**
-     * The expected value.
-     * @param array $data
-     * @return bool
-     */
-    private static function only_key_submitted($data) {
-        if (!empty($data['key']) && empty($data['value'])) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * The expected value.
-     * @param array $data
-     * @return bool
-     */
-    private static function only_value_submitted($data) {
-        if (empty($data['key']) && !empty($data['value'])) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * The expected value.
      * @param array $fieldsandsubmitteddata

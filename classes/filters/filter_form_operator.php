@@ -41,8 +41,6 @@ class filter_form_operator {
     public static function generate_form(MoodleQuickForm &$mform, array &$formdata) {
         $encodedtable = $formdata['encodedtable'];
         $mform->addElement('hidden', 'encodedtable', json_encode($encodedtable));
-
-        self::set_filter_name_field($mform);
         self::set_filter_columns($mform, $formdata);
 
         $mform->addElement(
@@ -75,20 +73,6 @@ class filter_form_operator {
      * Handles form definition of filter classes.
      * @param MoodleQuickForm $mform
      */
-    public static function set_filter_name_field(MoodleQuickForm &$mform) {
-        $mform->addElement(
-            'text',
-            'new_filter_name',
-            get_string('newwbtablefiltername', 'local_wunderbyte_table'),
-            ['size' => '60'],
-        );
-        $mform->setType('new_filter_name', PARAM_TEXT);
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param MoodleQuickForm $mform
-     */
     public static function set_filter_types(MoodleQuickForm &$mform) {
         $options = filter_manager::get_all_filter_types();
         if ($options) {
@@ -108,7 +92,7 @@ class filter_form_operator {
      * @return array
      */
     public static function validation(array $data) {
-        return filter_manager::get_data_validation($data);
+        return column_manager::get_data_validation($data);
     }
 
     /**
@@ -118,7 +102,6 @@ class filter_form_operator {
      */
     public static function persist_input_values($mform, $submitteddata) {
         $peristingvalues = [
-            'new_filter_name',
             'filter_columns',
         ];
         $filtertype = $submitteddata['filter_options'];

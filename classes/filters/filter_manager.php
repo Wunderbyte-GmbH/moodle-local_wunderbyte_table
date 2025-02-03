@@ -74,34 +74,12 @@ class filter_manager {
 
     /**
      * Handles form definition of filter classes.
-     * @param array $filterablecolumns
-     * @return array
-     */
-    public static function get_filtered_column_form($filterablecolumns) {
-        $options = [
-            '' => get_string('setwbtablefiltercolumnoption', 'local_wunderbyte_table'),
-        ];
-        return $options;
-    }
-
-    /**
-     * Handles form definition of filter classes.
      * @param string $classname
      * @return \MoodleQuickForm
      */
     public static function get_mandetory_filter_fields($classname) {
         $mandetoryfilterfields = self::execute_static_function($classname, 'render_mandatory_fields');
         return $mandetoryfilterfields;
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param array $data
-     * @return array
-     */
-    public static function get_data_validation($data) {
-        $errors = self::execute_static_function($data['filter_options'], 'validate_filter_data', $data);
-        return is_array($errors) ? $errors : [];
     }
 
     /**
