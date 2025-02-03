@@ -24,6 +24,8 @@
 namespace local_wunderbyte_table\filters;
 
 use local_wunderbyte_table\wunderbyte_table;
+use local_wunderbyte_table\editfilter;
+use local_wunderbyte_table\filter;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
@@ -38,7 +40,7 @@ class column_manager {
     /** @var string */
     protected $filtercolumn;
 
-    /** @var string */
+    /** @var \local_wunderbyte_table\wunderbyte_table */
     protected $table;
 
     /** @var \MoodleQuickForm */
@@ -59,11 +61,8 @@ class column_manager {
      * @return \MoodleQuickForm
      */
     public function get_filtered_column_form() {
-        // Get the filter type dropdown.
-        filter_form_operator::set_filter_types($this->mform);
-        // Get the already inserted key values.
         $this->set_available_filter_types();
-        // Get the add new key value field.
+        $this->set_add_filter_types();
         return $this->mform;
     }
 
@@ -71,12 +70,26 @@ class column_manager {
      * Handles form definition of filter classes.
      */
     private function set_available_filter_types() {
-        $columndata = $this->table->subcolumns['datafields'][$this->filtercolumn] ?? [];
+        $lang = filter::current_language();
+        $key = $this->table->tablecachehash . $lang . '_filterjson';
+        $filtersettings = editfilter::return_filtersettings($this->table, $key);
+        $columndata = $filtersettings[$this->filtercolumn] ?? [];
+
+        $existingfilterdata = [];
         foreach ($columndata as $key => $value) {
             if (!in_array($key, $this->non_kestringy_value_pair_properties())) {
-                self::execute_static_function($columndata['wbfilterclass'], 'generate_mandatory_fields', [$key => $value]);
+                $existingfilterdata[$key] = $value;
             }
         }
+        self::execute_static_function($columndata['wbfilterclass'], 'generate_mandatory_fields_with_data', $existingfilterdata);
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     */
+    private function set_add_filter_types() {
+        $this->mform->addElement('header', 'add_pair', 'Add new key value pair');
+        filter_form_operator::set_filter_types($this->mform);
     }
 
     /**
@@ -115,5 +128,37 @@ class column_manager {
             }
         }
         return null;
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $data
+     * @return array
+     */
+    public static function get_data_validation($data) {
+        $errors = [];
+        foreach ($data['value'] as $key => $value) {
+            if (self::only_partial_submitted($data['key'][$key], $value)) {
+                $errors['key'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+                $errors['value'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * The expected value.
+     * @param string $key
+     * @param string $value
+     * @return bool
+     */
+    private static function only_partial_submitted($key, $value) {
+        if (
+            empty($key) ||
+            empty($value)
+        ) {
+            return true;
+        }
+        return false;
     }
 }
