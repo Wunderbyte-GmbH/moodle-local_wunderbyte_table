@@ -83,9 +83,6 @@ class addfitlertable extends dynamic_form {
         $wunderbyteoperator->set_existing_key_value_pairs();
         $wunderbyteoperator->save_new_filter_options();
 
-        //filters_info::process_data($data, $newdata);
-        //tablesettings::process_data($data, $newdata);
-
         return $data;
     }
 

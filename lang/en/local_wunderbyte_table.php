@@ -48,6 +48,7 @@ $string['change'] = 'Change';
 $string['changesortorder'] = "Change sort order";
 $string['checkallcheckbox'] = "Check all";
 $string['checkbox'] = 'Checkbox';
+$string['columnemptyerror'] = 'Column is empty';
 $string['couldnotloaddata'] = "Could not load data";
 $string['countlabel'] = '{$a->filteredrecords} of {$a->totalrecords} records found ';
 $string['customizewbtable'] = 'Customize Wunderbyte Table';

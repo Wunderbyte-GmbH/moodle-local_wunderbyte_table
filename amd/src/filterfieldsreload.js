@@ -47,8 +47,10 @@ export const init = () => {
                 methodname: 'local_wunderbyte_table_get_filter_fields',
                 args: {filtertype: selectedValue},
                 done: (response) => {
-                    // eslint-disable-next-line no-console
-                    console.log('Web service error:', response);
+                    const placeholder = document.getElementById('filter-add-field');
+                    if (placeholder) {
+                        placeholder.innerHTML = response.html;
+                    }
                 },
                 fail: (error) => {
                     // eslint-disable-next-line no-console
