@@ -72,9 +72,9 @@ class get_filter_fields extends external_api {
             'filtertype' => $filtertype,
         ];
         $params = self::validate_parameters(self::execute_parameters(), $params);
-        //$mandatoryfields = filter_manager::get_mandetory_filter_fields($params['filtertype']);
+        $mandatoryfields = filter_manager::get_mandetory_filter_fields($params['filtertype']);
         return [
-            'html' => 'TESTING',
+            'html' => $mandatoryfields->toHtml(),
         ];
     }
 

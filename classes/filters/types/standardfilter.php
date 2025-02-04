@@ -24,6 +24,7 @@
 
 namespace local_wunderbyte_table\filters\types;
 use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\filters\type_form_builder\standardfilter_form_builder;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -127,18 +128,9 @@ class standardfilter extends base {
      */
     public static function generate_mandatory_fields(&$mform) {
         $groupelements = [];
-        foreach (self::$grouplabels as $grouplabel) {
-            $labelelement = $mform->createElement(
-                'static',
-                "{$grouplabel}label",
-                '',
-                get_string("standardfilter{$grouplabel}label", 'local_wunderbyte_table')
-            );
-            $inputelement = $mform->createElement('text', $grouplabel, '', ['size' => '20']);
-            $mform->setType($grouplabel, PARAM_TEXT);
-            $groupelements[] = $labelelement;
-            $groupelements[] = $inputelement;
-        }
+
+        $formbuilder = new standardfilter_form_builder(null, null, $mform);
+        $formbuilder->generate_mandatory_standardfilter_fields($groupelements);
 
         $mform->addGroup(
             $groupelements,
@@ -155,26 +147,10 @@ class standardfilter extends base {
     public static function generate_mandatory_fields_with_data(&$mform, $data) {
         $mform->addElement('header', 'existing_pairs', 'Existing key value pairs');
         $groupedelements = [];
-
         foreach ($data as $key => $value) {
-            $keylabel = $mform->createElement('static', "{$key}_key_label", '', 'Key');
-            $keyinput = $mform->createElement('text', "key[{$key}]", '', ['size' => '20']);
-            $mform->setType("key[{$key}]", PARAM_TEXT);
-            $mform->setDefault("key[{$key}]", $key);
-
-            $valuelabel = $mform->createElement('static', "{$key}_value_label", '', 'Value');
-            $valueinput = $mform->createElement('text', "value[{$key}]", '', ['size' => '20']);
-            $mform->setType("value[{$key}]", PARAM_TEXT);
-            $mform->setDefault("value[{$key}]", $value);
-
-            $trashicon = '<i class="fa fa-trash"></i>';
-            $removebutton = $mform->createElement('button', "remove[{$key}]", $trashicon, ['class' => 'btn']);
-
-            $groupedelements[] = $mform->createElement('group', "group_{$key}", '', [
-                $keylabel, $keyinput, $valuelabel, $valueinput, $removebutton,
-            ], ' ', false);
+            $formbuilder = new standardfilter_form_builder($key, $value, $mform);
+            $formbuilder->generate_mandatory_standardfilter_fields($groupedelements);
         }
-
         $mform->addGroup(
             $groupedelements,
             self::$groupname,
@@ -183,6 +159,7 @@ class standardfilter extends base {
             false
         );
     }
+
     /**
      * The expected value.
      * @param array $fieldsandsubmitteddata
