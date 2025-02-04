@@ -37,18 +37,18 @@ class wunderbyte_table_db_operator {
     /** @var string */
     protected $key;
 
-    /** @var \local_wunderbyte_table\wunderbyte_table */
+    /** @var array */
     protected $filtersettings;
 
-    /** @var array */
+    /** @var object */
     protected $data;
 
     /** @var string */
     protected $tablename;
     /**
      * __construct
-     * @param array $data
-     * @param array $table
+     * @param object $data
+     * @param \local_wunderbyte_table\wunderbyte_table $table
      */
     public function __construct($data, $table) {
         $this->tablename = 'local_wunderbyte_table';
@@ -65,8 +65,12 @@ class wunderbyte_table_db_operator {
      */
     public function set_existing_key_value_pairs() {
         $newfilterkeyvalues = [];
-        foreach ($this->data->key as $key) {
-            $newfilterkeyvalues[$key] = $this->data->value[$key];
+        foreach ($this->data->key as $key => $keyvalue) {
+            if ($key == 0) {
+                $newfilterkeyvalues[$keyvalue] = $this->data->value[0];
+            } else {
+                $newfilterkeyvalues[$keyvalue] = $this->data->value[$keyvalue];
+            }
         }
         $this->filtersettings[$this->data->filter_columns] = $this->merge_settings_head_with_key_value_($newfilterkeyvalues);
     }

@@ -84,6 +84,7 @@ class filter_form_operator {
             );
             $mform->setType('filter_options', PARAM_INT);
         }
+
     }
 
     /**

@@ -90,6 +90,10 @@ class column_manager {
     private function set_add_filter_types() {
         $this->mform->addElement('header', 'add_pair', 'Add new key value pair');
         filter_form_operator::set_filter_types($this->mform);
+        $this->mform->addElement(
+            'html',
+            '<div id="filter-add-field"></div>'
+        );
     }
 
     /**
@@ -136,7 +140,7 @@ class column_manager {
      * @return array
      */
     public static function get_data_validation($data) {
-        $errors = [];
+        $errors = self::checked_selected_column($data['filter_columns']);
         foreach ($data['value'] as $key => $value) {
             if (self::only_partial_submitted($data['key'][$key], $value)) {
                 $errors['key'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
@@ -144,6 +148,19 @@ class column_manager {
             }
         }
         return $errors;
+    }
+
+    /**
+     * The expected value.
+     * @param string $filtercolumns
+     * @return array
+     */
+    private static function checked_selected_column($filtercolumns) {
+        $errros = [];
+        if (empty($filtercolumns)) {
+            $errros['filter_columns'] = get_string('columnemptyerror', 'local_wunderbyte_table');
+        }
+        return $errros;
     }
 
     /**

@@ -47,6 +47,7 @@ $string['change'] = 'Ändere';
 $string['changesortorder'] = 'Ändere die Sortierungsrichtung';
 $string['checkallcheckbox'] = 'Alles auswählen';
 $string['checkbox'] = 'Checkbox';
+$string['columnemptyerror'] = 'Suchspalte ist leer';
 $string['couldnotloaddata'] = 'Konnte keine Daten laden';
 $string['countlabel'] = '{$a->filteredrecords} von {$a->totalrecords} Einträgen gefunden ';
 $string['customizewbtable'] = 'Wunderbyte Table anpassen';
