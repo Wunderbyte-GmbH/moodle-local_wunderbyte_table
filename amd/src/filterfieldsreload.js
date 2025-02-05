@@ -47,9 +47,9 @@ export const init = () => {
                 methodname: 'local_wunderbyte_table_get_filter_fields',
                 args: {filtertype: selectedValue},
                 done: (response) => {
-                    const placeholder = document.getElementById('filter-add-field');
-                    if (placeholder) {
-                        placeholder.innerHTML = response.html;
+                    const filteradd = document.getElementById('filter-add-field');
+                    if (filteradd && response.filteraddfields) {
+                        filteradd.innerHTML = response.filteraddfields;
                     }
                 },
                 fail: (error) => {

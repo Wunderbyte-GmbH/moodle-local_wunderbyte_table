@@ -44,7 +44,11 @@ class column_manager {
     protected $table;
 
     /** @var \MoodleQuickForm */
-    protected $mform;
+    protected $mformedit;
+    /** @var \MoodleQuickForm */
+    protected $mformadd;
+    /** @var array */
+    protected $filtersettings;
 
     /**
      * Handles form definition of filter classes.
@@ -53,28 +57,31 @@ class column_manager {
     public function __construct($params) {
         $this->filtercolumn = $params['filtercolumn'];
         $this->table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
-        $this->mform = new \MoodleQuickForm('dynamicform', 'post', '');
+        $this->mformedit = new \MoodleQuickForm('dynamicformedit', 'post', '');
+        $this->mformadd = new \MoodleQuickForm('dynamicformadd', 'post', '');
+        $lang = filter::current_language();
+        $key = $this->table->tablecachehash . $lang . '_filterjson';
+        $this->filtersettings = editfilter::return_filtersettings($this->table, $key);
     }
 
     /**
      * Handles form definition of filter classes.
-     * @return \MoodleQuickForm
+     * @return array
      */
     public function get_filtered_column_form() {
         $this->set_available_filter_types();
         $this->set_add_filter_types();
-        return $this->mform;
+        return [
+            'filtereditfields' => $this->mformedit->toHtml(),
+            'filteraddfields' => $this->mformadd->toHtml(),
+        ];
     }
 
     /**
      * Handles form definition of filter classes.
      */
     private function set_available_filter_types() {
-        $lang = filter::current_language();
-        $key = $this->table->tablecachehash . $lang . '_filterjson';
-        $filtersettings = editfilter::return_filtersettings($this->table, $key);
-        $columndata = $filtersettings[$this->filtercolumn] ?? [];
-
+        $columndata = $this->filtersettings[$this->filtercolumn] ?? [];
         $existingfilterdata = [];
         foreach ($columndata as $key => $value) {
             if (!in_array($key, $this->non_kestringy_value_pair_properties())) {
@@ -88,12 +95,8 @@ class column_manager {
      * Handles form definition of filter classes.
      */
     private function set_add_filter_types() {
-        $this->mform->addElement('header', 'add_pair', 'Add new key value pair');
-        filter_form_operator::set_filter_types($this->mform);
-        $this->mform->addElement(
-            'html',
-            '<div id="filter-add-field"></div>'
-        );
+        $this->mformadd->addElement('header', 'add_pair', 'Add new key value pair');
+        filter_form_operator::set_filter_types($this->mformadd);
     }
 
     /**
@@ -123,7 +126,7 @@ class column_manager {
                     if ($reflection->hasMethod($staticfunction)) {
                         $method = $reflection->getMethod($staticfunction);
                         if ($method->isPublic() && $method->isStatic()) {
-                            return $classname::$staticfunction($this->mform, $data);
+                            return $classname::$staticfunction($this->mformedit, $data);
                         }
                     }
                 }
@@ -177,5 +180,14 @@ class column_manager {
             return true;
         }
         return false;
+    }
+
+    /**
+     * The expected value.
+     * @param string $filtercolumn
+     * @return array
+     */
+    public function get_filter_settings_of_column($filtercolumn) {
+        return $this->filtersettings[$filtercolumn] ?? [];
     }
 }

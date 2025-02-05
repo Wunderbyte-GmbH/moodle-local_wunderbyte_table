@@ -47,6 +47,10 @@ class filter_form_operator {
             'html',
             '<div id="filter-edit-fields"></div>'
         );
+        $mform->addElement(
+            'html',
+            '<div id="filter-add-field"></div>'
+        );
     }
 
     /**
@@ -72,8 +76,9 @@ class filter_form_operator {
     /**
      * Handles form definition of filter classes.
      * @param MoodleQuickForm $mform
+     * @param string $default
      */
-    public static function set_filter_types(MoodleQuickForm &$mform) {
+    public static function set_filter_types(MoodleQuickForm &$mform, $default = '') {
         $options = filter_manager::get_all_filter_types();
         if ($options) {
             $mform->addElement(
@@ -83,17 +88,10 @@ class filter_form_operator {
                 $options
             );
             $mform->setType('filter_options', PARAM_INT);
+            if ($default !== '' && array_key_exists($default, $options)) {
+                $mform->setDefault('filter_options', $default);
+            }
         }
-
-    }
-
-    /**
-     * Validation.
-     * @param array $data
-     * @return array
-     */
-    public static function validation(array $data) {
-        return column_manager::get_data_validation($data);
     }
 
     /**
@@ -102,23 +100,33 @@ class filter_form_operator {
      * @param array $submitteddata
      */
     public static function persist_input_values($mform, $submitteddata) {
-        $peristingvalues = [
-            'filter_columns',
-        ];
-        $filtertype = $submitteddata['filter_options'];
-        if (!empty($filtertype)) {
-            foreach ($peristingvalues as $peristingvalue) {
-                if (!empty($submitteddata[$peristingvalue])) {
-                    $mform->getElement($peristingvalue)->setValue($submitteddata[$peristingvalue]);
+        $peristingvalue = 'filter_columns';
+        $filtercolumn = $submitteddata[$peristingvalue];
+
+        if (!empty($filtercolumn)) {
+            if (!empty($submitteddata[$peristingvalue])) {
+                $mform->getElement($peristingvalue)->setValue($submitteddata[$peristingvalue]);
+            }
+
+            $submitteddata['filtercolumn'] = $submitteddata['filter_columns'];
+            $columnmanager = new column_manager($submitteddata);
+            $filteredcolumnform = $columnmanager->get_filtered_column_form();
+            $errors = $columnmanager->get_data_validation($submitteddata);
+
+            // add the errors start here
+            foreach ($filteredcolumnform->_elements as $element) {
+                foreach ($element->_elements as $groupelement) {
+                    $mform->addElement($element);
                 }
             }
 
-            // $mandatoryfields = filter_manager::get_mandetory_filter_fields($filtertype);
-            // $errors = self::validation($submitteddata);
-            // filter_manager::set_peristing_values($mandatoryfields, $submitteddata, $errors);
-
-            // $dynamichtml = $mandatoryfields->toHtml();
-            // self::set_dynamic_fields_inside_div($mform, $dynamichtml);
+            $filtertype = $columnmanager->get_filter_settings_of_column($filtercolumn);
+            if ($filtertype) {
+                //$mandatoryfields = filter_manager::get_mandetory_filter_fields($filtertype['wbfilterclass']);
+                // foreach ($mandatoryfields->_elements as $element) {
+                //     $mform->addElement($element);
+                // }
+            }
         }
     }
 
@@ -127,14 +135,18 @@ class filter_form_operator {
      * @param \MoodleQuickForm $mform
      * @param string $dynamichtml
      */
-    private static function set_dynamic_fields_inside_div(&$mform, $dynamichtml) {
+    private static function set_dynamic_fields_inside_div(&$mform, $dynamichtml, $divid) {
         foreach ($mform->_elements as $element) {
             if (
                 $element->_type === 'html' &&
                 isset($element->_text) &&
-                strpos($element->_text, 'filter-edit-fields') !== false
+                strpos($element->_text, $divid) !== false
             ) {
-                $element->_text = '<div id="filter-edit-fields"> ' . $dynamichtml . '</div>';
+                if ($divid == 'filter-add-field') {
+                    $element->_text .= '<div id="' . $divid . '"> ' . $dynamichtml . '</div>';
+                } else {
+                    $element->_text = '<div id="' . $divid . '"> ' . $dynamichtml . '</div>';
+                }
                 break;
             }
         }
