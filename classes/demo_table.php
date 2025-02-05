@@ -25,6 +25,10 @@
 
 namespace local_wunderbyte_table;
 
+use local_wunderbyte_table\dynamicactionelements\dynamiccheckbox;
+use local_wunderbyte_table\dynamicactionelements\dynamicselect;
+use local_wunderbyte_table\dynamicactionelements\dynamictextinput;
+
 defined('MOODLE_INTERNAL') || die();
 
 use local_wunderbyte_table\output\table;
@@ -97,20 +101,9 @@ class demo_table extends wunderbyte_table {
             ]
         ];
 
-        $data[] = [
-            'label' => get_string('checkbox', 'local_wunderbyte_table'), // Name of your action button.
-            'class' => 'btn btn-success',
-            'href' => '#', // You can either use the link, or JS, or both.
-            'iclass' => 'fa fa-edit', // Add an icon before the label.
-            'id' => $values->id.'-'.$this->uniqueid,
-            'name' => $this->uniqueid.'-'.$values->id,
-            'methodname' => 'togglecheckbox', // The method needs to be added to your child of wunderbyte_table class.
-            'ischeckbox' => true,
-            'data' => [ // Will be added eg as data-id = $values->id, so values can be transmitted to the method above.
-                'id' => $values->id,
-                'labelcolumn' => 'username',
-            ]
-        ];
+        $data[] = dynamiccheckbox::generate_data($values->id, $this->uniqueid);;
+        $data[] = dynamicselect::generate_data($values->id, $this->uniqueid);
+        $data[] = dynamictextinput::generate_data($values->id, $this->uniqueid);
 
         // This transforms the array to make it easier to use in mustache template.
         table::transform_actionbuttons_array($data);
@@ -161,6 +154,34 @@ class demo_table extends wunderbyte_table {
         return [
            'success' => 1,
            'message' => $dataobject->state == 'true' ? 'checked' : 'unchecked',
+        ];
+    }
+    /**
+     * Toggle Checkbox
+     *
+     * @param int $id
+     * @param string $data
+     * @return array
+     */
+    public function action_textinputchange(int $id, string $data):array {
+        $dataobject = json_decode($data);
+        return [
+           'success' => 1,
+           'message' => 'Entered string is: ' . $dataobject->value,
+        ];
+    }
+    /**
+     * Toggle Checkbox
+     *
+     * @param int $id
+     * @param string $data
+     * @return array
+     */
+    public function action_selectoption(int $id, string $data):array {
+        $dataobject = json_decode($data);
+        return [
+           'success' => 1,
+           'message' => 'Selected option: ' . $dataobject->selectedValue,
         ];
     }
 

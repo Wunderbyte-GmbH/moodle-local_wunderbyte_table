@@ -50,7 +50,6 @@ export function initializeActionButton(selector, idstring, encodedtable) {
     return;
   }
   const actionbuttons = container.querySelectorAll(SELECTOR.ACTIONBUTTON);
-
   actionbuttons.forEach(button => {
     if (button.dataset.initialized) {
       return;
@@ -59,7 +58,6 @@ export function initializeActionButton(selector, idstring, encodedtable) {
 
     // First check if we have a valid methodname.
     if (button.dataset.methodname && button.dataset.methodname.length > 0) {
-
       // Second check if it's a checkbox, then we need a change listener.
       if (button.dataset.ischeckbox) {
         button.addEventListener('change', () => {
@@ -67,11 +65,25 @@ export function initializeActionButton(selector, idstring, encodedtable) {
           const data = button.dataset;
           data.state = button.checked;
 
-          // eslint-disable-next-line no-console
-          console.log(data.state);
-
           transmitAction(button.dataset.id, button.dataset.methodname,
             JSON.stringify(data), idstring, encodedtable);
+        });
+      } else if (button.dataset.methodname == 'textinputchange') {
+        const debouncedInputHandler = debounce(() => {
+            const data = button.dataset;
+            data.value = button.value;
+
+            transmitAction(button.dataset.id, button.dataset.methodname,
+                JSON.stringify(data), idstring, encodedtable);
+        }, 300);
+
+        button.addEventListener('input', debouncedInputHandler);
+      } else if (button.dataset.methodname == 'selectoption') {
+        button.addEventListener('change', () => {
+            const data = button.dataset;
+            data.selectedValue = button.value;
+            transmitAction(button.dataset.id, button.dataset.methodname,
+                JSON.stringify(data), idstring, encodedtable);
         });
       } else {
         // Else it's a button, we attach the click listener.
@@ -153,6 +165,19 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
     // eslint-disable-next-line no-console
     console.log(e);
   });
+}
+
+/**
+ * Shows generic confirmation modal.
+ * @param {*} func
+ * @param {int} delay
+ */
+function debounce(func, delay) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), delay);
+    };
 }
 
 

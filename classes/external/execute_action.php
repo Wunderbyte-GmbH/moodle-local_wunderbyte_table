@@ -78,7 +78,8 @@ class execute_action extends external_api {
         string $methodname,
         string $encodedtable,
         int $id,
-        string $data) {
+        string $data
+    ) {
 
         global $USER, $PAGE;
 
