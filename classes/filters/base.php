@@ -500,9 +500,9 @@ abstract class base {
 
     /**
      * The expected value.
-     * @return mixed
+     * @param \MoodleQuickForm $mform
      */
-    public static function render_mandatory_fields() {
+    public static function render_mandatory_fields(&$mform) {
         $mform = new MoodleQuickForm('dynamicform', 'post', '');
         $mform->addElement(
             'static',
@@ -510,7 +510,6 @@ abstract class base {
             '',
             'No additional fields needed'
         );
-        return $mform;
     }
 
     /**

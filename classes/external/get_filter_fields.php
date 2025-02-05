@@ -74,7 +74,7 @@ class get_filter_fields extends external_api {
         $params = self::validate_parameters(self::execute_parameters(), $params);
         $mandatoryfields = filter_manager::get_mandetory_filter_fields($params['filtertype']);
         return [
-            'html' => $mandatoryfields->toHtml(),
+            'filteraddfields' => $mandatoryfields->toHtml(),
         ];
     }
 
@@ -85,7 +85,7 @@ class get_filter_fields extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'html' => new external_value(PARAM_RAW, 'fields html'),
+            'filteraddfields' => new external_value(PARAM_RAW, 'fields html'),
         ]);
     }
 }

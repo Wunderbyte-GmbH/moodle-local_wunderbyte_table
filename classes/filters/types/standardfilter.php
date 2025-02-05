@@ -114,12 +114,10 @@ class standardfilter extends base {
 
     /**
      * The expected value.
-     * @return \MoodleQuickForm
+     * @param \MoodleQuickForm
      */
-    public static function render_mandatory_fields() {
-        $mform = new \MoodleQuickForm('dynamicform', 'post', '');
+    public static function render_mandatory_fields(&$mform) {
         self::generate_mandatory_fields($mform);
-        return $mform;
     }
 
     /**

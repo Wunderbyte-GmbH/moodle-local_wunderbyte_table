@@ -16,6 +16,7 @@
 
 namespace local_wunderbyte_table\form;
 
+use local_wunderbyte_table\filters\column_manager;
 use local_wunderbyte_table\filters\filter_form_operator;
 use local_wunderbyte_table\filters\wunderbyte_table_db_operator;
 
@@ -104,7 +105,8 @@ class addfitlertable extends dynamic_form {
      *
      */
     public function validation($data, $files) {
-        return filter_form_operator::validation($this->_ajaxformdata);
+        $columnmanager = new column_manager($data);
+        return $columnmanager->get_data_validation($this->_ajaxformdata);
     }
 
 

@@ -76,10 +76,8 @@ class get_filter_column_data extends external_api {
         ];
         $params = self::validate_parameters(self::execute_parameters(), $params);
         $columnmanager = new column_manager($params);
-        $filteredcolumnform = $columnmanager->get_filtered_column_form();
-        return [
-            'html' => '<div>' . $filteredcolumnform->toHtml() . '</div>',
-        ];
+        $filteredcolumnforms = $columnmanager->get_filtered_column_form();
+        return $filteredcolumnforms;
     }
 
     /**
@@ -89,7 +87,8 @@ class get_filter_column_data extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'html' => new external_value(PARAM_RAW, 'fields html'),
+            'filtereditfields' => new external_value(PARAM_RAW, 'fields html'),
+            'filteraddfields' => new external_value(PARAM_RAW, 'fields html'),
         ]);
     }
 }

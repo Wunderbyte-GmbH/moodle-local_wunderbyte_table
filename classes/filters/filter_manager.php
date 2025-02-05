@@ -78,8 +78,11 @@ class filter_manager {
      * @return \MoodleQuickForm
      */
     public static function get_mandetory_filter_fields($classname) {
-        $mandetoryfilterfields = self::execute_static_function($classname, 'render_mandatory_fields');
-        return $mandetoryfilterfields;
+        $mform = new \MoodleQuickForm('dynamicform', 'post', '');
+        $mform->addElement('header', 'add_pair', 'Add new key value pair');
+        filter_form_operator::set_filter_types($mform, $classname);
+        self::execute_static_function($classname, 'render_mandatory_fields', $mform);
+        return $mform;
     }
 
     /**
@@ -104,7 +107,7 @@ class filter_manager {
      * Handles form definition of filter classes.
      * @param string $classname
      * @param string $staticfunction
-     * @param array $data
+     * @param mixed $data
      * @return mixed|null
      */
     private static function execute_static_function($classname, $staticfunction, $data = []) {
