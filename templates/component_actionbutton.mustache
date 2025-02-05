@@ -69,25 +69,6 @@
     }
 }}
 {{#showactionbuttons}}
-    {{^ischeckbox}}
-    <span>
-        <a href="{{href}}"
-            class="{{class}}"
-            data-type="wb_action_button"
-            title="{{methodname}}-{{name}}"
-            data-id="{{id}}"
-            data-methodname="{{methodname}}"
-            data-formname="{{formname}}"
-            data-nomodal="{{nomodal}}"
-            data-selectionmandatory="{{selectionmandatory}}"
-            {{#data}}
-                data-{{key}}="{{value}}"
-            {{/data}}>
-            <i class="{{iclass}}" aria-label="{{arialabel}}" title="{{title}}"></i>
-            {{label}}
-        </a>
-    </span>
-    {{/ischeckbox}}
     {{#ischeckbox}}
         <div class="form-check">
             <input
@@ -107,4 +88,64 @@
             <label class="form-check-label" for="wb-checkbox-{{id}}">{{label}}</label>
         </div>
     {{/ischeckbox}}
+    {{^ischeckbox}}
+        {{^isselect}}
+            {{^istextinput}}
+                <span>
+                    <a href="{{href}}"
+                        class="{{class}}"
+                        data-type="wb_action_button"
+                        title="{{methodname}}-{{name}}"
+                        data-id="{{id}}"
+                        data-methodname="{{methodname}}"
+                        data-formname="{{formname}}"
+                        data-nomodal="{{nomodal}}"
+                        data-selectionmandatory="{{selectionmandatory}}"
+                        {{#data}}
+                            data-{{key}}="{{value}}"
+                        {{/data}}>
+                        <i class="{{iclass}}" aria-label="{{arialabel}}" title="{{title}}"></i>
+                        {{label}}
+                    </a>
+                </span>
+            {{/istextinput}}
+        {{/isselect}}
+    {{/ischeckbox}}
+
+    {{#isselect}}
+    <div class="form-group">
+            <select
+                id="{{id}}"
+                name="{{name}}"
+                class="form-select"
+                data-id="{{id}}"
+                data-type="wb_action_button"
+                data-methodname="{{methodname}}"
+            >
+                {{#options}}
+                    <option value="{{value}}"
+                        {{#disabled}}disabled{{/disabled}}
+                        {{#selected}}selected{{/selected}}>
+                        {{text}}
+                    </option>
+                {{/options}}
+            </select>
+        </div>
+    {{/isselect}}
+
+    {{#istextinput}}
+        <div class="form-group">
+            <input type="text"
+                id="{{id}}"
+                name="{{name}}"
+                class="{{class}}"
+                placeholder="{{data.placeholder}}"
+                maxlength="{{data.maxlength}}"
+                data-type="wb_action_button"
+                data-methodname="{{methodname}}"
+                {{#data}}
+                    data-{{key}}="{{value}}"
+                {{/data}}>
+        </div>
+    {{/istextinput}}
 {{/showactionbuttons}}
