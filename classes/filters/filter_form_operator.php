@@ -56,6 +56,7 @@ class filter_form_operator {
     /**
      * Handles form definition of filter classes.
      * @param MoodleQuickForm $mform
+     * @param array $formdata
      */
     public static function set_filter_columns(MoodleQuickForm &$mform, $formdata) {
         $encodedtable = $formdata['encodedtable'];
@@ -113,7 +114,6 @@ class filter_form_operator {
             $filteredcolumnform = $columnmanager->get_filtered_column_form();
             $errors = $columnmanager->get_data_validation($submitteddata);
 
-            // add the errors start here
             foreach ($filteredcolumnform->_elements as $element) {
                 foreach ($element->_elements as $groupelement) {
                     $mform->addElement($element);
@@ -122,10 +122,10 @@ class filter_form_operator {
 
             $filtertype = $columnmanager->get_filter_settings_of_column($filtercolumn);
             if ($filtertype) {
-                //$mandatoryfields = filter_manager::get_mandetory_filter_fields($filtertype['wbfilterclass']);
-                // foreach ($mandatoryfields->_elements as $element) {
-                //     $mform->addElement($element);
-                // }
+                $mandatoryfields = filter_manager::get_mandetory_filter_fields($filtertype['wbfilterclass']);
+                foreach ($mandatoryfields->_elements as $element) {
+                    $mform->addElement($element);
+                }
             }
         }
     }
