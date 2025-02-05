@@ -40,18 +40,20 @@ export const init = (encodedtable) => {
     observeDOMChanges((dropdown) => {
         dropdown.addEventListener('change', (event) => {
             const selectedValue = event.target.value;
-            // eslint-disable-next-line no-console
-            console.log('inside', selectedValue);
             Ajax.call([{
                 methodname: 'local_wunderbyte_table_get_filter_column_data',
                 args: {
                     filtercolumn: selectedValue,
                     encodedtable: encodedtable
                 },
-                done: (response) => {
-                    const placeholder = document.getElementById('filter-edit-fields');
-                    if (placeholder) {
-                        placeholder.innerHTML = response.html;
+                done: (response ) => {
+                    const filteredit = document.getElementById('filter-edit-fields');
+                    if (filteredit && response.filtereditfields) {
+                        filteredit.innerHTML = response.filtereditfields;
+                    }
+                    const filteradd = document.getElementById('filter-add-field');
+                    if (filteradd && response.filteraddfields) {
+                        filteradd.innerHTML = response.filteraddfields;
                     }
                 },
                 fail: (error) => {
