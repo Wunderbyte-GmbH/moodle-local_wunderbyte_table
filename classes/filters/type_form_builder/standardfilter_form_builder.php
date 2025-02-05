@@ -39,6 +39,8 @@ class standardfilter_form_builder {
 
     /**
      * The expected value.
+     * @param string $key
+     * @param string $value
      * @param \MoodleQuickForm $mform
      */
     public function __construct($key, $value, &$mform) {
@@ -50,7 +52,7 @@ class standardfilter_form_builder {
 
     /**
      * The expected value.
-     * @param \MoodleQuickForm $mform
+     * @param array $groupedelements
      */
     public function generate_mandatory_standardfilter_fields(&$groupedelements) {
         $keylabelinput = $this->generate_pair_label_input('key');
@@ -64,7 +66,7 @@ class standardfilter_form_builder {
 
     /**
      * The expected value.
-     * @param string $key
+     * @param string $type
      * @return array
      */
     private function generate_pair_label_input($type) {
@@ -74,8 +76,8 @@ class standardfilter_form_builder {
         $this->mform->setType("{$type}[{$this->key}]", PARAM_TEXT);
         $this->mform->setDefault("{$type}[{$this->key}]", $this->$type);
         return [
-            $type . 'label' => $label,
-            $type . 'keyinput' => $input,
+            "{$type}label" => $label,
+            "{$type}keyinput" => $input,
         ];
     }
 
