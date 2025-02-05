@@ -60,7 +60,8 @@ class get_filter_column_data extends external_api {
 
     /**
      * Execute this webservice.
-     * @param string $filtertype
+     * @param string $filtercolumn
+     * @param string $encodedtable
      * @return array
      */
     public static function execute(

@@ -60,8 +60,6 @@ class wunderbyte_table_db_operator {
 
     /**
      * Set the key value pairs
-     * @param array $data
-     * @param array $table
      */
     public function set_existing_key_value_pairs() {
         $newfilterkeyvalues = [];
@@ -77,8 +75,7 @@ class wunderbyte_table_db_operator {
 
     /**
      * Set the key value pairs
-     * @param array $data
-     * @param array $table
+     * @param array $newfilterkeyvalues
      */
     private function merge_settings_head_with_key_value_($newfilterkeyvalues) {
         $settingshead = [
@@ -96,8 +93,6 @@ class wunderbyte_table_db_operator {
 
     /**
      * Set the key value pairs
-     * @param array $data
-     * @param array $table
      */
     public function save_new_filter_options() {
         global $DB;

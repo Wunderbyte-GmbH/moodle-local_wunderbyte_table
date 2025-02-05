@@ -141,6 +141,7 @@ class standardfilter extends base {
     /**
      * The expected value.
      * @param \MoodleQuickForm $mform
+     * @param array $data
      */
     public static function generate_mandatory_fields_with_data(&$mform, $data) {
         $mform->addElement('header', 'existing_pairs', 'Existing key value pairs');
