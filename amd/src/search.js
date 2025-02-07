@@ -27,7 +27,7 @@ import {getFilterObjects} from 'local_wunderbyte_table/filter';
 import {getSortSelection} from 'local_wunderbyte_table/sort';
 
 var lastsearchinputs = {};
-const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 2;
+const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 1;
 
 /**
  * Render the checkboxes for the filer.
