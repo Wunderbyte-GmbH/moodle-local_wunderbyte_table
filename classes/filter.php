@@ -360,10 +360,10 @@ class filter {
     public static function get_timezone_offset() {
 
         $now = new DateTime("now", new DateTimeZone('GMT'));
-        $gmttime = $now->format('h');
+        $gmttime = $now->format('H');
 
         $now = new DateTime("now", core_date::get_user_timezone_object());
-        $userhour = $now->format('h');
+        $userhour = $now->format('H');
 
         $delta = $gmttime - $userhour;
 
