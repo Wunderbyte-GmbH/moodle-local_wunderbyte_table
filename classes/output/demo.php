@@ -506,7 +506,8 @@ class demo implements renderable, templatable {
             'id' => get_string('id', 'local_wunderbyte_table'),
             'course' => get_string('course'),
             'module' => get_string('module', 'local_wunderbyte_table'),
-            'idnumber' => get_string('module', 'local_wunderbyte_table'),
+            'idnumber' => get_string('idnumber'),
+            'added' => get_string('timecreated'),
             'action' => get_string('action'),
         ];
 

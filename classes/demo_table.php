@@ -41,6 +41,16 @@ class demo_table extends wunderbyte_table {
      * @param stdClass $values
      * @return void
      */
+    public function col_added($values) {
+        return userdate($values->added, get_string('strftimedatetimeshort'));
+    }
+
+    /**
+     * Decodes the Unix Timestamp
+     *
+     * @param stdClass $values
+     * @return void
+     */
     public function col_timecreated($values) {
         return userdate($values->timecreated);
     }
