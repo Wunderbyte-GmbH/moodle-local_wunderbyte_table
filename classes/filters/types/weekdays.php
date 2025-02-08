@@ -22,9 +22,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- namespace local_wunderbyte_table\filters\types;
- use local_wunderbyte_table\filters\base;
- use moodle_exception;
+namespace local_wunderbyte_table\filters\types;
+
+use moodle_exception;
+use local_wunderbyte_table\filter;
+use local_wunderbyte_table\filters\base;
+use local_wunderbyte_table\wunderbyte_table;
 
 /**
  * Filter class with automatically supports the english weekdays as filter options.
@@ -114,5 +117,25 @@ class weekdays extends base {
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }
+    }
+
+    /**
+     * Get filter options for weekdays.
+     * @param wunderbyte_table $table
+     * @param string $key
+     * @return array
+     */
+    public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
+
+        $array = filter::get_db_filter_column_weekdays($table, $key);
+
+        $returnarray = [];
+        // We get back the GMT timestamps. We need to translate them.
+        foreach ($array as $day => $value) {
+            $value->$key = "$day";
+            $returnarray[$day] = $value;
+        }
+
+        return $returnarray ?? [];
     }
 }
