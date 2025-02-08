@@ -280,6 +280,48 @@ class filter {
     }
 
     /**
+     * Makes sql request for weekdays .
+     * @param wunderbyte_table $table
+     * @param string $key
+     * @return array
+     */
+    public static function get_db_filter_column_weekdays(wunderbyte_table $table, string $key) {
+
+        global $DB;
+
+        $databasetype = $DB->get_dbfamily();
+
+        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+        switch ($databasetype) {
+            case 'postgres':
+                $sql = "SELECT $key, COUNT($key)
+                        FROM ( SELECT TO_CHAR(TIMESTAMP 'epoch' + $key * INTERVAL '1 second', 'FMDay') AS $key
+                        FROM {$table->sql->from}
+                        WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as weekdayss1
+                        GROUP BY $key ";
+                break;
+            case 'mysql':
+                $sql = "SELECT $key, COUNT($key)
+                        FROM ( SELECT DATE_FORMAT(FROM_UNIXTIME($key), '%A') AS $key
+                        FROM {$table->sql->from}
+                        WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as weekdayss1
+                        GROUP BY $key ";
+                break;
+            default:
+                $sql = '';
+                break;
+        }
+
+        if (empty($sql)) {
+            return [];
+        }
+
+        $records = $DB->get_records_sql($sql, $table->sql->params);
+
+        return $records;
+    }
+
+    /**
      * Apply the filter for postgres & mariadb DB.
      * @param string $fieldname
      * @param string $param
@@ -297,6 +339,29 @@ class filter {
                 break;
             default:
                 $sql = " EXTRACT(HOUR FROM FROM_UNIXTIME($fieldname)) = $param";
+        }
+
+        return $sql;
+    }
+
+    /**
+     * Apply the weekday filter for postgres & mariadb DB.
+     * @param string $fieldname
+     * @param string $param
+     * @return string
+     */
+    public static function apply_weekday_filter(string $fieldname, string $param) {
+        global $DB;
+
+        $databasetype = $DB->get_dbfamily();
+
+        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+        switch ($databasetype) {
+            case 'postgres':
+                $sql = " TO_CHAR(TIMESTAMP 'epoch' + $fieldname * INTERVAL '1 second', 'FMDay') = $param";
+                break;
+            default:
+                $sql = " DATE_FORMAT(FROM_UNIXTIME($fieldname), '%A') = $param";
         }
 
         return $sql;
