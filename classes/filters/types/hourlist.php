@@ -149,12 +149,12 @@ class hourlist extends base {
 
         $returnarray = [];
         // We get back the GMT timestamps. We need to translate them.
-        foreach ($array as $key => $value) {
+        foreach ($array as $hour => $value) {
 
-            $key = $key - $delta;
+            $hour = $hour - $delta;
 
-            $value->coursestarttime = "$key";
-            $returnarray[$key] = $value;
+            $value->$key = "$hour";
+            $returnarray[$hour] = $value;
         }
 
         return $returnarray ?? [];
