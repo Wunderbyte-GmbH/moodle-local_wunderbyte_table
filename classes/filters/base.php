@@ -445,6 +445,11 @@ abstract class base {
                 $delta = filter::get_timezone_offset(); // Timezone might vary according to location.
                 $paramsvaluekey = $table->set_params((string) ($value + $delta), false);
                 $filter .= filter::apply_hourlist_filter($columnname, ":$paramsvaluekey");
+            } else if (
+                is_string($value)
+                && isset($table->subcolumns['datafields'][$columnname]['local_wunderbyte_table\filters\types\weekdays'])
+            ) {
+                $filter .= filter::apply_weekday_filter($columnname, "$value");
             } else {
                 // We want to find the value in an array of values.
                 // Therefore, we have to use or as well.
