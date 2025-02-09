@@ -295,16 +295,20 @@ class filter {
         switch ($databasetype) {
             case 'postgres':
                 $sql = "SELECT $key, COUNT($key)
-                        FROM ( SELECT TO_CHAR(TIMESTAMP 'epoch' + $key * INTERVAL '1 second', 'FMDay') AS $key
-                        FROM {$table->sql->from}
-                        WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as weekdayss1
+                        FROM (
+                            SELECT TO_CHAR(TIMESTAMP 'epoch' + $key * INTERVAL '1 second', 'FMDay') AS $key
+                            FROM {$table->sql->from}
+                            WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0
+                        ) as weekdayss1
                         GROUP BY $key ";
                 break;
             case 'mysql':
                 $sql = "SELECT $key, COUNT($key)
-                        FROM ( SELECT DATE_FORMAT(FROM_UNIXTIME($key), '%A') AS $key
-                        FROM {$table->sql->from}
-                        WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as weekdayss1
+                        FROM (
+                            SELECT DATE_FORMAT(FROM_UNIXTIME($key), '%A') AS $key
+                            FROM {$table->sql->from}
+                            WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0
+                        ) as weekdayss1
                         GROUP BY $key ";
                 break;
             default:
