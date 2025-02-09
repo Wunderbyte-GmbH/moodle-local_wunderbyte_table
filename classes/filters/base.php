@@ -449,7 +449,8 @@ abstract class base {
                 is_string($value)
                 && isset($table->subcolumns['datafields'][$columnname]['local_wunderbyte_table\filters\types\weekdays'])
             ) {
-                $filter .= filter::apply_weekday_filter($columnname, "$value");
+                $paramsvaluekey = $table->set_params((string) ($value), false);
+                $filter .= filter::apply_weekday_filter($columnname, ":$paramsvaluekey");
             } else {
                 // We want to find the value in an array of values.
                 // Therefore, we have to use or as well.
