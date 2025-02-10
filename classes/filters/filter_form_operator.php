@@ -67,9 +67,27 @@ class filter_form_operator {
             }
 
             $submitteddata['filtercolumn'] = $submitteddata['filter_columns'];
+
             $columnmanager = new column_manager($submitteddata);
             $filteredcolumnform = $columnmanager->get_filtered_column_form_persist_error();
+
+            $validationmanager = new validation_manager($submitteddata);
+            $errors = $validationmanager->get_data_validation();
+            $validationmanager->set_errors($errors, $filteredcolumnform);
+
+            self::render_forms_to_html($filteredcolumnform);
             self::set_dynamic_fields_inside_div($mform, $filteredcolumnform);
+        }
+    }
+
+    /**
+     * Validation.
+     * @param \MoodleQuickForm $mform
+     * @param array $dynamicforms
+     */
+    private static function render_forms_to_html(&$filteredcolumnform) {
+        foreach ($filteredcolumnform as $key => $form) {
+            $filteredcolumnform[$key] = $form->toHtml();
         }
     }
 

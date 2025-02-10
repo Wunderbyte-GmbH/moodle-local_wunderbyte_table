@@ -51,15 +51,12 @@ class column_manager {
     protected $filtersettings;
     /** @var array */
     protected $data;
-    /** @var array */
-    protected $errors;
 
     /**
      * Handles form definition of filter classes.
      * @param array $params
      */
     public function __construct($params) {
-        $this->errors = [];
         $this->data = $params;
         $this->filtercolumn = $params['filtercolumn'];
         $this->table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
@@ -94,7 +91,7 @@ class column_manager {
      * @return array
      */
     public function get_filtered_column_form_persist_error() {
-        $this->set_data_validation();
+        //$this->errors = $this->get_data_validation();
 
         $existingfilterdata = [];
         foreach ($this->data['value'] as $key => $keyvalue) {
@@ -105,8 +102,8 @@ class column_manager {
         $this->set_available_filter_types($existingfilterdata, $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
         $this->set_add_filter_key_value();
         return [
-            'filtereditfields' => $this->mformedit->toHtml(),
-            'filteraddfields' => $this->mformadd->toHtml(),
+            'filtereditfields' => $this->mformedit,
+            'filteraddfields' => $this->mformadd,
         ];
     }
 
@@ -122,16 +119,16 @@ class column_manager {
             $this->mformedit->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No pairs exist</p>');
         }
 
-        foreach ($this->mformedit->_elements as $element) {
-            if ($element->_type === 'group') {
-                foreach ($element->_elements as $subelement) {
-                    $label = str_replace('group_', '', $subelement->_name);
-                    if (isset($this->errors['key'][$label])) {
-                        $this->mformedit->setElementError($element->_name, $this->errors['key'][$label]);
-                    }
-                }
-            }
-        }
+        // foreach ($this->mformedit->_elements as $element) {
+        //     if ($element->_type === 'group') {
+        //         foreach ($element->_elements as $subelement) {
+        //             $label = str_replace('group_', '', $subelement->_name);
+        //             if (isset($this->errors['key'][$label])) {
+        //                 $this->mformedit->setElementError($element->_name, $this->errors['key'][$label]);
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     /**
@@ -183,7 +180,7 @@ class column_manager {
                 $classname::$staticfunction($this->mformadd, $newvalue);
                 $parts = explode("\\", $classname);
                 $elementname = array_pop($parts) . 'group';
-                $this->mformadd->setElementError($elementname, $this->errors['key'][0]);
+                //$this->mformadd->setElementError($elementname, $this->errors['key'][0]);
             }
         }
     }
@@ -198,60 +195,6 @@ class column_manager {
             'wbfilterclass',
             $this->filtercolumn . '_wb_checked',
         ];
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param array $data
-     */
-    public function return_validation() {
-        $this->set_data_validation();
-        return $this->errors;
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param array $data
-     */
-    private function set_data_validation() {
-        if (isset($this->data['filter_columns'])) {
-            $errors = self::checked_selected_column($this->data['filter_columns']);
-            foreach ($this->data['key'] as $key => $keyvalue) {
-                if (self::only_partial_submitted($keyvalue, $this->data['value'][$key])) {
-                    $errors['key'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
-                    $errors['value'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
-                }
-            }
-            $this->errors = $errors;
-        }
-    }
-
-    /**
-     * The expected value.
-     * @param string $filtercolumns
-     * @return array
-     */
-    private static function checked_selected_column($filtercolumns) {
-        $errros = [];
-        if (empty($filtercolumns)) {
-            $errros['filter_columns'] = get_string('columnemptyerror', 'local_wunderbyte_table');
-        }
-        return $errros;
-    }
-
-    /**
-     * The expected value.
-     * @param string $key
-     * @param string $value
-     * @return bool
-     */
-    private static function only_partial_submitted($key, $value) {
-        if (
-            empty($key) !== empty($value)
-        ) {
-            return true;
-        }
-        return false;
     }
 
     /**
