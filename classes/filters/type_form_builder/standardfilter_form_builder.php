@@ -36,6 +36,10 @@ class standardfilter_form_builder {
     private $mform;
     /** @var string */
     private $groupid;
+    /** @var array */
+    private $unsaveddatakey;
+    /** @var array */
+    private $unsaveddatavalue;
 
     /**
      * The expected value.
@@ -48,6 +52,8 @@ class standardfilter_form_builder {
         $this->value = $value;
         $this->mform = $mform;
         $this->groupid = "group_{$key}";
+        $this->unsaveddatakey = [];
+        $this->unsaveddatavalue = [];
     }
 
     /**
@@ -74,7 +80,12 @@ class standardfilter_form_builder {
         $label = $this->mform->createElement('static', "{$this->key}_{$type}_label", '', $typename);
         $input = $this->mform->createElement('text', "{$type}[{$this->key}]", '', ['size' => '20']);
         $this->mform->setType("{$type}[{$this->key}]", PARAM_TEXT);
-        $this->mform->setDefault("{$type}[{$this->key}]", $this->$type);
+        $unsavedkey = "unsaveddata" . $type;
+        if (!empty($this->$unsavedkey)) {
+            $this->mform->setDefault("{$type}[{$this->key}]", $this->$unsavedkey);
+        } else {
+            $this->mform->setDefault("{$type}[{$this->key}]", $this->$type);
+        }
         return [
             "{$type}label" => $label,
             "{$type}keyinput" => $input,
@@ -114,5 +125,14 @@ class standardfilter_form_builder {
         $groupedelements[] = $this->mform->createElement('html', $groupwrapperstart);
         $groupedelements[] = $group;
         $groupedelements[] = $this->mform->createElement('html', $groupwrapperend);
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     */
+    public function set_unsaved_new_fields($data) {
+        $this->unsaveddatakey = array_keys($data)[0];
+        $this->unsaveddatavalue = array_values($data)[0];
     }
 }

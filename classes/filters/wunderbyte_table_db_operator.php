@@ -64,10 +64,12 @@ class wunderbyte_table_db_operator {
     public function set_existing_key_value_pairs() {
         $newfilterkeyvalues = [];
         foreach ($this->data->key as $key => $keyvalue) {
-            if ($key == 0) {
-                $newfilterkeyvalues[$keyvalue] = $this->data->value[0];
-            } else {
-                $newfilterkeyvalues[$keyvalue] = $this->data->value[$keyvalue];
+            if (!empty($key) || !empty($keyvalue)) {
+                if ($key == 0) {
+                    $newfilterkeyvalues[$keyvalue] = $this->data->value[0];
+                } else {
+                    $newfilterkeyvalues[$keyvalue] = $this->data->value[$keyvalue];
+                }
             }
         }
         $this->filtersettings[$this->data->filter_columns] = $this->merge_settings_head_with_key_value_($newfilterkeyvalues);
@@ -100,6 +102,10 @@ class wunderbyte_table_db_operator {
         if ($result) {
             $result->jsonstring = json_encode($this->filtersettings);
             $DB->update_record($this->tablename, $result);
+            \core\notification::add(
+                get_string('successaddedfilternotification', 'local_wunderbyte_table'),
+                \core\output\notification::NOTIFY_SUCCESS
+            );
         }
     }
 }

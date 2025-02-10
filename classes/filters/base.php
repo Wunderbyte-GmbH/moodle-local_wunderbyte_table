@@ -430,7 +430,7 @@ abstract class base {
             if (
                 isset($table->subcolumns['datafields'][$columnname]['jsonattribute'])
             ) {
-                    $paramsvaluekey = $table->set_params("%" . $value ."%");
+                    $paramsvaluekey = $table->set_params("%" . $value . "%");
                     $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false);
             } else if (
                 is_numeric($value)
@@ -511,7 +511,7 @@ abstract class base {
      * The expected value.
      * @param \MoodleQuickForm $mform
      */
-    public static function render_mandatory_fields(&$mform) {
+    public static function render_mandatory_fields(&$mform, $data) {
         $mform = new MoodleQuickForm('dynamicform', 'post', '');
         $mform->addElement(
             'static',

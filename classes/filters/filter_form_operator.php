@@ -24,7 +24,6 @@
 
 namespace local_wunderbyte_table\filters;
 
-use local_wunderbyte_table\wunderbyte_table;
 use MoodleQuickForm;
 
 /**
@@ -41,7 +40,7 @@ class filter_form_operator {
     public static function generate_form(MoodleQuickForm &$mform, array &$formdata) {
         $encodedtable = $formdata['encodedtable'];
         $mform->addElement('hidden', 'encodedtable', json_encode($encodedtable));
-        self::set_filter_columns($mform, $formdata);
+        column_manager::set_filter_columns($mform, $formdata);
 
         $mform->addElement(
             'html',
@@ -51,48 +50,6 @@ class filter_form_operator {
             'html',
             '<div id="filter-add-field"></div>'
         );
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param MoodleQuickForm $mform
-     * @param array $formdata
-     */
-    public static function set_filter_columns(MoodleQuickForm &$mform, $formdata) {
-        $encodedtable = $formdata['encodedtable'];
-        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
-        $filterablecolumns = $table->subcolumns['datafields'];
-        $options = filter_manager::get_all_filter_columns($filterablecolumns);
-        if ($options) {
-            $mform->addElement(
-                'select',
-                'filter_columns',
-                get_string('setwbtablefiltercolumn', 'local_wunderbyte_table'),
-                $options
-            );
-            $mform->setType('filter_columns', PARAM_INT);
-        }
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param MoodleQuickForm $mform
-     * @param string $default
-     */
-    public static function set_filter_types(MoodleQuickForm &$mform, $default = '') {
-        $options = filter_manager::get_all_filter_types();
-        if ($options) {
-            $mform->addElement(
-                'select',
-                'filter_options',
-                get_string('setwbtablefiltertype', 'local_wunderbyte_table'),
-                $options
-            );
-            $mform->setType('filter_options', PARAM_INT);
-            if ($default !== '' && array_key_exists($default, $options)) {
-                $mform->setDefault('filter_options', $default);
-            }
-        }
     }
 
     /**
@@ -111,43 +68,26 @@ class filter_form_operator {
 
             $submitteddata['filtercolumn'] = $submitteddata['filter_columns'];
             $columnmanager = new column_manager($submitteddata);
-            $filteredcolumnform = $columnmanager->get_filtered_column_form();
-            $errors = $columnmanager->get_data_validation($submitteddata);
-
-            foreach ($filteredcolumnform->_elements as $element) {
-                foreach ($element->_elements as $groupelement) {
-                    $mform->addElement($element);
-                }
-            }
-
-            $filtertype = $columnmanager->get_filter_settings_of_column($filtercolumn);
-            if ($filtertype) {
-                $mandatoryfields = filter_manager::get_mandetory_filter_fields($filtertype['wbfilterclass']);
-                foreach ($mandatoryfields->_elements as $element) {
-                    $mform->addElement($element);
-                }
-            }
+            $filteredcolumnform = $columnmanager->get_filtered_column_form_persist_error();
+            self::set_dynamic_fields_inside_div($mform, $filteredcolumnform);
         }
     }
 
     /**
      * Validation.
      * @param \MoodleQuickForm $mform
-     * @param string $dynamichtml
+     * @param array $dynamicforms
      */
-    private static function set_dynamic_fields_inside_div(&$mform, $dynamichtml, $divid) {
+    private static function set_dynamic_fields_inside_div(&$mform, $dynamicforms) {
         foreach ($mform->_elements as $element) {
             if (
-                $element->_type === 'html' &&
-                isset($element->_text) &&
-                strpos($element->_text, $divid) !== false
+                $element->_type === 'html'
             ) {
-                if ($divid == 'filter-add-field') {
-                    $element->_text .= '<div id="' . $divid . '"> ' . $dynamichtml . '</div>';
-                } else {
-                    $element->_text = '<div id="' . $divid . '"> ' . $dynamichtml . '</div>';
+                if (strpos($element->_text, 'filter-edit-fields')) {
+                        $element->_text = $dynamicforms['filtereditfields'];
+                } else if (strpos($element->_text, 'filter-add-field')) {
+                    $element->_text = $dynamicforms['filteraddfields'];
                 }
-                break;
             }
         }
     }
