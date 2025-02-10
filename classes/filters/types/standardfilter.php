@@ -162,4 +162,35 @@ class standardfilter extends base {
         }
         return $mandatoryfields;
     }
+
+    /**
+     * The expected value.
+     * @param array $data
+     * @return array
+     */
+    public static function validate_input($data) {
+        $errors = [];
+        foreach ($data['key'] as $key => $keyvalue) {
+            if (self::only_partial_submitted($keyvalue, $data['value'][$key])) {
+                $errors['key'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+                $errors['value'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * The expected value.
+     * @param string $key
+     * @param string $value
+     * @return bool
+     */
+    private static function only_partial_submitted($key, $value) {
+        if (
+            empty($key) !== empty($value)
+        ) {
+            return true;
+        }
+        return false;
+    }
 }

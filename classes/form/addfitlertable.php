@@ -16,8 +16,8 @@
 
 namespace local_wunderbyte_table\form;
 
-use local_wunderbyte_table\filters\column_manager;
 use local_wunderbyte_table\filters\filter_form_operator;
+use local_wunderbyte_table\filters\validation_manager;
 use local_wunderbyte_table\filters\wunderbyte_table_db_operator;
 
 defined('MOODLE_INTERNAL') || die();
@@ -104,8 +104,8 @@ class addfitlertable extends dynamic_form {
      *
      */
     public function validation($data, $files) {
-        $columnmanager = new column_manager($this->_ajaxformdata);
-        return $columnmanager->return_validation();
+        $validationmanager = new validation_manager($this->_ajaxformdata);
+        return $validationmanager->get_data_validation();
     }
 
 
