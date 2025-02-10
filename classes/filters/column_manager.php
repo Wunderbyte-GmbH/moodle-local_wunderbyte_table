@@ -49,16 +49,22 @@ class column_manager {
     protected $mformadd;
     /** @var array */
     protected $filtersettings;
+    /** @var array */
+    protected $data;
+    /** @var array */
+    protected $errors;
 
     /**
      * Handles form definition of filter classes.
      * @param array $params
      */
     public function __construct($params) {
+        $this->errors = [];
+        $this->data = $params;
         $this->filtercolumn = $params['filtercolumn'];
         $this->table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
-        $this->mformedit = new \MoodleQuickForm('dynamicformedit', 'post', '');
-        $this->mformadd = new \MoodleQuickForm('dynamicformadd', 'post', '');
+        $this->mformedit = new \MoodleQuickForm('dynamicform', 'post', '');
+        $this->mformadd = new \MoodleQuickForm('dynamicform', 'post', '');
         $lang = filter::current_language();
         $key = $this->table->tablecachehash . $lang . '_filterjson';
         $this->filtersettings = editfilter::return_filtersettings($this->table, $key);
@@ -69,8 +75,35 @@ class column_manager {
      * @return array
      */
     public function get_filtered_column_form() {
-        $this->set_available_filter_types();
-        $this->set_add_filter_types();
+        $existingfilterdata = [];
+        foreach ($this->filtersettings[$this->filtercolumn] as $key => $value) {
+            if (!in_array($key, $this->non_kestringy_value_pair_properties())) {
+                $existingfilterdata[$key] = $value;
+            }
+        }
+        $this->set_available_filter_types($existingfilterdata, $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
+        $this->set_add_filter_key_value();
+        return [
+            'filtereditfields' => $this->mformedit->toHtml(),
+            'filteraddfields' => $this->mformadd->toHtml(),
+        ];
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @return array
+     */
+    public function get_filtered_column_form_persist_error() {
+        $this->set_data_validation();
+
+        $existingfilterdata = [];
+        foreach ($this->data['value'] as $key => $keyvalue) {
+            if ($key !== 0) {
+                $existingfilterdata[$key] = $this->data['value'][$key];
+            }
+        }
+        $this->set_available_filter_types($existingfilterdata, $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
+        $this->set_add_filter_key_value();
         return [
             'filtereditfields' => $this->mformedit->toHtml(),
             'filteraddfields' => $this->mformadd->toHtml(),
@@ -80,23 +113,79 @@ class column_manager {
     /**
      * Handles form definition of filter classes.
      */
-    private function set_available_filter_types() {
-        $columndata = $this->filtersettings[$this->filtercolumn] ?? [];
-        $existingfilterdata = [];
-        foreach ($columndata as $key => $value) {
-            if (!in_array($key, $this->non_kestringy_value_pair_properties())) {
-                $existingfilterdata[$key] = $value;
+    private function set_available_filter_types($existingfilterdata, $filterclass) {
+        $this->mformedit->addElement('header', 'existing_pairs', 'Existing key value pairs');
+        $staticfunction = 'render_mandatory_fields';
+        if ($existingfilterdata  && self::is_static_public_function($filterclass, $staticfunction)) {
+            $filterclass::$staticfunction($this->mformedit, $existingfilterdata);
+        } else {
+            $this->mformedit->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No pairs exist</p>');
+        }
+
+        foreach ($this->mformedit->_elements as $element) {
+            if ($element->_type === 'group') {
+                foreach ($element->_elements as $subelement) {
+                    $label = str_replace('group_', '', $subelement->_name);
+                    if (isset($this->errors['key'][$label])) {
+                        $this->mformedit->setElementError($element->_name, $this->errors['key'][$label]);
+                    }
+                }
             }
         }
-        self::execute_static_function($columndata['wbfilterclass'], 'generate_mandatory_fields_with_data', $existingfilterdata);
     }
 
     /**
      * Handles form definition of filter classes.
      */
-    private function set_add_filter_types() {
+    private function is_static_public_function($classname, $functionname) {
+        if (class_exists($classname)) {
+            try {
+                $reflection = new ReflectionClass($classname);
+                if (!$reflection->isAbstract() && $reflection->isSubclassOf(base::class)) {
+                    if ($reflection->hasMethod($functionname)) {
+                        $method = $reflection->getMethod($functionname);
+                        if ($method->isPublic() && $method->isStatic()) {
+                            return true;
+                        }
+                    }
+                }
+            } catch (\ReflectionException $e) {
+                debugging("Reflection error for class $classname: " . $e->getMessage());
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     */
+    private function set_add_filter_key_value() {
+        $this->mformadd->addElement('html', '<div id="filter-add-field">');
         $this->mformadd->addElement('header', 'add_pair', 'Add new key value pair');
-        filter_form_operator::set_filter_types($this->mformadd);
+
+        $classname = $this->data['filter_options'];
+        filter_manager::set_filter_types($this->mformadd, $classname);
+        self::render_mandatory_fields($classname);
+
+        $this->mformadd->addElement('html', '</div>');
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     */
+    private function render_mandatory_fields($classname) {
+        if (isset($this->data['key'][0])) {
+            $newvalue = [
+                $this->data['key'][0] => $this->data['value'][0],
+            ];
+            $staticfunction = 'render_mandatory_fields';
+            if (self::is_static_public_function($classname, $staticfunction)) {
+                $classname::$staticfunction($this->mformadd, $newvalue);
+                $parts = explode("\\", $classname);
+                $elementname = array_pop($parts) . 'group';
+                $this->mformadd->setElementError($elementname, $this->errors['key'][0]);
+            }
+        }
     }
 
     /**
@@ -113,44 +202,28 @@ class column_manager {
 
     /**
      * Handles form definition of filter classes.
-     * @param string $classname
-     * @param string $staticfunction
      * @param array $data
-     * @return mixed|null
      */
-    private function execute_static_function($classname, $staticfunction, $data = []) {
-        if (class_exists($classname)) {
-            try {
-                $reflection = new ReflectionClass($classname);
-                if (!$reflection->isAbstract() && $reflection->isSubclassOf(base::class)) {
-                    if ($reflection->hasMethod($staticfunction)) {
-                        $method = $reflection->getMethod($staticfunction);
-                        if ($method->isPublic() && $method->isStatic()) {
-                            return $classname::$staticfunction($this->mformedit, $data);
-                        }
-                    }
-                }
-            } catch (\ReflectionException $e) {
-                debugging("Reflection error for class $classname: " . $e->getMessage());
-            }
-        }
-        return null;
+    public function return_validation() {
+        $this->set_data_validation();
+        return $this->errors;
     }
 
     /**
      * Handles form definition of filter classes.
      * @param array $data
-     * @return array
      */
-    public static function get_data_validation($data) {
-        $errors = self::checked_selected_column($data['filter_columns']);
-        foreach ($data['value'] as $key => $value) {
-            if (self::only_partial_submitted($data['key'][$key], $value)) {
-                $errors['key'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
-                $errors['value'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+    private function set_data_validation() {
+        if (isset($this->data['filter_columns'])) {
+            $errors = self::checked_selected_column($this->data['filter_columns']);
+            foreach ($this->data['key'] as $key => $keyvalue) {
+                if (self::only_partial_submitted($keyvalue, $this->data['value'][$key])) {
+                    $errors['key'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+                    $errors['value'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+                }
             }
+            $this->errors = $errors;
         }
-        return $errors;
     }
 
     /**
@@ -174,8 +247,7 @@ class column_manager {
      */
     private static function only_partial_submitted($key, $value) {
         if (
-            empty($key) ||
-            empty($value)
+            empty($key) !== empty($value)
         ) {
             return true;
         }
@@ -189,5 +261,43 @@ class column_manager {
      */
     public function get_filter_settings_of_column($filtercolumn) {
         return $this->filtersettings[$filtercolumn] ?? [];
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param \MoodleQuickForm $mform
+     * @param array $formdata
+     */
+    public static function set_filter_columns(\MoodleQuickForm &$mform, $formdata) {
+        $encodedtable = $formdata['encodedtable'];
+        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
+        $filterablecolumns = $table->subcolumns['datafields'];
+        $options = self::get_all_filter_columns($filterablecolumns);
+        if ($options) {
+            $mform->addElement(
+                'select',
+                'filter_columns',
+                get_string('setwbtablefiltercolumn', 'local_wunderbyte_table'),
+                $options
+            );
+            $mform->setType('filter_columns', PARAM_INT);
+        }
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $filterablecolumns
+     * @return array
+     */
+    public static function get_all_filter_columns($filterablecolumns) {
+        $options = [
+            '' => get_string('setwbtablefiltercolumnoption', 'local_wunderbyte_table'),
+        ];
+        foreach ($filterablecolumns as $key => $filterablecolumn) {
+            if (isset($filterablecolumn['wbfilterclass'])) {
+                $options[$key] = $filterablecolumn['localizedname'];
+            }
+        }
+        return $options;
     }
 }
