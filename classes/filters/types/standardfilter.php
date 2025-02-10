@@ -114,46 +114,30 @@ class standardfilter extends base {
 
     /**
      * The expected value.
-     * @param \MoodleQuickForm
-     */
-    public static function render_mandatory_fields(&$mform) {
-        self::generate_mandatory_fields($mform);
-    }
-
-    /**
-     * The expected value.
      * @param \MoodleQuickForm $mform
      */
-    public static function generate_mandatory_fields(&$mform) {
+    public static function render_mandatory_fields(&$mform, $data = []) {
         $groupelements = [];
+        $label = '';
 
-        $formbuilder = new standardfilter_form_builder(null, null, $mform);
-        $formbuilder->generate_mandatory_standardfilter_fields($groupelements);
+        if ($mform->elementExists('add_pair')) {
+            $formbuilder = new standardfilter_form_builder(null, null, $mform);
+            if ($data) {
+                $formbuilder->set_unsaved_new_fields($data);
+            }
+            $formbuilder->generate_mandatory_standardfilter_fields($groupelements);
+            $label = get_string('standardfiltergrouplabel', 'local_wunderbyte_table');
+        } else if ($mform->elementExists('existing_pairs')) {
+            foreach ($data as $key => $value) {
+                $formbuilder = new standardfilter_form_builder($key, $value, $mform);
+                $formbuilder->generate_mandatory_standardfilter_fields($groupelements);
+            }
+        }
 
         $mform->addGroup(
             $groupelements,
             self::$groupname,
-            get_string('standardfiltergrouplabel', 'local_wunderbyte_table'),
-            [' '],
-            false
-        );
-    }
-    /**
-     * The expected value.
-     * @param \MoodleQuickForm $mform
-     * @param array $data
-     */
-    public static function generate_mandatory_fields_with_data(&$mform, $data) {
-        $mform->addElement('header', 'existing_pairs', 'Existing key value pairs');
-        $groupedelements = [];
-        foreach ($data as $key => $value) {
-            $formbuilder = new standardfilter_form_builder($key, $value, $mform);
-            $formbuilder->generate_mandatory_standardfilter_fields($groupedelements);
-        }
-        $mform->addGroup(
-            $groupedelements,
-            self::$groupname,
-            '',
+            $label,
             [' '],
             false
         );

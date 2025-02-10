@@ -57,31 +57,19 @@ class filter_manager {
 
     /**
      * Handles form definition of filter classes.
-     * @param array $filterablecolumns
-     * @return array
-     */
-    public static function get_all_filter_columns($filterablecolumns) {
-        $options = [
-            '' => get_string('setwbtablefiltercolumnoption', 'local_wunderbyte_table'),
-        ];
-        foreach ($filterablecolumns as $key => $filterablecolumn) {
-            if (isset($filterablecolumn['wbfilterclass'])) {
-                $options[$key] = $filterablecolumn['localizedname'];
-            }
-        }
-        return $options;
-    }
-
-    /**
-     * Handles form definition of filter classes.
      * @param string $classname
+     * @param array $data
      * @return \MoodleQuickForm
      */
-    public static function get_mandetory_filter_fields($classname) {
+    public static function get_mandetory_filter_fields($classname, $data = []) {
         $mform = new \MoodleQuickForm('dynamicform', 'post', '');
+
+        $mform->addElement('html', '<div id="filter-add-field">');
         $mform->addElement('header', 'add_pair', 'Add new key value pair');
-        filter_form_operator::set_filter_types($mform, $classname);
+        self::set_filter_types($mform, $classname);
         self::execute_static_function($classname, 'render_mandatory_fields', $mform);
+        $mform->addElement('html', '</div>');
+
         return $mform;
     }
 
@@ -127,5 +115,26 @@ class filter_manager {
             }
         }
         return null;
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param \MoodleQuickForm $mform
+     * @param string $default
+     */
+    public static function set_filter_types(\MoodleQuickForm &$mform, $default = '') {
+        $options = self::get_all_filter_types();
+        if ($options) {
+            $mform->addElement(
+                'select',
+                'filter_options',
+                get_string('setwbtablefiltertype', 'local_wunderbyte_table'),
+                $options
+            );
+            $mform->setType('filter_options', PARAM_INT);
+            if ($default !== '' && array_key_exists($default, $options)) {
+                $mform->setDefault('filter_options', $default);
+            }
+        }
     }
 }

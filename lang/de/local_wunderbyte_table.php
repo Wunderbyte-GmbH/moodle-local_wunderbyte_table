@@ -162,6 +162,7 @@ $string['standardfiltervaluekeyerror'] = 'Entweder beiden oder kein Wert soll au
 $string['standardfiltervaluelabel'] = 'Value ';
 $string['startvalue'] = 'Anfang';
 $string['stickyheader'] = 'Header fixieren (sticky header)';
+$string['successaddedfilternotification'] = 'Filter wurde erfolgreich bearbeitet';
 $string['sunday'] = 'So';
 $string['table1name'] = 'Demo Tabelle 1';
 $string['table2name'] = 'Demo Tabelle 2';

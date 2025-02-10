@@ -70,7 +70,6 @@ class addfitlertable extends dynamic_form {
         }
     }
 
-
     /**
      * Process data for dynamic submission
      * @return object $data
@@ -105,8 +104,8 @@ class addfitlertable extends dynamic_form {
      *
      */
     public function validation($data, $files) {
-        $columnmanager = new column_manager($data);
-        return $columnmanager->get_data_validation($this->_ajaxformdata);
+        $columnmanager = new column_manager($this->_ajaxformdata);
+        return $columnmanager->return_validation();
     }
 
 

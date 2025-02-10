@@ -166,6 +166,7 @@ $string['standardfiltervaluekeyerror'] = 'Either both or none have to be submitt
 $string['standardfiltervaluelabel'] = 'Value ';
 $string['startvalue'] = 'Start';
 $string['stickyheader'] = 'Make header sticky';
+$string['successaddedfilternotification'] = 'Filter was successfully edited.';
 $string['sunday'] = 'Sun';
 $string['table1name'] = 'Demo table 1';
 $string['table2name'] = 'Demo table 2';
