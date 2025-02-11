@@ -399,6 +399,7 @@ class demo implements renderable, templatable {
             'action' => get_string('action'),
             'startdate' => get_string('startdate'),
             'enddate' => get_string('enddate'),
+            'timecreated' => get_string('timecreated'),
         ];
 
         $standardfilter = new standardfilter('fullname', get_string('fullname'));
@@ -431,6 +432,9 @@ class demo implements renderable, templatable {
             'now'
         );
         $table->add_filter($datepicker);
+
+        $hourslistfilter = new hourlist('timecreated', "timecreated");
+        $table->add_filter($hourslistfilter);
 
         $table->define_headers(array_values($columns));
         $table->define_columns(array_keys($columns));
