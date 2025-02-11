@@ -82,8 +82,7 @@ class filter_form_operator {
 
     /**
      * Validation.
-     * @param \MoodleQuickForm $mform
-     * @param array $dynamicforms
+     * @param array $filteredcolumnform
      */
     private static function render_forms_to_html(&$filteredcolumnform) {
         foreach ($filteredcolumnform as $key => $form) {
