@@ -24,6 +24,9 @@
 
 namespace local_wunderbyte_table\filters;
 
+use local_wunderbyte_table\wunderbyte_table;
+use local_wunderbyte_table\editfilter;
+use local_wunderbyte_table\filter;
 use MoodleQuickForm;
 
 /**
@@ -40,7 +43,9 @@ class filter_form_operator {
     public static function generate_form(MoodleQuickForm &$mform, array &$formdata) {
         $encodedtable = $formdata['encodedtable'];
         $mform->addElement('hidden', 'encodedtable', json_encode($encodedtable));
-        column_manager::set_filter_columns($mform, $formdata);
+
+        $columnmanager = new column_manager($formdata, $formdata['encodedtable']);
+        $columnmanager->set_filter_columns($mform, $formdata['encodedtable']);
 
         $mform->addElement(
             'html',
@@ -68,10 +73,10 @@ class filter_form_operator {
 
             $submitteddata['filtercolumn'] = $submitteddata['filter_columns'];
 
-            $columnmanager = new column_manager($submitteddata);
+            $columnmanager = new column_manager($submitteddata, $submitteddata['encodedtable']);
             $filteredcolumnform = $columnmanager->get_filtered_column_form_persist_error();
 
-            $validationmanager = new validation_manager($submitteddata);
+            $validationmanager = new validation_manager($submitteddata, $submitteddata['encodedtable']);
             $errors = $validationmanager->get_data_validation();
             $validationmanager->set_errors($errors, $filteredcolumnform);
 
