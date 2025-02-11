@@ -40,7 +40,7 @@ class validation_manager {
 
     /**
      * Handles form definition of filter classes.
-     * @param array $params
+     * @param array $submitteddata
      */
     public function __construct($submitteddata) {
         $this->data = $submitteddata;
@@ -48,6 +48,8 @@ class validation_manager {
 
     /**
      * Handles form definition of filter classes.
+     * @param array $errors
+     * @param array $forms
      */
     public function set_errors($errors, &$forms) {
         foreach ($forms as $form) {
@@ -57,9 +59,10 @@ class validation_manager {
 
     /**
      * Handles form definition of filter classes.
-     * @param array $data
+     * @return array
      */
     public function get_data_validation() {
+        $errors = [];
         if (isset($this->data['filter_columns'])) {
             $errors = self::checked_selected_column($this->data['filter_columns']);
 
@@ -69,12 +72,15 @@ class validation_manager {
                 $fitertypeerrors = $classname::$staticfunction($this->data);
                 $errors = array_merge($errors, $fitertypeerrors);
             }
-            return $errors;
         }
+        return $errors;
     }
 
     /**
      * Handles form definition of filter classes.
+     * @param string $classname
+     * @param string $functionname
+     * @return bool
      */
     private function is_static_public_function($classname, $functionname) {
         if (class_exists($classname)) {

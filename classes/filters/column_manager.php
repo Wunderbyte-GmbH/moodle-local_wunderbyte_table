@@ -91,8 +91,6 @@ class column_manager {
      * @return array
      */
     public function get_filtered_column_form_persist_error() {
-        //$this->errors = $this->get_data_validation();
-
         $existingfilterdata = [];
         foreach ($this->data['value'] as $key => $keyvalue) {
             if ($key !== 0) {
@@ -109,6 +107,8 @@ class column_manager {
 
     /**
      * Handles form definition of filter classes.
+     * @param array $existingfilterdata
+     * @param string $filterclass
      */
     private function set_available_filter_types($existingfilterdata, $filterclass) {
         $this->mformedit->addElement('header', 'existing_pairs', 'Existing key value pairs');
@@ -118,21 +118,12 @@ class column_manager {
         } else {
             $this->mformedit->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No pairs exist</p>');
         }
-
-        // foreach ($this->mformedit->_elements as $element) {
-        //     if ($element->_type === 'group') {
-        //         foreach ($element->_elements as $subelement) {
-        //             $label = str_replace('group_', '', $subelement->_name);
-        //             if (isset($this->errors['key'][$label])) {
-        //                 $this->mformedit->setElementError($element->_name, $this->errors['key'][$label]);
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     /**
      * Handles form definition of filter classes.
+     * @param string $classname
+     * @param string $functionname
      */
     private function is_static_public_function($classname, $functionname) {
         if (class_exists($classname)) {
@@ -169,6 +160,7 @@ class column_manager {
 
     /**
      * Handles form definition of filter classes.
+     * @param string $classname
      */
     private function render_mandatory_fields($classname) {
         if (isset($this->data['key'][0])) {
@@ -180,7 +172,6 @@ class column_manager {
                 $classname::$staticfunction($this->mformadd, $newvalue);
                 $parts = explode("\\", $classname);
                 $elementname = array_pop($parts) . 'group';
-                //$this->mformadd->setElementError($elementname, $this->errors['key'][0]);
             }
         }
     }

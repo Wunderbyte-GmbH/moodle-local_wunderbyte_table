@@ -501,6 +501,7 @@ abstract class base {
     /**
      * The expected value.
      * @param \MoodleQuickForm $mform
+     * @param array $data
      */
     public static function render_mandatory_fields(&$mform, $data) {
         $mform = new MoodleQuickForm('dynamicform', 'post', '');
