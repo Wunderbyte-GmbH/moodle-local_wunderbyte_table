@@ -23,10 +23,6 @@
  */
 namespace local_wunderbyte_table\filters;
 
-use local_wunderbyte_table\wunderbyte_table;
-use local_wunderbyte_table\editfilter;
-use local_wunderbyte_table\filter;
-
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
@@ -36,7 +32,7 @@ use ReflectionClass;
  * Handles the filter classes.
  * @package local_wunderbyte_table
  */
-class column_manager {
+class column_manager extends filtersettings {
     /** @var string */
     protected $filtercolumn;
 
@@ -56,15 +52,12 @@ class column_manager {
      * Handles form definition of filter classes.
      * @param array $params
      */
-    public function __construct($params) {
+    public function __construct($params, $encodedtable) {
         $this->data = $params;
         $this->filtercolumn = $params['filtercolumn'];
-        $this->table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
         $this->mformedit = new \MoodleQuickForm('dynamicform', 'post', '');
         $this->mformadd = new \MoodleQuickForm('dynamicform', 'post', '');
-        $lang = filter::current_language();
-        $key = $this->table->tablecachehash . $lang . '_filterjson';
-        $this->filtersettings = editfilter::return_filtersettings($this->table, $key);
+        $this->filtersettings = self::get_filtersettings($encodedtable);
     }
 
     /**
@@ -202,11 +195,8 @@ class column_manager {
      * @param \MoodleQuickForm $mform
      * @param array $formdata
      */
-    public static function set_filter_columns(\MoodleQuickForm &$mform, $formdata) {
-        $encodedtable = $formdata['encodedtable'];
-        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
-        $filterablecolumns = $table->subcolumns['datafields'];
-        $options = self::get_all_filter_columns($filterablecolumns);
+    public function set_filter_columns(\MoodleQuickForm &$mform) {
+        $options = self::get_all_filter_columns($this->filtersettings);
         if ($options) {
             $mform->addElement(
                 'select',

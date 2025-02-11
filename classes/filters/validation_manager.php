@@ -32,9 +32,11 @@ use ReflectionClass;
  * Handles the filter classes.
  * @package local_wunderbyte_table
  */
-class validation_manager {
+class validation_manager extends filtersettings {
     /** @var array */
     protected $data;
+    /** @var array */
+    protected $filtersettings;
     /** @var array */
     protected $errors;
 
@@ -42,8 +44,9 @@ class validation_manager {
      * Handles form definition of filter classes.
      * @param array $submitteddata
      */
-    public function __construct($submitteddata) {
+    public function __construct($submitteddata, $encodedtable) {
         $this->data = $submitteddata;
+        $this->filtersettings = self::get_filtersettings($encodedtable);
     }
 
     /**
@@ -52,9 +55,60 @@ class validation_manager {
      * @param array $forms
      */
     public function set_errors($errors, &$forms) {
-        foreach ($forms as $form) {
-            $testing = 10;
+        foreach ($forms as $formkey => $form) {
+            if (!isset($form->_elements) || !is_array($form->_elements)) {
+                continue;
+            }
+
+            foreach ($form->_elements as $element) {
+                if (isset($element->_type) && $element->_type === 'group') {
+                    if ($this->is_error_on_new_pair($formkey, $errors['key'][0])) {
+                        $form->setElementError($element->_name, $errors['key'][0]);
+                    } else if ($existingpairerrors = $this->is_error_on_existing_pair($formkey, $errors)) {
+                        $form->setElementError($element->_name, $existingpairerrors);
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $formkey
+     * @param array $errormsg
+     * @return bool
+     */
+    private function is_error_on_new_pair($formkey, $errormsg) {
+        return $formkey == 'filteraddfields' && $errormsg;
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $formkey
+     * @param array $errors
+     * @return mixed
+     */
+    private function is_error_on_existing_pair($formkey, $errors) {
+        if ($formkey == 'filtereditfields') {
+            return self::get_existing_pair_errors($errors);
+        }
+        return false;
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $errors
+     * @return string
+     */
+    public function get_existing_pair_errors($errors) {
+        $uniqueerrors = [];
+        unset($errors['key'][0]);
+        foreach ($errors['key'] as $error) {
+            if (!in_array($error, $uniqueerrors)) {
+                $uniqueerrors[] = $error;
+            }
+        }
+        return implode(', ', $uniqueerrors);
     }
 
     /**
@@ -64,11 +118,11 @@ class validation_manager {
     public function get_data_validation() {
         $errors = [];
         if (isset($this->data['filter_columns'])) {
-            $errors = self::checked_selected_column($this->data['filter_columns']);
+            $errors = $this->checked_selected_column($this->data['filter_columns']);
 
-            $classname = $this->data['filter_options'];
+            $classname = $this->filtersettings[$this->data['filter_columns']]['wbfilterclass'];
             $staticfunction = 'validate_input';
-            if (self::is_static_public_function($this->data['filter_options'], $staticfunction)) {
+            if (self::is_static_public_function($classname, $staticfunction)) {
                 $fitertypeerrors = $classname::$staticfunction($this->data);
                 $errors = array_merge($errors, $fitertypeerrors);
             }
@@ -106,7 +160,7 @@ class validation_manager {
      * @param string $filtercolumns
      * @return array
      */
-    private static function checked_selected_column($filtercolumns) {
+    private function checked_selected_column($filtercolumns) {
         $errros = [];
         if (empty($filtercolumns)) {
             $errros['filter_columns'] = get_string('columnemptyerror', 'local_wunderbyte_table');
