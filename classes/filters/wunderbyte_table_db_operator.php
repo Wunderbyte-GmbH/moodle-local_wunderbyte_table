@@ -64,7 +64,7 @@ class wunderbyte_table_db_operator {
     public function set_existing_key_value_pairs() {
         $newfilterkeyvalues = [];
         foreach ($this->data->key as $key => $keyvalue) {
-            if (!empty($key) || !empty($keyvalue)) {
+            if (!empty($keyvalue)) {
                 if ($key == 0) {
                     $newfilterkeyvalues[$keyvalue] = $this->data->value[0];
                 } else {

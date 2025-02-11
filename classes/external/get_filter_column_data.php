@@ -32,6 +32,7 @@ use external_function_parameters;
 use external_value;
 use external_single_structure;
 use local_wunderbyte_table\filters\column_manager;
+use local_wunderbyte_table\filters\filter_form_operator;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -76,7 +77,7 @@ class get_filter_column_data extends external_api {
             'encodedtable' => $encodedtable,
         ];
         $params = self::validate_parameters(self::execute_parameters(), $params);
-        $columnmanager = new column_manager($params);
+        $columnmanager = new column_manager($params, $params['encodedtable']);
         $filteredcolumnforms = $columnmanager->get_filtered_column_form();
         return $filteredcolumnforms;
     }

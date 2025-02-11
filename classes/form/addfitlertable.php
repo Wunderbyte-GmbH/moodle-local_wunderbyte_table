@@ -104,7 +104,7 @@ class addfitlertable extends dynamic_form {
      *
      */
     public function validation($data, $files) {
-        $validationmanager = new validation_manager($this->_ajaxformdata);
+        $validationmanager = new validation_manager($this->_ajaxformdata, $data['encodedtable']);
         return $validationmanager->get_data_validation();
     }
 
