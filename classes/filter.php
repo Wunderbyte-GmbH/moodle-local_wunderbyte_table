@@ -339,10 +339,12 @@ class filter {
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
             case 'postgres':
-                $sql = " EXTRACT(HOUR FROM TIMESTAMP 'epoch' + $fieldname * interval '1 second') = $param";
+                $sql = " EXTRACT(HOUR FROM TIMESTAMP 'epoch' + $fieldname * interval '1 second') = $param
+                 AND $fieldname IS NOT NULL AND $fieldname <> 0";
                 break;
             default:
-                $sql = " EXTRACT(HOUR FROM FROM_UNIXTIME($fieldname)) = $param";
+                $sql = " EXTRACT(HOUR FROM FROM_UNIXTIME($fieldname)) = $param
+                 AND $fieldname IS NOT NULL AND $fieldname <> 0";
         }
 
         return $sql;
@@ -362,10 +364,12 @@ class filter {
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
             case 'postgres':
-                $sql = " TO_CHAR(TIMESTAMP 'epoch' + $fieldname * INTERVAL '1 second', 'FMDay') = $param";
+                $sql = " TO_CHAR(TIMESTAMP 'epoch' + $fieldname * INTERVAL '1 second', 'FMDay') = $param
+                 AND $fieldname IS NOT NULL AND $fieldname <> 0";
                 break;
             default:
-                $sql = " DATE_FORMAT(FROM_UNIXTIME($fieldname), '%A') = $param";
+                $sql = " DATE_FORMAT(FROM_UNIXTIME($fieldname), '%A') = $param
+                 AND $fieldname IS NOT NULL AND $fieldname <> 0";
         }
 
         return $sql;
