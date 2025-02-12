@@ -259,11 +259,11 @@ class filter {
                         GROUP BY $key ";
                 break;
             case 'mysql':
-                $sql = "SELECT $key, COUNT($key)
-                        FROM ( SELECT EXTRACT(HOUR FROM FROM_UNIXTIME($key)) AS $key
+                $sql = "SELECT hours, COUNT(*) as count
+                        FROM ( SELECT EXTRACT(HOUR FROM FROM_UNIXTIME($key)) AS hours
                         FROM {$table->sql->from}
                         WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as hourss1
-                        GROUP BY $key ";
+                        GROUP BY hours";
                 break;
             default:
                 $sql = '';
@@ -303,13 +303,13 @@ class filter {
                         GROUP BY $key ";
                 break;
             case 'mysql':
-                $sql = "SELECT $key, COUNT($key)
+                $sql = "SELECT weekday, COUNT(*) as count
                         FROM (
-                            SELECT DATE_FORMAT(FROM_UNIXTIME($key), '%A') AS $key
+                            SELECT DATE_FORMAT(FROM_UNIXTIME($key), '%W') AS weekday
                             FROM {$table->sql->from}
                             WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0
                         ) as weekdayss1
-                        GROUP BY $key ";
+                        GROUP BY weekday";
                 break;
             default:
                 $sql = '';
@@ -368,7 +368,7 @@ class filter {
                  AND $fieldname IS NOT NULL AND $fieldname <> 0";
                 break;
             default:
-                $sql = " DATE_FORMAT(FROM_UNIXTIME($fieldname), '%A') = $param
+                $sql = " DATE_FORMAT(FROM_UNIXTIME($fieldname), '%W') = $param
                  AND $fieldname IS NOT NULL AND $fieldname <> 0";
         }
 
