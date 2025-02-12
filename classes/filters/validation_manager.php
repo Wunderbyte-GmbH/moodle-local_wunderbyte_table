@@ -43,6 +43,7 @@ class validation_manager extends filtersettings {
     /**
      * Handles form definition of filter classes.
      * @param array $submitteddata
+     * @param string $encodedtable
      */
     public function __construct($submitteddata, $encodedtable) {
         $this->data = $submitteddata;

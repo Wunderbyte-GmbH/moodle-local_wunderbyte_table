@@ -35,7 +35,8 @@ use local_wunderbyte_table\filter;
 abstract class filtersettings {
     /**
      * Validation.
-     * @param string $filteredcolumnform
+     * @param string $encodedtable
+     * @return array
      */
     public static function get_filtersettings($encodedtable) {
         $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);

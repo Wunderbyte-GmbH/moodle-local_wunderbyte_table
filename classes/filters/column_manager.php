@@ -51,6 +51,7 @@ class column_manager extends filtersettings {
     /**
      * Handles form definition of filter classes.
      * @param array $params
+     * @param string $encodedtable
      */
     public function __construct($params, $encodedtable) {
         $this->data = $params;
@@ -193,7 +194,6 @@ class column_manager extends filtersettings {
     /**
      * Handles form definition of filter classes.
      * @param \MoodleQuickForm $mform
-     * @param array $formdata
      */
     public function set_filter_columns(\MoodleQuickForm &$mform) {
         $options = self::get_all_filter_columns($this->filtersettings);
