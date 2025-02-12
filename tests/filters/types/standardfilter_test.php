@@ -32,8 +32,9 @@ use local_wunderbyte_table\filters\types\standardfilter;
 final class standardfilter_test extends TestCase {
     /**
      * Test define_sql() method.
+     * @covers \standardfilter::define_sql
      */
-    public function test_define_sql() {
+    public function test_define_sql(): void {
         $filter = new standardfilter('username');
         $filter->define_sql('test_field', 'test_table', 'test_condition');
 
@@ -47,7 +48,11 @@ final class standardfilter_test extends TestCase {
         $this->assertSame('test_condition', $sql['where']);
     }
 
-    public function test_add_options() {
+    /**
+     * Test define_sql() method.
+     * @covers \standardfilter::add_options
+     */
+    public function test_add_options(): void {
         $filter = new standardfilter('username');
         $options = ['key1' => 'value1', 'key2' => 'value2'];
 
@@ -61,13 +66,17 @@ final class standardfilter_test extends TestCase {
         $this->assertEquals($options, $result);
     }
 
-    public function test_validate_input() {
+    /**
+     * Test define_sql() method.
+     * @covers \standardfilter::validate_input
+     */
+    public function test_validate_input(): void {
         $data = [
             'key' => ['one', ''],
             'value' => ['one', 'two'],
         ];
 
-        $errors = standardfilter::validate_input(data: $data);
+        $errors = standardfilter::validate_input($data);
 
         $this->assertArrayHasKey('key', $errors);
         $this->assertArrayHasKey(1, $errors['key']);
@@ -75,7 +84,11 @@ final class standardfilter_test extends TestCase {
         $this->assertArrayHasKey(1, $errors['value']);
     }
 
-    public function test_get_dynamic_values() {
+    /**
+     * Test define_sql() method.
+     * @covers \standardfilter::get_dynamic_values
+     */
+    public function test_get_dynamic_values(): void {
         $mformmock = $this->createMock(\MoodleQuickForm::class);
 
         $mformmock->expects($this->any())
