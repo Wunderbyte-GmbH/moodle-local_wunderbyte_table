@@ -132,8 +132,8 @@ jobs:
           coverage: none
 
       - name: Install Node.js dependencies
+        working-directory: plugin
         run: |
-          cd plugin
           if [ -f package-lock.json ]; then
             npm ci
           else
