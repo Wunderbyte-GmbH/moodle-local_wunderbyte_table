@@ -132,7 +132,7 @@ jobs:
           coverage: none
 
       - name: Install Node.js dependencies
-        working-directory: moodle
+        working-directory: ..
         run: |
           if [ -f package-lock.json ]; then
             npm ci
