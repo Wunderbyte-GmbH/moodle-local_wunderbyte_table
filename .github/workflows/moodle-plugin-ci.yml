@@ -131,8 +131,11 @@ jobs:
           ini-values: max_input_vars=5000
           coverage: none
 
+      - name: List root directory contents
+        run: ls -R
+
       - name: Install Node.js dependencies
-        working-directory: ..
+        working-directory: /var/www/moodle
         run: |
           if [ -f package-lock.json ]; then
             npm ci
