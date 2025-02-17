@@ -45,6 +45,7 @@ const SELECTOR = {
 export function initializeActionButton(selector, idstring, encodedtable) {
 
   const container = document.querySelector(selector);
+
   if (!container) {
     return;
   }
@@ -55,6 +56,7 @@ export function initializeActionButton(selector, idstring, encodedtable) {
       return;
     }
     button.dataset.initialized = true;
+
     // First check if we have a valid methodname.
     if (button.dataset.methodname && button.dataset.methodname.length > 0) {
 
