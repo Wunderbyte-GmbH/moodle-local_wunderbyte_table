@@ -68,7 +68,12 @@ class column_manager extends filtersettings {
     public function get_filtered_column_form() {
         $existingfilterdata = [];
         foreach ($this->filtersettings[$this->filtercolumn] as $key => $value) {
-            if (!in_array($key, $this->non_kestringy_value_pair_properties())) {
+            $classname = $this->filtersettings[$this->filtercolumn]['wbfilterclass'];
+            if (
+                class_exists($classname) &&
+                method_exists($classname, 'non_kestringy_value_pair_properties') &&
+                !in_array($key, $classname::non_kestringy_value_pair_properties($this->filtercolumn))
+            ) {
                 $existingfilterdata[$key] = $value;
             }
         }
@@ -168,18 +173,6 @@ class column_manager extends filtersettings {
                 $elementname = array_pop($parts) . 'group';
             }
         }
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @return array
-     */
-    private function non_kestringy_value_pair_properties() {
-        return [
-            'localizedname',
-            'wbfilterclass',
-            $this->filtercolumn . '_wb_checked',
-        ];
     }
 
     /**

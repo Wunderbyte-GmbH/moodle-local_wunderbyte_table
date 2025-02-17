@@ -33,7 +33,11 @@ use moodle_exception;
  * Wunderbyte table class is an extension of table_sql.
  */
 class datepicker extends base {
-
+    /**
+     *
+     * @var string
+     */
+    public static $groupname = 'datepickergroup';
     /**
      * Get standard filter options.
      * @param wunderbyte_table $table
@@ -221,4 +225,87 @@ class datepicker extends base {
     ): void {
         return;
     }
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param array $data
+     */
+    public static function render_mandatory_fields(&$mform, $data = []) {
+        foreach ($data as $filterlabel => $filtertype) {
+            $mform->addElement('html', '<h4>' . $filterlabel . ':</h4>');
+            $horizontallinecounter = 0;
+            foreach ($filtertype as $filtertypedata) {
+                if ($horizontallinecounter > 0) {
+                    $mform->addElement('html', '<hr>');
+                }
+                foreach ($filtertypedata as $filtertypedatalabel => $filtertypedatavalue) {
+                    $label = $mform->createElement('html', '<b>' . $filtertypedatalabel . ':</b>');
+                    $operators = [
+                        '=' => '=',
+                        '<' => '<',
+                        '>' => '>',
+                        '<=' => '<=',
+                        '>=' => '>=',
+                    ];
+                    $operatoroptions = [
+                        0 => "within",
+                        1 => "overlapboth",
+                        2 => "overlapstart",
+                        3 => "overlapend",
+                        4 => "before",
+                        5 => "after",
+                        6 => "flexoverlap",
+                    ];
+                    $valuelabel = $horizontallinecounter . '_value_' . $filtertypedatalabel;
+                    if ($filtertypedatalabel == 'operator') {
+                        $input = $mform->createElement('select', $valuelabel, '', $operators);
+                        $mform->setDefault($valuelabel, $filtertypedatavalue);
+                    } else if (is_array($filtertypedatavalue)) {
+                        $input = $mform->createElement('select', $valuelabel, 'Select Subjects:', $operatoroptions, ['multiple' => true]);
+                        $mform->setDefault($valuelabel, array_keys($filtertypedatavalue));
+                    } else {
+                        $input = $mform->createElement('text', $valuelabel, '');
+                        $mform->setDefault($valuelabel, $filtertypedatavalue);
+                    }
+                    $mform->addGroup([$label, $input], 'group_' . $filtertypedatalabel, '', ' ', false);
+                }
+                $horizontallinecounter++;
+            }
+        }
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     * @return array
+     */
+    public static function validate_input($data) {
+        $checkablevalues = [];
+        foreach ($data as $key => $keyvalue) {
+            if (strpos($key, '_value_') !== false) {
+                $keylabel = explode('_', $key);
+                $checkablevalues[$keylabel[0]][$keylabel[2]] = $keyvalue;
+            }
+        }
+        foreach ($checkablevalues as $index => $data) {
+            $errors[$index] = 'Error testing';
+        }
+        return $errors;
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @return array
+     */
+    public static function non_kestringy_value_pair_properties($filtercolumn) {
+        return [
+            'localizedname',
+            'wbfilterclass',
+            'local_wunderbyte_table\filters\types\datepicker',
+            $filtercolumn . '_wb_checked',
+        ];
+    }
+
+
 }

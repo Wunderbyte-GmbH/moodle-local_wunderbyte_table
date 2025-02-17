@@ -165,6 +165,18 @@ class standardfilter extends base {
     }
 
     /**
+     * Handles form definition of filter classes.
+     * @return array
+     */
+    public static function non_kestringy_value_pair_properties($filtercolumn) {
+        return [
+            'localizedname',
+            'wbfilterclass',
+            $filtercolumn . '_wb_checked',
+        ];
+    }
+
+    /**
      * The expected value.
      * @param array $data
      * @return array
