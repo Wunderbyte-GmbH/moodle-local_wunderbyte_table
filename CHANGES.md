@@ -1,3 +1,13 @@
+## Version 2.0.42 (2025021800)
+* New feature: Callbackfilter
+* New feature: Introduce sortable classes to allow sort specific sql and caches
+* Improvement: Possibility to turn off caching
+* Tests: Add automatic tests for callback filtering and new standard sortable class
+* Tests: Add phpunit test for testing standard filter
+
+## Version 2.0.41 (2025021200)
+* Set minlength to 1 (to also consider input of "AI" in fulltextsearch).
+
 ## Version 2.0.40 (2025012900)
 * Bugfix: Avoid empty get_in_or_equal error in function instantiate_by_shortnames of wbt_field_controller_info.
 
