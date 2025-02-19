@@ -6,6 +6,4 @@ jobs:
   ci:
     uses: Wunderbyte-GmbH/catalyst-moodle-workflows/.github/workflows/ci.yml@main
     with:
-      # Any further options in this section
-    secrets:
-      moodle_org_token: ${{ secrets.MOODLE_ORG_TOKEN }}
+      codechecker_max_warnings: 0
