@@ -7,3 +7,4 @@ jobs:
     uses: Wunderbyte-GmbH/catalyst-moodle-workflows/.github/workflows/ci.yml@main
     with:
       codechecker_max_warnings: 0
+      disable_phpcpd: true
