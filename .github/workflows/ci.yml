@@ -8,3 +8,4 @@ jobs:
     with:
       codechecker_max_warnings: 0
       disable_phpcpd: true
+
