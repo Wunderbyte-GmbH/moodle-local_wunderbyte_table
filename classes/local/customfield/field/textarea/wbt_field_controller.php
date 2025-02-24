@@ -38,7 +38,6 @@ use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class wbt_field_controller extends field_controller implements wbt_field_controller_base {
-
     /**
      * Get the actual string value of the customfield.
      *
@@ -53,5 +52,30 @@ class wbt_field_controller extends field_controller implements wbt_field_control
             return format_text($key);
         }
         return '';
+    }
+
+    /**
+     * Get an array containing all key value pairs for the customfield.
+     * Depending on the type, these can be actually used values or possible values.
+     *
+     * @param string $key
+     * @return array an array containing all key value pairs for the customfield
+     */
+    public function get_values_array(): array {
+        global $DB;
+
+        $sql = "SELECT DISTINCT value AS id, value AS data
+                  FROM {customfield_data}
+                 WHERE fieldid = :fieldid";
+        $params = [
+            'fieldid' => $this->get_field()->get('id'),
+        ];
+        try {
+            $records = $DB->get_records_sql($sql, $params);
+        } catch (\Throwable $th) {
+            return [];
+        }
+
+        return $records;
     }
 }

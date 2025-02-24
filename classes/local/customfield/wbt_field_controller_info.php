@@ -38,7 +38,6 @@ use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class wbt_field_controller_info {
-
     /**
      * Array of instantiated customfield field controllers.
      * @var array
@@ -113,13 +112,7 @@ class wbt_field_controller_info {
                 if ($instance = self::create($record)) {
                     self::$instances[$record->shortname] = $instance;
                     return $instance;
-                } else {
-                    // Fallback: By default, we return text controller.
-                    return new wbt_field_controller();
                 }
-            } else {
-                // Fallback: By default, we return text controller.
-                return new wbt_field_controller();
             }
         }
         // Fallback: By default, we return text controller.
