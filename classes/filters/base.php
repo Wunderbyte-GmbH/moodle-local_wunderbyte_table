@@ -434,7 +434,7 @@ abstract class base {
             if (
                 isset($table->subcolumns['datafields'][$columnname]['jsonattribute'])
             ) {
-                    $paramsvaluekey = $table->set_params("%" . $value ."%");
+                    $paramsvaluekey = $table->set_params("%" . $value . "%");
                     $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false);
             } else if (
                 is_numeric($value)
