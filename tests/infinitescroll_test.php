@@ -29,13 +29,10 @@ namespace local_wunderbyte_table;
 use advanced_testcase;
 use cache_helper;
 use coding_exception;
-use Exception;
 use local_wunderbyte_table\external\load_data;
-use local_wunderbyte_table\filters\types\callback;
 use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\local\sortables\types\standardsortable;
-use moodle_exception;
 
 /**
  * Test base functionality of wunderbyte_table
@@ -138,7 +135,7 @@ final class infinitescroll_test extends advanced_testcase {
 
         // We expect the shortnames to come sorted like this.
         usort($shortnames, function ($a, $b) {
-            return strnatcmp($b, $a); // Reverse natural sorting
+            return strnatcmp($b, $a); // Reverse natural sorting.
         });
 
         // Now we fetch all the rows.
