@@ -61,11 +61,11 @@ class wbt_field_controller extends field_controller implements wbt_field_control
     public function get_values_array(): array {
         global $DB;
 
-        $sql = "SELECT DISTINCT value AS id, value AS data
-                  FROM {customfield_data}
+        $sql = "SELECT DISTINCT fieldid AS id, value AS data
+                  FROM {customfield_data} cd
                  WHERE fieldid = :fieldid";
         $params = [
-            'fieldid' => $this->get_field()->get('id'),
+            'fieldid' => $this->field->get('id'),
         ];
         try {
             $records = $DB->get_records_sql($sql, $params);
