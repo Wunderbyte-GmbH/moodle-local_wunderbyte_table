@@ -9,8 +9,8 @@ export const init = () => {
             mutations.forEach((mutation) => {
                 if (mutation.addedNodes) {
                     mutation.addedNodes.forEach((node) => {
-                        if (node instanceof HTMLElement && node.querySelector('[name="filter_options"]')) {
-                            callback(node.querySelector('[name="filter_options"]'));
+                        if (node instanceof HTMLElement && node.querySelector('[name="wbfilterclass"]')) {
+                            callback(node.querySelector('[name="wbfilterclass"]'));
                         }
                     });
                 }

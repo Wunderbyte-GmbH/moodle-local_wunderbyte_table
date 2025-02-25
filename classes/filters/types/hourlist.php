@@ -24,9 +24,6 @@
 
 namespace local_wunderbyte_table\filters\types;
 
-use core_date;
-use DateTime;
-use DateTimeZone;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\filter;
 use local_wunderbyte_table\wunderbyte_table;
@@ -35,7 +32,6 @@ use local_wunderbyte_table\wunderbyte_table;
  * Wunderbyte table class is an extension of table_sql.
  */
 class hourlist extends base {
-
     /**
      * Set the column which should be filtered and possibly localize it.
      * @param string $columnidentifier
@@ -44,12 +40,26 @@ class hourlist extends base {
      * @param string $secondcolumnlocalized
      * @return void
      */
-    public function __construct(string $columnidentifier,
-                                string $localizedstring = '',
-                                string $secondcolumnidentifier = '',
-                                string $secondcolumnlocalized = '') {
+    public function __construct(
+        string $columnidentifier,
+        string $localizedstring = '',
+        string $secondcolumnidentifier = '',
+        string $secondcolumnlocalized = ''
+    ) {
+        $this->options = self::get_possible_timed_options();
 
-        $this->options = [
+        $this->columnidentifier = $columnidentifier;
+        $this->localizedstring = empty($localizedstring) ? $columnidentifier : $localizedstring;
+        $this->secondcolumnidentifier = $secondcolumnidentifier;
+        $this->secondcolumnlocalized = empty($secondcolumnlocalized) ? $secondcolumnidentifier : $secondcolumnlocalized;
+    }
+
+    /**
+     * Add the filter to the array.
+     * @return array
+     */
+    public static function get_possible_timed_options() {
+        return [
             0  => get_string('from0to1', 'local_wunderbyte_table'),
             1  => get_string('from1to2', 'local_wunderbyte_table'),
             2  => get_string('from2to3', 'local_wunderbyte_table'),
@@ -75,11 +85,6 @@ class hourlist extends base {
             22 => get_string('from22to23', 'local_wunderbyte_table'),
             23 => get_string('from23to24', 'local_wunderbyte_table'),
         ];
-
-        $this->columnidentifier = $columnidentifier;
-        $this->localizedstring = empty($localizedstring) ? $columnidentifier : $localizedstring;
-        $this->secondcolumnidentifier = $secondcolumnidentifier;
-        $this->secondcolumnlocalized = empty($secondcolumnlocalized) ? $secondcolumnidentifier : $secondcolumnlocalized;
     }
 
     /**
@@ -87,7 +92,7 @@ class hourlist extends base {
      * @param array $filter
      * @param bool $invisible
      * @return void
-     * @throws moodle_exception
+     * @throws \moodle_exception
      */
     public function add_filter(array &$filter, bool $invisible = false) {
 
@@ -109,12 +114,13 @@ class hourlist extends base {
         if (!isset($filter[$this->columnidentifier])) {
             $filter[$this->columnidentifier] = $options;
         } else {
-            throw new moodle_exception(
+            throw new \moodle_exception(
                 'filteridentifierconflict',
                 'local_wunderbyte_table',
                 '',
                 $this->columnidentifier,
-                'Every column can have only one filter applied');
+                'Every column can have only one filter applied'
+            );
         }
     }
 
@@ -150,11 +156,35 @@ class hourlist extends base {
             $value->$key = "$hour";
             $returnarray[$hour] = $value;
         }
-
         return $returnarray ?? [];
     }
 
     /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param array $data
+     */
+    public static function render_mandatory_fields(&$mform, $data = []) {
+        $mform->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @return array
+     */
+    public static function get_filterspecific_values($data) {
+        $filterenablelabel = $data->filter_columns . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            $data->wbfilterclass => true,
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+        ];
+        $filterspecificvalues = array_merge($filterspecificvalues, self::get_possible_timed_options());
+        return $filterspecificvalues;
+	}
+
      * Makes sql requests.
      * @param wunderbyte_table $table
      * @param string $key

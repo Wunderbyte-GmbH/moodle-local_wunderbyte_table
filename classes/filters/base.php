@@ -503,7 +503,7 @@ abstract class base {
      * @param \MoodleQuickForm $mform
      * @param array $data
      */
-    public static function render_mandatory_fields(&$mform, $data) {
+    public static function render_mandatory_fields(&$mform, $data = []) {
         $mform = new MoodleQuickForm('dynamicform', 'post', '');
         $mform->addElement(
             'static',
@@ -528,5 +528,20 @@ abstract class base {
      */
     public static function get_dynamic_values($fieldsandsubmitteddata) {
         return [];
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @return array
+     */
+    public static function get_filterspecific_values($data) {
+        $filterenablelabel = $data->filter_columns . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+        ];
+        return $filterspecificvalues;
     }
 }
