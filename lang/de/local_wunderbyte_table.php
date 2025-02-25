@@ -137,6 +137,7 @@ $string['september'] = 'September';
 $string['showallrecords'] = 'Alle Einträge anzeigen';
 $string['showcountlabel'] = 'Anzahl der gefundenen Einträge anzeigen';
 $string['showdownloadbutton'] = 'Download-Button anzeigen';
+$string['showdownloadbuttonatbottom'] = 'Download-Button unter der Tabelle (statt oberhalb) anzeigen';
 $string['showfilter'] = 'Zeige diesen Filter';
 $string['showfilterontop'] = 'Filter über der Tabelle anzeigen';
 $string['showreloadbutton'] = 'Reload-Button anzeigen';
@@ -176,5 +177,3 @@ $string['ymmcns'] = 'Modal, mehrere Requests, keine Checkbox Auswahl';
 $string['ymmcys'] = 'Modal, mehrere Requests, Checkbox Auswahl';
 $string['ymscns'] = 'Modal, ein Request, keine Checkbox Auswahl';
 $string['ymscys'] = 'Modal, ein Request, Checkbox Auswahl';
-
-

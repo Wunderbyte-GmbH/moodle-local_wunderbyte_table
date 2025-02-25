@@ -50,7 +50,6 @@ use local_wunderbyte_table\local\settings\tablesettings;
  * Wunderbyte table class is an extension of table_sql.
  */
 class wunderbyte_table extends table_sql {
-
     /**
      * Provide const for sortorder ASC.
      */
@@ -110,6 +109,12 @@ class wunderbyte_table extends table_sql {
      * @var bool Show a label where number of totalrows and filtered rows are displayed.
      */
     public $showcountlabel = false;
+
+    /**
+     *
+     * @var bool Show the download button at the bottom of the table (on top is the default).
+     */
+    public $showdownloadbuttonatbottom = false;
 
     /**
      *
@@ -426,7 +431,7 @@ class wunderbyte_table extends table_sql {
      */
     public function lazyout($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
-        list($idnumber, $encodedtable, $html) = $this->lazyouthtml($pagesize, $useinitialsbar, $downloadhelpbutton);
+        [$idnumber, $encodedtable, $html] = $this->lazyouthtml($pagesize, $useinitialsbar, $downloadhelpbutton);
 
         echo $html;
     }
@@ -462,7 +467,7 @@ class wunderbyte_table extends table_sql {
 
         // In the following function we return the template we want to use.
         // This function also checks, if there is a special container template present. If so, we use it instead.
-        list($component, $template) = $this->return_component_and_template();
+        [$component, $template] = $this->return_component_and_template();
 
         $tableobject = $this->printtable($pagesize, $useinitialsbar);
         $output = $PAGE->get_renderer('local_wunderbyte_table');
@@ -526,17 +531,15 @@ class wunderbyte_table extends table_sql {
         $rawdata = $this->rawdata;
         $rowswithdates = [];
         foreach ($rawdata as $rowraw) {
-
             $rowdata = singleton_service::get_instance_of_booking_option_settings($rowraw->id);
             if (count($rowdata->sessions) > 0) {
                 foreach ($rowdata->sessions as $session) {
                     $url = new moodle_url('/mod/booking/optionview.php', ['optionid' => $rowdata->id,
                                                                               'cmid' => $rowdata->cmid]);
                     $session->url = $url->out(false);
-                    array_push($rowswithdates, $session );
+                    array_push($rowswithdates, $session);
                 }
             }
-
         }
         $data['rowswithdates'] = json_encode($rowswithdates);
         if (isset($data['table']['rows'])) {
@@ -547,7 +550,6 @@ class wunderbyte_table extends table_sql {
         }
 
         return $OUTPUT->render_from_template($component . "/" . $template, $data);
-
     }
 
 
@@ -571,8 +573,10 @@ class wunderbyte_table extends table_sql {
         $this->urlfilter = optional_param('wbtfilter', '', PARAM_TEXT);
         $this->urlsearch = optional_param('wbtsearch', '', PARAM_TEXT);
 
-        if (($this->urlfilter !== '' && !empty($this->urlfilter))
-            || ($this->urlsearch !== '' && !empty($this->urlsearch))) {
+        if (
+            ($this->urlfilter !== '' && !empty($this->urlfilter))
+            || ($this->urlsearch !== '' && !empty($this->urlsearch))
+        ) {
             $tablecachehash = $this->return_encoded_table(true);
         } else {
             $tablecachehash = $this->return_encoded_table();
@@ -603,8 +607,11 @@ class wunderbyte_table extends table_sql {
         tablesettings::apply_setting($this);
 
         if (!$this->columns) {
-            $onerow = $DB->get_record_sql("SELECT {$this->sql->fields} FROM {$this->sql->from} WHERE {$this->sql->where}",
-                $this->sql->params, IGNORE_MULTIPLE);
+            $onerow = $DB->get_record_sql(
+                "SELECT {$this->sql->fields} FROM {$this->sql->from} WHERE {$this->sql->where}",
+                $this->sql->params,
+                IGNORE_MULTIPLE
+            );
             // If columns is not set then define columns as the keys of the rows returned.
             // From the db.
             $this->define_columns(array_keys((array)$onerow));
@@ -745,15 +752,19 @@ class wunderbyte_table extends table_sql {
      */
     public function add_subcolumns(string $subcolumnsidentifier, array $subcolumns, bool $addtocolumns = true) {
         if (strlen($subcolumnsidentifier) == 0) {
-            throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
-                    "You need to specify a columnidentifer like cardheader or cardfooter");
+            throw new moodle_exception(
+                'nosubcolumidentifier',
+                'local_wunderbyte_table',
+                null,
+                null,
+                "You need to specify a columnidentifer like cardheader or cardfooter"
+            );
         }
         foreach ($this->columns as $key => $value) {
             $columns[] = $key;
         }
 
         foreach ($subcolumns as $key => $value) {
-
             if (gettype($value) == 'array') {
                 $this->subcolumns[$subcolumnsidentifier][$key] = $value;
                 $columns[] = $key;
@@ -814,13 +825,19 @@ class wunderbyte_table extends table_sql {
      * @return void
      */
     public function add_classes_to_subcolumns(
-                string $subcolumnsidentifier,
-                array $classes,
-                ?array $subcolumns = null,
-                $replace = false) {
+        string $subcolumnsidentifier,
+        array $classes,
+        ?array $subcolumns = null,
+        $replace = false
+    ) {
         if (strlen($subcolumnsidentifier) == 0) {
-            throw new moodle_exception('nosubcolumidentifier', 'local_wunderbyte_table', null, null,
-                    "You need to specify a columnidentifer like cardheader or cardfooter");
+            throw new moodle_exception(
+                'nosubcolumidentifier',
+                'local_wunderbyte_table',
+                null,
+                null,
+                "You need to specify a columnidentifer like cardheader or cardfooter"
+            );
         }
         if (!$subcolumns) {
             $subcolumnsarray = $this->subcolumns[$subcolumnsidentifier];
@@ -832,16 +849,20 @@ class wunderbyte_table extends table_sql {
         foreach ($subcolumnsarray as $columnkey => $columnkey) {
             foreach ($classes as $key => $value) {
                 if (!isset($key) || !isset($value)) {
-                    throw new moodle_exception('nokeyvaluepairinclassarray', 'local_wunderbyte_table', null, null,
-                    "The classarray has to have the form classidentifier => classname, where {{classidentifier}}
-                        needs to be present in your mustache template.");
+                    throw new moodle_exception(
+                        'nokeyvaluepairinclassarray',
+                        'local_wunderbyte_table',
+                        null,
+                        null,
+                        "The classarray has to have the form classidentifier => classname, where {{classidentifier}}
+                        needs to be present in your mustache template."
+                    );
                 }
                 if ($replace || !isset($this->subcolumns[$subcolumnsidentifier][$columnkey][$key])) {
                     $this->subcolumns[$subcolumnsidentifier][$columnkey][$key] = $value;
                 } else {
                     $this->subcolumns[$subcolumnsidentifier][$columnkey][$key] .= ' ' . $value;
                 }
-
             }
         }
     }
@@ -867,8 +888,10 @@ class wunderbyte_table extends table_sql {
             $this->formatedrows[$key] = $formattedrow;
 
             if ($this->is_downloading()) {
-                $this->add_data_keyed($formattedrow,
-                $this->get_row_class($rawrow));
+                $this->add_data_keyed(
+                    $formattedrow,
+                    $this->get_row_class($rawrow)
+                );
             }
         }
     }
@@ -989,7 +1012,6 @@ class wunderbyte_table extends table_sql {
         $searchcolumns = $this->fulltextsearchcolumns;
 
         if (!empty($searchcolumns) && count($searchcolumns)) {
-
             foreach ($searchcolumns as $key => $value) {
                 // Check Moodle version to determine compatibility.
                 if ($CFG->version > 2022112800) {
@@ -1411,7 +1433,7 @@ class wunderbyte_table extends table_sql {
                     $replacements = ['"', '"', '"'];
                     $searchtext = str_replace($characterstoreplace, $replacements, $searchtext);
 
-                    $regex = '/(?|"([^"]+)"|(\w+))'.$separator.'(?:"([^"]+)"|([^,\s]+))/';
+                    $regex = '/(?|"([^"]+)"|(\w+))' . $separator . '(?:"([^"]+)"|([^,\s]+))/';
                     $initialsearchtext = $searchtext;
                     $columnname = '';
                     $value = '';
@@ -1443,17 +1465,21 @@ class wunderbyte_table extends table_sql {
                             }
                         }
 
-                        if (!$quotedvalue && // Value is unquoted.
-                        !filter_var($value, FILTER_VALIDATE_INT) && // And not a number.
-                        !filter_var($value, FILTER_VALIDATE_FLOAT)) {
+                        if (
+                            !$quotedvalue && // Value is unquoted.
+                            !filter_var($value, FILTER_VALIDATE_INT) && // And not a number.
+                            !filter_var($value, FILTER_VALIDATE_FLOAT)
+                        ) {
                             $value = "%" . $value . "%"; // Add wildcards.
                         }
 
                         // Check if searchstring column corresponds to localized name. If so set columnname.
                         if (in_array($columnname, $columns)) {
                             $columnname = array_search($columnname, $columns);
-                        } else if (!array_key_exists($columnname, $columns)
-                            || !array_key_exists(strtolower($columnname), $columns)) {
+                        } else if (
+                            !array_key_exists($columnname, $columns)
+                            || !array_key_exists(strtolower($columnname), $columns)
+                        ) {
                             // Or columnname.
                             continue;
                         }
@@ -1693,7 +1719,7 @@ class wunderbyte_table extends table_sql {
         global $CFG;
 
         if (!empty($this->tabletemplate)) {
-            list($component, $template) = explode("/", $this->tabletemplate);
+            [$component, $template] = explode("/", $this->tabletemplate);
         }
 
         if (empty($component) || empty($template)) {
@@ -1794,12 +1820,13 @@ class wunderbyte_table extends table_sql {
 
         $data['id'] = $values->id;
         $data['label'] = '';
-        $data['name'] = 'row-'.$this->uniqueid.'-'.$values->id;
+        $data['name'] = 'row-' . $this->uniqueid . '-' . $values->id;
         $data['checkboxclass'] = '';
         $data['checked'] = !empty($values->checkbox) ? true : false;
         $data['tableid'] = $this->idstring;
 
-        return $OUTPUT->render_from_template('local_wunderbyte_table/col_checkbox', $data);;
+        return $OUTPUT->render_from_template('local_wunderbyte_table/col_checkbox', $data);
+        ;
     }
 
     /**
@@ -1814,12 +1841,13 @@ class wunderbyte_table extends table_sql {
 
         $data['id'] = $values->id;
         $data['label'] = '';
-        $data['name'] = 'row-'.$this->uniqueid.'-'.$values->id;
+        $data['name'] = 'row-' . $this->uniqueid . '-' . $values->id;
         $data['checkboxclass'] = '';
         $data['checked'] = !empty($values->checkbox) ? true : false;
         $data['tableid'] = $this->idstring;
 
-        return $OUTPUT->render_from_template('local_wunderbyte_table/col_sortableitem', $data);;
+        return $OUTPUT->render_from_template('local_wunderbyte_table/col_sortableitem', $data);
+        ;
     }
 
     /**
@@ -2033,9 +2061,11 @@ class wunderbyte_table extends table_sql {
             // If the key is an int, we can't run this.
             if (!is_int($key)) {
                 // We only exclude it when we are sure that it's really there.
-                if (!strpos($sql, ':'. $key . ' ')
-                    && !strpos($sql, ':'. $key . ')')
-                    && !strpos($sql, ':'. $key . PHP_EOL)) {
+                if (
+                    !strpos($sql, ':' . $key . ' ')
+                    && !strpos($sql, ':' . $key . ')')
+                    && !strpos($sql, ':' . $key . PHP_EOL)
+                ) {
                         unset($params[$key]);
                 }
             }

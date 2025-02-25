@@ -369,6 +369,7 @@ class demo implements renderable, templatable {
         $table->stickyheader = true;
         $table->showcountlabel = true;
         // $table->showfilterontop = true;
+        // $table->showdownloadbuttonatbottom = true;
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
