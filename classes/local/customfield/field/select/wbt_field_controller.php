@@ -44,9 +44,10 @@ class wbt_field_controller extends field_controller implements wbt_field_control
      * Get the actual string value of the customfield by index.
      *
      * @param string $key
+     * @param bool $formatstring
      * @return string the string value for the index
      */
-    public function get_option_value_by_key(string $key): string {
+    public function get_option_value_by_key(string $key, bool $formatstring = true): string {
         $index = (int) $key;
         $optionsstring = $this->get_configdata_property('options');
         $optionsarray = explode(PHP_EOL, $optionsstring);
@@ -57,7 +58,11 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         if ($i < 0 || $i >= count($optionsarray)) {
             return wbt_field_controller_info::WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND;
         }
-        return format_string($optionsarray[$i]);
+        $returnvalue = $optionsarray[$i];
+        if ($formatstring) {
+            format_string($returnvalue);
+        }
+        return $returnvalue;
     }
 
     /**

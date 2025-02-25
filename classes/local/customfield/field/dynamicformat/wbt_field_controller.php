@@ -42,9 +42,10 @@ class wbt_field_controller extends field_controller implements wbt_field_control
      * Get the actual string value of the customfield by index.
      *
      * @param string $key
+     * @param bool $formatstring
      * @return string the string value for the index
      */
-    public function get_option_value_by_key(string $key): string {
+    public function get_option_value_by_key(string $key, bool $formatstring = true): string {
         global $DB;
 
         $sql = $this->get_configdata_property('dynamicsql');
@@ -54,7 +55,11 @@ class wbt_field_controller extends field_controller implements wbt_field_control
             return $key;
         }
         if (isset($records[$key])) {
-            return format_string($records[$key]->data ?? $key);
+            $returnvalue = $records[$key]->data ?? $key;
+            if ($formatstring) {
+                format_string($returnvalue);
+            }
+            return $returnvalue;
         } else {
             return $key;
         }

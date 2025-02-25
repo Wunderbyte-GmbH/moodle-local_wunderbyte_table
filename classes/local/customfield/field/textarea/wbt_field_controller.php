@@ -42,14 +42,18 @@ class wbt_field_controller extends field_controller implements wbt_field_control
      * Get the actual string value of the customfield.
      *
      * @param string $key
+     * @param bool $formatstring
      * @return string the string value
      */
-    public function get_option_value_by_key(string $key): string {
+    public function get_option_value_by_key(string $key, bool $formatstring = true): string {
         global $DB;
 
         if (!empty($key)) {
-            // For textarea we need format_text.
-            return format_text($key);
+            $returnvalue = $key;
+            if ($formatstring) {
+                format_string($returnvalue);
+            }
+            return $returnvalue;
         }
         return '';
     }
@@ -63,7 +67,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
     public function get_values_array(): array {
         global $DB;
 
-        $sql = "SELECT DISTINCT fieldid AS id, value AS data
+        $sql = "SELECT DISTINCT id AS id, value AS data
                   FROM {customfield_data} cd
                  WHERE fieldid = :fieldid";
         $params = [
