@@ -76,15 +76,17 @@ class standardfilter_form_builder {
      * @return array
      */
     private function generate_pair_label_input($type) {
+        $keylabel = $this->key ?? "0";
+        $valuelabel = 'keyvaluepairs[' . $keylabel . '][' . $type . ']';
         $typename = get_string("standardfilter{$type}label", 'local_wunderbyte_table');
         $label = $this->mform->createElement('static', "{$this->key}_{$type}_label", '', $typename);
-        $input = $this->mform->createElement('text', "{$type}[{$this->key}]", '', ['size' => '20']);
-        $this->mform->setType("{$type}[{$this->key}]", PARAM_TEXT);
+        $input = $this->mform->createElement('text', $valuelabel, '', ['size' => '20']);
+        $this->mform->setType($valuelabel, PARAM_TEXT);
         $unsavedkey = "unsaveddata" . $type;
         if (!empty($this->$unsavedkey)) {
-            $this->mform->setDefault("{$type}[{$this->key}]", $this->$unsavedkey);
+            $this->mform->setDefault($valuelabel, $this->$unsavedkey);
         } else {
-            $this->mform->setDefault("{$type}[{$this->key}]", $this->$type);
+            $this->mform->setDefault($valuelabel, $this->$type);
         }
         return [
             "{$type}label" => $label,

@@ -27,6 +27,7 @@ namespace local_wunderbyte_table\filters;
 use local_wunderbyte_table\wunderbyte_table;
 use local_wunderbyte_table\editfilter;
 use local_wunderbyte_table\filter;
+use ReflectionClass;
 
 /**
  * Handles the filter classes.
@@ -42,6 +43,64 @@ abstract class filtersettings {
         $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
         $lang = filter::current_language();
         $key = $table->tablecachehash . $lang . '_filterjson';
-        return editfilter::return_filtersettings($table, $key);
+        $settings = editfilter::return_filtersettings($table, $key);
+
+        foreach ($table->columns as $index => $column) {
+            if (!isset($settings[$index])) {
+                $settings[$index] = [
+                    'localizedname' => $table->headers[$column],
+                    $index . '_wb_chewcked' => 0,
+                ];
+            }
+        }
+        return $settings;
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @return array
+     */
+    public static function get_all_filter_types() {
+        $typesdirectory = __DIR__ . '/types';
+        $filtertypes = [
+            '' => get_string('setwbtablefiltertypeoption', 'local_wunderbyte_table'),
+        ];
+        $foundfiltertypes = [];
+        foreach (scandir($typesdirectory) as $file) {
+            if (pathinfo($file, PATHINFO_EXTENSION) === 'php') {
+                $classname = __NAMESPACE__ . '\\types\\' . pathinfo($file, PATHINFO_FILENAME);
+                $localizedname = self::execute_static_function($classname, 'return_localized_name');
+                if ($localizedname) {
+                    $foundfiltertypes[$classname] = $localizedname;
+                }
+            }
+        }
+        return array_merge($filtertypes, $foundfiltertypes);
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param string $classname
+     * @param string $staticfunction
+     * @param mixed $data
+     * @return mixed|null
+     */
+    protected static function execute_static_function($classname, $staticfunction, $data = []) {
+        if (class_exists($classname)) {
+            try {
+                $reflection = new ReflectionClass($classname);
+                if (!$reflection->isAbstract() && $reflection->isSubclassOf(base::class)) {
+                    if ($reflection->hasMethod($staticfunction)) {
+                        $method = $reflection->getMethod($staticfunction);
+                        if ($method->isPublic() && $method->isStatic()) {
+                            return $classname::$staticfunction($data);
+                        }
+                    }
+                }
+            } catch (\ReflectionException $e) {
+                debugging("Reflection error for class $classname: " . $e->getMessage());
+            }
+        }
+        return null;
     }
 }

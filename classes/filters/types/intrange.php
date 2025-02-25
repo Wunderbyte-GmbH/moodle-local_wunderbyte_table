@@ -33,7 +33,6 @@ use moodle_exception;
  * Wunderbyte table class is an extension of table_sql.
  */
 class intrange extends base {
-
     /**
      * Get standard filter options.
      * @param wunderbyte_table $table
@@ -270,5 +269,31 @@ class intrange extends base {
         $tableobject[$key]['intrange']['intranges'][0]['endvalue'] = $values[1];
 
         return;
+    }
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param array $data
+     */
+    public static function render_mandatory_fields(&$mform, $data = []) {
+        $mform->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @return array
+     */
+    public static function get_filterspecific_values($data) {
+        $filterenablelabel = $data->filter_columns . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            $data->wbfilterclass => true,
+            'intrange' => [],
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+        ];
+        return $filterspecificvalues;
     }
 }

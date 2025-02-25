@@ -62,35 +62,7 @@ class wunderbyte_table_db_operator {
      * Set the key value pairs
      */
     public function set_existing_key_value_pairs() {
-        $newfilterkeyvalues = [];
-        foreach ($this->data->key as $key => $keyvalue) {
-            if (!empty($keyvalue)) {
-                if ($key == 0) {
-                    $newfilterkeyvalues[$keyvalue] = $this->data->value[0];
-                } else {
-                    $newfilterkeyvalues[$keyvalue] = $this->data->value[$keyvalue];
-                }
-            }
-        }
-        $this->filtersettings[$this->data->filter_columns] = $this->merge_settings_head_with_key_value_($newfilterkeyvalues);
-    }
-
-    /**
-     * Set the key value pairs
-     * @param array $newfilterkeyvalues
-     */
-    private function merge_settings_head_with_key_value_($newfilterkeyvalues) {
-        $settingshead = [
-            'localizedname',
-            'wbfilterclass',
-            'username_wb_checked',
-        ];
-        foreach ($this->filtersettings[$this->data->filter_columns] as $key => $filtersetting) {
-            if (in_array($key, $settingshead)) {
-                $newfilterkeyvalues[$key] = $filtersetting;
-            }
-        }
-        return $newfilterkeyvalues;
+        $this->filtersettings[$this->data->filter_columns] = $this->data->wbfilterclass::get_filterspecific_values($this->data);
     }
 
     /**
@@ -106,6 +78,51 @@ class wunderbyte_table_db_operator {
                 get_string('successaddedfilternotification', 'local_wunderbyte_table'),
                 \core\output\notification::NOTIFY_SUCCESS
             );
+            $otherlangtables = $this->get_other_lang_tables($result->tablehash, $this->key);
+            $this->persist_filter_settings($otherlangtables, $this->filtersettings);
+        }
+    }
+
+    /**
+     * Set the key value pairs
+     * @param string $tablehash
+     */
+    public function get_other_lang_tables($tablehash, $hash) {
+        global $DB;
+        $sql = "SELECT * FROM {" . $this->tablename . "}
+            WHERE tablehash = :tablehash
+            AND hash <> :hash";
+
+        $params = [
+            'tablehash' => $tablehash,
+            'hash' => $hash,
+        ];
+        return $DB->get_records_sql($sql, $params);
+    }
+
+    /**
+     * Set the key value pairs
+     * @param string $tablehash
+     */
+    public function persist_filter_settings($tables, $filtersettings) {
+        global $DB;
+        foreach ($tables as $table) {
+            $tablesettings = json_decode($table->jsonstring);
+
+            if ($tablesettings === null || !isset($tablesettings->filtersettings)) {
+                continue;
+            }
+
+            foreach ($tablesettings->filtersettings as $filtercolumn => $filtercolumnsettings) {
+                if (isset($filtersettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'])) {
+                    $tablesettings->filtersettings->$filtercolumn->{$filtercolumn . '_wb_checked'} = $filtersettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'];
+                }
+            }
+
+            $DB->update_record($this->tablename, [
+                'id' => $table->id,
+                'jsonstring' => json_encode($tablesettings),
+            ]);
         }
     }
 }

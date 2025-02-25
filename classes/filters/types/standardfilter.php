@@ -120,7 +120,6 @@ class standardfilter extends base {
     public static function render_mandatory_fields(&$mform, $data = []) {
         $groupelements = [];
         $label = '';
-
         if ($mform->elementExists('add_pair')) {
             $formbuilder = new standardfilter_form_builder(null, null, $mform);
             if ($data) {
@@ -183,10 +182,9 @@ class standardfilter extends base {
      */
     public static function validate_input($data) {
         $errors = [];
-        foreach ($data['key'] as $key => $keyvalue) {
-            if (self::only_partial_submitted($keyvalue, $data['value'][$key])) {
-                $errors['key'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
-                $errors['value'][$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+        foreach ($data['keyvaluepairs'] as $key => $keyvaluepair) {
+            if (self::only_partial_submitted($keyvaluepair)) {
+                $errors[$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
             }
         }
         return $errors;
@@ -198,12 +196,32 @@ class standardfilter extends base {
      * @param string $value
      * @return bool
      */
-    private static function only_partial_submitted($key, $value) {
+    private static function only_partial_submitted($keyvaluepair) {
         if (
-            empty($key) !== empty($value)
+            empty($keyvaluepair['key']) !== empty($keyvaluepair['value'])
         ) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @return array
+     */
+    public static function get_filterspecific_values($data) {
+        $filterenablelabel = $data->filter_columns . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+        ];
+        foreach ($data->keyvaluepairs as $key => $keyvaluepair) {
+            if (!empty($keyvaluepair['key']) && !empty($keyvaluepair['value'])) {
+                $filterspecificvalues[$keyvaluepair['key']] = $keyvaluepair['value'];
+            }
+        }
+        return $filterspecificvalues;
     }
 }

@@ -67,16 +67,25 @@ class column_manager extends filtersettings {
      */
     public function get_filtered_column_form() {
         $existingfilterdata = [];
-        foreach ($this->filtersettings[$this->filtercolumn] as $key => $value) {
-            $classname = $this->filtersettings[$this->filtercolumn]['wbfilterclass'];
+        $filterenabled = 0;
+        $filtersettings = $this->filtersettings[$this->filtercolumn];
+
+        foreach ($filtersettings as $key => $value) {
+            $classname = $filtersettings['wbfilterclass'];
+            if ($this->is_static_public_function($classname, 'get_filterspecific_data')) {
+                $existingfilterdata = $classname::get_filterspecific_data($filtersettings, $this->filtercolumn);
+            }
             if (
                 class_exists($classname) &&
                 method_exists($classname, 'non_kestringy_value_pair_properties') &&
                 !in_array($key, $classname::non_kestringy_value_pair_properties($this->filtercolumn))
             ) {
                 $existingfilterdata[$key] = $value;
+            } else if (isset($filtersettings[$this->filtercolumn . '_wb_checked'])) {
+                $filterenabled = $filtersettings[$this->filtercolumn . '_wb_checked'];
             }
         }
+        $this->set_general_filter_settings($filtersettings, $filterenabled);
         $this->set_available_filter_types($existingfilterdata, $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
         $this->set_add_filter_key_value();
         return [
@@ -91,17 +100,56 @@ class column_manager extends filtersettings {
      */
     public function get_filtered_column_form_persist_error() {
         $existingfilterdata = [];
-        foreach ($this->data['value'] as $key => $keyvalue) {
-            if ($key !== 0) {
-                $existingfilterdata[$key] = $this->data['value'][$key];
+        $filterenabled = 0;
+        // Outsource to filterclass or streamline!
+        foreach ($this->data['keyvaluepairs'] as $keylabel => $keyvaluepair) {
+            if ($keylabel !== 0) {
+                $existingfilterdata[$keylabel] = $keyvaluepair['value'];
             }
         }
+        if (isset($this->data['datepicker'])) {
+            $existingfilterdata['datepicker'] = $this->data['datepicker'];
+        }
+        if (isset($this->data[$this->filtercolumn . '_wb_checked'])) {
+            $filterenabled = $this->data[$this->filtercolumn . '_wb_checked'];
+        }
+        $this->set_general_filter_settings($this->data, $filterenabled);
         $this->set_available_filter_types($existingfilterdata, $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
         $this->set_add_filter_key_value();
         return [
             'filtereditfields' => $this->mformedit,
             'filteraddfields' => $this->mformadd,
         ];
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $existingfilterdata
+     * @param int $filterclass
+     */
+    private function set_general_filter_settings($filtercolumn, $enabled) {
+        $this->mformedit->addElement('header', 'filter_enabled_header', 'General filter settings');
+        $this->mformedit->addElement('text', 'localizedname', 'Filtername');
+        $this->mformedit->setDefault('localizedname', $filtercolumn['localizedname']);
+        $this->mformedit->addElement(
+            'advcheckbox',
+            $this->filtercolumn . '_wb_checked',
+            'Enable filter',
+            'Select checkobx if filter should be enabled'
+        );
+        $this->mformedit->setDefault($this->filtercolumn . '_wb_checked', $enabled ? 1 : 0);
+
+        $options = self::get_all_filter_types();
+        $this->mformedit->addElement(
+            'select',
+            'wbfilterclass',
+            get_string('setwbtablefiltertype', 'local_wunderbyte_table'),
+            $options
+        );
+        $this->mformedit->setType('wbfilterclass', PARAM_INT);
+        if (isset($filtercolumn['wbfilterclass'])) {
+            $this->mformedit->setDefault('wbfilterclass', $filtercolumn['wbfilterclass']);
+        }
     }
 
     /**
@@ -150,8 +198,7 @@ class column_manager extends filtersettings {
         $this->mformadd->addElement('html', '<div id="filter-add-field">');
         $this->mformadd->addElement('header', 'add_pair', 'Add new key value pair');
 
-        $classname = $this->data['filter_options'];
-        filter_manager::set_filter_types($this->mformadd, $classname);
+        $classname = $this->filtersettings[$this->data['filtercolumn']]['wbfilterclass'] ?? '';
         self::render_mandatory_fields($classname);
 
         $this->mformadd->addElement('html', '</div>');
@@ -162,16 +209,16 @@ class column_manager extends filtersettings {
      * @param string $classname
      */
     private function render_mandatory_fields($classname) {
-        if (isset($this->data['key'][0])) {
+        if (isset($this->data['keyvaluepairs'][0])) {
             $newvalue = [
-                $this->data['key'][0] => $this->data['value'][0],
+                $this->data['keyvaluepairs'][0]['key'] => $this->data['keyvaluepairs'][0]['value'],
             ];
-            $staticfunction = 'render_mandatory_fields';
-            if (self::is_static_public_function($classname, $staticfunction)) {
-                $classname::$staticfunction($this->mformadd, $newvalue);
-                $parts = explode("\\", $classname);
-                $elementname = array_pop($parts) . 'group';
-            }
+        }
+        $staticfunction = 'render_mandatory_fields';
+        if (self::is_static_public_function($classname, $staticfunction)) {
+            $classname::$staticfunction($this->mformadd, $newvalue ?? []);
+            $parts = explode("\\", $classname);
+            $elementname = array_pop($parts) . 'group';
         }
     }
 
@@ -211,7 +258,7 @@ class column_manager extends filtersettings {
             '' => get_string('setwbtablefiltercolumnoption', 'local_wunderbyte_table'),
         ];
         foreach ($filterablecolumns as $key => $filterablecolumn) {
-            if (isset($filterablecolumn['wbfilterclass'])) {
+            if ($key != 'id') {
                 $options[$key] = $filterablecolumn['localizedname'];
             }
         }

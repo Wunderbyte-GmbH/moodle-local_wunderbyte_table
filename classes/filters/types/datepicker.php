@@ -128,7 +128,6 @@ class datepicker extends base {
                 $filter['defaultvalue'] = !empty($defaultvaluestart) ? $defaultvaluestart : 'now';
                 break;
             case 'in between':
-
                 $filter['columntimestart'] = $this->columnidentifier;
                 $filter['columntimeend'] = $this->secondcolumnidentifier;
                 $filter['labelstartvalue'] = $this->localizedstring;
@@ -164,7 +163,6 @@ class datepicker extends base {
         $datepickerarray = $filtersettings[$fckey];
 
         foreach ($datepickerarray['datepicker'] as $labelkey => $object) {
-
             if (!isset($object['columntimestart'])) {
                 $defaulttimestamp = $datepickerarray['datepicker'][$labelkey]['defaultvalue'];
 
@@ -176,7 +174,6 @@ class datepicker extends base {
                     'timereadable' => $defaulttimestamp === 'now' ? 'now' : date('H:i', $defaulttimestamp),
                     'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
                 ];
-
             } else { // Inbetween Filter applied.
                 // Prepare the array for output.
                 if (empty($datepickerarray['datepicker'][$labelkey]['possibleoperations'])) {
@@ -235,44 +232,109 @@ class datepicker extends base {
         foreach ($data as $filterlabel => $filtertype) {
             $mform->addElement('html', '<h4>' . $filterlabel . ':</h4>');
             $horizontallinecounter = 0;
-            foreach ($filtertype as $filtertypedata) {
+            foreach ($filtertype as $filtertypename => $filtertypedata) {
+                $htmlid = strtolower(str_replace(' ', '-', $filtertypename));
+                $mform->addElement('html', '<div id="' . $htmlid . '">');
+
                 if ($horizontallinecounter > 0) {
                     $mform->addElement('html', '<hr>');
                 }
+                $mform->addElement('html', '<b>Filter name: ' . $filtertypename . '<b>');
+                self::add_remove_button($mform, $htmlid);
+
                 foreach ($filtertypedata as $filtertypedatalabel => $filtertypedatavalue) {
-                    $label = $mform->createElement('html', '<b>' . $filtertypedatalabel . ':</b>');
-                    $operators = [
-                        '=' => '=',
-                        '<' => '<',
-                        '>' => '>',
-                        '<=' => '<=',
-                        '>=' => '>=',
-                    ];
-                    $operatoroptions = [
-                        0 => "within",
-                        1 => "overlapboth",
-                        2 => "overlapstart",
-                        3 => "overlapend",
-                        4 => "before",
-                        5 => "after",
-                        6 => "flexoverlap",
-                    ];
-                    $valuelabel = $horizontallinecounter . '_value_' . $filtertypedatalabel;
+                    $valuelabel = $filterlabel . '[' . $filtertypename . '][' . $filtertypedatalabel . ']';
                     if ($filtertypedatalabel == 'operator') {
-                        $input = $mform->createElement('select', $valuelabel, '', $operators);
-                        $mform->setDefault($valuelabel, $filtertypedatavalue);
+                        $input = $mform->createElement(
+                            'select',
+                            $valuelabel,
+                            '',
+                            self::get_operators()
+                        );
+                        $mform->setDefault(
+                            $valuelabel,
+                            $filtertypedatavalue
+                        );
                     } else if (is_array($filtertypedatavalue)) {
-                        $input = $mform->createElement('select', $valuelabel, 'Select Subjects:', $operatoroptions, ['multiple' => true]);
-                        $mform->setDefault($valuelabel, array_keys($filtertypedatavalue));
+                        $input = $mform->createElement(
+                            'select',
+                            $valuelabel,
+                            'Select Subjects:',
+                            self::get_operatoroptions(),
+                            ['multiple' => true]
+                        );
+                        $mform->setDefault(
+                            $valuelabel,
+                            array_keys($filtertypedatavalue)
+                        );
                     } else {
-                        $input = $mform->createElement('text', $valuelabel, '');
-                        $mform->setDefault($valuelabel, $filtertypedatavalue);
+                        $input = $mform->createElement(
+                            'text',
+                            $valuelabel,
+                            ''
+                        );
+                        $mform->setDefault(
+                            $valuelabel,
+                            $filtertypedatavalue
+                        );
                     }
-                    $mform->addGroup([$label, $input], 'group_' . $filtertypedatalabel, '', ' ', false);
+                    $mform->addGroup([$input], $filtertypename . $filtertypedatalabel, $filtertypedatalabel, ' ', false);
                 }
                 $horizontallinecounter++;
+                $mform->addElement('html', '</div>');
             }
         }
+    }
+
+    /**
+     * The expected value.
+     * @return array
+     */
+    public static function get_operators() {
+        return [
+            '=' => '=',
+            '<' => '<',
+            '>' => '>',
+            '<=' => '<=',
+            '>=' => '>=',
+        ];
+    }
+
+    /**
+     * The expected value.
+     * @return array
+     */
+    public static function get_operatoroptions() {
+        return [
+            0 => "within",
+            1 => "overlapboth",
+            2 => "overlapstart",
+            3 => "overlapend",
+            4 => "before",
+            5 => "after",
+            6 => "flexoverlap",
+        ];
+    }
+
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param string $filtertypename
+     */
+    public static function add_remove_button(&$mform, $filtertypename) {
+        $trashicon = '<i class="fa fa-trash"></i>';
+        $mform->addElement(
+            'button',
+            "remove[{$filtertypename}]",
+            $trashicon,
+            [
+                'class' => 'btn remove-key-value',
+                'type' => 'button',
+                'data-groupid' => $filtertypename,
+                'aria-label' => "Remove key-value pair for {$filtertypename}",
+            ]
+        );
     }
 
     /**
@@ -281,15 +343,19 @@ class datepicker extends base {
      * @return array
      */
     public static function validate_input($data) {
-        $checkablevalues = [];
-        foreach ($data as $key => $keyvalue) {
-            if (strpos($key, '_value_') !== false) {
-                $keylabel = explode('_', $key);
-                $checkablevalues[$keylabel[0]][$keylabel[2]] = $keyvalue;
+        $errors = [];
+        foreach ($data['datepicker'] as $datepickername => $datepickerinputs) {
+            foreach ($datepickerinputs as $datepickerlabel => $datepickerinput) {
+                if (
+                    is_string($datepickerinput) &&
+                    (
+                        empty($datepickerinput) ||
+                        $datepickerinput == "_qf__force_multiselect_submission"
+                    )
+                ) {
+                    $errors[$datepickername . $datepickerlabel] = get_string('filteremptynameerror', 'local_wunderbyte_table');
+                }
             }
-        }
-        foreach ($checkablevalues as $index => $data) {
-            $errors[$index] = 'Error testing';
         }
         return $errors;
     }

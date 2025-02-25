@@ -24,9 +24,6 @@
 
 namespace local_wunderbyte_table\filters;
 
-use local_wunderbyte_table\wunderbyte_table;
-use local_wunderbyte_table\editfilter;
-use local_wunderbyte_table\filter;
 use MoodleQuickForm;
 
 /**

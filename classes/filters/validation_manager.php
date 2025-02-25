@@ -60,17 +60,31 @@ class validation_manager extends filtersettings {
             if (!isset($form->_elements) || !is_array($form->_elements)) {
                 continue;
             }
-
             foreach ($form->_elements as $element) {
-                if (isset($element->_type) && $element->_type === 'group') {
-                    if ($this->is_error_on_new_pair($formkey, $errors['key'][0])) {
-                        $form->setElementError($element->_name, $errors['key'][0]);
-                    } else if ($existingpairerrors = $this->is_error_on_existing_pair($formkey, $errors)) {
-                        $form->setElementError($element->_name, $existingpairerrors);
+                if (isset($element->_type) && in_array($element->_type, $this->valid_element_types())) {
+                    if ($this->is_error_on_new_pair($formkey, $errors[0])) {
+                        $form->setElementError($element->getName(), $errors[0]);
+                    } else if (isset($errors[$element->getName()])) {
+                        $form->setElementError($element->getName(), $errors[$element->getName()]);
+                    }
+                    if (isset($errors[$element->_name])) {
+                        $form->setElementError($element->getName(), $errors[$element->_name]);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Handles form definition of filter classes.
+     * @return array
+     */
+    private function valid_element_types() {
+        return [
+            'group',
+            'text',
+            'select',
+        ];
     }
 
     /**
@@ -103,8 +117,8 @@ class validation_manager extends filtersettings {
      */
     public function get_existing_pair_errors($errors) {
         $uniqueerrors = [];
-        unset($errors['key'][0]);
-        foreach ($errors['key'] as $error) {
+        unset($errors[0]);
+        foreach ($errors as $error) {
             if (!in_array($error, $uniqueerrors)) {
                 $uniqueerrors[] = $error;
             }
@@ -119,7 +133,7 @@ class validation_manager extends filtersettings {
     public function get_data_validation() {
         $errors = [];
         if (isset($this->data['filter_columns'])) {
-            $errors = $this->checked_selected_column($this->data['filter_columns']);
+            $errors = $this->checked_general_filter_settings($this->data);
 
             $classname = $this->filtersettings[$this->data['filter_columns']]['wbfilterclass'];
             $staticfunction = 'validate_input';
@@ -158,13 +172,19 @@ class validation_manager extends filtersettings {
 
     /**
      * The expected value.
-     * @param string $filtercolumns
+     * @param array $filterdata
      * @return array
      */
-    private function checked_selected_column($filtercolumns) {
+    private function checked_general_filter_settings($filterdata) {
         $errros = [];
-        if (empty($filtercolumns)) {
+        if (empty($filterdata['filter_columns'])) {
             $errros['filter_columns'] = get_string('columnemptyerror', 'local_wunderbyte_table');
+        }
+        if (empty($filterdata['localizedname'])) {
+            $errros['localizedname'] = get_string('localizednameemptyerror', 'local_wunderbyte_table');
+        }
+        if (empty($filterdata['wbfilterclass'])) {
+            $errros['wbfilterclass'] = get_string('wbfilterclassemptyerror', 'local_wunderbyte_table');
         }
         return $errros;
     }
