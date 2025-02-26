@@ -194,6 +194,11 @@ You can define the suppression like this.
         1 => get_string('active', 'myplugin'),
     ]);
 
+### Filter position
+By default, filters will be shown at the left of the table. If you want to show them on top of the table, you can do it like this:
+
+    $table->showfilterontop = true;
+
 ### Hierarchical filter
 The hierarchical filter will allow to order your results in a special way. Assume you have the following values: one, two, three, four, five, six in your database. They belong to three different categories. You can then add the filter like this:
 
@@ -326,6 +331,17 @@ WB Table has implemented the javascript and most of the php to support reorderin
 
 This will add a column with drag n drop handles. But you will need to add a method "action_reorderrows" to actually do the reordering to your wb table child class. For obvious reasons, this can't be done generically.
 You'll find a non functional template for this method in your wunderbyte_table.php in the classes folder.
+
+## Download
+
+If your table supports download, you can activate the download button like this:
+
+    $table->showdownloadbutton = true;
+
+By default, the download button will be shown at the top of the table.
+If you want to show it at the bottom of the table, you can use this:
+
+    $table->showdownloadbuttonatbottom = true;
 
 ### Display
 
