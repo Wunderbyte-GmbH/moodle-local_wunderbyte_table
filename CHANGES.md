@@ -1,3 +1,9 @@
+## Version 2.0.43 (2025022600)
+* Improvement: New get_values_array() function for customfields.
+* New feature: Add possibility to show download button at bottom of table.
+* Bugfix: Field property of field controller can be accessed directly without getter.
+* Test: Add test to verify sortorder in infinite scroll environment
+
 ## Version 2.0.42 (2025021800)
 * New feature: Callbackfilter
 * New feature: Introduce sortable classes to allow sort specific sql and caches
