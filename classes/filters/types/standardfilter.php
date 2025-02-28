@@ -65,17 +65,6 @@ class standardfilter extends base {
     private $sql;
 
     /**
-     * This function adds sql to the table sql.
-     *
-     * @param wunderbyte_table $table
-     *
-     * @return void
-     *
-     */
-    public function add_sql(wunderbyte_table $table) {
-    }
-
-    /**
      * [Description for define_sql]
      *
      * @param string $field
