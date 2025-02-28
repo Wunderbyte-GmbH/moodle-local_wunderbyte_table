@@ -26,13 +26,14 @@ namespace local_wunderbyte_table\filters\types;
 use PHPUnit\Framework\TestCase;
 use local_wunderbyte_table\filters\types\standardfilter;
 
+
 /**
  * Unit tests for standardfilter class.
  */
 final class standardfilter_test extends TestCase {
     /**
      * Test define_sql() method.
-     * @covers \standardfilter::define_sql
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::define_sql
      */
     public function test_define_sql(): void {
         $filter = new standardfilter('username');
@@ -50,7 +51,7 @@ final class standardfilter_test extends TestCase {
 
     /**
      * Test define_sql() method.
-     * @covers \standardfilter::add_options
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::add_options
      */
     public function test_add_options(): void {
         $filter = new standardfilter('username');
@@ -68,25 +69,30 @@ final class standardfilter_test extends TestCase {
 
     /**
      * Test define_sql() method.
-     * @covers \standardfilter::validate_input
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::validate_input
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::only_partial_submitted
      */
     public function test_validate_input(): void {
         $data = [
-            'key' => ['one', ''],
-            'value' => ['one', 'two'],
+            'keyvaluepairs' => [
+                'one' => [
+                    'key' => 'one',
+                    'value' => 'one',
+                ],
+                'two' => [
+                    'key' => 'two',
+                    'value' => null,
+                ],
+            ],
         ];
 
         $errors = standardfilter::validate_input($data);
-
-        $this->assertArrayHasKey('key', $errors);
-        $this->assertArrayHasKey(1, $errors['key']);
-        $this->assertArrayHasKey('value', $errors);
-        $this->assertArrayHasKey(1, $errors['value']);
+        $this->assertArrayHasKey('two_group', $errors);
     }
 
     /**
      * Test define_sql() method.
-     * @covers \standardfilter::get_dynamic_values
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::get_dynamic_values
      */
     public function test_get_dynamic_values(): void {
         $mformmock = $this->createMock(\MoodleQuickForm::class);
@@ -103,5 +109,112 @@ final class standardfilter_test extends TestCase {
 
         $result = standardfilter::get_dynamic_values($fieldsandsubmitteddata);
         $this->assertInstanceOf(\MoodleQuickForm::class, $result);
+    }
+
+    /**
+     * Test define_sql() method.
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::non_kestringy_value_pair_properties
+     */
+    public function test_non_kestringy_value_pair_properties(): void {
+        $result = standardfilter::non_kestringy_value_pair_properties('username');
+        $this->assertCount(3, $result);
+    }
+
+    /**
+     * Test define_sql() method.
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::get_new_filter_values
+     */
+    public function test_get_new_filter_values(): void {
+        $data = (object) [
+            'localizedname' => 'datalocalizedname',
+            'username_wb_checked' => 'datafilterenablelabel',
+            'keyvaluepairs' => [
+                'one' => [
+                    'key' => 'one',
+                    'value' => 'value',
+                ],
+            ],
+
+        ];
+        $filtercolumn = 'username';
+
+        $result = standardfilter::get_new_filter_values($data, $filtercolumn);
+        $this->assertCount(4, $result);
+        $this->assertArrayHasKey('one', $result);
+    }
+
+    /**
+     * Test define_sql() method.
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::get_filterspecific_values
+     */
+    public function test_get_filterspecific_values(): void {
+        $data = [
+            'localizedname' => 'datalocalizedname',
+            'username_wb_checked' => 'datafilterenablelabel',
+            'one' => 'onevalue',
+            'two' => 'twovalue',
+        ];
+        $filtercolumn = 'username';
+
+        $result = standardfilter::get_filterspecific_values($data, $filtercolumn);
+        $this->assertCount(2, $result);
+        $this->assertArrayHasKey('one', $result);
+    }
+
+
+    /**
+     * Test define_sql() method.
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::render_mandatory_fields
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::generate_delete_button
+     */
+    public function test_render_mandatory_fields(): void {
+        $mformmock = $this->createMock(\MoodleQuickForm::class);
+        $mformmock->expects($this->exactly(6))
+            ->method('createElement')
+            ->withConsecutive(
+                ['text', 'keyvaluepairs[one][key]', '', ['placeholder' => 'Key']],
+                ['text', 'keyvaluepairs[one][value]', '', ['placeholder' => 'Value']],
+                ['button', 'remove[one_group]', '<i class="fa fa-trash"></i>', [
+                    'class' => 'btn remove-key-value',
+                    'type' => 'button',
+                    'data-groupid' => 'one_group',
+                    'aria-label' => 'Remove key-value pair for one',
+                ]],
+                ['text', 'keyvaluepairs[two][key]', '', ['placeholder' => 'Key']],
+                ['text', 'keyvaluepairs[two][value]', '', ['placeholder' => 'Value']],
+                ['button', 'remove[two_group]', '<i class="fa fa-trash"></i>', [
+                    'class' => 'btn remove-key-value',
+                    'type' => 'button',
+                    'data-groupid' => 'two_group',
+                    'aria-label' => 'Remove key-value pair for two',
+                ]]
+            );
+
+        $mformmock->expects($this->exactly(4))
+            ->method('setDefault')
+            ->withConsecutive(
+                ['keyvaluepairs[one][key]', 'one'],
+                ['keyvaluepairs[one][value]', 'one_value'],
+                ['keyvaluepairs[two][key]', 'two'],
+                ['keyvaluepairs[two][value]', 'two_value']
+            );
+
+
+        $data = [
+            'one' => [
+                'key' => 'one',
+                'value' => 'one_value',
+            ],
+            'two' => [
+                'key' => 'two',
+                'value' => 'two_value',
+            ],
+            '0' => [
+                'key' => 'new value',
+                'value' => 'new_value',
+            ],
+        ];
+
+        standardfilter::render_mandatory_fields($mformmock, $data);
     }
 }
