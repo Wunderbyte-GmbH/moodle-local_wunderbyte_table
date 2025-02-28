@@ -62,13 +62,10 @@ class validation_manager extends filtersettings {
             }
             foreach ($form->_elements as $element) {
                 if (isset($element->_type) && in_array($element->_type, $this->valid_element_types())) {
-                    if ($this->is_error_on_new_pair($formkey, $errors[0])) {
-                        $form->setElementError($element->getName(), $errors[0]);
-                    } else if (isset($errors[$element->getName()])) {
+                    if ($this->is_error_on_new_pair($formkey, $errors['0_group'])) {
+                        $form->setElementError($element->getName(), $errors['0_group']);
+                    } else if (isset($errors[$element->getName()]) && $formkey != 'filteraddfields') {
                         $form->setElementError($element->getName(), $errors[$element->getName()]);
-                    }
-                    if (isset($errors[$element->_name])) {
-                        $form->setElementError($element->getName(), $errors[$element->_name]);
                     }
                 }
             }
@@ -135,7 +132,7 @@ class validation_manager extends filtersettings {
         if (isset($this->data['filter_columns'])) {
             $errors = $this->checked_general_filter_settings($this->data);
 
-            $classname = $this->filtersettings[$this->data['filter_columns']]['wbfilterclass'];
+            $classname = $this->data['wbfilterclass'];
             $staticfunction = 'validate_input';
             if (self::is_static_public_function($classname, $staticfunction)) {
                 $fitertypeerrors = $classname::$staticfunction($this->data);
@@ -143,31 +140,6 @@ class validation_manager extends filtersettings {
             }
         }
         return $errors;
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param string $classname
-     * @param string $functionname
-     * @return bool
-     */
-    private function is_static_public_function($classname, $functionname) {
-        if (class_exists($classname)) {
-            try {
-                $reflection = new ReflectionClass($classname);
-                if (!$reflection->isAbstract() && $reflection->isSubclassOf(base::class)) {
-                    if ($reflection->hasMethod($functionname)) {
-                        $method = $reflection->getMethod($functionname);
-                        if ($method->isPublic() && $method->isStatic()) {
-                            return true;
-                        }
-                    }
-                }
-            } catch (\ReflectionException $e) {
-                debugging("Reflection error for class $classname: " . $e->getMessage());
-            }
-        }
-        return false;
     }
 
     /**

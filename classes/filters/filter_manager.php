@@ -34,57 +34,29 @@ use ReflectionClass;
 class filter_manager extends filtersettings {
     /**
      * Handles form definition of filter classes.
+     * @param array $params
+     * @param string $encodedtable
+     */
+    public function __construct() {
+    }
+
+    /**
+     * Handles form definition of filter classes.
      * @param string $classname
      * @param array $data
      * @return \MoodleQuickForm
      */
-    public static function get_mandetory_filter_fields($classname, $data = []) {
+    public function get_mandetory_filter_fields($classname, $data = []) {
         $mform = new \MoodleQuickForm('dynamicform', 'post', '');
 
         $mform->addElement('html', '<div id="filter-add-field">');
         $mform->addElement('header', 'add_pair', 'Add new key value pair');
-        self::execute_static_function($classname, 'render_mandatory_fields', $mform);
+        $staticfunctionname = 'render_mandatory_fields';
+        if (self::is_static_public_function($classname, $staticfunctionname)) {
+            $classname::$staticfunctionname($mform);
+        }
         $mform->addElement('html', '</div>');
 
         return $mform;
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param \MoodleQuickForm $mandatoryfields
-     * @param array $submitteddata
-     * @param array $errors
-     */
-    public static function set_peristing_values($mandatoryfields, $submitteddata, $errors) {
-        self::execute_static_function(
-            $submitteddata['tbd_filter_options'],
-            'get_dynamic_values',
-            [
-                'form' => $mandatoryfields,
-                'data' => $submitteddata,
-                'errors' => $errors,
-            ]
-        );
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     * @param \MoodleQuickForm $mform
-     * @param string $default
-     */
-    public static function set_filter_types(\MoodleQuickForm &$mform, $default = '') {
-        $options = self::get_all_filter_types();
-        if ($options) {
-            $mform->addElement(
-                'select',
-                'tbd_filter_options',
-                get_string('setwbtablefiltertype', 'local_wunderbyte_table'),
-                $options
-            );
-            $mform->setType('tbd_filter_options', PARAM_INT);
-            if ($default !== '' && array_key_exists($default, $options)) {
-                $mform->setDefault('tbd_filter_options', $default);
-            }
-        }
     }
 }

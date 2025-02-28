@@ -60,7 +60,7 @@ abstract class filtersettings {
      * Handles form definition of filter classes.
      * @return array
      */
-    public static function get_all_filter_types() {
+    public function get_all_filter_types() {
         $typesdirectory = __DIR__ . '/types';
         $filtertypes = [
             '' => get_string('setwbtablefiltertypeoption', 'local_wunderbyte_table'),
@@ -69,9 +69,9 @@ abstract class filtersettings {
         foreach (scandir($typesdirectory) as $file) {
             if (pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                 $classname = __NAMESPACE__ . '\\types\\' . pathinfo($file, PATHINFO_FILENAME);
-                $localizedname = self::execute_static_function($classname, 'return_localized_name');
-                if ($localizedname) {
-                    $foundfiltertypes[$classname] = $localizedname;
+                $functionname = 'return_localized_name';
+                if (self::is_static_public_function($classname, $functionname)) {
+                    $foundfiltertypes[$classname] = $classname::$functionname();
                 }
             }
         }
@@ -81,19 +81,17 @@ abstract class filtersettings {
     /**
      * Handles form definition of filter classes.
      * @param string $classname
-     * @param string $staticfunction
-     * @param mixed $data
-     * @return mixed|null
+     * @param string $functionname
      */
-    protected static function execute_static_function($classname, $staticfunction, $data = []) {
-        if (class_exists($classname)) {
+    protected function is_static_public_function($classname, $functionname) {
+        if (class_exists(class: $classname)) {
             try {
                 $reflection = new ReflectionClass($classname);
                 if (!$reflection->isAbstract() && $reflection->isSubclassOf(base::class)) {
-                    if ($reflection->hasMethod($staticfunction)) {
-                        $method = $reflection->getMethod($staticfunction);
+                    if ($reflection->hasMethod($functionname)) {
+                        $method = $reflection->getMethod($functionname);
                         if ($method->isPublic() && $method->isStatic()) {
-                            return $classname::$staticfunction($data);
+                            return true;
                         }
                     }
                 }
@@ -101,6 +99,6 @@ abstract class filtersettings {
                 debugging("Reflection error for class $classname: " . $e->getMessage());
             }
         }
-        return null;
+        return false;
     }
 }

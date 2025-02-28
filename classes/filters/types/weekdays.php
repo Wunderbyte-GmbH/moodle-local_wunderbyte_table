@@ -50,21 +50,30 @@ class weekdays extends base {
         string $secondcolumnlocalized = ''
     ) {
 
-        $this->options = [
-            'monday' => get_string('monday', 'calendar'),
-            'tuesday' => get_string('tuesday', 'calendar'),
-            'wednesday' => get_string('wednesday', 'calendar'),
-            'thursday' => get_string('thursday', 'calendar'),
-            'friday' => get_string('friday', 'calendar'),
-            'saturday' => get_string('saturday', 'calendar'),
-            'sunday' => get_string('sunday', 'calendar'),
-        ];
+        $this->options = self::get_possible_weekdays_options();
 
         $this->columnidentifier = $columnidentifier;
         $this->localizedstring = empty($localizedstring) ? $columnidentifier : $localizedstring;
         $this->secondcolumnidentifier = $secondcolumnidentifier;
         $this->secondcolumnlocalized = empty($secondcolumnlocalized) ? $secondcolumnidentifier : $secondcolumnlocalized;
     }
+
+    /**
+     * Add the filter to the array.
+     * @return array
+     */
+    public static function get_possible_weekdays_options() {
+        return [
+            'monday' => get_string('monday', 'mod_booking'),
+            'tuesday' => get_string('tuesday', 'mod_booking'),
+            'wednesday' => get_string('wednesday', 'mod_booking'),
+            'thursday' => get_string('thursday', 'mod_booking'),
+            'friday' => get_string('friday', 'mod_booking'),
+            'saturday' => get_string('saturday', 'mod_booking'),
+            'sunday' => get_string('sunday', 'mod_booking'),
+        ];
+    }
+
 
     /**
      * Add the filter to the array.
@@ -121,6 +130,47 @@ class weekdays extends base {
     }
 
     /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param array $data
+     */
+    public static function render_mandatory_fields(&$mform, $data = []) {
+        $mform->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @return array
+     */
+    public static function get_filterspecific_values($data, $filtercolumn) {
+        $filterenablelabel = $filtercolumn . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            $data->wbfilterclass => true,
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+        ];
+        return $filterspecificvalues;
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @return array
+     */
+    public static function get_new_filter_values($data, $filtercolumn) {
+        $filterenablelabel = $filtercolumn . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            $data->wbfilterclass => true,
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+        ];
+        $filterspecificvalues = array_merge($filterspecificvalues, self::get_possible_weekdays_options());
+        return $filterspecificvalues;
+	}
+
      * Get filter options for weekdays.
      * @param wunderbyte_table $table
      * @param string $key

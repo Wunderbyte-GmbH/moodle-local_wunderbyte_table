@@ -62,7 +62,7 @@ class wunderbyte_table_db_operator {
      * Set the key value pairs
      */
     public function set_existing_key_value_pairs() {
-        $this->filtersettings[$this->data->filter_columns] = $this->data->wbfilterclass::get_filterspecific_values($this->data);
+        $this->filtersettings[$this->data->filter_columns] = $this->data->wbfilterclass::get_new_filter_values($this->data, $this->data->filter_columns);
     }
 
     /**

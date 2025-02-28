@@ -42,7 +42,7 @@ class filter_form_operator {
         $mform->addElement('hidden', 'encodedtable', json_encode($encodedtable));
 
         $columnmanager = new column_manager($formdata, $formdata['encodedtable']);
-        $columnmanager->set_filter_columns($mform, $formdata['encodedtable']);
+        $columnmanager->set_filter_columns($mform);
 
         $mform->addElement(
             'html',

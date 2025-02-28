@@ -216,8 +216,121 @@ class hierarchicalfilter extends base {
         $categoryvalue,
         wunderbyte_table &$table
     ): void {
-
         $standardfilter = new standardfilter($columnname);
         $standardfilter->apply_filter($filter, $columnname, $categoryvalue, $table);
+    }
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param array $data
+     */
+    public static function render_mandatory_fields(&$mform, $data = []) {
+        foreach ($data as $key => $keyvaluepair) {
+            if (count($data) > 1 && empty($key)) {
+                continue;
+            }
+            $elements = [];
+            $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][key]', '', ['placeholder' => 'Hierarchical key']);
+            if ($keyvaluepair['key']) {
+                $mform->setDefault('keyvaluepairs[' . $key . '][key]', $keyvaluepair['key']);
+            }
+            $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][parent]', '', ['placeholder' => 'Parent']);
+            if ($keyvaluepair['parent']) {
+                $mform->setDefault('keyvaluepairs[' . $key . '][parent]', $keyvaluepair['parent']);
+            }
+            $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][localizedname]', '', ['placeholder' => 'Localized name']);
+            if ($keyvaluepair['localizedname']) {
+                $mform->setDefault('keyvaluepairs[' . $key . '][localizedname]', $keyvaluepair['localizedname']);
+            }
+            if (!empty($key)) {
+                $elements[] = self::generate_delete_button($mform, $key);
+            }
+            $grouplabelname = empty($key) ? 'New' : $key;
+            $mform->addGroup($elements, $key . '_group', $grouplabelname . ' values', '<br>', false);
+        }
+    }
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param string $key
+     */
+    private static function generate_delete_button($mform, $key) {
+        $trashicon = '<i class="fa fa-trash"></i>';
+        return $mform->createElement(
+            'button',
+            "remove[{$key}_group]",
+            $trashicon,
+            [
+                'class' => 'btn remove-key-value',
+                'type' => 'button',
+                'data-groupid' => $key . '_group',
+                'aria-label' => "Remove key-value pair for {$key}",
+            ]
+        );
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     * @return array
+     */
+    public static function validate_input($data) {
+        $errors = [];
+        foreach ($data['keyvaluepairs'] as $key => $keyvaluepair) {
+            if (
+                empty($keyvaluepair['key']) != empty($keyvaluepair['parent']) ||
+                empty($keyvaluepair['key']) != empty($keyvaluepair['localizedname'])
+            ) {
+                $errors[$key . '_group'] = 'Either all or no values have to be filled out';
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * The expected value.
+     * @param array $data
+     * @return array
+     */
+    public static function get_filterspecific_values($data, $filtercolumn) {
+        $filterenablelabel = $filtercolumn . '_wb_checked';
+        $filterunspecificvalues = [
+            'localizedname',
+            'wbfilterclass',
+            $filterenablelabel,
+        ];
+        $filterspecificvalues = [];
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $filterunspecificvalues)) {
+                $filterspecificvalues[$key] = [
+                    'key' => $value['key'] ?? $key,
+                    'parent' => $value['parent'],
+                    'localizedname' => $value['localizedname'],
+                ];
+            }
+        }
+        return $filterspecificvalues;
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @return array
+     */
+    public static function get_new_filter_values($data, $filtercolumn) {
+        $filterenablelabel = $filtercolumn . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+        ];
+        foreach ($data->keyvaluepairs as $key => $keyvaluepair) {
+            $filterspecificvalues[$keyvaluepair['key']] = (object)[
+                'parent' => $keyvaluepair['parent'],
+                'localizedname' => $keyvaluepair['localizedname'],
+            ];
+        }
+        return $filterspecificvalues;
     }
 }
