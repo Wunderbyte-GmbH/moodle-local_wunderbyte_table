@@ -177,8 +177,8 @@ class hourlist extends base {
      * @param object $data
      * @return array
      */
-    public static function get_filterspecific_values($data) {
-        $filterenablelabel = $data->filter_columns . '_wb_checked';
+    public static function get_filterspecific_values($data, $filtercolumn) {
+        $filterenablelabel = $filtercolumn . '_wb_checked';
         $filterspecificvalues = [
             'localizedname' => $data->localizedname ?? '',
             $data->wbfilterclass => true,

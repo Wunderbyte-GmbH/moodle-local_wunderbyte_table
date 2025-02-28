@@ -24,8 +24,6 @@
 
 namespace local_wunderbyte_table\filters\types;
 use local_wunderbyte_table\filters\base;
-use local_wunderbyte_table\filters\type_form_builder\standardfilter_form_builder;
-
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
@@ -117,29 +115,45 @@ class standardfilter extends base {
      * @param \MoodleQuickForm $mform
      * @param array $data
      */
-    public static function render_mandatory_fields(&$mform, $data = []) {
-        $groupelements = [];
-        $label = '';
-        if ($mform->elementExists('add_pair')) {
-            $formbuilder = new standardfilter_form_builder(null, null, $mform);
-            if ($data) {
-                $formbuilder->set_unsaved_new_fields($data);
+    public static function render_mandatory_fields(&$mform, $data = [[]]) {
+        foreach ($data as $key => $keyvaluepair) {
+            if (count($data) > 1 && empty($key)) {
+                continue;
             }
-            $formbuilder->generate_mandatory_standardfilter_fields($groupelements);
-            $label = get_string('standardfiltergrouplabel', 'local_wunderbyte_table');
-        } else if ($mform->elementExists('existing_pairs')) {
-            foreach ($data as $key => $value) {
-                $formbuilder = new standardfilter_form_builder($key, $value, $mform);
-                $formbuilder->generate_mandatory_standardfilter_fields($groupelements);
+            $elements = [];
+            $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][key]', '', ['placeholder' => 'Key']);
+            if ($keyvaluepair['key']) {
+                $mform->setDefault('keyvaluepairs[' . $key . '][key]', $keyvaluepair['key']);
             }
+            $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][value]', '', ['placeholder' => 'Value']);
+            if ($keyvaluepair['value']) {
+                $mform->setDefault('keyvaluepairs[' . $key . '][value]', $keyvaluepair['value']);
+            }
+            if (!empty($key)) {
+                $elements[] = self::generate_delete_button($mform, $key);
+            }
+            $grouplabelname = empty($key) ? 'New' : $key;
+            $mform->addGroup($elements, $key . '_group', $grouplabelname . ' values', '<br>', false);
         }
+    }
 
-        $mform->addGroup(
-            $groupelements,
-            self::$groupname,
-            $label,
-            [' '],
-            false
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param string $key
+     */
+    private static function generate_delete_button($mform, $key) {
+        $trashicon = '<i class="fa fa-trash"></i>';
+        return $mform->createElement(
+            'button',
+            "remove[{$key}_group]",
+            $trashicon,
+            [
+                'class' => 'btn remove-key-value',
+                'type' => 'button',
+                'data-groupid' => $key . '_group',
+                'aria-label' => "Remove key-value pair for {$key}",
+            ]
         );
     }
 
@@ -184,7 +198,7 @@ class standardfilter extends base {
         $errors = [];
         foreach ($data['keyvaluepairs'] as $key => $keyvaluepair) {
             if (self::only_partial_submitted($keyvaluepair)) {
-                $errors[$key] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
+                $errors[$key . '_group'] = get_string('standardfiltervaluekeyerror', 'local_wunderbyte_table');
             }
         }
         return $errors;
@@ -207,11 +221,35 @@ class standardfilter extends base {
 
     /**
      * The expected value.
+     * @param array $data
+     * @return array
+     */
+    public static function get_filterspecific_values($data, $filtercolumn) {
+        $filterenablelabel = $filtercolumn . '_wb_checked';
+        $filterunspecificvalues = [
+            'localizedname',
+            'wbfilterclass',
+            $filterenablelabel,
+        ];
+        $filterspecificvalues = [];
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $filterunspecificvalues)) {
+                $filterspecificvalues[$key] = [
+                    'key' => $key,
+                    'value' => $value,
+                ];
+            }
+        }
+        return $filterspecificvalues;
+    }
+
+    /**
+     * The expected value.
      * @param object $data
      * @return array
      */
-    public static function get_filterspecific_values($data) {
-        $filterenablelabel = $data->filter_columns . '_wb_checked';
+    public static function get_new_filter_values($data, $filtercolumn) {
+        $filterenablelabel = $filtercolumn . '_wb_checked';
         $filterspecificvalues = [
             'localizedname' => $data->localizedname ?? '',
             'wbfilterclass' => $data->wbfilterclass ?? '',

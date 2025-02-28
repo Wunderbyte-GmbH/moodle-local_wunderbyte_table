@@ -32,7 +32,7 @@ define(['jquery'], function() {
                     return;
                 }
                 var groupId = button.dataset.groupid;
-                var group = document.getElementById(groupId);
+                var group = document.querySelector('[data-groupname="' + groupId + '"]');
                 if (group) {
                     group.remove();
                 } else {

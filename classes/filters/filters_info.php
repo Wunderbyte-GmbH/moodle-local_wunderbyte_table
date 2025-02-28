@@ -25,7 +25,6 @@
 namespace local_wunderbyte_table\filters;
 
 use coding_exception;
-use core_component;
 use dml_exception;
 use local_wunderbyte_table\editfilter;
 use local_wunderbyte_table\filter;

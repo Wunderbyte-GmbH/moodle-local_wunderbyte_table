@@ -26,8 +26,6 @@ namespace local_wunderbyte_table\filters;
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
-use ReflectionClass;
-
 /**
  * Handles the filter classes.
  * @package local_wunderbyte_table
@@ -66,28 +64,18 @@ class column_manager extends filtersettings {
      * @return array
      */
     public function get_filtered_column_form() {
-        $existingfilterdata = [];
-        $filterenabled = 0;
         $filtersettings = $this->filtersettings[$this->filtercolumn];
+        $functionname = 'get_filterspecific_values';
 
         foreach ($filtersettings as $key => $value) {
             $classname = $filtersettings['wbfilterclass'];
-            if ($this->is_static_public_function($classname, 'get_filterspecific_data')) {
-                $existingfilterdata = $classname::get_filterspecific_data($filtersettings, $this->filtercolumn);
-            }
-            if (
-                class_exists($classname) &&
-                method_exists($classname, 'non_kestringy_value_pair_properties') &&
-                !in_array($key, $classname::non_kestringy_value_pair_properties($this->filtercolumn))
-            ) {
-                $existingfilterdata[$key] = $value;
-            } else if (isset($filtersettings[$this->filtercolumn . '_wb_checked'])) {
-                $filterenabled = $filtersettings[$this->filtercolumn . '_wb_checked'];
+            if ($this->is_static_public_function($classname, $functionname)) {
+                $existingfilterdata = $classname::$functionname($filtersettings, $this->filtercolumn);
             }
         }
-        $this->set_general_filter_settings($filtersettings, $filterenabled);
-        $this->set_available_filter_types($existingfilterdata, $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
-        $this->set_add_filter_key_value();
+        $this->set_general_filter_settings($filtersettings);
+        $this->set_available_filter_types($existingfilterdata ?? [], $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
+        $this->set_add_filter_key_value($existingfilterdata[0] ?? []);
         return [
             'filtereditfields' => $this->mformedit->toHtml(),
             'filteraddfields' => $this->mformadd->toHtml(),
@@ -99,23 +87,13 @@ class column_manager extends filtersettings {
      * @return array
      */
     public function get_filtered_column_form_persist_error() {
-        $existingfilterdata = [];
-        $filterenabled = 0;
-        // Outsource to filterclass or streamline!
-        foreach ($this->data['keyvaluepairs'] as $keylabel => $keyvaluepair) {
-            if ($keylabel !== 0) {
-                $existingfilterdata[$keylabel] = $keyvaluepair['value'];
-            }
-        }
-        if (isset($this->data['datepicker'])) {
-            $existingfilterdata['datepicker'] = $this->data['datepicker'];
-        }
-        if (isset($this->data[$this->filtercolumn . '_wb_checked'])) {
-            $filterenabled = $this->data[$this->filtercolumn . '_wb_checked'];
-        }
-        $this->set_general_filter_settings($this->data, $filterenabled);
-        $this->set_available_filter_types($existingfilterdata, $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
-        $this->set_add_filter_key_value();
+        $filtersettings = $this->data;
+
+        $existingfilterdata = $filtersettings['keyvaluepairs'];
+
+        $this->set_general_filter_settings($filtersettings);
+        $this->set_available_filter_types($existingfilterdata ?? [], $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
+        $this->set_add_filter_key_value($existingfilterdata[0] ?? []);
         return [
             'filtereditfields' => $this->mformedit,
             'filteraddfields' => $this->mformadd,
@@ -124,10 +102,9 @@ class column_manager extends filtersettings {
 
     /**
      * Handles form definition of filter classes.
-     * @param array $existingfilterdata
-     * @param int $filterclass
+     * @param array $filtercolumn
      */
-    private function set_general_filter_settings($filtercolumn, $enabled) {
+    private function set_general_filter_settings($filtercolumn) {
         $this->mformedit->addElement('header', 'filter_enabled_header', 'General filter settings');
         $this->mformedit->addElement('text', 'localizedname', 'Filtername');
         $this->mformedit->setDefault('localizedname', $filtercolumn['localizedname']);
@@ -137,7 +114,7 @@ class column_manager extends filtersettings {
             'Enable filter',
             'Select checkobx if filter should be enabled'
         );
-        $this->mformedit->setDefault($this->filtercolumn . '_wb_checked', $enabled ? 1 : 0);
+        $this->mformedit->setDefault($this->filtercolumn . '_wb_checked', $filtercolumn[$this->filtercolumn . '_wb_checked']);
 
         $options = self::get_all_filter_types();
         $this->mformedit->addElement(
@@ -169,37 +146,13 @@ class column_manager extends filtersettings {
 
     /**
      * Handles form definition of filter classes.
-     * @param string $classname
-     * @param string $functionname
      */
-    private function is_static_public_function($classname, $functionname) {
-        if (class_exists($classname)) {
-            try {
-                $reflection = new ReflectionClass($classname);
-                if (!$reflection->isAbstract() && $reflection->isSubclassOf(base::class)) {
-                    if ($reflection->hasMethod($functionname)) {
-                        $method = $reflection->getMethod($functionname);
-                        if ($method->isPublic() && $method->isStatic()) {
-                            return true;
-                        }
-                    }
-                }
-            } catch (\ReflectionException $e) {
-                debugging("Reflection error for class $classname: " . $e->getMessage());
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Handles form definition of filter classes.
-     */
-    private function set_add_filter_key_value() {
+    private function set_add_filter_key_value($newkeyvaluepair) {
         $this->mformadd->addElement('html', '<div id="filter-add-field">');
         $this->mformadd->addElement('header', 'add_pair', 'Add new key value pair');
 
-        $classname = $this->filtersettings[$this->data['filtercolumn']]['wbfilterclass'] ?? '';
-        self::render_mandatory_fields($classname);
+        $classname = $this->data['wbfilterclass'] ?? $this->filtersettings[$this->data['filtercolumn']]['wbfilterclass'];
+        self::render_mandatory_fields($classname, [$newkeyvaluepair]);
 
         $this->mformadd->addElement('html', '</div>');
     }
@@ -208,15 +161,10 @@ class column_manager extends filtersettings {
      * Handles form definition of filter classes.
      * @param string $classname
      */
-    private function render_mandatory_fields($classname) {
-        if (isset($this->data['keyvaluepairs'][0])) {
-            $newvalue = [
-                $this->data['keyvaluepairs'][0]['key'] => $this->data['keyvaluepairs'][0]['value'],
-            ];
-        }
+    private function render_mandatory_fields($classname, $newkeyvaluepair) {
         $staticfunction = 'render_mandatory_fields';
         if (self::is_static_public_function($classname, $staticfunction)) {
-            $classname::$staticfunction($this->mformadd, $newvalue ?? []);
+            $classname::$staticfunction($this->mformadd, $newkeyvaluepair ?? []);
             $parts = explode("\\", $classname);
             $elementname = array_pop($parts) . 'group';
         }
