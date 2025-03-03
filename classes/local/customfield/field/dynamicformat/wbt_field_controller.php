@@ -57,7 +57,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         if (isset($records[$key])) {
             $returnvalue = $records[$key]->data ?? $key;
             if ($formatstring) {
-                format_string($returnvalue);
+                $returnvalue = format_string($returnvalue);
             }
             return $returnvalue;
         } else {

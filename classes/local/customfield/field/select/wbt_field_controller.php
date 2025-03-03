@@ -60,7 +60,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         }
         $returnvalue = $optionsarray[$i];
         if ($formatstring) {
-            format_string($returnvalue);
+            $returnvalue = format_string($returnvalue);
         }
         return $returnvalue;
     }

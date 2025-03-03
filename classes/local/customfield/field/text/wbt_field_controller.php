@@ -50,7 +50,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
             // For normal text fields we might need format_string.
             $returnvalue = $key;
             if ($formatstring) {
-                format_string($returnvalue);
+                $returnvalue = format_string($returnvalue);
             }
             return $returnvalue;
         }
