@@ -49,7 +49,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         global $DB;
 
         if (!empty($key)) {
-            $returnvalue = $key;
+            $returnvalue = base64_decode($key);
             if ($formatstring) {
                 $returnvalue = format_string($returnvalue);
             }
@@ -67,9 +67,18 @@ class wbt_field_controller extends field_controller implements wbt_field_control
     public function get_values_array(): array {
         global $DB;
 
-        $sql = "SELECT DISTINCT id AS id, value AS data
-                  FROM {customfield_data} cd
-                 WHERE fieldid = :fieldid";
+        switch ($DB->get_dbfamily()) {
+            case 'mysql':
+                $sql = "SELECT DISTINCT TO_BASE64(value) AS id, value AS data
+                          FROM {customfield_data} cd
+                         WHERE fieldid = :fieldid";
+                break;
+            default:
+                $sql = "SELECT DISTINCT encode(value::bytea, 'base64') AS id, value AS data
+                          FROM {customfield_data} cd
+                         WHERE fieldid = :fieldid";
+                break;
+        }
         $params = [
             'fieldid' => $this->field->get('id'),
         ];
