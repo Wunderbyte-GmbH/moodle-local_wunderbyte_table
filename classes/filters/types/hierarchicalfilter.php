@@ -231,17 +231,18 @@ class hierarchicalfilter extends base {
                 continue;
             }
             $elements = [];
-            $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][key]', '', ['placeholder' => 'Hierarchical key']);
+            $keylabel = 'keyvaluepairs[' . $key . ']';
+            $elements[] = $mform->createElement('text', $keylabel . '[key]', '', ['placeholder' => 'Hierarchical key']);
             if ($keyvaluepair['key']) {
-                $mform->setDefault('keyvaluepairs[' . $key . '][key]', $keyvaluepair['key']);
+                $mform->setDefault($keylabel . '[key]', $keyvaluepair['key']);
             }
-            $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][parent]', '', ['placeholder' => 'Parent']);
+            $elements[] = $mform->createElement('text', $keylabel . '[parent]', '', ['placeholder' => 'Parent']);
             if ($keyvaluepair['parent']) {
-                $mform->setDefault('keyvaluepairs[' . $key . '][parent]', $keyvaluepair['parent']);
+                $mform->setDefault($keylabel . '[parent]', $keyvaluepair['parent']);
             }
-            $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][localizedname]', '', ['placeholder' => 'Localized name']);
+            $elements[] = $mform->createElement('text', $keylabel . '[localizedname]', '', ['placeholder' => 'Localized name']);
             if ($keyvaluepair['localizedname']) {
-                $mform->setDefault('keyvaluepairs[' . $key . '][localizedname]', $keyvaluepair['localizedname']);
+                $mform->setDefault($keylabel . '[localizedname]', $keyvaluepair['localizedname']);
             }
             if (!empty($key)) {
                 $elements[] = self::generate_delete_button($mform, $key);
@@ -291,6 +292,7 @@ class hierarchicalfilter extends base {
     /**
      * The expected value.
      * @param array $data
+     * @param string $filtercolumn
      * @return array
      */
     public static function get_filterspecific_values($data, $filtercolumn) {

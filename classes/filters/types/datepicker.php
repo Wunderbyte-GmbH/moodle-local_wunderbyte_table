@@ -362,6 +362,7 @@ class datepicker extends base {
 
     /**
      * Handles form definition of filter classes.
+     * @param string $filtercolumn
      * @return array
      */
     public static function non_kestringy_value_pair_properties($filtercolumn) {

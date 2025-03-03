@@ -74,6 +74,7 @@ final class persist_filter_settings_test extends advanced_testcase {
     /**
      * Test define_sql() method.
      * @covers \local_wunderbyte_table\filters\wunderbyte_table_db_operator::persist_filter_settings
+     * @param string $tablehash
      */
     private function insert_fake_values($tablehash): void {
         global $DB;
@@ -87,6 +88,7 @@ final class persist_filter_settings_test extends advanced_testcase {
     /**
      * Test define_sql() method.
      * @covers \local_wunderbyte_table\filters\wunderbyte_table_db_operator::persist_filter_settings
+     * @param string $tablehash
      */
     private function get_fake_values($tablehash): array {
         $record1 = new stdClass();
@@ -149,7 +151,15 @@ final class persist_filter_settings_test extends advanced_testcase {
                             'labelendvalue' => 'enddate',
                             'defaultvaluestart' => '1680130800',
                             'defaultvalueend' => 'now',
-                            'possibleoperations' => ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap']
+                            'possibleoperations' => [
+                                'within',
+                                'overlapboth',
+                                'overlapstart',
+                                'overlapend',
+                                'before',
+                                'after',
+                                'flexoverlap'
+                            ],
                         ],
                     ],
                     'startdate_wb_checked' => 0,
@@ -205,7 +215,7 @@ final class persist_filter_settings_test extends advanced_testcase {
                             'labelendvalue' => 'enddate',
                             'defaultvaluestart' => '1680130800',
                             'defaultvalueend' => 'now',
-                            'possibleoperations' => ['0', '1', '2', '3']
+                            'possibleoperations' => ['0', '1', '2', '3'],
                         ],
                     ],
                     'startdate_wb_checked' => 1,

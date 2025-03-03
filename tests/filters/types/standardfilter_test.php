@@ -199,7 +199,6 @@ final class standardfilter_test extends TestCase {
                 ['keyvaluepairs[two][value]', 'two_value']
             );
 
-
         $data = [
             'one' => [
                 'key' => 'one',
