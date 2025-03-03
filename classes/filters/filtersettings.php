@@ -84,7 +84,7 @@ abstract class filtersettings {
      * @param string $functionname
      */
     protected function is_static_public_function($classname, $functionname) {
-        if (class_exists(class: $classname)) {
+        if (class_exists($classname)) {
             try {
                 $reflection = new ReflectionClass($classname);
                 if (!$reflection->isAbstract() && $reflection->isSubclassOf(base::class)) {

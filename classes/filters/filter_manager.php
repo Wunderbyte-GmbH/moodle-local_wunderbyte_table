@@ -34,8 +34,6 @@ use ReflectionClass;
 class filter_manager extends filtersettings {
     /**
      * Handles form definition of filter classes.
-     * @param array $params
-     * @param string $encodedtable
      */
     public function __construct() {
     }

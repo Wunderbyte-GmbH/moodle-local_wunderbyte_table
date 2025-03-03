@@ -283,6 +283,7 @@ class intrange extends base {
     /**
      * The expected value.
      * @param object $data
+     * @param string $filtercolumn
      * @return array
      */
     public static function get_filterspecific_values($data, $filtercolumn) {

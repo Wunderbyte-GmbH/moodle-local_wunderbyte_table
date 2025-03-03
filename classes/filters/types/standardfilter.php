@@ -168,6 +168,7 @@ class standardfilter extends base {
 
     /**
      * Handles form definition of filter classes.
+     * @param string $filtercolumn
      * @return array
      */
     public static function non_kestringy_value_pair_properties($filtercolumn) {
@@ -195,8 +196,7 @@ class standardfilter extends base {
 
     /**
      * The expected value.
-     * @param string $key
-     * @param string $value
+     * @param array $keyvaluepair
      * @return bool
      */
     private static function only_partial_submitted($keyvaluepair) {
@@ -211,6 +211,7 @@ class standardfilter extends base {
     /**
      * The expected value.
      * @param array $data
+     * @param string $filtercolumn
      * @return array
      */
     public static function get_filterspecific_values($data, $filtercolumn) {

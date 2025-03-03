@@ -62,7 +62,10 @@ class wunderbyte_table_db_operator {
      * Set the key value pairs
      */
     public function set_existing_key_value_pairs() {
-        $this->filtersettings[$this->data->filter_columns] = $this->data->wbfilterclass::get_new_filter_values($this->data, $this->data->filter_columns);
+        $this->filtersettings[$this->data->filter_columns] = $this->data->wbfilterclass::get_new_filter_values(
+            $this->data,
+            $this->data->filter_columns
+        );
     }
 
     /**
@@ -86,6 +89,7 @@ class wunderbyte_table_db_operator {
     /**
      * Set the key value pairs
      * @param string $tablehash
+     * @param string $hash
      */
     public function get_other_lang_tables($tablehash, $hash) {
         global $DB;
@@ -103,6 +107,7 @@ class wunderbyte_table_db_operator {
     /**
      * Set the key value pairs
      * @param string $tablehash
+     * @param array $filtersettings
      */
     public function persist_filter_settings($tables, $filtersettings) {
         global $DB;
@@ -115,7 +120,8 @@ class wunderbyte_table_db_operator {
 
             foreach ($tablesettings->filtersettings as $filtercolumn => $filtercolumnsettings) {
                 if (isset($filtersettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'])) {
-                    $tablesettings->filtersettings->$filtercolumn->{$filtercolumn . '_wb_checked'} = $filtersettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'];
+                    $tablesettings->filtersettings->$filtercolumn->{$filtercolumn . '_wb_checked'} =
+                        $filtersettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'];
                 }
             }
 
