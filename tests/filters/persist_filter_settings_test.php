@@ -158,7 +158,7 @@ final class persist_filter_settings_test extends advanced_testcase {
                                 'overlapend',
                                 'before',
                                 'after',
-                                'flexoverlap'
+                                'flexoverlap',
                             ],
                         ],
                     ],
