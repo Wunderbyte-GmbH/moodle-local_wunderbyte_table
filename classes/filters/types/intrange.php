@@ -200,7 +200,6 @@ class intrange extends base {
             REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') IS NOT NULL
             AND REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') != ''
             AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') AS INTEGER)";
-
         } else {
             // MariaDB/MySQL.
             // phpcs:ignore moodle.Commenting.TodoComment.MissingInfoInline
