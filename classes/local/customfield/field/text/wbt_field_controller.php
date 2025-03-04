@@ -43,11 +43,17 @@ class wbt_field_controller extends field_controller implements wbt_field_control
      *
      * @param string $key
      * @param bool $formatstring
+     * @param bool $keyisencoded
      * @return string the string value
      */
-    public function get_option_value_by_key(string $key, bool $formatstring = true): string {
+    public function get_option_value_by_key(string $key, bool $formatstring = true, bool $keyisencoded = false): string {
         if (!empty($key)) {
-            $returnvalue = base64_decode($key);
+            if ($keyisencoded) {
+                $returnvalue = base64_decode($key);
+            } else {
+                $returnvalue = $key;
+            }
+
             // For normal text fields we might need format_string.
             if ($formatstring) {
                 $returnvalue = format_string($returnvalue);
