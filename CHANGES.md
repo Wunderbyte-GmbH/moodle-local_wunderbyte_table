@@ -1,3 +1,8 @@
+## Version 2.0.44 (2025030400)
+* Improvement: unify field controller
+* Bugfix: correctly apply format string to values from customfields and return values.
+* Bugfix: Correctly return value for wbt_field_controller base fields
+
 ## Version 2.0.43 (2025022600)
 * Improvement: New get_values_array() function for customfields.
 * New feature: Add possibility to show download button at bottom of table.
