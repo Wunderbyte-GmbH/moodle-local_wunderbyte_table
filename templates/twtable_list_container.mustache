@@ -95,20 +95,23 @@
           <div class="container-fluid mw-100">
                <div class="row mb-2">
                     <div class="col-md-6">
-                         <div>
+                         <div class="d-flex">
                               {{> local_wunderbyte_table/component_toggle }}
                               {{> local_wunderbyte_table/component_reload }}
                               {{> local_wunderbyte_table/component_edit }}
-                              {{^showdownloadbuttonatbottom}}
-                              {{> local_wunderbyte_table/component_print }}
-                              {{/showdownloadbuttonatbottom}}
                          </div>
                     </div>
                     <div class="col-md-6 text-right align-self-end">
                          {{> local_wunderbyte_table/component_spinner }}
+                         {{> local_wunderbyte_table/component_switchtemplates }}
                          {{> local_wunderbyte_table/component_sort }}
                          {{> local_wunderbyte_table/component_search }}
                     </div>
+               </div>
+               <div>
+                    {{^showdownloadbuttonatbottom}}
+                    {{> local_wunderbyte_table/component_print }}
+                    {{/showdownloadbuttonatbottom}}
                </div>
           </div>
           <div class="wunderbyte_table_container {{uniqueid}} {{#showfilterontop}}showontop{{/showfilterontop}}">

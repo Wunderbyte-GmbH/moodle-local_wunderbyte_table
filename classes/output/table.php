@@ -270,6 +270,12 @@ class table implements renderable, templatable {
     public $templatedata = [];
 
     /**
+     * Array of templates for template switcher.
+     * @var array
+     */
+    public $switchtemplates = [];
+
+    /**
      * Constructor.
      *
      * @param wunderbyte_table $table
@@ -308,7 +314,7 @@ class table implements renderable, templatable {
             get_config('local_wunderbyte_table', 'allowedittable')
             && has_capability('local/wunderbyte_table:canedittable', $table->context)
         ) {
-                $this->edittable = true;
+            $this->edittable = true;
         } else {
             $this->edittable = false;
         }
@@ -338,6 +344,8 @@ class table implements renderable, templatable {
         $this->totalrows = $table->totalrows;
 
         $this->templatedata = $table->templatedata;
+
+        $this->switchtemplates = $table->switchtemplates;
 
         [$this->totalrecords, $this->filteredrecords] = $table->return_records_count();
 
@@ -615,7 +623,7 @@ class table implements renderable, templatable {
     public function return_as_list() {
         global $CFG;
 
-          $data = [
+        $data = [
             'idstring' => $this->idstring,
             'uniqueid' => $this->uniqueid,
             'encodedtable' => $this->encodedtable,
@@ -650,88 +658,105 @@ class table implements renderable, templatable {
             'showdownloadbuttonatbottom' => $this->showdownloadbuttonatbottom,
             'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
             'showspinner' => true,
-            ];
+            'switchtemplates' => $this->switchtemplates,
+        ];
 
-          // Only if we want to show the searchfield, we actually add the key.
-          if ($this->search) {
-              $data['search'] = true;
-              if ($CFG->version >= 2023042400) {
-                  // Moodle 4.2 uses Fontawesome 6.
-                  $data['searchiconclasses'] = 'fa-solid fa-magnifying-glass wunderbyteTableSearchIcon';
-              } else {
-                  // For older versions, use Fontawesome 4.
-                  $data['searchiconclasses'] = 'fa fa-search fa-xl mt-2';
-              }
-          }
+        // Only if we want to show the searchfield, we actually add the key.
+        if ($this->search) {
+            $data['search'] = true;
+            if ($CFG->version >= 2023042400) {
+                // Moodle 4.2 uses Fontawesome 6.
+                $data['searchiconclasses'] = 'fa-solid fa-magnifying-glass wunderbyteTableSearchIcon';
+            } else {
+                // For older versions, use Fontawesome 4.
+                $data['searchiconclasses'] = 'fa fa-search fa-xl mt-2';
+            }
+        }
 
-          // Only if we want to show the sortelements, we actually add the key.
-          if (!empty($this->sort)) {
-              if (!$this->cardsort) {
-                  $data['sort'] = $this->sort;
-              } else {
-                  $data['cardsort'] = $this->sort;
-              }
-          }
+        // We need to to the same for switchtemplates (template switcher).
+        if (!empty($this->switchtemplates)) {
+            if ($CFG->version >= 2023042400) {
+                // Moodle 4.2 uses Fontawesome 6.
+                $data['switchtemplatesiconclasses'] = 'fa-solid fa-table-list wunderbyteTableSwitchTemplatesIcon';
+            } else {
+                // For older versions, use Fontawesome 4.
+                $data['switchtemplatesiconclasses'] = 'fa fa-th-list fa-xl mt-2';
+            }
+        }
 
-          // Only if we want to show the searchfield, we actually add the key.
-          if ($this->showreloadbutton) {
-              $data['reload'] = true;
-          }
+        // Only if we want to show the sortelements, we actually add the key.
+        if (!empty($this->sort)) {
+            if (!$this->cardsort) {
+                $data['sort'] = $this->sort;
+            } else {
+                $data['cardsort'] = $this->sort;
+            }
+        }
 
-          // Only if we want to show the searchfield, we actually add the key.
-          if ($this->edittable) {
-              $data['edit'] = true;
-          }
+        // Only if we want to show the searchfield, we actually add the key.
+        if ($this->showreloadbutton) {
+            $data['reload'] = true;
+        }
 
-          if ($this->showcountlabel) {
-              $data['countlabel'] = true;
-          }
+        // Only if we want to show the searchfield, we actually add the key.
+        if ($this->edittable) {
+            $data['edit'] = true;
+        }
 
-          if (!empty($this->stickyheader)) {
-              $data['stickyheader'] = $this->stickyheader;
-          }
+        if ($this->showcountlabel) {
+            $data['countlabel'] = true;
+        }
 
-          if (!empty($this->tableheight)) {
-              $data['tableheight'] = $this->tableheight;
-          }
+        if (!empty($this->stickyheader)) {
+            $data['stickyheader'] = $this->stickyheader;
+        }
 
-          // Only if we want to show the print elements, we actually add the key.
-          if ($this->showdownloadbutton) {
-              $data['print'] = true;
-              $data['printoptions'] = $this->printoptions;
-              if (!empty($this->applyfilterondownload)) {
-                  $data['applyfilterondownload'] = "1";
-              }
-          }
+        if (!empty($this->tableheight)) {
+            $data['tableheight'] = $this->tableheight;
+        }
 
-          if (!empty($this->categories)) {
-              // If there there is a filterobject, we check if on load filters should be hidden or displayed (default).
-              if ($this->categories['filterinactive'] == true) {
-                  $data['showcomponentstoggle'] = false;
-                  $data['showfilterbutton'] = $this->showfilterbutton;
-                  $data['filterdeactivated'] = true;
-              } else {
-                  $data['showcomponentstoggle'] = true;
-                  $data['showfilterbutton'] = $this->showfilterbutton;
-              }
-          }
+        // Only if we want to show the print elements, we actually add the key.
+        if ($this->showdownloadbutton) {
+            $data['print'] = true;
+            $data['printoptions'] = $this->printoptions;
+            if (!empty($this->applyfilterondownload)) {
+                $data['applyfilterondownload'] = "1";
+            }
+        }
 
-          if (!empty($this->actionbuttons)) {
-              $data['showactionbuttons'] = $this->actionbuttons;
-          }
+        if (!empty($this->categories)) {
+            // If there there is a filterobject, we check if on load filters should be hidden or displayed (default).
+            if ($this->categories['filterinactive'] == true) {
+                $data['showcomponentstoggle'] = false;
+                $data['showfilterbutton'] = $this->showfilterbutton;
+                $data['filterdeactivated'] = true;
+            } else {
+                $data['showcomponentstoggle'] = true;
+                $data['showfilterbutton'] = $this->showfilterbutton;
+            }
+        }
 
-          if (class_exists('local_shopping_cart\shopping_cart')) {
-              $data['shoppingcartisavailable'] = true;
-          }
+        if (!empty($this->actionbuttons)) {
+            $data['showactionbuttons'] = $this->actionbuttons;
+        }
 
-          // We need a param to check in the css if the version is minimum 4.2.
-          if ($CFG->version >= 2023042400) {
-              $data['moodleversionminfourtwo'] = 'moodleversionminfourtwo';
-          }
+        if (class_exists('local_shopping_cart\shopping_cart')) {
+            $data['shoppingcartisavailable'] = true;
+        }
 
-          $this->apply_template_data($data);
+        // We need a param to check in the css if the version is minimum 4.2.
+        if ($CFG->version >= 2023042400) {
+            $data['moodleversionminfourtwo'] = 'moodleversionminfourtwo';
+        }
 
-            return $data;
+        // Make sure switchtemplates array is not passed, if it's empty.
+        if (empty($this->switchtemplates)) {
+            $data['switchtemplates'] = null;
+        }
+
+        $this->apply_template_data($data);
+
+        return $data;
     }
 
     /**
@@ -992,14 +1017,14 @@ class table implements renderable, templatable {
         $string = "";
         if ($filtersum > 0) {
             $string .= " | " .
-            get_string(
-                'filtercountmessage',
-                'local_wunderbyte_table',
-                (object)[
-                    'filtercolumns' => $filtercolumns,
-                    'filtersum' => $filtersum,
-                ]
-            );
+                get_string(
+                    'filtercountmessage',
+                    'local_wunderbyte_table',
+                    (object)[
+                        'filtercolumns' => $filtercolumns,
+                        'filtersum' => $filtersum,
+                    ]
+                );
         }
         if (!empty($table->searchtext)) {
             if (!empty($string)) {

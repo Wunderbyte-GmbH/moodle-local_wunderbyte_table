@@ -384,6 +384,28 @@ class wunderbyte_table extends table_sql {
     public $templatedata = [];
 
     /**
+     * Array of templates for template switcher.
+     * @var array
+     */
+    public $switchtemplates = [
+        'templates' => [
+            [
+                'template' => 'local_wunderbyte_table/twtable_list',
+                'shortname' => 'twtable_list',
+                'checked' => true,
+                'icon' => 'fa fa-list',
+                'label' => 'List',
+            ],
+            [
+                'template' => 'local_wunderbyte_table/table_card',
+                'shortname' => 'table_card',
+                'icon' => 'fa fa-square',
+                'label' => 'Cards',
+            ],
+        ],
+    ];
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
@@ -1885,6 +1907,24 @@ class wunderbyte_table extends table_sql {
         return [
             'success' => 1,
             'message' => 'This is just a demo, reordering has to be implemented for each table',
+        ];
+    }
+
+    /**
+     * Switch between templates.
+     * @param int $id
+     * @param string $data
+     * @return array
+     */
+    public function action_switchtemplates(int $id, string $data): array {
+        $jsonobject = json_decode($data);
+        $template = $jsonobject->selectedValue;
+
+        set_user_preference('wbtable_chosen_template_' . $this->idstring, $template);
+
+        return [
+            'success' => 1,
+            'message' => get_user_preferences('wbtable_chosen_template_' . $this->idstring),
         ];
     }
 

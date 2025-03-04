@@ -68,7 +68,7 @@ export function initializeActionButton(selector, idstring, encodedtable) {
           transmitAction(button.dataset.id, button.dataset.methodname,
             JSON.stringify(data), idstring, encodedtable);
         });
-      } else if (button.dataset.methodname == 'textinputchange') {
+      } else if (button.tagName == 'INPUT') {
         const debouncedInputHandler = debounce(() => {
             const data = button.dataset;
             data.value = button.value;
@@ -78,12 +78,19 @@ export function initializeActionButton(selector, idstring, encodedtable) {
         }, 300);
 
         button.addEventListener('input', debouncedInputHandler);
-      } else if (button.dataset.methodname == 'selectoption') {
+      } else if (button.tagName == 'SELECT') {
         button.addEventListener('change', () => {
             const data = button.dataset;
-            data.selectedValue = button.value;
-            transmitAction(button.dataset.id, button.dataset.methodname,
-                JSON.stringify(data), idstring, encodedtable);
+            if (data.selectedValue != button.value) {
+              data.selectedValue = button.value;
+              transmitAction(
+                button.dataset.id,
+                button.dataset.methodname,
+                JSON.stringify(data),
+                idstring,
+                encodedtable
+              );
+            }
         });
       } else {
         // Else it's a button, we attach the click listener.
@@ -182,7 +189,7 @@ function debounce(func, delay) {
 
 
 /**
- * Function to collect the ids, check if selection of ids is mandatory and prepare a string of selected lables.
+ * Function to collect the ids, check if selection of ids is mandatory and prepare a string of selected labels.
  * @param {*} idstring
  * @param {*} data //the dataset of the button that triggerd the action.
  * @returns {object}
