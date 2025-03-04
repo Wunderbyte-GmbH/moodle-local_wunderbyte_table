@@ -1,0 +1,47 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_wunderbyte_table/component_switchtemplates
+    Template for the wunderbyte table template switcher.
+    Classes required for JS:
+    * none
+    Data attributes required for JS:
+    * none
+
+    Example context (json):
+    {
+        "switchtemplates":
+        {
+            "template": "local_wunderbyte_table/twtable_list",
+            "shortname": "twtable_list",
+            "checked": true,
+            "icon": "fa fa-list",
+            "label": "List"
+        }
+    }
+}}
+{{#switchtemplates}}
+<div class="mr-3" aria-label="Template switcher dropdown" style="display:inline-flex;">
+    <i class="{{switchtemplatesiconclasses}} text-primary" aria-hidden="true"></i>
+    <select class="custom-select" id="wbtabletemplateswitcher" style="width: fit-content;"
+        data-id="1" data-type="wb_action_button" data-methodname="switchtemplates" data-nomodal="true">
+        {{#templates}}
+        <option value="{{template}}">
+            {{#icon}}<i class="{{.}}" aria-hidden="true"></i>&nbsp;{{/icon}}
+            {{#label}}{{.}}{{/label}}
+        </option>
+        {{/templates}}
+    </select>
+</div>
+{{/switchtemplates}}

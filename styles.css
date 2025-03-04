@@ -470,7 +470,8 @@
     margin-top: 20px;
 }
 
-.wunderbyteTableSearchIcon {
+.wunderbyteTableSearchIcon,
+.wunderbyteTableSwitchTemplatesIcon {
     padding-top: 7px;
     padding-right: 5px;
     font-size: 1.3em;

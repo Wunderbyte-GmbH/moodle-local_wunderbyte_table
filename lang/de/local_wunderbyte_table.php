@@ -158,6 +158,7 @@ $string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheck
 $string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sortieren"></i>';
 $string['tableheight'] = 'Tabellen-Höhe';
 $string['tableheight_help'] = 'Die Tabellenhöhe wird in Pixel angegeben, sinnvolle Werte beginnen daher bei ca. 300. Bei 0 wird die Höhe automatisch anhand der angezeigten Tabellen berechnet.';
+$string['templateswitcherlabel'] = 'Ansicht';
 $string['themennachkategorie'] = 'Themen nach Kategorie';
 $string['thursday'] = 'Do';
 $string['timespan'] = 'Zeitspanne';
