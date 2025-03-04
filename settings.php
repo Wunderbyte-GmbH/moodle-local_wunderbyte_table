@@ -28,16 +28,19 @@ defined('MOODLE_INTERNAL') || die();
 $componentname = "local_wunderbyte_table";
 
 if ($hassiteconfig) {
-
     // Add the category to the local plugin branch.
     $settings = new admin_settingpage($componentname . '_settings', '');
     $ADMIN->add('localplugins', new admin_category($componentname, get_string('pluginname', $componentname)));
     $ADMIN->add($componentname, $settings);
 
-    $allowedittable = new admin_setting_configcheckbox('local_wunderbyte_table/allowedittable',
-        get_string('allowedittable', 'local_wunderbyte_table'), '', 0);
+    $allowedittable = new admin_setting_configcheckbox(
+        'local_wunderbyte_table/allowedittable',
+        get_string('allowedittable', 'local_wunderbyte_table'),
+        '',
+        0
+    );
     // Make sure, we reset everything, once this checkbox is turned off (or on).
-    $allowedittable->set_updatedcallback(function() {
+    $allowedittable->set_updatedcallback(function () {
         global $DB;
         cache_helper::purge_by_event('setbackfilters');
         cache_helper::purge_by_event('setbackencodedtables');
@@ -50,14 +53,29 @@ if ($hassiteconfig) {
     $settings->add($allowedittable);
 
     $settings->add(
-        new admin_setting_configcheckbox('local_wunderbyte_table/logfiltercaches',
-            get_string('logfiltercaches', 'local_wunderbyte_table'), '', 0));
+        new admin_setting_configcheckbox(
+            'local_wunderbyte_table/logfiltercaches',
+            get_string('logfiltercaches', 'local_wunderbyte_table'),
+            '',
+            0
+        )
+    );
 
     $settings->add(
-        new admin_setting_configcheckbox('local_wunderbyte_table/allowsearchincolumns',
-            get_string('allowsearchincolumns', 'local_wunderbyte_table'), '', 0));
+        new admin_setting_configcheckbox(
+            'local_wunderbyte_table/allowsearchincolumns',
+            get_string('allowsearchincolumns', 'local_wunderbyte_table'),
+            '',
+            0
+        )
+    );
 
     $settings->add(
-        new admin_setting_configcheckbox('local_wunderbyte_table/turnoffcaching',
-            get_string('turnoffcaching', 'local_wunderbyte_table'), '', 0));
+        new admin_setting_configcheckbox(
+            'local_wunderbyte_table/turnoffcaching',
+            get_string('turnoffcaching', 'local_wunderbyte_table'),
+            '',
+            0
+        )
+    );
 }
