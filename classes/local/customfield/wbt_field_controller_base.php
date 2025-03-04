@@ -39,6 +39,7 @@ interface wbt_field_controller_base {
      *
      * @param string $key
      * @param bool $formatstring
+     * @param bool $keyisencoded
      * @return string the string value for the index
      */
     public function get_option_value_by_key(string $key, bool $formatstring = true, bool $keyisencoded = false): string;

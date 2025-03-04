@@ -43,6 +43,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
      *
      * @param string $key
      * @param bool $formatstring
+     * @param bool $keyisencoded
      * @return string the string value for the index
      */
     public function get_option_value_by_key(string $key, bool $formatstring = true, bool $keyisencoded = false): string {
