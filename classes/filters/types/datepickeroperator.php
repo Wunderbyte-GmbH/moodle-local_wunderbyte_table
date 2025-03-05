@@ -23,11 +23,6 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
-
-use coding_exception;
-use local_wunderbyte_table\filters\base;
-use local_wunderbyte_table\wunderbyte_table;
-use moodle_exception;
 use stdClass;
 
 /**
@@ -61,74 +56,18 @@ class datepickeroperator extends datepicker {
                 continue;
             }
             if (!empty($filterlabel)) {
-                $htmlid = strtolower(str_replace(' ', '-', $filterlabel));
-                $mform->addElement('html', '<div id="' . $htmlid . '">');
-
-                if ($horizontallinecounter > 0) {
-                    $mform->addElement('html', '<hr>');
-                }
-                $mform->addElement('html', '<b>Filter name: ' . $filterlabel . '</b>');
-                self::add_remove_button($mform, $htmlid);
+                self::add_date_filter_head($mform, $filterlabel, $horizontallinecounter);
             }
 
             $valuelabel = 'datepicker[' . $filterlabel . ']';
-            $nameinput = $mform->createElement(
-                'text',
-                $valuelabel  . '[name]',
-                '',
-                ['placeholder' => 'Insert a filter name']
-            );
 
-            $checkboxlabelinput = $mform->createElement(
-                'text',
-                $valuelabel  . '[checkboxlabel]',
-                '',
-                ['placeholder' => 'Insert a checkbox label']
-            );
+            $inputs = self::set_date_filter_input($mform, $valuelabel);
 
-            $operatorinput = $mform->createElement(
-                'select',
-                $valuelabel . '[operator]',
-                '',
-                self::get_operators()
-            );
-
-            $defaultvalueinput = $mform->createElement(
-                'date_selector',
-                $valuelabel  . '[defaultvalue]',
-                '',
-            );
-
-
-            $mform->setDefault(
-                $valuelabel . '[name]',
-                $filtertype['name']
-            );
-            $mform->setDefault(
-                $valuelabel . '[checkboxlabel]',
-                $filtertype['checkboxlabel']
-            );
-            $mform->setDefault(
-                $valuelabel . '[operator]',
-                $filtertype['operator']
-            );
-            $mform->setDefault(
-                $valuelabel . '[defaultvalue]',
-                $filtertype['defaultvalue']
-            );
+            self::set_date_default_value_input($mform, $valuelabel, $filtertype);
 
             $mform->addGroup(
-                [
-                        $mform->createElement('static', '', '', '<br><label>Name: </label>'),
-                        $nameinput,
-                        $mform->createElement('static', '', '', '<br><label>Checkbox Label: </label>'),
-                        $checkboxlabelinput,
-                        $mform->createElement('static', '', '', '<br><label>Operator: </label>'),
-                        $operatorinput,
-                        $mform->createElement('static', '', '', '<br><label>Default Value: </label>'),
-                        $defaultvalueinput,
-                    ],
-                    $filterlabel . '_group',
+                $inputs,
+                $filterlabel . '_group',
                 $filterlabel . '_group',
                 ' ',
                 false
@@ -137,6 +76,93 @@ class datepickeroperator extends datepicker {
             $mform->addElement('html', '</div>');
         }
     }
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param string $filterlabel
+     * @param int $horizontallinecounter
+     */
+    public static function add_date_filter_head(&$mform, $filterlabel, $horizontallinecounter) {
+        $htmlid = strtolower(str_replace(' ', '-', $filterlabel));
+        $mform->addElement('html', '<div id="' . $htmlid . '">');
+        if ($horizontallinecounter > 0) {
+            $mform->addElement('html', '<hr>');
+        }
+        $mform->addElement('html', '<b>Filter name: ' . $filterlabel . '</b>');
+        self::add_remove_button($mform, $htmlid);
+    }
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param string $valuelabel
+     * @return array
+     */
+    public static function set_date_filter_input(&$mform, $valuelabel) {
+        $nameinput = $mform->createElement(
+            'text',
+            $valuelabel  . '[name]',
+            '',
+            ['placeholder' => 'Insert a filter name']
+        );
+
+        $checkboxlabelinput = $mform->createElement(
+            'text',
+            $valuelabel  . '[checkboxlabel]',
+            '',
+            ['placeholder' => 'Insert a checkbox label']
+        );
+
+        $operatorinput = $mform->createElement(
+            'select',
+            $valuelabel . '[operator]',
+            '',
+            self::get_operators()
+        );
+
+        $defaultvalueinput = $mform->createElement(
+            'date_selector',
+            $valuelabel  . '[defaultvalue]',
+            '',
+        );
+        return [
+            $mform->createElement('static', '', '', '<br><label>Name: </label>'),
+            $nameinput,
+            $mform->createElement('static', '', '', '<br><label>Checkbox Label: </label>'),
+            $checkboxlabelinput,
+            $mform->createElement('static', '', '', '<br><label>Operator: </label>'),
+            $operatorinput,
+            $mform->createElement('static', '', '', '<br><label>Default Value: </label>'),
+            $defaultvalueinput,
+        ];
+    }
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param string $valuelabel
+     * @param array $filtertype
+     */
+    public static function set_date_default_value_input(&$mform, $valuelabel, $filtertype) {
+        $mform->setDefault(
+            $valuelabel . '[name]',
+            $filtertype['name']
+        );
+        $mform->setDefault(
+            $valuelabel . '[checkboxlabel]',
+            $filtertype['checkboxlabel']
+        );
+        $mform->setDefault(
+            $valuelabel . '[operator]',
+            $filtertype['operator']
+        );
+        $mform->setDefault(
+            $valuelabel . '[defaultvalue]',
+            $filtertype['defaultvalue']
+        );
+    }
+
 
     /**
      * The expected value.
@@ -150,26 +176,6 @@ class datepickeroperator extends datepicker {
             '<=' => '<=',
             '>=' => '>=',
         ];
-    }
-
-    /**
-     * The expected value.
-     * @param array $fieldsandsubmitteddata
-     * @return mixed
-     */
-    public static function get_dynamic_values($fieldsandsubmitteddata) {
-        $mandatoryfields = $fieldsandsubmitteddata['form'];
-        $filtergroup = $mandatoryfields->getElement(self::$groupname);
-        if ($filtergroup) {
-            foreach ($filtergroup->_elements as $groupelement) {
-                $label = $groupelement->_attributes['name'];
-                if (in_array($label, self::$grouplabels)) {
-                    $groupelement->_attributes['value'] = $fieldsandsubmitteddata['data'][$label] ?? null;
-                    $mandatoryfields->setElementError(self::$groupname, $fieldsandsubmitteddata['errors'][$label]);
-                }
-            }
-        }
-        return $mandatoryfields;
     }
 
     /**
