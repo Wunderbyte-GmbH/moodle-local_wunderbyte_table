@@ -39,13 +39,13 @@ class weekdays extends base {
      * @param string $secondcolumnlocalized
      * @return void
      */
-    public function __construct(string $columnidentifier,
-                                string $localizedstring = '',
-                                string $secondcolumnidentifier = '',
-                                string $secondcolumnlocalized = '') {
-
+    public function __construct(
+        string $columnidentifier,
+        string $localizedstring = '',
+        string $secondcolumnidentifier = '',
+        string $secondcolumnlocalized = ''
+    ) {
         $this->options = self::get_possible_weekdays_options();
-
         $this->columnidentifier = $columnidentifier;
         $this->localizedstring = empty($localizedstring) ? $columnidentifier : $localizedstring;
         $this->secondcolumnidentifier = $secondcolumnidentifier;

@@ -88,8 +88,14 @@ class column_manager extends filtersettings {
      */
     public function get_filtered_column_form_persist_error() {
         $filtersettings = $this->data;
+        $functionname = 'get_filterspecific_values';
 
-        $existingfilterdata = $filtersettings['keyvaluepairs'];
+        foreach ($filtersettings as $key => $value) {
+            $classname = $filtersettings['wbfilterclass'];
+            if ($this->is_static_public_function($classname, $functionname)) {
+                $existingfilterdata = $classname::$functionname($filtersettings, $this->filtercolumn);
+            }
+        }
 
         $this->set_general_filter_settings($filtersettings);
         $this->set_available_filter_types($existingfilterdata ?? [], $this->filtersettings[$this->filtercolumn]['wbfilterclass']);

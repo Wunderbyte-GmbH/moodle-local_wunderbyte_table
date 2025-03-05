@@ -26,7 +26,6 @@ namespace local_wunderbyte_table\filters\types;
 use local_wunderbyte_table\wunderbyte_table;
 use MoodleQuickForm;
 use PHPUnit\Framework\TestCase;
-use local_wunderbyte_table\filters\types\standardfilter;
 
 
 /**
