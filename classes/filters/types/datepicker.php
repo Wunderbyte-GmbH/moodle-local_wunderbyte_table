@@ -32,7 +32,7 @@ use moodle_exception;
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
-class datepicker extends base {
+abstract class datepicker extends base {
     /**
      *
      * @var string
@@ -225,83 +225,6 @@ class datepicker extends base {
 
     /**
      * The expected value.
-     * @param \MoodleQuickForm $mform
-     * @param array $data
-     */
-    public static function render_mandatory_fields(&$mform, $data = []) {
-        foreach ($data as $filterlabel => $filtertype) {
-            $mform->addElement('html', '<h4>' . $filterlabel . ':</h4>');
-            $horizontallinecounter = 0;
-            foreach ($filtertype as $filtertypename => $filtertypedata) {
-                $htmlid = strtolower(str_replace(' ', '-', $filtertypename));
-                $mform->addElement('html', '<div id="' . $htmlid . '">');
-
-                if ($horizontallinecounter > 0) {
-                    $mform->addElement('html', '<hr>');
-                }
-                $mform->addElement('html', '<b>Filter name: ' . $filtertypename . '<b>');
-                self::add_remove_button($mform, $htmlid);
-
-                foreach ($filtertypedata as $filtertypedatalabel => $filtertypedatavalue) {
-                    $valuelabel = $filterlabel . '[' . $filtertypename . '][' . $filtertypedatalabel . ']';
-                    if ($filtertypedatalabel == 'operator') {
-                        $input = $mform->createElement(
-                            'select',
-                            $valuelabel,
-                            '',
-                            self::get_operators()
-                        );
-                        $mform->setDefault(
-                            $valuelabel,
-                            $filtertypedatavalue
-                        );
-                    } else if (is_array($filtertypedatavalue)) {
-                        $input = $mform->createElement(
-                            'select',
-                            $valuelabel,
-                            'Select Subjects:',
-                            self::get_operatoroptions(),
-                            ['multiple' => true]
-                        );
-                        $mform->setDefault(
-                            $valuelabel,
-                            array_keys($filtertypedatavalue)
-                        );
-                    } else {
-                        $input = $mform->createElement(
-                            'text',
-                            $valuelabel,
-                            ''
-                        );
-                        $mform->setDefault(
-                            $valuelabel,
-                            $filtertypedatavalue
-                        );
-                    }
-                    $mform->addGroup([$input], $filtertypename . $filtertypedatalabel, $filtertypedatalabel, ' ', false);
-                }
-                $horizontallinecounter++;
-                $mform->addElement('html', '</div>');
-            }
-        }
-    }
-
-    /**
-     * The expected value.
-     * @return array
-     */
-    public static function get_operators() {
-        return [
-            '=' => '=',
-            '<' => '<',
-            '>' => '>',
-            '<=' => '<=',
-            '>=' => '>=',
-        ];
-    }
-
-    /**
-     * The expected value.
      * @return array
      */
     public static function get_operatoroptions() {
@@ -335,29 +258,6 @@ class datepicker extends base {
                 'aria-label' => "Remove key-value pair for {$filtertypename}",
             ]
         );
-    }
-
-    /**
-     * The expected value.
-     * @param array $data
-     * @return array
-     */
-    public static function validate_input($data) {
-        $errors = [];
-        foreach ($data['datepicker'] as $datepickername => $datepickerinputs) {
-            foreach ($datepickerinputs as $datepickerlabel => $datepickerinput) {
-                if (
-                    is_string($datepickerinput) &&
-                    (
-                        empty($datepickerinput) ||
-                        $datepickerinput == "_qf__force_multiselect_submission"
-                    )
-                ) {
-                    $errors[$datepickername . $datepickerlabel] = get_string('filteremptynameerror', 'local_wunderbyte_table');
-                }
-            }
-        }
-        return $errors;
     }
 
     /**

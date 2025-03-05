@@ -31,18 +31,18 @@ use ReflectionClass;
 /**
  * Unit tests for hourlist_test class.
  */
-final class hourlist_test extends TestCase {
+final class weekdays_test extends TestCase {
     /**
      * Test get_data_for_filter_options() method.
-     * @covers \local_wunderbyte_table\filters\types\hourlist::__construct
-     * @covers \local_wunderbyte_table\filters\types\hourlist::get_possible_timed_options
-     * @covers \local_wunderbyte_table\filters\types\hourlist::add_filter
+     * @covers \local_wunderbyte_table\filters\types\weekdays::__construct
+     * @covers \local_wunderbyte_table\filters\types\weekdays::get_possible_weekdays_options
+     * @covers \local_wunderbyte_table\filters\types\weekdays::add_filter
      */
     public function test_add_filter(): void {
         $filter = [];
         $columnidentifier = 'columnidentifier';
-        $hourlistmanager = new hourlist($columnidentifier);
-        $hourlistmanager->add_filter($filter);
+        $weekdaysmanager = new weekdays($columnidentifier);
+        $weekdaysmanager->add_filter($filter);
         $this->assertArrayHasKey('id', $filter);
         $this->assertArrayHasKey('columnidentifier', $filter);
         $this->assertEquals('ID', $filter['id']['localizedname']);
@@ -51,35 +51,35 @@ final class hourlist_test extends TestCase {
 
     /**
      * Test add_filter() method.
-     * @covers \local_wunderbyte_table\filters\types\hourlist::add_options
+     * @covers \local_wunderbyte_table\filters\types\weekdays::add_options
      */
     public function test_add_options(): void {
         $newoptions = [
             'new_option' => 'Something new',
         ];
         $columnidentifier = 'columnidentifier';
-        $hourlistmanager = new hourlist($columnidentifier);
-        $hourlistmanager->add_options($newoptions);
+        $weekdaysmanager = new weekdays($columnidentifier);
+        $weekdaysmanager->add_options($newoptions);
 
-        $reflection = new ReflectionClass($hourlistmanager);
+        $reflection = new ReflectionClass($weekdaysmanager);
         $property = $reflection->getProperty('options');
         $property->setAccessible(true);
-        $optionsvalue = $property->getValue($hourlistmanager);
+        $optionsvalue = $property->getValue($weekdaysmanager);
 
-        $this->assertCount(25, $optionsvalue);
+        $this->assertCount(8, $optionsvalue);
         $this->assertArrayHasKey('new_option', $optionsvalue);
     }
 
     /**
      * Test add_filter() method.
-     * @covers \local_wunderbyte_table\filters\types\hourlist::render_mandatory_fields
+     * @covers \local_wunderbyte_table\filters\types\weekdays::render_mandatory_fields
      */
     public function test_render_mandatory_fields(): void {
         $mform = $this->createMock(MoodleQuickForm::class);
         $mform->expects($this->once())
             ->method('addElement')
             ->with('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
-        hourlist::render_mandatory_fields($mform);
+        weekdays::render_mandatory_fields($mform);
     }
 
     /**
@@ -89,13 +89,13 @@ final class hourlist_test extends TestCase {
     public function test_get_filterspecific_values(): void {
         $data = new \stdClass();
         $data->localizedname = 'Test Filter';
-        $data->wbfilterclass = 'hourlist';
+        $data->wbfilterclass = 'weekdays';
         $data->testcolumn_wb_checked = '1';
 
-        $result = hourlist::get_filterspecific_values($data, 'testcolumn');
+        $result = weekdays::get_filterspecific_values($data, 'testcolumn');
 
         $this->assertEquals('Test Filter', $result['localizedname']);
         $this->assertEquals('1', $result['testcolumn_wb_checked']);
-        $this->assertEquals('hourlist', $result['wbfilterclass']);
+        $this->assertEquals('weekdays', $result['wbfilterclass']);
     }
 }

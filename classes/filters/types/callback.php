@@ -23,7 +23,6 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
-use Closure;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
 
@@ -52,7 +51,6 @@ class callback extends base {
      * @return array
      */
     public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
-
         $returnarray = [
             0 => (object)[
                 $key => 0,
@@ -149,5 +147,31 @@ class callback extends base {
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }
+    }
+
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param array $data
+     */
+    public static function render_mandatory_fields(&$mform, $data = []) {
+        $mform->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @param string $filtercolumn
+     * @return array
+     */
+    public static function get_filterspecific_values($data, $filtercolumn) {
+        $filterenablelabel = $filtercolumn . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            $data->wbfilterclass => true,
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+        ];
+        return $filterspecificvalues;
     }
 }

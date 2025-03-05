@@ -51,7 +51,6 @@ class weekdays extends base {
     ) {
 
         $this->options = self::get_possible_weekdays_options();
-
         $this->columnidentifier = $columnidentifier;
         $this->localizedstring = empty($localizedstring) ? $columnidentifier : $localizedstring;
         $this->secondcolumnidentifier = $secondcolumnidentifier;
