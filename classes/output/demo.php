@@ -82,6 +82,22 @@ class demo implements renderable, templatable {
         // It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
         $table = new demo_table('demotable_1');
 
+        // Add template switcher to table.
+        // Todo: Comment this in once we can load it via load_data.
+        /*$table->switchtemplates = [
+            'templates' => [
+                [
+                    'template' => 'local_wunderbyte_table/twtable_list',
+                    'checked' => true,
+                    'label' => 'List',
+                ],
+                [
+                    'template' => 'local_wunderbyte_table/table_card',
+                    'label' => 'Cards',
+                ],
+            ],
+        ];*/
+
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
             'username' => get_string('username'),
@@ -362,7 +378,7 @@ class demo implements renderable, templatable {
 
         $table->cardsort = true;
 
-        $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
+        // $table->tabletemplate = 'local_wunderbyte_table/twtable_list';
 
         $table->pageable(true);
 
