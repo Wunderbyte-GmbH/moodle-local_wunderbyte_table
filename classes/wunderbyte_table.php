@@ -199,7 +199,7 @@ class wunderbyte_table extends table_sql {
      *
      * @var string template for table.
      */
-    public $tabletemplate = 'local_wunderbyte_table/twtable_list';
+    public $tabletemplate = 'local_wunderbyte_table/twtable_list'; // Default template.
 
     /**
      *
@@ -440,6 +440,14 @@ class wunderbyte_table extends table_sql {
 
         $standardfilter = new standardfilter('id');
         $this->add_filter($standardfilter);
+
+        // If a user preference for the table template is set, we use it.
+        if (
+            !empty($this->switchtemplates['templates'])
+            && !empty(get_user_preferences('wbtable_chosen_template_' . $uniqueid))
+        ) {
+            $this->tabletemplate = get_user_preferences('wbtable_chosen_template_' . $uniqueid);
+        }
     }
 
     /**
@@ -1740,6 +1748,14 @@ class wunderbyte_table extends table_sql {
 
         global $CFG;
 
+        // First, we check, if we have a user preference from template switcher.
+        if (
+            !empty($this->switchtemplates['templates'])
+            && !empty(get_user_preferences('wbtable_chosen_template_' . $this->uniqueid))
+        ) {
+            $this->tabletemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
+        }
+
         if (!empty($this->tabletemplate)) {
             [$component, $template] = explode("/", $this->tabletemplate);
         }
@@ -1920,11 +1936,11 @@ class wunderbyte_table extends table_sql {
         $jsonobject = json_decode($data);
         $template = $jsonobject->selectedValue;
 
-        set_user_preference('wbtable_chosen_template_' . $this->idstring, $template);
+        set_user_preference('wbtable_chosen_template_' . $this->uniqueid, $template);
 
         return [
             'success' => 1,
-            'message' => get_user_preferences('wbtable_chosen_template_' . $this->idstring),
+            'message' => get_user_preferences('wbtable_chosen_template_' . $this->uniqueid),
         ];
     }
 

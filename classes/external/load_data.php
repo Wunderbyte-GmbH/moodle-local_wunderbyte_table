@@ -50,7 +50,6 @@ require_once($CFG->libdir . '/externallib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class load_data extends external_api {
-
     /**
      * Describes the parameters this webservice.
      *
@@ -67,8 +66,8 @@ class load_data extends external_api {
             'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_REQUIRED),
             'wbtfilter'  => new external_value(PARAM_RAW, 'reset value', VALUE_REQUIRED),
             'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
-        ]
-        );
+            // Todo: 'switchtemplates'.
+        ]);
     }
 
     /**
@@ -94,6 +93,7 @@ class load_data extends external_api {
         $treset = null,
         $filterobjects = null,
         $searchtext = null
+        // Todo: 'switchtemplates'.
     ) {
 
         global $CFG, $PAGE;
@@ -108,6 +108,7 @@ class load_data extends external_api {
                 'treset' => $treset,
                 'wbtfilter' => $filterobjects,
                 'searchtext' => $searchtext ?? "",
+                // Todo: 'switchtemplates'.
         ];
 
         $params = self::validate_parameters(self::execute_parameters(), $params);
@@ -179,6 +180,13 @@ class load_data extends external_api {
         $tabledata = $tableobject->export_for_template($output);
 
         if ($tabledata) {
+            // First we check if we have a user preference from template switcher.
+            if (
+                !empty($table->switchtemplates['templates'])
+                && !empty(get_user_preferences('wbtable_chosen_template_' . $table->uniqueid))
+            ) {
+                $table->tabletemplate = get_user_preferences('wbtable_chosen_template_' . $table->uniqueid);
+            }
             $result['template'] = $table->tabletemplate;
             $result['content'] = json_encode($tabledata);
             $result['filterjson'] = $table->filterjson ?? '';

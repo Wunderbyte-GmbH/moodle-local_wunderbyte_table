@@ -24,9 +24,7 @@
         "switchtemplates":
         {
             "template": "local_wunderbyte_table/twtable_list",
-            "shortname": "twtable_list",
             "checked": true,
-            "icon": "fa fa-list",
             "label": "List"
         }
     }
@@ -38,7 +36,6 @@
         data-id="1" data-type="wb_action_button" data-methodname="switchtemplates" data-nomodal="true">
         {{#templates}}
         <option value="{{template}}">
-            {{#icon}}<i class="{{.}}" aria-hidden="true"></i>&nbsp;{{/icon}}
             {{#label}}{{.}}{{/label}}
         </option>
         {{/templates}}
