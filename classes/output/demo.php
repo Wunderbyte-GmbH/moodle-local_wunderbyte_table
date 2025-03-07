@@ -84,7 +84,7 @@ class demo implements renderable, templatable {
 
         // Add template switcher to table.
         // Todo: Comment this in once we can load it via load_data.
-        /*$table->switchtemplates = [
+        $table->switchtemplates = [
             'templates' => [
                 [
                     'template' => 'local_wunderbyte_table/twtable_list',
@@ -95,8 +95,8 @@ class demo implements renderable, templatable {
                     'template' => 'local_wunderbyte_table/table_card',
                     'label' => 'Cards',
                 ],
-            ],
-        ];*/
+        ],
+    ];
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
