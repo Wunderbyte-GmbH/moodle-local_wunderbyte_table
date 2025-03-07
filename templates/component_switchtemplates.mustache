@@ -25,25 +25,24 @@
             "templates": [
                 {
                     "template": "local_wunderbyte_table/twtable_list",
-                    "label": "List"
+                    "label": "List",
+                    "selected": true
                 },
                 {
                     "template": "local_wunderbyte_table/twtable_cards",
                     "label": "Cards"
                 }
-            ],
-            "selectedtemplate": "local_wunderbyte_table/twtable_list"
-        ]
+            ]
+        ],
     }
 }}
 {{#switchtemplates}}
 <div class="mr-3" aria-label="Template switcher dropdown" style="display:inline-flex;">
     <i class="{{switchtemplatesiconclasses}} text-primary" aria-hidden="true"></i>
     <select class="custom-select" id="wbtabletemplateswitcher" style="width: fit-content;"
-        data-id="1" data-type="wb_action_button" data-methodname="switchtemplates" data-nomodal="true"
-        data-selected-value="{{selectedtemplate}}">
+        data-id="1" data-type="wb_action_button" data-methodname="switchtemplates" data-nomodal="true">
         {{#templates}}
-        <option value="{{template}}">
+        <option value="{{template}}" {{#selected}}selected{{/selected}}>
             {{#label}}{{.}}{{/label}}
         </option>
         {{/templates}}

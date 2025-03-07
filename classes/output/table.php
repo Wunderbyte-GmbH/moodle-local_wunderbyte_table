@@ -553,6 +553,18 @@ class table implements renderable, templatable {
         } else {
             $this->pagination['nopages'] = 'nopages';
         }
+
+        // Make sure the chosen template is marked as selected.
+        if (!empty($this->wbtable->switchtemplates['templates'])) {
+            foreach ($this->wbtable->switchtemplates['templates'] as &$t) {
+                if ($t['template'] === $this->wbtable->tabletemplate) {
+                    $t['selected'] = true;
+                } else {
+                    unset($t['selected']);
+                }
+            }
+        }
+        $this->switchtemplates = $this->wbtable->switchtemplates ?? null;
     }
 
     /**
@@ -658,7 +670,7 @@ class table implements renderable, templatable {
             'showdownloadbuttonatbottom' => $this->showdownloadbuttonatbottom,
             'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
             'showspinner' => true,
-            'switchtemplates' => $this->switchtemplates,
+            'switchtemplates' => $this->switchtemplates ?? null,
         ];
 
         // Only if we want to show the searchfield, we actually add the key.
