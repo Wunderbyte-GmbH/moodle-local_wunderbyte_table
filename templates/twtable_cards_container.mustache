@@ -91,18 +91,15 @@
      <div class="wunderbyte_table_container_{{idstring}} {{uniqueid}}{{!
           }}{{#showfilterbutton}} wunderbyte_table_filter_on{{/showfilterbutton}}{{!
           }}{{#filterdeactivated}} inactivefilter{{/filterdeactivated}}{{!
-          }}{{#nofilteratall}} nofilter{{/nofilteratall}} mt-2">
-          <div class="container-fluid mw-100">
+          }}{{#nofilteratall}} nofilter{{/nofilteratall}} mt-2 px-2">
+          <div class="container-fluid ml-0">
                <div class="row mb-2">
-                    <div class="col-md-6">
-                         <div class="d-flex">
-                              {{> local_wunderbyte_table/component_toggle }}
-                              {{> local_wunderbyte_table/component_reload }}
-                              {{> local_wunderbyte_table/component_edit }}
-                         </div>
+                    <div>
+                         {{> local_wunderbyte_table/component_toggle }}
+                         {{> local_wunderbyte_table/component_reload }}
+                         {{> local_wunderbyte_table/component_edit }}
                     </div>
-                    <div class="col-md-6 text-right align-self-end">
-                         {{> local_wunderbyte_table/component_spinner }}
+                    <div class="ml-auto">
                          {{> local_wunderbyte_table/component_switchtemplates }}
                          {{> local_wunderbyte_table/component_sort }}
                          {{> local_wunderbyte_table/component_search }}
@@ -114,7 +111,7 @@
                     {{/showdownloadbuttonatbottom}}
                </div>
           </div>
-          <div class="wunderbyte_table_container {{uniqueid}} {{#showfilterontop}}showontop{{/showfilterontop}}">
+          <div class="wunderbyte_table_container {{#showfilterontop}}showontop{{/showfilterontop}} {{uniqueid}}">
                {{#showfilterontop}}
                <div class="filterheader">
                 <aside class="wunderbyte_table_components{{^showcomponentstoggle}} inactive{{/showcomponentstoggle}}">
@@ -130,7 +127,7 @@
                </aside>
                {{/showfilterontop}}
                <div class= "wunderbyteTableClass {{uniqueid}}" id="a{{idstring}}">
-                         {{> local_wunderbyte_table/twtable_list }}
+                    {{> local_wunderbyte_table/twtable_cards }}
                </div>
                {{#showdownloadbuttonatbottom}}
                <div class="ml-2">
