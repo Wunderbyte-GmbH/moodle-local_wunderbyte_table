@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace local_wunderbyte_table\external;
 
 use cache;
-use context_system;
 use Exception;
 use external_api;
 use external_function_parameters;
@@ -66,7 +65,6 @@ class load_data extends external_api {
             'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_REQUIRED),
             'wbtfilter'  => new external_value(PARAM_RAW, 'reset value', VALUE_REQUIRED),
             'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
-            // Todo: 'switchtemplates'.
         ]);
     }
 
@@ -93,10 +91,9 @@ class load_data extends external_api {
         $treset = null,
         $filterobjects = null,
         $searchtext = null
-        // Todo: 'switchtemplates'.
     ) {
 
-        global $CFG, $PAGE;
+        global $PAGE;
 
         $params = [
                 'encodedtable' => $encodedtable,
@@ -108,7 +105,6 @@ class load_data extends external_api {
                 'treset' => $treset,
                 'wbtfilter' => $filterobjects,
                 'searchtext' => $searchtext ?? "",
-                // Todo: 'switchtemplates'.
         ];
 
         $params = self::validate_parameters(self::execute_parameters(), $params);
