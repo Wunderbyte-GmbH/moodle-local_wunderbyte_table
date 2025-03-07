@@ -180,13 +180,6 @@ class load_data extends external_api {
         $tabledata = $tableobject->export_for_template($output);
 
         if ($tabledata) {
-            // First we check if we have a user preference from template switcher.
-            if (
-                !empty($table->switchtemplates['templates'])
-                && !empty(get_user_preferences('wbtable_chosen_template_' . $table->uniqueid))
-            ) {
-                $table->tabletemplate = get_user_preferences('wbtable_chosen_template_' . $table->uniqueid);
-            }
             $result['template'] = $table->tabletemplate;
             $result['content'] = json_encode($tabledata);
             $result['filterjson'] = $table->filterjson ?? '';

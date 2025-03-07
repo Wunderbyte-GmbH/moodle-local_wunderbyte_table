@@ -387,23 +387,7 @@ class wunderbyte_table extends table_sql {
      * Array of templates for template switcher.
      * @var array
      */
-    public $switchtemplates = [
-        'templates' => [
-            [
-                'template' => 'local_wunderbyte_table/twtable_list',
-                'shortname' => 'twtable_list',
-                'checked' => true,
-                'icon' => 'fa fa-list',
-                'label' => 'List',
-            ],
-            [
-                'template' => 'local_wunderbyte_table/table_card',
-                'shortname' => 'table_card',
-                'icon' => 'fa fa-square',
-                'label' => 'Cards',
-            ],
-        ],
-    ];
+    public $switchtemplates = [];
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
@@ -442,11 +426,14 @@ class wunderbyte_table extends table_sql {
         $this->add_filter($standardfilter);
 
         // If a user preference for the table template is set, we use it.
+        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $uniqueid);
         if (
             !empty($this->switchtemplates['templates'])
-            && !empty(get_user_preferences('wbtable_chosen_template_' . $uniqueid))
+            && !empty($chosentemplate)
+            && self::template_exists($chosentemplate)
         ) {
-            $this->tabletemplate = get_user_preferences('wbtable_chosen_template_' . $uniqueid);
+            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $uniqueid);
+            $this->tabletemplate = $chosentemplate;
         }
     }
 
@@ -1748,12 +1735,15 @@ class wunderbyte_table extends table_sql {
 
         global $CFG;
 
-        // First, we check, if we have a user preference from template switcher.
+        // If a user preference for the table template is set, we use it.
+        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
         if (
             !empty($this->switchtemplates['templates'])
-            && !empty(get_user_preferences('wbtable_chosen_template_' . $this->uniqueid))
+            && !empty($chosentemplate)
+            && self::template_exists($chosentemplate)
         ) {
-            $this->tabletemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
+            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
+            $this->tabletemplate = $chosentemplate;
         }
 
         if (!empty($this->tabletemplate)) {
@@ -1935,8 +1925,21 @@ class wunderbyte_table extends table_sql {
     public function action_switchtemplates(int $id, string $data): array {
         $jsonobject = json_decode($data);
         $template = $jsonobject->selectedValue;
+        if (empty($template) || !self::template_exists($template)) {
+            return [
+                'success' => 0,
+                'message' => 'Template could not be found!',
+            ];
+        }
 
         set_user_preference('wbtable_chosen_template_' . $this->uniqueid, $template);
+
+        $this->tabletemplate = $template;
+
+        // When template is changed, we needd to re-cache the table.
+        $cache = cache::make('local_wunderbyte_table', 'encodedtables');
+        $cache->delete($this->tablecachehash);
+        $this->return_encoded_table(true);
 
         return [
             'success' => 1,
@@ -2162,5 +2165,25 @@ class wunderbyte_table extends table_sql {
      */
     public function set_template_data($key, $value) {
         $this->templatedata[$key] = $value;
+    }
+
+    /**
+     * Checks if a Mustache template exists for a given template.
+     *
+     * @param string $template The full template string, e.g. 'local_wunderbyte_table/twtable_list'.
+     * @return bool True if the template exists, false otherwise.
+     */
+    public static function template_exists($template) {
+        global $CFG;
+        $templatearr = explode('/', $template);
+        $component = $templatearr[0];
+        $templatepath = $templatearr[1];
+        $typearr = explode('_', $component);
+        $type = array_shift($typearr);
+        $pluginnamewithouttype = implode('_', $typearr);
+        $templatefullpath = $CFG->dirroot . '/' . $type . '/' . $pluginnamewithouttype . '/templates/' .
+            $templatepath . '.mustache';
+        // Check if the file path is valid (non-empty) and if the file exists.
+        return !empty($templatefullpath) && file_exists($templatefullpath);
     }
 }
