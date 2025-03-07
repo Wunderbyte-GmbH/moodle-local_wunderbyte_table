@@ -26,7 +26,6 @@
 
     Example context (json):
     {
-          "idstring": "f9aae5fda8d810a29f12d1e61b4ab25f",
           "listheaderclass": "listheaderclass",
           "cardheaderclass": "cardheaderclass",
           "cardfooterclass": "cardfooterclass",
@@ -68,30 +67,58 @@
           ]
      }
 }}
-
 {{#norecords}}
     <div class="norecordsfound">
         <div class="alert alert-warning" role="alert">{{#str}} norecords, local_wunderbyte_table {{/str}}</div>
     </div>
 {{/norecords}}
 {{^norecords}}
-     <div class="wunderbyte_table_container_{{idstring}} wunderbyte_table_container">
-          <aside class="wunderbyte_table_components">
-               {{> local_wunderbyte_table/component_spinner }}
-               {{> local_wunderbyte_table/component_sort }}
-               {{> local_wunderbyte_table/component_search }}
-               {{> local_wunderbyte_table/component_filter }}
-          </aside>
-          <div> {{! This div makes sure infinite scroll works properly }}
-               <div class= "wunderbyteTableClass" id='a{{idstring}}'>
-                    {{> local_wunderbyte_table/table_list }}
+     {{#table}}
+     {{#infinitescroll}}
+          {{^displayelementsontop}}
+               <div class="notontop infinite">
+               {{> local_wunderbyte_table/component_actionbutton }}
                </div>
+          {{/displayelementsontop}}
+     {{/infinitescroll}}
+     {{#displayelementsontop}}
+          <div class="ontop">
+          {{> local_wunderbyte_table/component_actionbutton }}
           </div>
+          <br>
+          <div>
+               {{> local_wunderbyte_table/component_pagination }}
+               <div class="float-right">{{> local_wunderbyte_table/component_selectrows }}</div>
+          </div>
+     {{/displayelementsontop}}
+     <div class="wunderbyte-table-table {{moodleversionminfourtwo}}">
+          {{> local_wunderbyte_table/component_countlabel }}
+          {{#table}}
+               {{> local_wunderbyte_table/component_countlabel }}
+               <div class="wunderbyte-table-grid no-overflow rows-container">
+               {{#rows}}
+                    {{> local_wunderbyte_table/twtable_cards_row }}
+               {{/rows}}
+               </div>
+          {{/table}}
      </div>
-
+     {{/table}}
 {{#js}}
     require(['local_wunderbyte_table/init'], function(init) {
     init.init('{{idstring}}', '{{encodedtable}}');
     });
 {{/js}}
 {{/norecords}}
+
+{{^infinitescroll}}
+{{^displayelementsontop}}
+<div class="float-right notontop">{{> local_wunderbyte_table/component_selectrows }}</div>
+          {{> local_wunderbyte_table/component_pagination }}
+          {{> local_wunderbyte_table/component_actionbutton }}
+{{/displayelementsontop}}
+{{/infinitescroll}}
+{{#errormessage}}
+     <div class="alert alert-danger" role="alert">
+          {{errormessage}}
+     </div>
+{{/errormessage}}

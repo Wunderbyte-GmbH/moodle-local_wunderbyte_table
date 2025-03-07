@@ -32,7 +32,6 @@ use local_wunderbyte_table\filters\types\hierarchicalfilter;
 use local_wunderbyte_table\filters\types\hourlist;
 use local_wunderbyte_table\filters\types\intrange;
 use local_wunderbyte_table\filters\types\standardfilter;
-use local_wunderbyte_table\wunderbyte_table;
 use renderable;
 use renderer_base;
 use templatable;
@@ -83,7 +82,6 @@ class demo implements renderable, templatable {
         $table = new demo_table('demotable_1');
 
         // Add template switcher to table.
-        // Todo: Comment this in once we can load it via load_data.
         $table->switchtemplates = [
             'templates' => [
                 [
@@ -92,11 +90,11 @@ class demo implements renderable, templatable {
                     'label' => 'List',
                 ],
                 [
-                    'template' => 'local_wunderbyte_table/table_card',
+                    'template' => 'local_wunderbyte_table/twtable_cards',
                     'label' => 'Cards',
                 ],
-        ],
-    ];
+            ],
+        ];
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),
