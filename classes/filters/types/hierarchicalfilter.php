@@ -43,7 +43,6 @@ class hierarchicalfilter extends base {
      * @return void
      */
     public function add_options(array $options = []) {
-
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }

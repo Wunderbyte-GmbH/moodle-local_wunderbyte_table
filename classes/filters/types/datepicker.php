@@ -37,6 +37,14 @@ abstract class datepicker extends base {
      *
      * @var string
      */
+    public static $newkeyvalue = [
+        0 => [0],
+    ];
+
+    /**
+     *
+     * @var string
+     */
     public static $groupname = 'datepickergroup';
     /**
      * Get standard filter options.
@@ -45,7 +53,6 @@ abstract class datepicker extends base {
      * @return array
      */
     public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
-
         return [];
     }
 
@@ -104,15 +111,11 @@ abstract class datepicker extends base {
         string $checkboxlabel = '',
         string $defaultvaluestart = '',
         string $defaultvalueend = '',
-        array $possibleoperations = [
-            'within',
-            'overlapboth',
-            'overlapstart',
-            'overlapend',
-            'before',
-            'after',
-            'flexoverlap',
-        ]) {
+        array $possibleoperations = []
+    ) {
+        if (empty($possibleoperations)) {
+            $possibleoperations = self::get_operatoroptions();
+        }
 
         if (!in_array($operator, ['=', '<', '>', '<=', '>='])) {
             throw new moodle_exception('novalidoperator', 'local_wunderbyte_table');
@@ -152,7 +155,7 @@ abstract class datepicker extends base {
      * @param array $filtersettings
      * @param string $fckey
      * @param array $values
-     * @return array
+     * @return mixed
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
 
@@ -177,8 +180,7 @@ abstract class datepicker extends base {
             } else { // Inbetween Filter applied.
                 // Prepare the array for output.
                 if (empty($datepickerarray['datepicker'][$labelkey]['possibleoperations'])) {
-                    $datepickerarray['datepicker'][$labelkey]['possibleoperations'] =
-                        ['within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after', 'flexoverlap'];
+                    $datepickerarray['datepicker'][$labelkey]['possibleoperations'] = self::get_operatoroptions();
                 }
                 $operationsarray = array_map(fn($y) => [
                     'operator' => $y,
@@ -274,5 +276,36 @@ abstract class datepicker extends base {
         ];
     }
 
+    /**
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param string $filterlabel
+     * @param int $horizontallinecounter
+     */
+    public static function add_date_filter_head(&$mform, $filterlabel, $horizontallinecounter) {
+        $htmlid = strtolower(str_replace(' ', '-', $filterlabel));
+        $mform->addElement('html', '<div id="' . $htmlid . '">');
+        if ($horizontallinecounter > 0) {
+            $mform->addElement('html', '<hr>');
+        }
+        $mform->addElement('html', '<b>Filter name: ' . $filterlabel . '</b>');
+        self::add_remove_button($mform, $htmlid);
+    }
 
+    /**
+     * The expected value.
+     * @param array $data
+     * @param string $filtercolumn
+     * @return array
+     */
+    public static function get_filterspecific_values($data, $filtercolumn) {
+        if ($data['datepicker']) {
+            foreach ($data['datepicker'] as $name => &$datepicker) {
+                if (!isset($datepicker['name'])) {
+                    $datepicker['name'] = $name;
+                }
+            }
+        }
+        return  $data['datepicker'] ?? [];
+    }
 }

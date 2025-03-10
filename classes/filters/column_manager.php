@@ -143,12 +143,28 @@ class column_manager extends filtersettings {
     private function set_available_filter_types($existingfilterdata, $filterclass) {
         $this->mformedit->addElement('header', 'existing_pairs', 'Existing key value pairs');
         $staticfunction = 'render_mandatory_fields';
-        if ($existingfilterdata  && self::is_static_public_function($filterclass, $staticfunction)) {
+        if (self::has_existingfilterdata($existingfilterdata)  && self::is_static_public_function($filterclass, $staticfunction)) {
             $filterclass::$staticfunction($this->mformedit, $existingfilterdata);
         } else {
             $this->mformedit->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No pairs exist</p>');
         }
     }
+
+    /**
+     * Handles form definition of filter classes.
+     * @param array $existingfilterdata
+     * @return bool
+     */
+    private function has_existingfilterdata($existingfilterdata) {
+        if (
+            count($existingfilterdata) >= 1 &&
+            !array_key_exists(0, $existingfilterdata)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * Handles form definition of filter classes.

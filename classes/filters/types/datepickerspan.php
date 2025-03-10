@@ -23,12 +23,15 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+
+use local_wunderbyte_table\wunderbyte_table;
+use moodle_exception;
 use stdClass;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
-class datepickeroperator extends datepicker {
+class datepickerspan extends datepicker {
     /**
      * The expected value.
      * @param \MoodleQuickForm $mform
@@ -40,7 +43,7 @@ class datepickeroperator extends datepicker {
         }
         $horizontallinecounter = 0;
         foreach ($data as $filterlabel => $filtertype) {
-            if (empty($filterlabel) && !strpos($mform->_elements[0]->_text, 'filter-add-field')) {
+            if (empty($filterlabel) && count($data) != 1) {
                 continue;
             }
             if (!empty($filterlabel)) {
@@ -84,16 +87,23 @@ class datepickeroperator extends datepicker {
             ['placeholder' => get_string('datepickerplaceholdercheckboxlabel', 'local_wunderbyte_table')]
         );
 
-        $operatorinput = $mform->createElement(
+        $possibleoperationsinput = $mform->createElement(
             'select',
-            $valuelabel . '[operator]',
+            $valuelabel . '[possibleoperations]',
             '',
-            self::get_operators()
+            self::get_operatoroptions(),
+            ['multiple' => 'multiple']
         );
 
-        $defaultvalueinput = $mform->createElement(
+        $defaultvaluestartinput = $mform->createElement(
             'date_selector',
-            $valuelabel  . '[defaultvalue]',
+            $valuelabel  . '[defaultvaluestart]',
+            '',
+        );
+
+        $defaultvalueendinput = $mform->createElement(
+            'date_selector',
+            $valuelabel  . '[defaultvalueend]',
             '',
         );
 
@@ -116,16 +126,23 @@ class datepickeroperator extends datepicker {
                 'static',
                 '',
                 '',
-                '<br><label>' . get_string('datepickerheadingoperation', 'local_wunderbyte_table') . '</label>'
+                '<br><label>' . get_string('datepickerheadingpossibleoperations', 'local_wunderbyte_table') . '</label>'
             ),
-            $operatorinput,
+            $possibleoperationsinput,
             $mform->createElement(
                 'static',
                 '',
                 '',
-                '<br><label>' . get_string('datepickerheadingdefaultvalue', 'local_wunderbyte_table') . '</label>'
+                '<br><label>' . get_string('datepickerheadingdefaultvaluestart', 'local_wunderbyte_table') . '</label>'
             ),
-            $defaultvalueinput,
+            $defaultvaluestartinput,
+            $mform->createElement(
+                'static',
+                '',
+                '',
+                '<br><label>' . get_string('datepickerheadingdefaultvalueend', 'local_wunderbyte_table') . '</label>'
+            ),
+            $defaultvalueendinput,
         ];
     }
 
@@ -145,27 +162,17 @@ class datepickeroperator extends datepicker {
             $filtertype['checkboxlabel'] ?? ''
         );
         $mform->setDefault(
-            $valuelabel . '[operator]',
-            $filtertype['operator'] ?? ''
+            $valuelabel . '[possibleoperations]',
+            self::get_operatoroptions_index($filtertype['possibleoperations'] ?? [])
         );
         $mform->setDefault(
-            $valuelabel . '[defaultvalue]',
-            $filtertype['defaultvalue'] ?? ''
+            $valuelabel . '[defaultvaluestart]',
+            $filtertype['defaultvaluestart'] ?? ''
         );
-    }
-
-    /**
-     * The expected value.
-     * @return array
-     */
-    public static function get_operators() {
-        return [
-            '=' => '=',
-            '<' => '<',
-            '>' => '>',
-            '<=' => '<=',
-            '>=' => '>=',
-        ];
+        $mform->setDefault(
+            $valuelabel . '[defaultvalueend]',
+            $filtertype['defaultvalueend'] ?? ''
+        );
     }
 
     /**
@@ -176,6 +183,7 @@ class datepickeroperator extends datepicker {
     public static function validate_input($data) {
         $errors = [];
         foreach ($data['datepicker'] as $datepickername => $datepickerinput) {
+            $errormsg = '';
             if (
                 empty($datepickerinput['name'])  &&
                 (
@@ -183,7 +191,13 @@ class datepickeroperator extends datepicker {
                     !empty($datepickerinput['checkboxlabel'])
                 )
             ) {
-                $errors[$datepickername . '_group'] = get_string('datepickererrormandatory', 'local_wunderbyte_table');
+                $errormsg .= get_string('datepickererrormandatory', 'local_wunderbyte_table');
+            }
+            if ($datepickerinput['operator'] == '"_qf__force_multiselect_submission"') {
+                $errormsg .= get_string('datepickererroroperations', 'local_wunderbyte_table');
+            }
+            if (!empty($errormsg)) {
+                $errors[$datepickername . '_group'] = $errormsg;
             }
         }
         return $errors;
@@ -204,8 +218,13 @@ class datepickeroperator extends datepicker {
                 $name = $keyvaluepair['name'];
                 $datepickerfilter->$name = (object) [
                     'checkboxlabel' => $keyvaluepair['checkboxlabel'],
-                    'operator' => $keyvaluepair['operator'],
-                    'defaultvalue' => $keyvaluepair['defaultvalue'],
+                    'columntimestart' => 'startdate',
+                    'columntimeend' => 'enddate',
+                    'labelstartvalue' => 'Timespan',
+                    'labelendvalue' => 'enddate',
+                    'defaultvaluestart' => self::get_timestamp($keyvaluepair['defaultvaluestart']),
+                    'defaultvalueend' => self::get_timestamp($keyvaluepair['defaultvalueend']),
+                    'possibleoperations' => self::get_operatoroptions_name($keyvaluepair['possibleoperations']),
                 ];
             }
         }
@@ -218,5 +237,67 @@ class datepickeroperator extends datepicker {
             'wbfilterclass' => $data->wbfilterclass ?? '',
         ];
         return $filterspecificvalues;
+    }
+
+    /**
+     * The expected value.
+     * @return int
+     */
+    public static function get_timestamp($moodleformdate) {
+        return mktime(
+            0,
+            0,
+            0,
+            $moodleformdate['month'],
+            $moodleformdate['day'],
+            $moodleformdate['year']
+        );
+    }
+
+    /**
+     * The expected value.
+     * @return array
+     */
+    public static function get_moodle_form_date($timestamp) {
+        $moodleformdate = date_parse_from_format('Y-m-d', date('Y-m-d', $timestamp));
+
+        return [
+            'day' => $moodleformdate['day'],
+            'month' => $moodleformdate['month'],
+            'year' => $moodleformdate['year'],
+        ];
+    }
+
+    /**
+     * The expected value.
+     * @return array
+     */
+    public static function get_operatoroptions_name($selectedoptions) {
+        $possibleoperations = self::get_operatoroptions();
+        $possibleoperationsname = [];
+
+        foreach ($selectedoptions as $value) {
+            $possibleoperationsname[] = $possibleoperations[$value];
+        }
+        return $possibleoperationsname;
+    }
+
+    /**
+     * The expected value.
+     * @return array
+     */
+    public static function get_operatoroptions_index($selectedoptions) {
+        if (is_null($selectedoptions)) {
+            $selectedoptions = [];
+        }
+        $possibleoperations = self::get_operatoroptions();
+        $possibleoperationsindex = [];
+
+        foreach ($possibleoperations as $index => $value) {
+            if (in_array($value, $selectedoptions)) {
+                $possibleoperationsindex[] = $index;
+            }
+        }
+        return $possibleoperationsindex;
     }
 }

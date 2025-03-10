@@ -153,7 +153,6 @@ class hourlist extends base {
         $delta = filter::get_timezone_offset();
 
         $returnarray = [];
-        // We get back the GMT timestamps. We need to translate them.
         foreach ($array as $key => $value) {
             $key = $key - $delta;
             $value->coursestarttime = "$key";
