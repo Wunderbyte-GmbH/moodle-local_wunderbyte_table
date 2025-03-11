@@ -83,19 +83,8 @@ class demo implements renderable, templatable {
         $table = new demo_table('demotable_1');
 
         // Add template switcher to table.
-        // Todo: Needs to be done in a function!
-        $table->switchtemplates = [
-            'templates' => [
-                [
-                    'template' => 'local_wunderbyte_table/twtable_list',
-                    'label' => 'List',
-                ],
-                [
-                    'template' => 'local_wunderbyte_table/twtable_cards',
-                    'label' => 'Cards',
-                ],
-            ],
-        ];
+        $table->add_template_to_switcher('local_wunderbyte_table/twtable_list', get_string('viewlist', 'local_wunderbyte_table'), true);
+        $table->add_template_to_switcher('local_wunderbyte_table/twtable_cards', get_string('viewcards', 'local_wunderbyte_table'));
 
         $columns = [
             'id' => get_string('id', 'local_wunderbyte_table'),

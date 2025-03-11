@@ -2186,4 +2186,29 @@ class wunderbyte_table extends table_sql {
         // Check if the file path is valid (non-empty) and if the file exists.
         return !empty($templatefullpath) && file_exists($templatefullpath);
     }
+
+    /**
+     * Add a template to the template switcher.
+     *
+     * @param string $template full template name, e.g. 'local_wunderbyte_table/twtable_list'
+     * @param string $label    label for the template, e.g. 'List'
+     * @param bool $selected   whether the template is selected by default
+     */
+    public function add_template_to_switcher(string $template, string $label, bool $selected = false) {
+        $template = [
+            'template' => $template,
+            'label' => $label,
+        ];
+        if ($selected) {
+            $template['selected'] = true;
+            // Make sure only one template is selected.
+            if (!empty($this->switchtemplates['templates'])) {
+                foreach ($this->switchtemplates['templates'] as &$existingtemplate) {
+                    unset($existingtemplate['selected']);
+                }
+            }
+        }
+        // Now we can add the template to the switcher.
+        $this->switchtemplates['templates'][] = $template;
+    }
 }

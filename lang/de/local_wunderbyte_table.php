@@ -167,6 +167,8 @@ $string['tuesday'] = 'Di';
 $string['turnoffcaching'] = 'Keine Verwendung von Caching' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['valuehastobeint'] = 'Wert muss eine Zahl sein';
 $string['veranstaltungen'] = "Veranstaltungen";
+$string['viewcards'] = 'Karten-Ansicht';
+$string['viewlist'] = 'Listen-Ansicht';
 $string['wbtablefiltersettingsheader'] = 'Filter anpassen';
 $string['wbtabletablesettingsdemo'] = 'Demo Text';
 $string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';

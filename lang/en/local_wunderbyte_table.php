@@ -171,6 +171,8 @@ $string['tuesday'] = 'Tue';
 $string['turnoffcaching'] = 'Turn off caching' . '<span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['valuehastobeint'] = "Value has to be a number";
 $string['veranstaltungen'] = "Events";
+$string['viewcards'] = 'Cards view';
+$string['viewlist'] = 'List view';
 $string['wbtablefiltersettingsheader'] = 'Edit filters';
 $string['wbtabletablesettingsdemo'] = 'Demo Text';
 $string['wbtabletablesettingsheader'] = 'More settings';
