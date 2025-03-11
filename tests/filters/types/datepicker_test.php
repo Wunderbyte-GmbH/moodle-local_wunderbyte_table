@@ -162,11 +162,11 @@ final class datepicker_test extends TestCase {
                 $this->equalTo("remove[{$filtertypename}]"),
                 $this->stringContains('<i class="fa fa-trash"></i>'),
                 $this->callback(function ($options) use ($filtertypename) {
-                        return is_array($options) &&
-                            isset($options['class']) && $options['class'] === 'btn remove-key-value' &&
-                            isset($options['type']) && $options['type'] === 'button' &&
-                            isset($options['data-groupid']) && $options['data-groupid'] === $filtertypename &&
-                            isset($options['aria-label']) && $options['aria-label'] === "Remove key-value pair for {$filtertypename}";
+                    return is_array($options) &&
+                        isset($options['class']) && $options['class'] === 'btn remove-key-value' &&
+                        isset($options['type']) && $options['type'] === 'button' &&
+                        isset($options['data-groupid']) && $options['data-groupid'] === $filtertypename &&
+                        isset($options['aria-label']) && $options['aria-label'] === "Remove key-value pair for {$filtertypename}";
                 })
             );
 

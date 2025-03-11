@@ -241,6 +241,7 @@ class datepickerspan extends datepicker {
 
     /**
      * The expected value.
+     * @param array $moodleformdate
      * @return int
      */
     public static function get_timestamp($moodleformdate) {
@@ -256,6 +257,7 @@ class datepickerspan extends datepicker {
 
     /**
      * The expected value.
+     * @param string $timestamp
      * @return array
      */
     public static function get_moodle_form_date($timestamp) {
@@ -270,6 +272,7 @@ class datepickerspan extends datepicker {
 
     /**
      * The expected value.
+     * @param array $selectedoptions
      * @return array
      */
     public static function get_operatoroptions_name($selectedoptions) {
@@ -284,6 +287,7 @@ class datepickerspan extends datepicker {
 
     /**
      * The expected value.
+     * @param array $selectedoptions
      * @return array
      */
     public static function get_operatoroptions_index($selectedoptions) {
