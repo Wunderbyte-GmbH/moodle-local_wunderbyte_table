@@ -84,7 +84,7 @@ final class weekdays_test extends TestCase {
 
     /**
      * Test add_filter() method.
-     * @covers \local_wunderbyte_table\filters\types\hourlist::get_filterspecific_values
+     * @covers \local_wunderbyte_table\filters\types\weekdays::get_filterspecific_values
      */
     public function test_get_filterspecific_values(): void {
         $data = new \stdClass();
@@ -97,5 +97,23 @@ final class weekdays_test extends TestCase {
         $this->assertEquals('Test Filter', $result['localizedname']);
         $this->assertEquals('1', $result['testcolumn_wb_checked']);
         $this->assertEquals('weekdays', $result['wbfilterclass']);
+    }
+
+    /**
+     * Test define_sql() method.
+     * @covers \local_wunderbyte_table\filters\types\weekdays::get_new_filter_values
+     */
+    public function test_get_new_filter_values(): void {
+        $data = (object) [
+            'localizedname' => 'datalocalizedname',
+            'username_wb_checked' => 'datafilterenablelabel',
+            'wbfilterclass' => "some\\testing\\class",
+            'filterenablelabel' => 'my_filter_label',
+        ];
+        $filtercolumn = 'username';
+
+        $result = weekdays::get_new_filter_values($data, $filtercolumn);
+        $this->assertCount(11, $result);
+        $this->assertArrayHasKey('monday', $result);
     }
 }
