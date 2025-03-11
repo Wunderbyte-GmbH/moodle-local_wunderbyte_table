@@ -32,7 +32,7 @@ use coding_exception;
 use Exception;
 use local_wunderbyte_table\external\load_data;
 use local_wunderbyte_table\filters\types\callback;
-use local_wunderbyte_table\filters\types\datepicker;
+use local_wunderbyte_table\filters\types\datepickerspan;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\filters\types\hierarchicalfilter;
 use local_wunderbyte_table\filters\types\hourlist;
@@ -378,7 +378,7 @@ final class base_dataprovider_test extends advanced_testcase {
         $callbackfilter->define_callbackfunction('local_wunderbyte_table\base_dataprovider_test::filter_iddivisiblebythree');
         $table->add_filter($callbackfilter);
 
-        $datepicker = new datepicker('enddate', get_string('enddate'));
+        $datepicker = new datepickerspan('enddate', get_string('enddate'));
         // For the datepicker, we need to add special options.
         $datepicker->add_options(
             'standard',
@@ -388,7 +388,7 @@ final class base_dataprovider_test extends advanced_testcase {
         );
         $table->add_filter($datepicker);
 
-        $datepicker = new datepicker(
+        $datepicker = new datepickerspan(
             'startdate',
             get_string('timespan', 'local_wunderbyte_table'),
             'enddate'

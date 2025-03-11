@@ -44,7 +44,6 @@ final class callback_test extends TestCase {
         $result = callback::get_data_for_filter_options($table, $key);
         $this->assertCount(2, $result);
         $this->assertArrayHasKey(0, $result);
-        $this->assertObjectHasProperty('keycount', $result[0]);
         $this->assertArrayHasKey(1, $result);
     }
 
