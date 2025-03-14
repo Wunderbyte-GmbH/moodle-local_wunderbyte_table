@@ -30,6 +30,14 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
       | page     | PageName2  | PageDesc2  | C2     | PAGE2    |
+    ## Unfortunately, TinyMCE is slow and has misbehavior which might cause number of site-wide issues. So - we disable it.
+    And the following config values are set as admin:
+      | config        | value         |
+      | texteditors   | atto,textarea |
+    And I change viewport size to "1600x12000"
+    ## Forcing of timezome is important for date validation
+    ##  | timezone      | Europe/Berlin |
+    ##  | forcetimezone | Europe/Berlin |
 
   @javascript
   Scenario: Filter users table in wb_table by weekdays
@@ -40,16 +48,25 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I click on ".asidecollapse-demotable_4" "css_element"
     And I click on ".demotable_4 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
     When I set the field "Friday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
-    Then I should see "3 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
-    And I wait "1" seconds
-    And I should see "user12" in the "#demotable_4_r1" "css_element"
-    And I should see "user2" in the "#demotable_4_r2" "css_element"
-    And I should see "user8" in the "#demotable_4_r3" "css_element"
+    And I wait until the page is ready
+    Then I should see "5 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I should see "user1" in the "#demotable_4_r1" "css_element"
+    And I should see "user12" in the "#demotable_4_r2" "css_element"
+    And I should see "user2" in the "#demotable_4_r3" "css_element"
+    And I should see "user7" in the "#demotable_4_r4" "css_element"
+    And I should see "user8" in the "#demotable_4_r5" "css_element"
     And I set the field "Friday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to ""
-    And I wait "1" seconds
+    And I wait until the page is ready
+    And I set the field "Wednesday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
+    And I wait until the page is ready
+    And I should see "user10" in the "#demotable_4_r1" "css_element"
+    And I should see "user5" in the "#demotable_4_r2" "css_element"
+    And I should see "user6" in the "#demotable_4_r3" "css_element"
+    And I should see "3 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I set the field "Wednesday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to ""
+    And I wait until the page is ready
     And I set the field "Thursday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
-    And I wait "1" seconds
+    And I wait until the page is ready
     And I should see "admin" in the "#demotable_4_r1" "css_element"
     And I should see "guest" in the "#demotable_4_r2" "css_element"
     And I should see "2 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
-    And I wait "1" seconds
