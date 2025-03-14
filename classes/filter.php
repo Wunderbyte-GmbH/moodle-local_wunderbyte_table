@@ -290,22 +290,27 @@ class filter {
         global $DB;
 
         $databasetype = $DB->get_dbfamily();
+        $tz = usertimezone();
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
             case 'postgres':
                 $sql = "SELECT $key, COUNT($key)
                         FROM (
-                            SELECT TO_CHAR(TIMESTAMP 'epoch' + $key * INTERVAL '1 second', 'FMDay') AS $key
+                            SELECT TO_CHAR(
+                                (TIMESTAMP 'epoch' + $key * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'FMDay'
+                            ) AS $key
                             FROM {$table->sql->from}
-                            WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0
+                            WHERE {$table->sql->where} AND $key IS NOT NULL
                         ) as weekdayss1
                         GROUP BY $key ";
                 break;
             case 'mysql':
                 $sql = "SELECT weekday, COUNT(*) as count
                         FROM (
-                            SELECT DATE_FORMAT(FROM_UNIXTIME($key), '%W') AS weekday
+                            SELECT DATE_FORMAT(
+                                CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz'), '%W'
+                            ) AS weekday
                             FROM {$table->sql->from}
                             WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0
                         ) as weekdayss1
@@ -360,15 +365,20 @@ class filter {
         global $DB;
 
         $databasetype = $DB->get_dbfamily();
+        $tz = usertimezone();
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
             case 'postgres':
-                $sql = " TO_CHAR(TIMESTAMP 'epoch' + $fieldname * INTERVAL '1 second', 'FMDay') = $param
-                 AND $fieldname IS NOT NULL AND $fieldname <> 0";
+                $sql = " TO_CHAR(
+                 (TIMESTAMP 'epoch' + $fieldname * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'FMDay'
+                 ) = $param
+                 AND $fieldname IS NOT NULL";
                 break;
             default:
-                $sql = " DATE_FORMAT(FROM_UNIXTIME($fieldname), '%W') = $param
+                $sql = " DATE_FORMAT(
+                 CONVERT_TZ(FROM_UNIXTIME($fieldname), 'UTC', '$tz'), '%W'
+                 ) = $param
                  AND $fieldname IS NOT NULL AND $fieldname <> 0";
         }
 
