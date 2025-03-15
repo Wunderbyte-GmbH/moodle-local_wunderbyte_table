@@ -248,7 +248,7 @@ class filter {
         global $DB;
 
         $databasetype = $DB->get_dbfamily();
-        $tz = usertimezone();
+        $tz = usertimezone(); // We must apply user's timezone there.
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
@@ -265,9 +265,13 @@ class filter {
                 break;
             case 'mysql':
                 $sql = "SELECT hours, COUNT(*) as count
-                        FROM ( SELECT EXTRACT(HOUR FROM FROM_UNIXTIME($key)) AS hours
-                        FROM {$table->sql->from}
-                        WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as hourss1
+                        FROM (
+                            SELECT EXTRACT(
+                                HOUR FROM CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz')
+                            ) AS hours
+                            FROM {$table->sql->from}
+                            WHERE {$table->sql->where} AND $key IS NOT NULL
+                        ) as hourss1
                         GROUP BY hours";
                 break;
             default:
@@ -295,7 +299,7 @@ class filter {
         global $DB;
 
         $databasetype = $DB->get_dbfamily();
-        $tz = usertimezone();
+        $tz = usertimezone(); // We must apply user's timezone there.
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
@@ -345,7 +349,7 @@ class filter {
         global $DB;
 
         $databasetype = $DB->get_dbfamily();
-        $tz = usertimezone();
+        $tz = usertimezone(); // We must apply user's timezone there.
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
@@ -356,8 +360,10 @@ class filter {
                  AND $fieldname IS NOT NULL";
                 break;
             default:
-                $sql = " EXTRACT(HOUR FROM FROM_UNIXTIME($fieldname)) = $param
-                 AND $fieldname IS NOT NULL AND $fieldname <> 0";
+                $sql = " EXTRACT(
+                 HOUR FROM CONVERT_TZ(FROM_UNIXTIME($fieldname), 'UTC', '$tz')
+                 ) = $param
+                 AND $fieldname IS NOT NULL";
         }
 
         return $sql;
@@ -373,7 +379,7 @@ class filter {
         global $DB;
 
         $databasetype = $DB->get_dbfamily();
-        $tz = usertimezone();
+        $tz = usertimezone(); // We must apply user's timezone there.
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
