@@ -295,15 +295,15 @@ class filter {
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
             case 'postgres':
-                $sql = "SELECT $key, COUNT($key)
+                $sql = "SELECT weekday, COUNT(weekday)
                         FROM (
                             SELECT TO_CHAR(
                                 (TIMESTAMP 'epoch' + $key * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'FMDay'
-                            ) AS $key
+                            ) AS weekday
                             FROM {$table->sql->from}
                             WHERE {$table->sql->where} AND $key IS NOT NULL
                         ) as weekdayss1
-                        GROUP BY $key ";
+                        GROUP BY weekday ";
                 break;
             case 'mysql':
                 $sql = "SELECT weekday, COUNT(*) as count
