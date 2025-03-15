@@ -312,7 +312,7 @@ class filter {
                                 CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz'), '%W'
                             ) AS weekday
                             FROM {$table->sql->from}
-                            WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0
+                            WHERE {$table->sql->where} AND $key IS NOT NULL
                         ) as weekdayss1
                         GROUP BY weekday";
                 break;
@@ -379,7 +379,7 @@ class filter {
                 $sql = " DATE_FORMAT(
                  CONVERT_TZ(FROM_UNIXTIME($fieldname), 'UTC', '$tz'), '%W'
                  ) = $param
-                 AND $fieldname IS NOT NULL AND $fieldname <> 0";
+                 AND $fieldname IS NOT NULL";
         }
 
         return $sql;
