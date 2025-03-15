@@ -248,15 +248,20 @@ class filter {
         global $DB;
 
         $databasetype = $DB->get_dbfamily();
+        $tz = usertimezone();
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
             case 'postgres':
-                $sql = "SELECT $key, COUNT($key)
-                        FROM ( SELECT EXTRACT(HOUR FROM TIMESTAMP 'epoch' + $key * interval '1 second') AS $key
-                        FROM {$table->sql->from}
-                        WHERE {$table->sql->where} AND $key IS NOT NULL AND $key <> 0) as hourss1
-                        GROUP BY $key ";
+                $sql = "SELECT hours, COUNT(hours)
+                        FROM (
+                            SELECT EXTRACT(
+                                HOUR FROM (TIMESTAMP 'epoch' + $key * interval '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz'
+                            ) AS hours
+                            FROM {$table->sql->from}
+                            WHERE {$table->sql->where} AND $key IS NOT NULL
+                        ) as hourss1
+                        GROUP BY hours ";
                 break;
             case 'mysql':
                 $sql = "SELECT hours, COUNT(*) as count
@@ -340,12 +345,15 @@ class filter {
         global $DB;
 
         $databasetype = $DB->get_dbfamily();
+        $tz = usertimezone();
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
             case 'postgres':
-                $sql = " EXTRACT(HOUR FROM TIMESTAMP 'epoch' + $fieldname * interval '1 second') = $param
-                 AND $fieldname IS NOT NULL AND $fieldname <> 0";
+                $sql = " EXTRACT(
+                 HOUR FROM (TIMESTAMP 'epoch' + $fieldname * interval '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz'
+                 ) = $param
+                 AND $fieldname IS NOT NULL";
                 break;
             default:
                 $sql = " EXTRACT(HOUR FROM FROM_UNIXTIME($fieldname)) = $param
