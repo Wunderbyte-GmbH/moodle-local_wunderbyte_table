@@ -19,8 +19,12 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
       | teacher1 | Teacher   | 1        | ## Monday, May 27, 2024 22:35 ##         |
     And the following "courses" exist:
       | fullname | shortname | startdate  | enddate    | timecreated                   |
-      | Course 1 | C1        | 1652317261 | 1652835661 | ## February 10, 2023 4:13 ##  |
-      | Course 2 | C2        | 1683853261 | 1684371661 | ## February 10, 2023 14:05 ## |
+      | Course 1 | C1        | 1652317261 | 1652835661 | ## February 10, 2021 4:13 ##  |
+      | Course 2 | C2        | 1683853261 | 1684371661 | ## February 10, 2022 14:05 ## |
+      | Course 3 | C3        | 1652317261 | 1652835661 | ## February 10, 2021 4:33 ##  |
+      | Course 4 | C4        | 1683853261 | 1684371661 | ## February 10, 2022 18:05 ## |
+      | Course 5 | C5        | 1652317261 | 1652835661 | ## February 10, 2021 11:33 ## |
+      | Course 6 | C6        | 1683853261 | 1684371661 | ## February 10, 2022 23:15 ## |
     ## C1 - 12-18 May 2022, C2 - 12-18 May 2023
     And the following "course enrolments" exist:
       | user     | course | role           |
@@ -70,3 +74,37 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I should see "admin" in the "#demotable_4_r1" "css_element"
     And I should see "guest" in the "#demotable_4_r2" "css_element"
     And I should see "2 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+
+  @javascript
+  Scenario: Filter course table in wb_table by hourlist
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Demo table 2"
+    ## Filter panel being hidden by default on this tab
+    And I click on ".asidecollapse-demotable_2" "css_element"
+    And I click on ".demotable_2 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
+    When I set the field "04:00 - 05:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
+    ## We can not check number of filtered items and their exact location in table - because we do not know "timecreate" for site!
+    And I wait until the page is ready
+    Then I should see "Course 1" in the "#demotable_2 .rows-container" "css_element"
+    And I should see "Course 3" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 2" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 4" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 5" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 6" in the "#demotable_2 .rows-container" "css_element"
+    And I set the field "04:00 - 05:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to ""
+    And I wait until the page is ready
+    And I set the field "11:00 - 12:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
+    And I wait until the page is ready
+    And I should see "Course 5" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 2" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 4" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 6" in the "#demotable_2 .rows-container" "css_element"
+    And I set the field "11:00 - 12:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to ""
+    And I wait until the page is ready
+    And I set the field "23:00 - 24:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
+    And I wait until the page is ready
+    And I should see "Course 6" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 2" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 3" in the "#demotable_2 .rows-container" "css_element"
+    And I should not see "Course 5" in the "#demotable_2 .rows-container" "css_element"
