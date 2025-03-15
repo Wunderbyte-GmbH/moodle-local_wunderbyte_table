@@ -144,15 +144,9 @@ class hourlist extends base {
     public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
 
         $array = filter::get_db_filter_column_hours($table, $key);
-
-        $delta = filter::get_timezone_offset();
-
         $returnarray = [];
-        // We get back the GMT timestamps. We need to translate them.
+
         foreach ($array as $hour => $value) {
-
-            $hour = $hour - $delta;
-
             $value->$key = "$hour";
             $returnarray[$hour] = $value;
         }

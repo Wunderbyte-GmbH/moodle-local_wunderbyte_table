@@ -440,15 +440,14 @@ abstract class base {
                 is_numeric($value)
                 && isset($table->subcolumns['datafields'][$columnname]['local_wunderbyte_table\filters\types\hourlist'])
             ) {
-                // Known issue. See https://github.com/Wunderbyte-GmbH/Wunderbyte-GmbH/issues/304.
-                // Here we check if it's an hourslist filter.
-                $delta = filter::get_timezone_offset(); // Timezone might vary according to location.
-                $paramsvaluekey = $table->set_params((string) ($value + $delta), false);
+                // Timezone now being applyied in the filter class.
+                $paramsvaluekey = $table->set_params((string) ($value), false);
                 $filter .= filter::apply_hourlist_filter($columnname, ":$paramsvaluekey");
             } else if (
                 is_string($value)
                 && isset($table->subcolumns['datafields'][$columnname]['local_wunderbyte_table\filters\types\weekdays'])
             ) {
+                // Timezone now being applyied in the filter class.
                 $paramsvaluekey = $table->set_params((string) ($value), false);
                 $filter .= filter::apply_weekday_filter($columnname, ":$paramsvaluekey");
             } else {
