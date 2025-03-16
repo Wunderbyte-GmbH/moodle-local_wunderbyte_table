@@ -306,9 +306,9 @@ class filter {
             case 'postgres':
                 $sql = "SELECT weekday, COUNT(weekday)
                         FROM (
-                            SELECT TO_CHAR(
-                                (TIMESTAMP 'epoch' + $key * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'FMDay'
-                            ) AS weekday
+                            SELECT TRIM(TO_CHAR(
+                                (TIMESTAMP 'epoch' + $key * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'day'
+                            )) AS weekday
                             FROM {$table->sql->from}
                             WHERE {$table->sql->where} AND $key IS NOT NULL
                         ) as weekdayss1
@@ -317,9 +317,9 @@ class filter {
             case 'mysql':
                 $sql = "SELECT weekday, COUNT(*) as count
                         FROM (
-                            SELECT DATE_FORMAT(
+                            SELECT LOWER(DATE_FORMAT(
                                 CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz'), '%W'
-                            ) AS weekday
+                            )) AS weekday
                             FROM {$table->sql->from}
                             WHERE {$table->sql->where} AND $key IS NOT NULL
                         ) as weekdayss1
@@ -384,15 +384,15 @@ class filter {
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
             case 'postgres':
-                $sql = " TO_CHAR(
-                 (TIMESTAMP 'epoch' + $fieldname * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'FMDay'
-                 ) = $param
+                $sql = " TRIM(TO_CHAR(
+                 (TIMESTAMP 'epoch' + $fieldname * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'day'
+                 )) = $param
                  AND $fieldname IS NOT NULL";
                 break;
             default:
-                $sql = " DATE_FORMAT(
+                $sql = " LOWER(DATE_FORMAT(
                  CONVERT_TZ(FROM_UNIXTIME($fieldname), 'UTC', '$tz'), '%W'
-                 ) = $param
+                 )) = $param
                  AND $fieldname IS NOT NULL";
         }
 

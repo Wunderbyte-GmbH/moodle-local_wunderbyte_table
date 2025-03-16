@@ -50,13 +50,13 @@ class weekdays extends base {
     ) {
 
         $this->options = [
-            'monday' => get_string('monday', 'local_wunderbyte_table'),
-            'tuesday' => get_string('tuesday', 'local_wunderbyte_table'),
-            'wednesday' => get_string('wednesday', 'local_wunderbyte_table'),
-            'thursday' => get_string('thursday', 'local_wunderbyte_table'),
-            'friday' => get_string('friday', 'local_wunderbyte_table'),
-            'saturday' => get_string('saturday', 'local_wunderbyte_table'),
-            'sunday' => get_string('sunday', 'local_wunderbyte_table'),
+            'monday' => get_string('monday', 'calendar'),
+            'tuesday' => get_string('tuesday', 'calendar'),
+            'wednesday' => get_string('wednesday', 'calendar'),
+            'thursday' => get_string('thursday', 'calendar'),
+            'friday' => get_string('friday', 'calendar'),
+            'saturday' => get_string('saturday', 'calendar'),
+            'sunday' => get_string('sunday', 'calendar'),
         ];
 
         $this->columnidentifier = $columnidentifier;
