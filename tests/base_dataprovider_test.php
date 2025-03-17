@@ -35,6 +35,7 @@ use local_wunderbyte_table\filters\types\callback;
 use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\filters\types\hierarchicalfilter;
+use local_wunderbyte_table\filters\types\hourlist;
 use local_wunderbyte_table\filters\types\intrange;
 use local_wunderbyte_table\filters\types\weekdays;
 use local_wunderbyte_table\local\sortables\types\standardsortable;
@@ -265,6 +266,7 @@ final class base_dataprovider_test extends advanced_testcase {
             'action' => get_string('action'),
             'startdate' => get_string('startdate'),
             'enddate' => get_string('enddate'),
+            'timecreated' => get_string('timecreated'),
         ];
 
         // Number of items must be equal.
@@ -283,6 +285,9 @@ final class base_dataprovider_test extends advanced_testcase {
             'enddate',
             get_string('enddate')
         );
+        $table->add_filter($weekdaysfilter);
+
+        $weekdaysfilter = new weekdays('timecreated', get_string('timecreated'));
         $table->add_filter($weekdaysfilter);
 
         $standardfilter = new standardfilter('shortname', 'shortname');
@@ -320,6 +325,7 @@ final class base_dataprovider_test extends advanced_testcase {
             'action' => get_string('action'),
             'startdate' => get_string('startdate'),
             'enddate' => get_string('enddate'),
+            'timecreated' => get_string('timecreated'),
         ];
 
         // Number of items must be equal.
@@ -396,6 +402,9 @@ final class base_dataprovider_test extends advanced_testcase {
             'now'
         );
         $table->add_filter($datepicker);
+
+        $hourslistfilter = new hourlist('timecreated', "timecreated");
+        $table->add_filter($hourslistfilter);
 
         $table->set_filter_sql('*', "(SELECT * FROM {course} ORDER BY id ASC LIMIT 112) as s1", 'id > 1', '');
 
@@ -580,27 +589,31 @@ final class base_dataprovider_test extends advanced_testcase {
                 'coursestocreate' => 10,
                 // No fullname, so default 'Test Course xx' will be applied.
                 'users' => $standardusers,
+                'timecreated' => strtotime('Tuesday, 15 April 2014 05:00'),
             ],
             [
                 'coursestocreate' => 3,
                 'fullname' => 'filtercourse',
                 'users' => $standardusers,
+                'timecreated' => strtotime('Saturday, 12 June 2005 10:00'),
             ],
             [
                 'coursestocreate' => 1,
                 'fullname' => 'ended1',
                 'shortname' => 'short-ended1',
-                'startdate' => strtotime('2 May 2010 13:00'),
-                'enddate' => strtotime('20 May 2010 14:20'),
+                'startdate' => strtotime('Sunday, 2 May 2010 13:00'),
+                'enddate' => strtotime('Thursday, 20 May 2010 14:20'),
                 'users' => $standardusers,
+                'timecreated' => strtotime('Wednesday, 10 December 2015 22:00'),
             ],
             [
                 'coursestocreate' => 1,
                 'fullname' => 'ended2',
                 'shortname' => 'short-ended2',
-                'startdate' => strtotime('5 Jun 2020 14:00'),
-                'enddate' => strtotime('15 Jun 2020 15:00'),
+                'startdate' => strtotime('Friday, 5 Jun 2020 15:00'),
+                'enddate' => strtotime('Monday, 15 Jun 2020 17:00'),
                 'users' => $standardusers,
+                'timecreated' => strtotime('Saturday, 18 January 2020 19:00'),
             ],
             [
                 'coursestocreate' => 1,
@@ -609,6 +622,7 @@ final class base_dataprovider_test extends advanced_testcase {
                 'startdate' => $plusfifftymonth,
                 'enddate' => $plussixtymonth,
                 'users' => $standardusers,
+                'timecreated' => strtotime('Monday, 10 March 2025 19:30'),
             ],
         ];
 
@@ -651,6 +665,79 @@ final class base_dataprovider_test extends advanced_testcase {
         // Array of tests.
         $returnarray = [
             // Test name (description).
+            'filter_weekdays' => [
+                'tablecallback' => 'create_demo_table',
+                'courses' => $standardcourses,
+                'expected' => [
+                    'getrowscount' => [
+                        [
+                            'assert' => 16,
+                        ],
+                        [
+                            'filterobjects' => '{"timecreated":["tuesday"]}',
+                            'assert' => 10,
+                        ],
+                        [
+                            'filterobjects' => '{"timecreated":["saturday"]}',
+                            'assert' => 4,
+                        ],
+                        [
+                            'filterobjects' => '{"timecreated":["monday"]}',
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => '{"timecreated":["wednesday"]}',
+                            'assert' => 1,
+                        ],
+                    ],
+                ],
+            ],
+            'filter_hourlist' => [
+                'tablecallback' => 'create_demo2_table',
+                'courses' => $standardcourses,
+                'expected' => [
+                    'getrowscount' => [
+                        [
+                            'assert' => 16,
+                        ],
+                        [
+                            'filterobjects' => '{"timecreated":["5"]}',
+                            'assert' => 10,
+                        ],
+                        [
+                            'filterobjects' => '{"timecreated":["10"]}',
+                            'assert' => 3,
+                        ],
+                        [
+                            'filterobjects' => '{"timecreated":["19"]}',
+                            'assert' => 2,
+                        ],
+                        [
+                            'filterobjects' => '{"timecreated":["22"]}',
+                            'assert' => 1,
+                        ],
+                    ],
+                ],
+            ],
+            'filter_cmbine_shortname_weekdays' => [
+                'tablecallback' => 'create_demo_table',
+                'courses' => $standardcourses,
+                'expected' => [
+                    'getrowscount' => [
+                        [
+                            'assert' => 16,
+                        ],
+                        [
+                            'filterobjects' => '{"shortname":["short-ended1","short-ended2"],"startdate":["sunday"]}',
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => '{"shortname":["short-ended1","short-ended2"],"startdate":["friday"]}',
+                            'assert' => 1,
+                        ],
+                    ],
+                ],
+            ],
             'filter_intrange' => [
                 'tablecallback' => 'create_demo_table',
                 'courses' => $standardcourses,
