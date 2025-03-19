@@ -127,7 +127,7 @@ class weekdays extends base {
      */
     public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
 
-        $array = filter::get_db_filter_column_weekdays($table, $key);
+        $array = self::get_db_filter_column_weekdays($table, $key);
 
         $returnarray = [];
         // We get back the GMT timestamps. We need to translate them.
@@ -137,5 +137,100 @@ class weekdays extends base {
         }
 
         return $returnarray ?? [];
+    }
+
+    /**
+     * Makes sql request for weekdays .
+     * @param wunderbyte_table $table
+     * @param string $key
+     * @return array
+     */
+    protected static function get_db_filter_column_weekdays(wunderbyte_table $table, string $key) {
+        global $DB;
+
+        $databasetype = $DB->get_dbfamily();
+        $tz = usertimezone(); // We must apply user's timezone there.
+
+        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+        switch ($databasetype) {
+            case 'postgres':
+                $sql = "SELECT weekday, COUNT(weekday)
+                        FROM (
+                            SELECT TRIM(TO_CHAR(
+                                (TIMESTAMP 'epoch' + $key * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'day'
+                            )) AS weekday
+                            FROM {$table->sql->from}
+                            WHERE {$table->sql->where} AND $key IS NOT NULL
+                        ) as weekdayss1
+                        GROUP BY weekday ";
+                break;
+            case 'mysql':
+                $sql = "SELECT weekday, COUNT(*) as count
+                        FROM (
+                            SELECT LOWER(DATE_FORMAT(
+                                CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz'), '%W'
+                            )) AS weekday
+                            FROM {$table->sql->from}
+                            WHERE {$table->sql->where} AND $key IS NOT NULL
+                        ) as weekdayss1
+                        GROUP BY weekday";
+                break;
+            default:
+                $sql = '';
+                break;
+        }
+
+        if (empty($sql)) {
+            return [];
+        }
+
+        $records = $DB->get_records_sql($sql, $table->sql->params);
+
+        return $records;
+    }
+
+    /**
+     * Apply the filter of intrange class.
+     *
+     * @param string $filter
+     * @param string $columnname
+     * @param mixed $categoryvalue
+     * @param wunderbyte_table $table
+     *
+     * @return void
+     *
+     */
+    public function apply_filter(
+        string &$filter,
+        string $columnname,
+        $categoryvalue,
+        wunderbyte_table &$table
+    ): void {
+        global $DB;
+
+        $databasetype = $DB->get_dbfamily();
+        $tz = usertimezone(); // We must apply user's timezone there.
+        $filtercounter = 1;
+        $filter .= " ( ";
+        foreach ($categoryvalue as $key => $value) {
+            $filter .= $filtercounter == 1 ? "" : " OR ";
+            $paramsvaluekey = $table->set_params((string) ($value), false);
+            // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+            switch ($databasetype) {
+                case 'postgres':
+                    $filter .= " TRIM(TO_CHAR(
+                    (TIMESTAMP 'epoch' + $columnname * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'day'
+                    )) = :$paramsvaluekey
+                    AND $columnname IS NOT NULL";
+                    break;
+                default:
+                    $filter .= " LOWER(DATE_FORMAT(
+                    CONVERT_TZ(FROM_UNIXTIME($columnname), 'UTC', '$tz'), '%W'
+                    )) = :$paramsvaluekey
+                    AND $columnname IS NOT NULL";
+            }
+            $filtercounter++;
+        }
+        $filter .= " ) ";
     }
 }

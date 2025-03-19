@@ -289,57 +289,6 @@ class filter {
     }
 
     /**
-     * Makes sql request for weekdays .
-     * @param wunderbyte_table $table
-     * @param string $key
-     * @return array
-     */
-    public static function get_db_filter_column_weekdays(wunderbyte_table $table, string $key) {
-
-        global $DB;
-
-        $databasetype = $DB->get_dbfamily();
-        $tz = usertimezone(); // We must apply user's timezone there.
-
-        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
-        switch ($databasetype) {
-            case 'postgres':
-                $sql = "SELECT weekday, COUNT(weekday)
-                        FROM (
-                            SELECT TRIM(TO_CHAR(
-                                (TIMESTAMP 'epoch' + $key * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'day'
-                            )) AS weekday
-                            FROM {$table->sql->from}
-                            WHERE {$table->sql->where} AND $key IS NOT NULL
-                        ) as weekdayss1
-                        GROUP BY weekday ";
-                break;
-            case 'mysql':
-                $sql = "SELECT weekday, COUNT(*) as count
-                        FROM (
-                            SELECT LOWER(DATE_FORMAT(
-                                CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz'), '%W'
-                            )) AS weekday
-                            FROM {$table->sql->from}
-                            WHERE {$table->sql->where} AND $key IS NOT NULL
-                        ) as weekdayss1
-                        GROUP BY weekday";
-                break;
-            default:
-                $sql = '';
-                break;
-        }
-
-        if (empty($sql)) {
-            return [];
-        }
-
-        $records = $DB->get_records_sql($sql, $table->sql->params);
-
-        return $records;
-    }
-
-    /**
      * Apply the filter for postgres & mariadb DB.
      * @param string $fieldname
      * @param string $param
@@ -363,36 +312,6 @@ class filter {
                 $sql = " EXTRACT(
                  HOUR FROM CONVERT_TZ(FROM_UNIXTIME($fieldname), 'UTC', '$tz')
                  ) = $param
-                 AND $fieldname IS NOT NULL";
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Apply the weekday filter for postgres & mariadb DB.
-     * @param string $fieldname
-     * @param string $param
-     * @return string
-     */
-    public static function apply_weekday_filter(string $fieldname, string $param) {
-        global $DB;
-
-        $databasetype = $DB->get_dbfamily();
-        $tz = usertimezone(); // We must apply user's timezone there.
-
-        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
-        switch ($databasetype) {
-            case 'postgres':
-                $sql = " TRIM(TO_CHAR(
-                 (TIMESTAMP 'epoch' + $fieldname * INTERVAL '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz', 'day'
-                 )) = $param
-                 AND $fieldname IS NOT NULL";
-                break;
-            default:
-                $sql = " LOWER(DATE_FORMAT(
-                 CONVERT_TZ(FROM_UNIXTIME($fieldname), 'UTC', '$tz'), '%W'
-                 )) = $param
                  AND $fieldname IS NOT NULL";
         }
 
