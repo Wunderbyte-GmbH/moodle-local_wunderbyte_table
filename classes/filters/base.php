@@ -436,13 +436,6 @@ abstract class base {
             ) {
                     $paramsvaluekey = $table->set_params("%" . $value . "%");
                     $filter .= $DB->sql_like("$columnname", ":$paramsvaluekey", false);
-            } else if (
-                is_numeric($value)
-                && isset($table->subcolumns['datafields'][$columnname]['local_wunderbyte_table\filters\types\hourlist'])
-            ) {
-                // Timezone now being applyied in the filter class.
-                $paramsvaluekey = $table->set_params((string) ($value), false);
-                $filter .= filter::apply_hourlist_filter($columnname, ":$paramsvaluekey");
             } else {
                 // We want to find the value in an array of values.
                 // Therefore, we have to use or as well.

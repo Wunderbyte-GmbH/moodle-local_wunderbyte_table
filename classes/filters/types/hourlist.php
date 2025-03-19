@@ -143,7 +143,7 @@ class hourlist extends base {
      */
     public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
 
-        $array = filter::get_db_filter_column_hours($table, $key);
+        $array = self::get_db_filter_column_hours($table, $key);
         $returnarray = [];
 
         foreach ($array as $hour => $value) {
@@ -154,4 +154,99 @@ class hourlist extends base {
         return $returnarray ?? [];
     }
 
+    /**
+     * Makes sql requests.
+     * @param wunderbyte_table $table
+     * @param string $key
+     * @return array
+     */
+    protected static function get_db_filter_column_hours(wunderbyte_table $table, string $key) {
+
+        global $DB;
+
+        $databasetype = $DB->get_dbfamily();
+        $tz = usertimezone(); // We must apply user's timezone there.
+
+        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+        switch ($databasetype) {
+            case 'postgres':
+                $sql = "SELECT hours, COUNT(hours)
+                        FROM (
+                            SELECT EXTRACT(
+                                HOUR FROM (TIMESTAMP 'epoch' + $key * interval '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz'
+                            ) AS hours
+                            FROM {$table->sql->from}
+                            WHERE {$table->sql->where} AND $key IS NOT NULL
+                        ) as hourss1
+                        GROUP BY hours ";
+                break;
+            case 'mysql':
+                $sql = "SELECT hours, COUNT(*) as count
+                        FROM (
+                            SELECT EXTRACT(
+                                HOUR FROM CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz')
+                            ) AS hours
+                            FROM {$table->sql->from}
+                            WHERE {$table->sql->where} AND $key IS NOT NULL
+                        ) as hourss1
+                        GROUP BY hours";
+                break;
+            default:
+                $sql = '';
+                break;
+        }
+
+        if (empty($sql)) {
+            return [];
+        }
+
+        $records = $DB->get_records_sql($sql, $table->sql->params);
+
+        return $records;
+    }
+
+    /**
+     * Apply the filter of hourlist class.
+     *
+     * @param string $filter
+     * @param string $columnname
+     * @param mixed $categoryvalue
+     * @param wunderbyte_table $table
+     *
+     * @return void
+     *
+     */
+    public function apply_filter(
+        string &$filter,
+        string $columnname,
+        $categoryvalue,
+        wunderbyte_table &$table
+    ): void {
+        global $DB;
+
+        $databasetype = $DB->get_dbfamily();
+        $tz = usertimezone(); // We must apply user's timezone there.
+        $filtercounter = 1;
+        $filter .= " ( ";
+        foreach ($categoryvalue as $key => $value) {
+            $filter .= $filtercounter == 1 ? "" : " OR ";
+            $paramsvaluekey = $table->set_params((string) ($value), false);
+            // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+            switch ($databasetype) {
+                case 'postgres':
+                    $filter .= " EXTRACT(
+                     HOUR FROM (TIMESTAMP 'epoch' + $columnname * interval '1 second') AT TIME ZONE 'UTC' AT TIME ZONE '$tz'
+                     ) = :$paramsvaluekey
+                     AND $columnname IS NOT NULL";
+                    break;
+                default:
+                    $filter .= " EXTRACT(
+                     HOUR FROM CONVERT_TZ(FROM_UNIXTIME($columnname), 'UTC', '$tz')
+                     ) = :$paramsvaluekey
+                     AND $columnname IS NOT NULL";
+            }
+            $filtercounter++;
+        }
+        $filter .= " ) ";
+    }
 }

@@ -190,7 +190,7 @@ class weekdays extends base {
     }
 
     /**
-     * Apply the filter of intrange class.
+     * Apply the filter of weekday class.
      *
      * @param string $filter
      * @param string $columnname
