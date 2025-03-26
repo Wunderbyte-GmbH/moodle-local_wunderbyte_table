@@ -557,7 +557,10 @@ class table implements renderable, templatable {
         // Make sure the chosen template is marked as selected.
         if (!empty($this->wbtable->switchtemplates['templates'])) {
             foreach ($this->wbtable->switchtemplates['templates'] as &$t) {
-                if ($t['template'] === $this->wbtable->tabletemplate) {
+                if (
+                    ($t['template'] == get_user_preferences('wbtable_chosen_template_' . $this->wbtable->uniqueid))
+                    && ((int)$t['viewparam'] == get_user_preferences('wbtable_chosen_template_viewparam_' . $this->wbtable->uniqueid))
+                ) {
                     $t['selected'] = true;
                 } else {
                     unset($t['selected']);

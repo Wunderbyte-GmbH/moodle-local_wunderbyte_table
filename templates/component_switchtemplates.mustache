@@ -27,11 +27,13 @@
                     {
                         "template": "local_wunderbyte_table/twtable_list",
                         "label": "List",
+                        "viewparam": 0,
                         "selected": true
                     },
                     {
                         "template": "local_wunderbyte_table/twtable_cards",
-                        "label": "Cards"
+                        "label": "Cards",
+                        "viewparam": 1
                     }
                 ]
             }
@@ -44,7 +46,7 @@
     <select class="custom-select" id="wbtabletemplateswitcher" style="width: fit-content;"
         data-id="1" data-type="wb_action_button" data-methodname="switchtemplates" data-nomodal="true">
         {{#templates}}
-        <option value="{{template}}" {{#selected}}selected{{/selected}}>
+        <option value="{{template}} {{viewparam}}" {{#selected}}selected{{/selected}}>
             {{#label}}{{.}}{{/label}}
         </option>
         {{/templates}}

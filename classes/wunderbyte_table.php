@@ -31,6 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/tablelib.php");
 
 use cache;
+use context_system;
 use Exception;
 use local_wunderbyte_table\event\table_viewed;
 use local_wunderbyte_table\output\lazytable;
@@ -41,6 +42,7 @@ use local_wunderbyte_table\output\viewtable;
 use moodle_url;
 use stdClass;
 use coding_exception;
+use local_wunderbyte_table\event\template_switched;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\local\sortables\base as basesort;
 use local_wunderbyte_table\filters\types\standardfilter;
@@ -200,6 +202,12 @@ class wunderbyte_table extends table_sql {
      * @var string template for table.
      */
     public $tabletemplate = 'local_wunderbyte_table/twtable_list'; // Default template.
+
+    /**
+     * Optional viewparam if the same template is used for different views.
+     * @var int $viewparam
+     */
+    public $viewparam = 0;
 
     /**
      *
@@ -434,6 +442,14 @@ class wunderbyte_table extends table_sql {
         ) {
             $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $uniqueid);
             $this->tabletemplate = $chosentemplate;
+
+            $chosenviewparam = get_user_preferences('wbtable_chosen_template_viewparam_' . $uniqueid);
+            if (is_number($chosenviewparam)) {
+                // Only add integers. Else it's an error.
+                $this->viewparam = $chosenviewparam;
+            } else {
+                $this->viewparam = 0; // Default viewparam.
+            }
         }
     }
 
@@ -1744,6 +1760,11 @@ class wunderbyte_table extends table_sql {
         ) {
             $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
             $this->tabletemplate = $chosentemplate;
+
+            $chosenviewparam = get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid);
+            if (is_number($chosenviewparam)) {
+                $this->viewparam = $chosenviewparam;
+            }
         }
 
         if (!empty($this->tabletemplate)) {
@@ -1923,27 +1944,42 @@ class wunderbyte_table extends table_sql {
      * @return array
      */
     public function action_switchtemplates(int $id, string $data): array {
+        global $USER;
         $jsonobject = json_decode($data);
-        $template = $jsonobject->selectedValue;
+        [$template, $viewparam] = explode(" ", $jsonobject->selectedValue);
         if (empty($template) || !self::template_exists($template)) {
             return [
                 'success' => 0,
                 'message' => 'Template could not be found!',
             ];
         }
-
         set_user_preference('wbtable_chosen_template_' . $this->uniqueid, $template);
+        set_user_preference('wbtable_chosen_template_viewparam_' . $this->uniqueid, $viewparam);
 
         $this->tabletemplate = $template;
+        $this->viewparam = $viewparam;
 
         // When template is changed, we needd to re-cache the table.
         $cache = cache::make('local_wunderbyte_table', 'encodedtables');
         $cache->delete($this->tablecachehash);
         $this->return_encoded_table(true);
 
+        $event = template_switched::create([
+            'context' => context_system::instance(),
+            'userid' => $USER->id,
+            'other' => [
+                'tablename' => $this->uniqueid ?? '',
+                'template' => $template ?? '',
+                'viewparam' => $viewparam ?? 0,
+            ],
+        ]);
+        $event->trigger();
+
         return [
             'success' => 1,
-            'message' => get_user_preferences('wbtable_chosen_template_' . $this->uniqueid),
+            'message' => "template: " . get_user_preferences('wbtable_chosen_template_' . $this->uniqueid) .
+                " viewparam: " . get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid),
+            'reload' => 1,
         ];
     }
 
@@ -2193,11 +2229,13 @@ class wunderbyte_table extends table_sql {
      * @param string $template full template name, e.g. 'local_wunderbyte_table/twtable_list'
      * @param string $label    label for the template, e.g. 'List'
      * @param bool $selected   whether the template is selected by default
+     * @param int $viewparam   an optional viewparam if you want to use the same template for different views
      */
-    public function add_template_to_switcher(string $template, string $label, bool $selected = false) {
+    public function add_template_to_switcher(string $template, string $label, bool $selected = false, int $viewparam = 0) {
         $template = [
             'template' => $template,
             'label' => $label,
+            'viewparam' => $viewparam,
         ];
         if ($selected) {
             $template['selected'] = true;
