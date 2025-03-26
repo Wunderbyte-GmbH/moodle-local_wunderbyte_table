@@ -257,7 +257,7 @@ class demo implements renderable, templatable {
             'class' => 'btn btn-warning',
             'href' => '#',
             // 'methodname' => 'additem',
-            'formname' => 'local_wunderbyte_table\\form\\edittable', // To include a dynamic form to open and edit entry in modal.
+            'formname' => 'local_wunderbyte_table\\form\\demoform', // To include a dynamic form to open and edit entry in modal.
             'nomodal' => false,
             'id' => -1,
             'selectionmandatory' => false,

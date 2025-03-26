@@ -167,6 +167,7 @@ $string['turnoffcaching'] = 'Keine Verwendung von Caching' . '<span class="badge
 $string['valuehastobeint'] = 'Wert muss eine Zahl sein';
 $string['veranstaltungen'] = "Veranstaltungen";
 $string['wbtablefiltersettingsheader'] = 'Filter anpassen';
+$string['wbtabletablesettingsdemo'] = 'Demo Text';
 $string['wbtabletablesettingsheader'] = 'Weitere Einstellungen';
 $string['wednesday'] = 'Mi';
 $string['weekdays'] = 'Wochentagefilter';

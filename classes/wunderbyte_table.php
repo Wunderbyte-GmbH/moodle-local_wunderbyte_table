@@ -394,7 +394,7 @@ class wunderbyte_table extends table_sql {
 
         global $PAGE;
 
-        // We will not breack working code but have to inform developers about potentially severe issue.
+        // We will not break working code but have to inform developers about potentially severe issue.
         if (debugging() && preg_match('#[^a-zA-Z0-9_\s]#', $uniqueid)) {
             throw new coding_exception(
                 "Variable uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!",

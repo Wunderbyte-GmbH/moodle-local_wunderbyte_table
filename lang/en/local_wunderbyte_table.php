@@ -171,6 +171,7 @@ $string['turnoffcaching'] = 'Turn off caching' . '<span class="badge bg-danger t
 $string['valuehastobeint'] = "Value has to be a number";
 $string['veranstaltungen'] = "Events";
 $string['wbtablefiltersettingsheader'] = 'Edit filters';
+$string['wbtabletablesettingsdemo'] = 'Demo Text';
 $string['wbtabletablesettingsheader'] = 'More settings';
 $string['wednesday'] = 'Wed';
 $string['weekdays'] = 'Weekdays filter';

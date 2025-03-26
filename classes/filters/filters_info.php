@@ -66,15 +66,16 @@ class filters_info {
         $filterobjects = $tablesettings['filtersettings'];
 
         foreach ($filterobjects as $key => $filter) {
-
             if ($key === 'id') {
-                $mform->addElement('advcheckbox',
+                $mform->addElement(
+                    'advcheckbox',
                     'id_wb_checked',
                     '',
-                    get_string('showfilter', 'local_wunderbyte_table'));
+                    get_string('showfilter', 'local_wunderbyte_table')
+                );
 
-                    // We save the filterobject as we get it here.
-                    $mform->addElement('hidden', 'wb_jsontablesettings', json_encode($tablesettings));
+                // We save the filterobject as we get it here.
+                $mform->addElement('hidden', 'wb_jsontablesettings', json_encode($tablesettings));
             } else {
                 $classname = $filter['wbfilterclass'];
                 $filter['columnidentifier'] = $key;

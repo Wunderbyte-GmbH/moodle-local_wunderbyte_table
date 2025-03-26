@@ -36,8 +36,7 @@ use stdClass;
  * @package     local_wunderbyte_table
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class edittable extends dynamic_form {
-
+class demoform extends dynamic_form {
     /**
      * {@inheritdoc}
      * @see moodleform::definition()
@@ -59,16 +58,14 @@ class edittable extends dynamic_form {
         $mform->addElement(
             'header',
             'wbtablefiltersettingsheader',
-            get_string('wbtablefiltersettingsheader', 'local_wunderbyte_table')
-        );
-        filters_info::defintion($mform, $data);
-
-        $mform->addElement(
-            'header',
-            'wbtabletablesettingsheader',
             get_string('wbtabletablesettingsheader', 'local_wunderbyte_table')
         );
-        tablesettings::definition($mform, (array)$data);
+
+        $mform->addElement(
+            'static',
+            'wbtabletablesettingsdemo',
+            get_string('wbtabletablesettingsdemo', 'local_wunderbyte_table')
+        );
     }
 
     /**
@@ -80,10 +77,6 @@ class edittable extends dynamic_form {
 
         $newdata = new stdClass();
 
-        filters_info::process_data($data, $newdata);
-
-        tablesettings::process_data($data, $newdata);
-
         return $newdata;
     }
 
@@ -94,16 +87,6 @@ class edittable extends dynamic_form {
     public function set_data_for_dynamic_submission(): void {
 
         $data = (object)$this->_ajaxformdata;
-
-        $encodedtable = $data->encodedtable;
-        if (empty($encodedtable)) {
-
-        }
-        $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
-
-        filters_info::set_data($data, $table);
-
-        tablesettings::set_data($data, $table);
 
         $this->set_data($data);
     }
@@ -117,17 +100,8 @@ class edittable extends dynamic_form {
      *
      */
     public function validation($data, $files) {
-        $errors = [];
 
-        if (!is_number($data['gs_wb_pagesize'])) {
-            $errors['gs_wb_pagesize'] = get_string('valuehastobeint', 'local_wunderbyte_table');
-        }
-
-        if (!is_number($data['gs_wb_infinitescroll'])) {
-            $errors['gs_wb_infinitescroll'] = get_string('valuehastobeint', 'local_wunderbyte_table');
-        }
-
-        return $errors;
+        return [];
     }
 
 
@@ -153,6 +127,5 @@ class edittable extends dynamic_form {
      */
     protected function check_access_for_dynamic_submission(): void {
         // Perhaps we will need a specific campaigns capability.
-        require_capability('local/wunderbyte_table:canedittable', context_system::instance());
     }
 }
