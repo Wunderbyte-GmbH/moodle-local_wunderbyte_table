@@ -47,6 +47,7 @@ use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\local\sortables\base as basesort;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\local\settings\tablesettings;
+use mod_booking\output\view;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
@@ -202,12 +203,6 @@ class wunderbyte_table extends table_sql {
      * @var string template for table.
      */
     public $tabletemplate = 'local_wunderbyte_table/twtable_list'; // Default template.
-
-    /**
-     * Optional viewparam if the same template is used for different views.
-     * @var int $viewparam
-     */
-    public $viewparam = 0;
 
     /**
      *
@@ -434,22 +429,14 @@ class wunderbyte_table extends table_sql {
         $this->add_filter($standardfilter);
 
         // If a user preference for the table template is set, we use it.
-        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $uniqueid);
+        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->idstring);
         if (
             !empty($this->switchtemplates['templates'])
             && !empty($chosentemplate)
             && self::template_exists($chosentemplate)
         ) {
-            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $uniqueid);
+            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->idstring);
             $this->tabletemplate = $chosentemplate;
-
-            $chosenviewparam = get_user_preferences('wbtable_chosen_template_viewparam_' . $uniqueid);
-            if (is_number($chosenviewparam)) {
-                // Only add integers. Else it's an error.
-                $this->viewparam = $chosenviewparam;
-            } else {
-                $this->viewparam = 0; // Default viewparam.
-            }
         }
     }
 
@@ -1752,19 +1739,14 @@ class wunderbyte_table extends table_sql {
         global $CFG;
 
         // If a user preference for the table template is set, we use it.
-        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
+        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->idstring);
         if (
             !empty($this->switchtemplates['templates'])
             && !empty($chosentemplate)
             && self::template_exists($chosentemplate)
         ) {
-            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
+            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->idstring);
             $this->tabletemplate = $chosentemplate;
-
-            $chosenviewparam = get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid);
-            if (is_number($chosenviewparam)) {
-                $this->viewparam = $chosenviewparam;
-            }
         }
 
         if (!empty($this->tabletemplate)) {
@@ -1953,22 +1935,21 @@ class wunderbyte_table extends table_sql {
                 'message' => 'Template could not be found!',
             ];
         }
-        set_user_preference('wbtable_chosen_template_' . $this->uniqueid, $template);
-        set_user_preference('wbtable_chosen_template_viewparam_' . $this->uniqueid, $viewparam);
+        set_user_preference('wbtable_chosen_template_' . $this->idstring, $template);
+        set_user_preference('wbtable_chosen_template_viewparam_' . $this->idstring, $viewparam);
 
         $this->tabletemplate = $template;
-        $this->viewparam = $viewparam;
 
         // When template is changed, we needd to re-cache the table.
         $cache = cache::make('local_wunderbyte_table', 'encodedtables');
         $cache->delete($this->tablecachehash);
-        $this->return_encoded_table(true);
+        $table = $this->return_encoded_table(true);
 
         $event = template_switched::create([
             'context' => context_system::instance(),
             'userid' => $USER->id,
             'other' => [
-                'tablename' => $this->uniqueid ?? '',
+                'tablename' => $this->idstring ?? '',
                 'template' => $template ?? '',
                 'viewparam' => $viewparam ?? 0,
             ],
@@ -1977,9 +1958,8 @@ class wunderbyte_table extends table_sql {
 
         return [
             'success' => 1,
-            'message' => "template: " . get_user_preferences('wbtable_chosen_template_' . $this->uniqueid) .
-                " viewparam: " . get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid),
-            'reload' => 1,
+            'message' => "template: " . get_user_preferences('wbtable_chosen_template_' . $this->idstring) .
+                " viewparam: " . get_user_preferences('wbtable_chosen_template_viewparam_' . $this->idstring),
         ];
     }
 

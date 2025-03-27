@@ -35,7 +35,6 @@ use templatable;
  *
  */
 class lazytable implements renderable, templatable {
-
     /**
      * An idstring for the table & spinner.
      *
@@ -67,7 +66,6 @@ class lazytable implements renderable, templatable {
     public function __construct(string $idstring, string $encodedtable, int $inifinitescroll) {
         $this->idstring = $idstring;
         $this->encodedtable = $encodedtable;
-
         $this->infinitescrollenabled = $inifinitescroll > 0 ? true : false;
     }
 

@@ -121,7 +121,6 @@ class load_data extends external_api {
             } catch (Exception $e) {
                 return [
                     'template' => '',
-                    'viewparam' => '',
                     'content' => '',
                     'filterjson' => '',
                 ];
@@ -178,7 +177,6 @@ class load_data extends external_api {
 
         if ($tabledata) {
             $result['template'] = $table->tabletemplate;
-            $result['viewparam'] = $table->viewparam;
             $result['content'] = json_encode($tabledata);
             $result['filterjson'] = $table->filterjson ?? '';
         }
@@ -194,7 +192,6 @@ class load_data extends external_api {
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'template' => new external_value(PARAM_TEXT, 'template name'),
-            'viewparam' => new external_value(PARAM_INT, 'viewparam for template'),
             'content' => new external_value(PARAM_RAW, 'json content'),
             'filterjson' => new external_value(PARAM_RAW, 'filter json to create checkboxes', VALUE_OPTIONAL, ''),
         ]);

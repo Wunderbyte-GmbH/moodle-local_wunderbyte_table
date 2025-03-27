@@ -558,8 +558,10 @@ class table implements renderable, templatable {
         if (!empty($this->wbtable->switchtemplates['templates'])) {
             foreach ($this->wbtable->switchtemplates['templates'] as &$t) {
                 if (
-                    ($t['template'] == get_user_preferences('wbtable_chosen_template_' . $this->wbtable->uniqueid))
-                    && ((int)$t['viewparam'] == get_user_preferences('wbtable_chosen_template_viewparam_' . $this->wbtable->uniqueid))
+                    ($t['template'] == get_user_preferences('wbtable_chosen_template_' . $this->wbtable->idstring))
+                    && ($t['viewparam'] == get_user_preferences(
+                        'wbtable_chosen_template_viewparam_' . $this->wbtable->idstring
+                    ))
                 ) {
                     $t['selected'] = true;
                 } else {
