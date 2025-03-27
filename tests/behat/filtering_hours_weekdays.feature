@@ -38,10 +38,10 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And the following config values are set as admin:
       | config        | value         |
       | texteditors   | atto,textarea |
-    And I change viewport size to "1600x3000"
     ## Forcing of timezome is important for date validation
-    ##  | timezone      | Europe/Berlin |
-    ##  | forcetimezone | Europe/Berlin |
+      | timezone      | Europe/Brussels |
+      | forcetimezone | Europe/Brussels |
+    And I change viewport size to "1600x3000"
 
   @javascript
   Scenario: Filter users table in wb_table by weekdays
