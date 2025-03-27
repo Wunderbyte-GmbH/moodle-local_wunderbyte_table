@@ -38,7 +38,7 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And the following config values are set as admin:
       | config        | value         |
       | texteditors   | atto,textarea |
-    ## Forcing of timezome is important for date validation
+    ## Forcing of timezome could be important for date validation
       | timezone      | Europe/Brussels |
       | forcetimezone | Europe/Brussels |
     And I change viewport size to "1600x3000"
@@ -52,7 +52,8 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I click on ".asidecollapse-demotable_4" "css_element"
     And I click on ".demotable_4 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
     When I set the field "Friday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
-    And I wait until the page is ready
+    ##And I wait until the page is ready - does bot work in this case.
+    And I wait "2" seconds
     Then I should see "5 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "user1" in the "#demotable_4_r1" "css_element"
     And I should see "user12" in the "#demotable_4_r2" "css_element"
@@ -102,11 +103,12 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     ## Use hourlist filrer now
     And I click on ".demotable_2 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
     When I set the field "04:00 - 05:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
-    And I wait until the page is ready
-    Then I should see "Course 1" in the "#demotable_2_r1" "css_element"
+    ##And I wait until the page is ready - does bot work in this case.
+    And I wait "2" seconds
+    Then I should see "2 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And I should see "Course 3" in the "#demotable_2_r2" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r3']" "xpath_element" should not exist
-    And I should see "2 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I set the field "04:00 - 05:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to ""
     And I wait until the page is ready
     And I set the field "11:00 - 12:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
