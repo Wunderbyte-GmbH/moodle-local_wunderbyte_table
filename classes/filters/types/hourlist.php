@@ -162,10 +162,10 @@ class hourlist extends base {
      */
     protected static function get_db_filter_column_hours(wunderbyte_table $table, string $key) {
 
-        global $DB;
+        global $DB, $USER;
 
         $databasetype = $DB->get_dbfamily();
-        $tz = usertimezone(); // We must apply user's timezone there.
+        $tz = core_date::get_user_timezone($USER); // We must apply user's timezone there.
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         switch ($databasetype) {
@@ -222,10 +222,10 @@ class hourlist extends base {
         $categoryvalue,
         wunderbyte_table &$table
     ): void {
-        global $DB;
+        global $DB, $USER;
 
         $databasetype = $DB->get_dbfamily();
-        $tz = usertimezone(); // We must apply user's timezone there.
+        $tz = core_date::get_user_timezone($USER); // We must apply user's timezone there.
         $filtercounter = 1;
         $filter .= " ( ";
         foreach ($categoryvalue as $key => $value) {
