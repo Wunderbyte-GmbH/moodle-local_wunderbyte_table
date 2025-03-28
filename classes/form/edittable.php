@@ -37,7 +37,6 @@ use stdClass;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class edittable extends dynamic_form {
-
     /**
      * {@inheritdoc}
      * @see moodleform::definition()
@@ -97,14 +96,13 @@ class edittable extends dynamic_form {
 
         $encodedtable = $data->encodedtable;
         if (empty($encodedtable)) {
-
+            // Do nothing if table is missing.
+            return;
         }
         $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
         filters_info::set_data($data, $table);
-
         tablesettings::set_data($data, $table);
-
         $this->set_data($data);
     }
 
