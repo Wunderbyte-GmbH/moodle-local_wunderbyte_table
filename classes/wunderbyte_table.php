@@ -1943,13 +1943,13 @@ class wunderbyte_table extends table_sql {
         // When template is changed, we needd to re-cache the table.
         $cache = cache::make('local_wunderbyte_table', 'encodedtables');
         $cache->delete($this->tablecachehash);
-        $table = $this->return_encoded_table(true);
+        $encodedtable = $this->return_encoded_table(true);
 
         $event = template_switched::create([
             'context' => context_system::instance(),
             'userid' => $USER->id,
             'other' => [
-                'tablename' => $this->idstring ?? '',
+                'tablename' => $encodedtable ?? '',
                 'template' => $template ?? '',
                 'viewparam' => $viewparam ?? 0,
             ],
