@@ -2,7 +2,14 @@
 Feature: Hours and weekdays filtering functionality of wunderbyte_table works as expected
 
   Background:
-    Given the following "users" exist:
+    Given the following config values are set as admin:
+      | config        | value         |
+      | texteditors   | atto,textarea |
+      | timezone      | Europe/Brussels |
+      | forcetimezone | Europe/Brussels |
+    ## Unfortunately, TinyMCE is slow and has misbehavior which might cause number of site-wide issues. So - we disable it.
+    ## Forcing of timezome could be important for date validation.
+    And the following "users" exist:
       | username | firstname | lastname | timecreated                              |
       | user1    | Username  | 1        | ## Friday, February 10, 2023 04:03 ##    |
       | user2    | Username  | 2        | ## Friday, February 10, 2023 14:05 ##    |
@@ -34,13 +41,6 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
       | page     | PageName2  | PageDesc2  | C2     | PAGE2    |
-    ## Unfortunately, TinyMCE is slow and has misbehavior which might cause number of site-wide issues. So - we disable it.
-    And the following config values are set as admin:
-      | config        | value         |
-      | texteditors   | atto,textarea |
-    ## Forcing of timezome could be important for date validation
-      | timezone      | Europe/Brussels |
-      | forcetimezone | Europe/Brussels |
     And I change viewport size to "1600x3000"
 
   @javascript
