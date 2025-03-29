@@ -27,6 +27,7 @@ Feature: Row controls functionality of wunderbyte_table works as expected
     And the following "activities" exist:
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
+    And I change viewport size to "1600x3000"
 
   @javascript
   Scenario: Press TriggersNoModal button in the rows on the different tabs of the table
