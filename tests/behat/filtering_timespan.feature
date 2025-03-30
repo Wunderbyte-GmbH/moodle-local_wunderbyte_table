@@ -30,6 +30,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
       | page     | PageName2  | PageDesc2  | C2     | PAGE2    |
+    And I change viewport size to "1600x3000"
 
   @javascript
   Scenario: Filter course table in wb_table by timespan for overlaping
@@ -48,7 +49,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     ##  | date-enddate | ## 12 days ago ## |
     ##  | Display records | overlap |
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
-    And I wait "1" seconds
+    And I wait "2" seconds
     Then I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
@@ -122,7 +123,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-20"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlapping beginning"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
-    And I wait "1" seconds
+    And I wait "2" seconds
     Then I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
@@ -146,7 +147,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-15"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "overlapping ending"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
-    And I wait "1" seconds
+    And I wait "2" seconds
     Then I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
