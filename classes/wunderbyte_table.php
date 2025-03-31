@@ -429,13 +429,12 @@ class wunderbyte_table extends table_sql {
         $this->add_filter($standardfilter);
 
         // If a user preference for the table template is set, we use it.
-        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->idstring);
+        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
         if (
             !empty($this->switchtemplates['templates'])
             && !empty($chosentemplate)
             && self::template_exists($chosentemplate)
         ) {
-            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->idstring);
             $this->tabletemplate = $chosentemplate;
         }
     }
@@ -1739,13 +1738,13 @@ class wunderbyte_table extends table_sql {
         global $CFG;
 
         // If a user preference for the table template is set, we use it.
-        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->idstring);
+        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
         if (
             !empty($this->switchtemplates['templates'])
             && !empty($chosentemplate)
             && self::template_exists($chosentemplate)
         ) {
-            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->idstring);
+            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
             $this->tabletemplate = $chosentemplate;
         }
 
@@ -1935,8 +1934,8 @@ class wunderbyte_table extends table_sql {
                 'message' => 'Template could not be found!',
             ];
         }
-        set_user_preference('wbtable_chosen_template_' . $this->idstring, $template);
-        set_user_preference('wbtable_chosen_template_viewparam_' . $this->idstring, $viewparam);
+        set_user_preference('wbtable_chosen_template_' . $this->uniqueid, $template);
+        set_user_preference('wbtable_chosen_template_viewparam_' . $this->uniqueid, (int) $viewparam);
 
         $this->tabletemplate = $template;
 
@@ -1958,8 +1957,8 @@ class wunderbyte_table extends table_sql {
 
         return [
             'success' => 1,
-            'message' => "template: " . get_user_preferences('wbtable_chosen_template_' . $this->idstring) .
-                " viewparam: " . get_user_preferences('wbtable_chosen_template_viewparam_' . $this->idstring),
+            'message' => "template: " . get_user_preferences('wbtable_chosen_template_' . $this->uniqueid) .
+                " viewparam: " . get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid),
         ];
     }
 
@@ -2181,6 +2180,13 @@ class wunderbyte_table extends table_sql {
      */
     public function set_template_data($key, $value) {
         $this->templatedata[$key] = $value;
+    }
+
+    /**
+     * Unsets template data.
+     */
+    public function unset_template_data() {
+        unset($this->templatedata);
     }
 
     /**
