@@ -170,6 +170,22 @@ class load_data extends external_api {
             $table->unset_sorting_settings();
         }
 
+        // Make sure the chosen template is marked as selected.
+        if (!empty($table->switchtemplates['templates'])) {
+            foreach ($table->switchtemplates['templates'] as &$t) {
+                if (
+                    ($t['template'] == get_user_preferences('wbtable_chosen_template_' . $table->uniqueid))
+                    && ($t['viewparam'] == get_user_preferences(
+                        'wbtable_chosen_template_viewparam_' . $table->uniqueid
+                    ))
+                ) {
+                    $t['selected'] = true;
+                } else {
+                    unset($t['selected']);
+                }
+            }
+        }
+
         // No we return the json object and the matching method.
         $tableobject = $table->printtable($table->pagesize, $table->useinitialsbar, $table->downloadhelpbutton);
         $output = $PAGE->get_renderer('local_wunderbyte_table');

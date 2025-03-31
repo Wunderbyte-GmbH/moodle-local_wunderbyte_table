@@ -1925,7 +1925,7 @@ class wunderbyte_table extends table_sql {
      * @return array
      */
     public function action_switchtemplates(int $id, string $data): array {
-        global $USER;
+        global $CFG, $USER;
         $jsonobject = json_decode($data);
         [$template, $viewparam] = explode(" ", $jsonobject->selectedValue);
         if (empty($template) || !self::template_exists($template)) {
@@ -1942,24 +1942,26 @@ class wunderbyte_table extends table_sql {
         // When template is changed, we needd to re-cache the table.
         $cache = cache::make('local_wunderbyte_table', 'encodedtables');
         $cache->delete($this->tablecachehash);
-        $encodedtable = $this->return_encoded_table(true);
+        $tablecachehash = $this->return_encoded_table(true);
 
+        // Trigger event, so we can react to it from other plugins.
         $event = template_switched::create([
             'context' => context_system::instance(),
             'userid' => $USER->id,
             'other' => [
-                'tablename' => $encodedtable ?? '',
+                'tablecachehash' => $tablecachehash ?? '',
                 'template' => $template ?? '',
                 'viewparam' => $viewparam ?? 0,
             ],
         ]);
         $event->trigger();
 
-        return [
-            'success' => 1,
-            'message' => "template: " . get_user_preferences('wbtable_chosen_template_' . $this->uniqueid) .
-                " viewparam: " . get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid),
-        ];
+        $returnarray['success'] = 1;
+        if ($CFG->debug == DEBUG_DEVELOPER) {
+            $returnarray['message'] = "template: " . get_user_preferences('wbtable_chosen_template_' . $this->uniqueid) .
+                " viewparam: " . get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid);
+        }
+        return $returnarray;
     }
 
     /**
