@@ -1957,10 +1957,12 @@ class wunderbyte_table extends table_sql {
         $event->trigger();
 
         $returnarray['success'] = 1;
-        if ($CFG->debug == DEBUG_DEVELOPER) {
+        // Can be added if needed.
+        // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
+        /* if ($CFG->debug == DEBUG_DEVELOPER) {
             $returnarray['message'] = "template: " . get_user_preferences('wbtable_chosen_template_' . $this->uniqueid) .
                 " viewparam: " . get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid);
-        }
+        } */
         return $returnarray;
     }
 
