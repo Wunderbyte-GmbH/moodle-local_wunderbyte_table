@@ -31,6 +31,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
       | page     | PageName2  | PageDesc2  | C2     | PAGE2    |
     And I change viewport size to "1600x3000"
+    And I clean wbtable cache
 
   @javascript
   Scenario: Filter course table in wb_table by timespan for overlaping

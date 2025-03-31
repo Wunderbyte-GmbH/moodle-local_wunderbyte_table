@@ -37,6 +37,7 @@ Feature: As admin I want to ensure that customization of the wunderbyte_table se
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
     And I change viewport size to "1600x3000"
+    And I clean wbtable cache
 
   @javascript
   Scenario: WB_table: Verify filter settings working on download

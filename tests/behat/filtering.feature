@@ -37,6 +37,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
     And I change viewport size to "1600x3000"
+    And I clean wbtable cache
 
   @javascript
   Scenario: WB_Table: Filter tables on different tabs using input field
@@ -92,9 +93,10 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I follow "Demo table 1"
     And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
     And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
+    And I wait "1" seconds
     And I set the field "user15" in the "#id_collapse_username" "css_element" to "checked"
     ## And I wait until the page is ready
-    And I wait "2" seconds
+    And I wait "1" seconds
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And I should see "user15" in the "#demotable_1_r2" "css_element"
     And I should see "2 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
