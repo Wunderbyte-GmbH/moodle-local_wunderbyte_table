@@ -38,6 +38,8 @@ class behat_local_wunderbyte_table extends behat_base {
     public function i_clean_wbtable_cache() {
         // Mandatory clean-up.
         cache_helper::purge_by_event('changesinwunderbytetable');
+        cache_helper::purge_by_event('setbackencodedtables');
+        cache_helper::purge_by_event('setbackfilters');
         $_POST = [];
     }
 }
