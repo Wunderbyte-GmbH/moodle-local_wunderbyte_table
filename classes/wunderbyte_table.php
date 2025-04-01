@@ -376,7 +376,7 @@ class wunderbyte_table extends table_sql {
 
     /**
      * Show pagination
-     * @var string
+     * @var bool
      */
     public $showpagination = true;
 
