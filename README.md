@@ -48,7 +48,7 @@ One new feature is caching. Wunderbyte_table will automatically pass every sql c
 
 A request for page one will be cached with a different key than a request for page 2 etc.
 
-Invalidation of the cache is being done by
+Invalidation of the cache is being done by 
 
     cache_helper::purge_by_event('changesinwunderbytetable');
 
