@@ -57,7 +57,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
             }
 
             if ($formatstring) {
-                $returnvalue = format_string($returnvalue);
+                $returnvalue = format_text($returnvalue);
             }
             return $returnvalue;
         }
