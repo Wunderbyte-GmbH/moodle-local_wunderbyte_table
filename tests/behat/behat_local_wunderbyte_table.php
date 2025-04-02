@@ -36,10 +36,15 @@ class behat_local_wunderbyte_table extends behat_base {
      * @return void
      */
     public function i_clean_wbtable_cache() {
+        global $DB;
         // Mandatory clean-up.
         cache_helper::purge_by_event('changesinwunderbytetable');
         cache_helper::purge_by_event('setbackencodedtables');
         cache_helper::purge_by_event('setbackfilters');
+        $sql = "DELETE FROM {local_wunderbyte_table}
+                      WHERE hash LIKE '%_filterjson'
+                         OR hash LIKE '%_sqlquery'";
+        $DB->execute($sql);
         $_POST = [];
     }
 }
