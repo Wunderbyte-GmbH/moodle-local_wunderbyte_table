@@ -37,7 +37,6 @@ Feature: Filtering functionality of wunderbyte_table works as expected
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
     And I change viewport size to "1600x3000"
-    And I clean wbtable cache
 
   @javascript
   Scenario: WB_Table: Filter tables on different tabs using input field
@@ -60,6 +59,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I set the field "search-demotable_2" to "site"
     And I wait "1" seconds
     And I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
+    And I clean wbtable cache
 
   @javascript
   Scenario: WB_Table: Filter users table by username via sidebar filter controls
@@ -85,6 +85,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I set the field "guest" in the "#id_collapse_username" "css_element" to ""
     And I wait "1" seconds
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I clean wbtable cache
 
   @javascript
   Scenario: WB_Table: Filter users table by username and reset filter
@@ -105,6 +106,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I click on "Show all records" "text" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I wait until the page is ready
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I clean wbtable cache
 
   @javascript
   Scenario: WB_Table: Filter users table by department and reset filter
@@ -130,6 +132,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I click on "Show all records" "text" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I wait "1" seconds
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I clean wbtable cache
 
   @javascript
   Scenario: WB_Table: Search username in sidebar filter controls and filter by it
@@ -154,6 +157,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "user15" in the "#id_collapse_username" "css_element"
     And I should see "user16" in the "#id_collapse_username" "css_element"
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I clean wbtable cache
 
   @javascript
   Scenario: WB_Table: Filter multiple tables consequently using sidebar filter controls
@@ -207,6 +211,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "URL1" in the "#demotable_3_r1" "css_element"
     And "//*[contains(@id, 'demotable_3')]//tr[@id, 'demotable_3_r2']" "xpath_element" should not exist
     And I should see "1 of 2 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I clean wbtable cache
 
   @javascript
   Scenario: WBTable: Filter by intrange in username using sidebar filter controls
@@ -233,3 +238,4 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I wait until the page is ready
     And I should see "user2" in the "#demotable_4_r3" "css_element"
     And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r4']" "xpath_element" should not exist
+    And I clean wbtable cache
