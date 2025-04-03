@@ -37,6 +37,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
       | activity | name       | intro      | course | idnumber |
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
     And I clean wbtable cache
+    And I change viewport size to "1600x1200"
 
   @javascript
   Scenario: WB_Table: Display single table
