@@ -1,3 +1,15 @@
+## Version 2.0.46 (2025040300)
+* Improvement: Add classes to template switcher mustache.
+* Bugfix: The hourlist and weekdays filters displays available intervals/weekdays now correctly.
+* Bugfix: Wrong type for showpagination.
+* Tests: Improved phpunit test.
+* Tests: Improved BEHAT tests.
+
+## Version 2.0.45 (2025040100)
+* New feature: Switch between table templates (individually for each user).
+* Bugfix: Display demp form instead in demo.php
+* Bugfix: use format_text instead of format_string on textarea.
+
 ## Version 2.0.44 (2025030400)
 * Improvement: unify field controller
 * Bugfix: correctly apply format string to values from customfields and return values.
