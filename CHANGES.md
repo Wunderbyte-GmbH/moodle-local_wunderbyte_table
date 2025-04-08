@@ -1,3 +1,6 @@
+## Version 2.0.47 (2025040800)
+* Bugfix: Make sure switcher remembers selected template for table is encoded.
+
 ## Version 2.0.46 (2025040300)
 * Improvement: Add classes to template switcher mustache.
 * Bugfix: The hourlist and weekdays filters displays available intervals/weekdays now correctly.
