@@ -296,6 +296,23 @@ class table implements renderable, templatable {
 
         $this->errormessage = $table->errormessage;
 
+        // Make sure the chosen template is marked as selected.
+        if (!empty($this->wbtable->switchtemplates['templates'])) {
+            foreach ($this->wbtable->switchtemplates['templates'] as &$t) {
+                if (
+                    ($t['template'] == get_user_preferences('wbtable_chosen_template_' . $this->wbtable->uniqueid))
+                    && ($t['viewparam'] == get_user_preferences(
+                        'wbtable_chosen_template_viewparam_' . $this->wbtable->uniqueid
+                    ))
+                ) {
+                    $t['selected'] = true;
+                } else {
+                    unset($t['selected']);
+                }
+            }
+        }
+        $this->switchtemplates = $this->wbtable->switchtemplates ?? null;
+
         // We don't want the encoded table stable, regardless of previous actions.
         $this->encodedtable = empty($encodedtable) ? $table->return_encoded_table() : $encodedtable;
 
@@ -553,23 +570,6 @@ class table implements renderable, templatable {
         } else {
             $this->pagination['nopages'] = 'nopages';
         }
-
-        // Make sure the chosen template is marked as selected.
-        if (!empty($this->wbtable->switchtemplates['templates'])) {
-            foreach ($this->wbtable->switchtemplates['templates'] as &$t) {
-                if (
-                    ($t['template'] == get_user_preferences('wbtable_chosen_template_' . $this->wbtable->uniqueid))
-                    && ($t['viewparam'] == get_user_preferences(
-                        'wbtable_chosen_template_viewparam_' . $this->wbtable->uniqueid
-                    ))
-                ) {
-                    $t['selected'] = true;
-                } else {
-                    unset($t['selected']);
-                }
-            }
-        }
-        $this->switchtemplates = $this->wbtable->switchtemplates ?? null;
     }
 
     /**
