@@ -461,10 +461,9 @@ class wunderbyte_table extends table_sql {
      * @param int $pagesize
      * @param bool $useinitialsbar
      * @param string $downloadhelpbutton
-     * @return string
+     * @return void
      */
     public function out($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
-
         echo self::outhtml($pagesize, $useinitialsbar, $downloadhelpbutton);
     }
 
@@ -677,7 +676,7 @@ class wunderbyte_table extends table_sql {
      * data to the table with add_data or add_data_keyed.
      * @param bool $closeexportclassdoc
      * @param string $encodedtable
-     * @return table
+     * @return table|void
      */
     public function finish_output($closeexportclassdoc = true, $encodedtable = '') {
 
@@ -2033,7 +2032,7 @@ class wunderbyte_table extends table_sql {
      * ... we will also check if the filter for this request is created.
      * @param bool $forfilter
      * @param bool $useinitialsbar
-     * @return int
+     * @return string
      * @throws coding_exception
      */
     public function create_cachekey(bool $forfilter = false, bool $useinitialsbar = true) {
