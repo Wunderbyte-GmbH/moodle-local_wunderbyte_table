@@ -19,7 +19,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 /**
  * Render the checkboxes for the filer.
  * @param {string} idstring
@@ -44,7 +43,6 @@ export const renderSearchbox = (idstring) => {
         return;
     }
 };
-
 
 /**
  * Function to initialize the search after rendering each searchfield.

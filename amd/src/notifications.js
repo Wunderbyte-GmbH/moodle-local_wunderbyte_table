@@ -21,7 +21,6 @@
 
 import Notification from 'core/notification';
 
-
 const SELECTORS = {
     NOTIFICATION_LIST: '#user-notifications div.alert'
 };
