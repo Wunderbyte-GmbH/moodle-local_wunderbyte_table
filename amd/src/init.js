@@ -120,7 +120,6 @@ const initHandleDropdown = (idstring) => {
  */
 const initHandleDropdownFocusSearch = () => {
 
-
     const checkboxes = document.querySelectorAll('.filterelement.filterouter');
     if (checkboxes) {
         Array.from(checkboxes).forEach(cb => {
@@ -164,7 +163,6 @@ const initHandleDropdownFocusSearch = () => {
         });
     }
 };
-
 
 /**
  * Toggle aside block with filters.
@@ -497,7 +495,6 @@ export const callLoadData = (
                     return true;
                 });
 
-
                 if (!tablejss.hasOwnProperty(idstring)) {
 
                     const promise = returnPromiseToSaveJS(rendertemplate, jsonobject, idstring);
@@ -651,7 +648,6 @@ export const callLoadData = (
     }]);
 };
 
-
 /**
  * Add the scroll functionality to the right table.
  * @param {*} idstring
@@ -761,7 +757,6 @@ function returnHiddenElement(element) {
     }
     return null;
 }
-
 
 /**
  * The rendered table has links we can't use. We replace them with eventlisteners and use the callLoadData function.

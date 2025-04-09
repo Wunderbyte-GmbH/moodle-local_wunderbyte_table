@@ -56,7 +56,6 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 1;
     });
 };
 
-
 /**
  * Function to initialize the search after rendering the searchbox.
  * @param {*} containerselector
@@ -111,7 +110,6 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 1;
                 null,
                 filterobjects,
                 searchstring);
-
             }
           }, timeout);
 
