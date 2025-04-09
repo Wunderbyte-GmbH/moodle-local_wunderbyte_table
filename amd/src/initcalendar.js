@@ -131,7 +131,7 @@ export async function init(id) {
         const highlightSessions = [];
         datesobject.forEach(session => {
             const date = new Date(session.coursestarttime * 1000);
-            const object = { url: session.url, timestamp: date };
+            const object = {url: session.url, timestamp: date};
             highlightSessions.push(object);
         });
         let calendarDays = document.querySelector('.calendar-days');
@@ -211,7 +211,7 @@ export async function init(id) {
             dateFormate.classList.add('showtime');
         };
     });
-    (function () {
+    (function() {
         monthList.classList.add('hideonce');
     })();
     document.querySelector('#pre-year').onclick = () => {
@@ -224,7 +224,7 @@ export async function init(id) {
     };
 
     let currentDate = new Date();
-    let currentMonth = { value: currentDate.getMonth() };
-    let currentYear = { value: currentDate.getFullYear() };
+    let currentMonth = {value: currentDate.getMonth()};
+    let currentYear = {value: currentDate.getFullYear()};
     generateCalendar(currentMonth.value, currentYear.value);
 }
