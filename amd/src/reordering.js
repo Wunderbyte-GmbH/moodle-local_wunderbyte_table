@@ -91,7 +91,6 @@
     return columns;
  };
 
-
  /**
   * Function to initialize the search after rendering the searchbox.
   * @param {*} listContainer
@@ -100,7 +99,6 @@
   * @returns {void}
   */
  export function initializeReordering(listContainer, idstring, encodedtable) {
-
 
     const container = document.querySelector(listContainer);
 
@@ -116,6 +114,4 @@
     rowscontainer.dataset.sortinitialized = true;
 
     initSortableLists(rowscontainer, SELECTOR.ROWS, idstring, encodedtable);
-
 }
-

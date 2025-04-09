@@ -29,10 +29,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 import {
     get_strings as getStrings,
- } from 'core/str';
+} from 'core/str';
 
 /**
  * [Description for init]
@@ -47,7 +46,6 @@ export async function init(id) {
     const data = calendarElement.dataset.rowswithdates;
     const datesobject = JSON.parse(data);
 
-
     const isLeapYear = (year) => {
         return (
             (year % 4 === 0 && year % 100 !== 0 && year % 400 !== 0) ||
@@ -61,54 +59,54 @@ export async function init(id) {
 
     const strings = [
         {
-          key: 'january',
-          component: 'local_wunderbyte_table',
+            key: 'january',
+            component: 'local_wunderbyte_table',
         },
         {
-          key: 'february',
-          component: 'local_wunderbyte_table',
+            key: 'february',
+            component: 'local_wunderbyte_table',
         },
         {
-          key: 'march',
-          component: 'local_wunderbyte_table',
+            key: 'march',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'april',
-        component: 'local_wunderbyte_table',
+            key: 'april',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'may',
-        component: 'local_wunderbyte_table',
+            key: 'may',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'june',
-        component: 'local_wunderbyte_table',
+            key: 'june',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'july',
-        component: 'local_wunderbyte_table',
+            key: 'july',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'august',
-        component: 'local_wunderbyte_table',
+            key: 'august',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'september',
-        component: 'local_wunderbyte_table',
+            key: 'september',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'october',
-        component: 'local_wunderbyte_table',
+            key: 'october',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'november',
-        component: 'local_wunderbyte_table',
+            key: 'november',
+            component: 'local_wunderbyte_table',
         },
         {
-        key: 'december',
-        component: 'local_wunderbyte_table',
+            key: 'december',
+            component: 'local_wunderbyte_table',
         },
-      ];
+    ];
 
     const localizedstrings = await getStrings(strings);
     const monthNames = localizedstrings;
@@ -130,11 +128,10 @@ export async function init(id) {
     };
 
     const generateCalendar = (month, year) => {
-
         const highlightSessions = [];
         datesobject.forEach(session => {
             const date = new Date(session.coursestarttime * 1000);
-            const object = {url: session.url, timestamp: date};
+            const object = { url: session.url, timestamp: date };
             highlightSessions.push(object);
         });
         let calendarDays = document.querySelector('.calendar-days');
@@ -160,7 +157,6 @@ export async function init(id) {
         calendarHeaderYear.innerHTML = year;
 
         let firstDay = new Date(year, month);
-
 
         for (let i = 0; i <= daysOfMonth[month] + firstDay.getDay() - 1; i++) {
             let day = document.createElement('div');
@@ -188,8 +184,8 @@ export async function init(id) {
                     let link = document.createElement('a');
                     link.classList.add('stretched-link');
                     link.href = matchedHighlightSession.url;
-                // Insert the <a> element into the div
-                day.appendChild(link);
+                    // Insert the <a> element into the div
+                    day.appendChild(link);
                 }
 
             }
@@ -215,7 +211,7 @@ export async function init(id) {
             dateFormate.classList.add('showtime');
         };
     });
-    (function() {
+    (function () {
         monthList.classList.add('hideonce');
     })();
     document.querySelector('#pre-year').onclick = () => {
@@ -228,7 +224,7 @@ export async function init(id) {
     };
 
     let currentDate = new Date();
-    let currentMonth = {value: currentDate.getMonth()};
-    let currentYear = {value: currentDate.getFullYear()};
+    let currentMonth = { value: currentDate.getMonth() };
+    let currentYear = { value: currentDate.getFullYear() };
     generateCalendar(currentMonth.value, currentYear.value);
 }
