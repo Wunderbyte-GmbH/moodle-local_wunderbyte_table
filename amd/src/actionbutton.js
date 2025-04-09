@@ -18,7 +18,6 @@
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 import ModalFactory from 'core/modal_factory';
 import ModalEvents from 'core/modal_events';
 import Ajax from 'core/ajax';
@@ -43,7 +42,6 @@ const SELECTOR = {
  * @returns {void}
  */
 export function initializeActionButton(selector, idstring, encodedtable) {
-
   const container = document.querySelector(selector);
 
   if (!container) {
@@ -147,7 +145,6 @@ export function initializeActionButton(selector, idstring, encodedtable) {
  * @param {*} result
  */
 async function showConfirmationModal(button, idstring, encodedtable, result) {
-
   // Checking if we have data from selection result. Otherwise generating default string for body.
   let datastring = result.labelstring ?? '';
   let strings = [];
@@ -186,7 +183,6 @@ function debounce(func, delay) {
         timeout = setTimeout(() => func(...args), delay);
     };
 }
-
 
 /**
  * Function to collect the ids, check if selection of ids is mandatory and prepare a string of selected labels.
@@ -295,7 +291,6 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
  * @returns {object}
  */
 function getIds(id, idstring, data) {
-
   var checkedids = [];
 
   const labelarray = [];
@@ -307,7 +302,6 @@ function getIds(id, idstring, data) {
   // Make sure we treat id as int.
   id = parseInt(id);
   if (id < 1) {
-
     const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOX);
 
     // Create an array of ids of the checked boxes.
@@ -360,7 +354,6 @@ function getIds(id, idstring, data) {
  * @param {*} encodedtable
  */
 async function showEditFormModal(button, titleText, bodyText, saveButtonText, idstring, encodedtable) {
-
   // eslint-disable-next-line no-console
   console.log(button, bodyText, saveButtonText, idstring, encodedtable);
 
