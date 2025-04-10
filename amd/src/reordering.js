@@ -14,37 +14,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Javascript for sorting columns in question bank view.
- *
- * @copyright  2024 Wunderbyte GmbH
- * @author     Georg Maißer
+ * @module    local_wunderbyte_table
+ * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+import SortableList from 'core/sortable_list';
+import jQuery from 'jquery';
+import {transmitAction} from 'local_wunderbyte_table/actionbutton';
 
- import SortableList from 'core/sortable_list';
- import jQuery from 'jquery';
- import {transmitAction} from 'local_wunderbyte_table/actionbutton';
-
- const SELECTOR = {
+const SELECTOR = {
     ROWS: '.rows-container',
- };
+};
 
- var activeinfo = null;
- /**
-  * Sets up sortable list in the column sort order page.
-  * @param {Element} listRoot
-  * @param {String} identifier
-  * @param {String} idstring
-  * @param {String} encodedtable
-  */
- const initSortableLists = (listRoot, identifier, idstring, encodedtable) => {
+var activeinfo = null;
+/**
+ * Sets up sortable list in the column sort order page.
+ * @param {Element} listRoot
+ * @param {String} identifier
+ * @param {String} idstring
+ * @param {String} encodedtable
+ */
+const initSortableLists = (listRoot, identifier, idstring, encodedtable) => {
     new SortableList(listRoot);
 
     jQuery(identifier + ' > *').on(SortableList.EVENTS.DROP, function(event, info) {
         // eslint-disable-next-line no-console
         console.log('drop', event.currentTarget);
 
-       if (info.positionChanged && activeinfo != info) {
+        if (info.positionChanged && activeinfo != info) {
 
             activeinfo = info;
             const data = {
@@ -56,7 +53,7 @@
             transmitAction(-1, 'reorderrows', datastring, idstring, encodedtable);
             listRoot.querySelectorAll('tr').forEach(item => item.classList.remove('wb-table-sortable-drag'));
             listRoot.querySelectorAll('tr').forEach(item => item.classList.remove('wb-table-sortable-active'));
-       }
+        }
     });
 
     jQuery(identifier + ' > *').on(SortableList.EVENTS.DRAGSTART, (event) => {
@@ -79,26 +76,26 @@
     });
 };
 
- /**
-  * Gets the newly reordered columns to display in the question bank view.
-  * @param {Element} listRoot
-  * @returns {Array}
-  */
- const getIdOrder = listRoot => {
-     const columns = Array.from(listRoot.querySelectorAll('tr[data-id]'))
-         .map(column => column.dataset.id);
+/**
+ * Gets the newly reordered columns to display in the question bank view.
+ * @param {Element} listRoot
+ * @returns {Array}
+ */
+const getIdOrder = listRoot => {
+    const columns = Array.from(listRoot.querySelectorAll('tr[data-id]'))
+        .map(column => column.dataset.id);
     columns.pop();
     return columns;
- };
+};
 
- /**
-  * Function to initialize the search after rendering the searchbox.
-  * @param {*} listContainer
-  * @param {*} idstring
-  * @param {*} encodedtable
-  * @returns {void}
-  */
- export function initializeReordering(listContainer, idstring, encodedtable) {
+/**
+ * Function to initialize the search after rendering the searchbox.
+ * @param {*} listContainer
+ * @param {*} idstring
+ * @param {*} encodedtable
+ * @returns {void}
+ */
+export function initializeReordering(listContainer, idstring, encodedtable) {
 
     const container = document.querySelector(listContainer);
 
@@ -109,7 +106,7 @@
     const rowscontainer = container.querySelector(`${SELECTOR.ROWS}`);
 
     if (!rowscontainer || rowscontainer.dataset.sortinitialized) {
-      return;
+        return;
     }
     rowscontainer.dataset.sortinitialized = true;
 

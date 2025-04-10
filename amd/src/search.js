@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
- * @package    local_wunderbyte_table
+/**
+ * @module    local_wunderbyte_table
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 import Templates from 'core/templates';
 import {callLoadData} from 'local_wunderbyte_table/init';
 
@@ -33,14 +32,14 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 1;
  * Render the checkboxes for the filer.
  * @param {string} idstring
  */
- export const renderSearchbox = (idstring) => {
+export const renderSearchbox = (idstring) => {
 
     const selector = ".wunderbyte_table_container_" + idstring;
     const container = document.querySelector(selector);
     const searchcontainer = container.querySelector("input.search");
 
     if (searchcontainer) {
-      return;
+        return;
     }
 
     Templates.renderForPromise('local_wunderbyte_table/search', []).then(({html}) => {
@@ -62,10 +61,10 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 1;
  * @param {*} idstring
  * @param {*} encodedtable
  */
- export function initializeSearch(containerselector, idstring, encodedtable) {
+export function initializeSearch(containerselector, idstring, encodedtable) {
 
-  // eslint-disable-next-line no-console
-  console.log('initializeSearch', idstring);
+    // eslint-disable-next-line no-console
+    console.log('initializeSearch', idstring);
 
     const inputElement = document.querySelector(containerselector + ' input.search');
     const buttonForSearch = document.querySelector(containerselector + ' .searchbutton');
@@ -76,90 +75,90 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 1;
 
     if (!inputElement.dataset.initialized) {
 
-      inputElement.dataset.initialized = true;
+        inputElement.dataset.initialized = true;
 
-      if (buttonForSearch) {
-        buttonForSearch.addEventListener('click', () => {
-          let minlength = 0;
-          let timeout = 400;
+        if (buttonForSearch) {
+            buttonForSearch.addEventListener('click', () => {
+                let minlength = 0;
+                let timeout = 400;
 
-          let now = Date.now();
+                let now = Date.now();
 
-          lastsearchinputs[idstring] = now;
+                lastsearchinputs[idstring] = now;
 
-          setTimeout(() => {
+                setTimeout(() => {
 
-            const searchstring = getSearchInput(idstring, minlength);
+                    const searchstring = getSearchInput(idstring, minlength);
 
-            // If the timevalue after the wait is the same as before, we didn't have another input.
-            // we want to make sure we do no loading while we are waiting for the answer.
-            // And the iput string must be longer than 3.
-            if (lastsearchinputs[idstring] === now
-                && searchstring !== null) {
+                    // If the timevalue after the wait is the same as before, we didn't have another input.
+                    // we want to make sure we do no loading while we are waiting for the answer.
+                    // And the iput string must be longer than 3.
+                    if (lastsearchinputs[idstring] === now
+                        && searchstring !== null) {
 
-              const filterobjects = getFilterObjects(idstring);
-              const sort = getSortSelection(idstring);
+                        const filterobjects = getFilterObjects(idstring);
+                        const sort = getSortSelection(idstring);
 
-              callLoadData(idstring,
-                encodedtable,
-                0, // We set page to 0 because we need to start the container anew.
-                null,
-                sort,
-                null,
-                null,
-                null,
-                filterobjects,
-                searchstring);
-            }
-          }, timeout);
+                        callLoadData(idstring,
+                            encodedtable,
+                            0, // We set page to 0 because we need to start the container anew.
+                            null,
+                            sort,
+                            null,
+                            null,
+                            null,
+                            filterobjects,
+                            searchstring);
+                    }
+                }, timeout);
 
-          return;
-        });
-      }
-
-      inputElement.addEventListener('keyup', (e) => {
-
-        let minlength = LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH;
-        let timeout = 400;
-        // If Enter was pressed in searchfield, trigger search immediatly, without minimum length of input.
-        if (e.key == 'Enter') {
-          minlength = 0;
-          timeout = 0;
+                return;
+            });
         }
 
-        let now = Date.now();
+        inputElement.addEventListener('keyup', (e) => {
 
-        lastsearchinputs[idstring] = now;
+            let minlength = LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH;
+            let timeout = 400;
+            // If Enter was pressed in searchfield, trigger search immediatly, without minimum length of input.
+            if (e.key == 'Enter') {
+                minlength = 0;
+                timeout = 0;
+            }
 
-        setTimeout(() => {
+            let now = Date.now();
 
-          const searchstring = getSearchInput(idstring, minlength);
+            lastsearchinputs[idstring] = now;
 
-          // If the timevalue after the wait is the same as before, we didn't have another input.
-          // we want to make sure we do no loading while we are waiting for the answer.
-          // And the iput string must be longer than 3.
-          if (lastsearchinputs[idstring] === now
-              && searchstring !== null) {
+            setTimeout(() => {
 
-            const filterobjects = getFilterObjects(idstring);
-            const sort = getSortSelection(idstring);
+                const searchstring = getSearchInput(idstring, minlength);
 
-            callLoadData(idstring,
-              encodedtable,
-              0, // We set page to 0 because we need to start the container anew.
-              null,
-              sort,
-              null,
-              null,
-              null,
-              filterobjects,
-              searchstring);
+                // If the timevalue after the wait is the same as before, we didn't have another input.
+                // we want to make sure we do no loading while we are waiting for the answer.
+                // And the iput string must be longer than 3.
+                if (lastsearchinputs[idstring] === now
+                    && searchstring !== null) {
 
-          }
-        }, timeout);
+                    const filterobjects = getFilterObjects(idstring);
+                    const sort = getSortSelection(idstring);
 
-        return;
-      });
+                    callLoadData(idstring,
+                        encodedtable,
+                        0, // We set page to 0 because we need to start the container anew.
+                        null,
+                        sort,
+                        null,
+                        null,
+                        null,
+                        filterobjects,
+                        searchstring);
+
+                }
+            }, timeout);
+
+            return;
+        });
     }
 }
 
@@ -171,18 +170,18 @@ const LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH = 1;
  */
 export function getSearchInput(idstring, minlength = LOCAL_WUNDERBYTE_TABLE_SEARCH_MINLENGTH) {
 
-  const inputElement = document.querySelector(".wunderbyte_table_container_" + idstring + ' input.search');
+    const inputElement = document.querySelector(".wunderbyte_table_container_" + idstring + ' input.search');
 
-  if (!inputElement) {
-    return null;
-  }
+    if (!inputElement) {
+        return null;
+    }
 
     let searchstring = null;
 
     if (inputElement.value.length > minlength
         || inputElement.value.length === 0) {
-      searchstring = inputElement.value;
+        searchstring = inputElement.value;
     }
 
-  return searchstring;
+    return searchstring;
 }

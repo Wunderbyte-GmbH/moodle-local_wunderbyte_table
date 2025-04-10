@@ -12,8 +12,8 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/*
- * @package    local_wunderbyte_table
+/**
+ * @module    local_wunderbyte_table
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,22 +31,22 @@ const SELECTOR = {
  * @returns {void};
  */
 export function initializeRowsSelect(selector, idstring, encodedtable) {
-        const container = document.querySelector(selector);
-        if (!container) {
-            return;
-        }
-        const selectElements = container.querySelectorAll(SELECTOR.ROWSELECT);
+    const container = document.querySelector(selector);
+    if (!container) {
+        return;
+    }
+    const selectElements = container.querySelectorAll(SELECTOR.ROWSELECT);
 
-        selectElements.forEach(selectElement => {
-            if (!selectElement.dataset.initialized) {
-                selectElement.dataset.initialized = true;
-                selectElement.addEventListener('change', () => {
-                    const selectedvalue = selectElement.value;
-                    const data = {
-                        "numberofrowsselect": selectedvalue,
-                    };
-                    transmitAction(0, 'rownumberperpage', JSON.stringify(data), idstring, encodedtable);
-                });
-            }
-        });
+    selectElements.forEach(selectElement => {
+        if (!selectElement.dataset.initialized) {
+            selectElement.dataset.initialized = true;
+            selectElement.addEventListener('change', () => {
+                const selectedvalue = selectElement.value;
+                const data = {
+                    "numberofrowsselect": selectedvalue,
+                };
+                transmitAction(0, 'rownumberperpage', JSON.stringify(data), idstring, encodedtable);
+            });
+        }
+    });
 }

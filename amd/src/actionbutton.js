@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
- * @package    local_wunderbyte_table
+/**
+ * @module    local_wunderbyte_table
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -68,27 +68,27 @@ export function initializeActionButton(selector, idstring, encodedtable) {
         });
       } else if (button.tagName == 'INPUT') {
         const debouncedInputHandler = debounce(() => {
-            const data = button.dataset;
-            data.value = button.value;
+          const data = button.dataset;
+          data.value = button.value;
 
-            transmitAction(button.dataset.id, button.dataset.methodname,
-                JSON.stringify(data), idstring, encodedtable);
+          transmitAction(button.dataset.id, button.dataset.methodname,
+            JSON.stringify(data), idstring, encodedtable);
         }, 300);
 
         button.addEventListener('input', debouncedInputHandler);
       } else if (button.tagName == 'SELECT') {
         button.addEventListener('change', () => {
-            const data = button.dataset;
-            if (data.selectedValue != button.value) {
-              data.selectedValue = button.value;
-              transmitAction(
-                button.dataset.id,
-                button.dataset.methodname,
-                JSON.stringify(data),
-                idstring,
-                encodedtable
-              );
-            }
+          const data = button.dataset;
+          if (data.selectedValue != button.value) {
+            data.selectedValue = button.value;
+            transmitAction(
+              button.dataset.id,
+              button.dataset.methodname,
+              JSON.stringify(data),
+              idstring,
+              encodedtable
+            );
+          }
         });
       } else {
         // Else it's a button, we attach the click listener.
@@ -99,8 +99,8 @@ export function initializeActionButton(selector, idstring, encodedtable) {
           var selectionresult = await getSelectionData(idstring, button.dataset);
           // Button Data will either return as int (1 for true) as bool, or as "true" string. We want all cases to return true.
           if (button.dataset.selectionmandatory == "1"
-          || button.dataset.selectionmandatory == true
-          || button.dataset.selectionmandatory == "true") {
+            || button.dataset.selectionmandatory == true
+            || button.dataset.selectionmandatory == "true") {
             var selectionmandatory = true;
           }
           // eslint-disable-next-line block-scoped-var
@@ -177,11 +177,11 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
  * @param {int} delay
  */
 function debounce(func, delay) {
-    let timeout;
-    return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), delay);
-    };
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  };
 }
 
 /**
@@ -228,7 +228,7 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
   // Show the call spinner.
   let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
   if (callspinner) {
-      callspinner.classList.remove('hidden');
+    callspinner.classList.remove('hidden');
   }
 
   Ajax.call([{
@@ -243,7 +243,7 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
       // Hide the call spinner.
       let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
       if (callspinner) {
-          callspinner.classList.add('hidden');
+        callspinner.classList.add('hidden');
       }
 
       if (data.success == 1) {
@@ -275,7 +275,7 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
       // Hide the call spinner.
       let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
       if (callspinner) {
-          callspinner.classList.add('hidden');
+        callspinner.classList.add('hidden');
       }
 
       showNotification("row " + id + " was not treated", "danger");
@@ -443,16 +443,16 @@ function chooseActionToTransmit(button, idstring, encodedtable, selectionresult)
     transmitAction(button.dataset.id,
       button.dataset.methodname,
       JSON.stringify(button.dataset), idstring, encodedtable);
-      return;
+    return;
   }
 
   if (id != 0) { // -1 means we want single line execution.
-        // eslint-disable-next-line no-console
-        console.log("single call");
+    // eslint-disable-next-line no-console
+    console.log("single call");
     transmitAction(id, methodname, JSON.stringify({...data, checkedids}), idstring, encodedtable);
   } else {
-      // eslint-disable-next-line no-console
-      console.log("multiple call");
+    // eslint-disable-next-line no-console
+    console.log("multiple call");
     checkedids.forEach(cid => {
       transmitAction(cid, methodname, JSON.stringify(data), idstring, encodedtable);
     });
