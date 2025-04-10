@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
- * @package    local_wunderbyte_table
+/**
+ * @module    local_wunderbyte_table
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -101,8 +101,8 @@ export function initializeFilterSearch(containerselector) {
                         listelement.removeAttribute('hidden');
                     } else {
                         listelement.setAttribute('hidden', '');
-                    // For hierarchy filter. Only do once for current parent.
-                }
+                        // For hierarchy filter. Only do once for current parent.
+                    }
                     if (match === true) {
                         listelement.parentNode.parentNode.classList.add('show');
                     } else {

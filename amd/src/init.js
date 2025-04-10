@@ -13,12 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
- * @package    local_wunderbyte_table
- * @copyright Wunderbyte GmbH <info@wunderbyte.at>
+/**
+ * @module    local_wunderbyte_table
+ * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
@@ -31,9 +30,11 @@ import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 import {initializeEditTableButton} from 'local_wunderbyte_table/edittable';
 import {initializeReordering} from 'local_wunderbyte_table/reordering';
 import {initializeRowsSelect} from './rowsdisplayselect';
-import {initializeResetFilterButton,
+import {
+    initializeResetFilterButton,
     updateUrlWithFilterSearchSort,
-    updateDownloadUrlWithFilterSearchSort} from './filter';
+    updateDownloadUrlWithFilterSearchSort
+} from './filter';
 import {initializeFilterSearch} from './filtersearch';
 
 import {get_string as getString} from 'core/str';
@@ -109,7 +110,7 @@ const initHandleDropdown = (idstring) => {
                 const sibling = element.nextElementSibling;
                 sibling.classList.toggle("show");
                 event.preventDefault();
-                        });
+            });
         });
     }
 };
@@ -126,7 +127,7 @@ const initHandleDropdownFocusSearch = () => {
             cb.addEventListener('click', function(event) {
                 event.currentTarget.parentElement.parentElement.parentElement.firstElementChild.style.display = 'none';
             });
-    });
+        });
     }
 
     const elements = document.querySelectorAll('.wunderbyteTableFilter .dropdownMenuButton');
@@ -140,26 +141,26 @@ const initHandleDropdownFocusSearch = () => {
                 if (event.currentTarget == element) {
                     setTimeout(() => {
                         if (!element.nextElementSibling.firstElementChild.children[1].hidden) {
-                        element.nextElementSibling.firstElementChild.children[1].focus();
-                        const buttonHeight = element.clientHeight;
-                        element.nextElementSibling.firstElementChild.children[1].style.height = buttonHeight + 'px';
-                        const heightWm = buttonHeight + 3;
-                        if (element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML &&
-                            element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML.length > 28) {
+                            element.nextElementSibling.firstElementChild.children[1].focus();
+                            const buttonHeight = element.clientHeight;
+                            element.nextElementSibling.firstElementChild.children[1].style.height = buttonHeight + 'px';
+                            const heightWm = buttonHeight + 3;
+                            if (element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML &&
+                                element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML.length > 28) {
                                 element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML =
-                                element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML
-                                .substring(0, 28);
-                        }
-                        element.nextElementSibling.firstElementChild.children[1].style.top = '-' + heightWm + 'px';
-                        element.nextElementSibling.firstElementChild.children[0].style.display = 'block';
-                        const posLabel = buttonHeight + 20;
-                        element.nextElementSibling.firstElementChild.children[0].style.top = '-' + posLabel + 'px';
+                                    element.nextElementSibling.firstElementChild.children[0].firstElementChild.innerHTML
+                                        .substring(0, 28);
+                            }
+                            element.nextElementSibling.firstElementChild.children[1].style.top = '-' + heightWm + 'px';
+                            element.nextElementSibling.firstElementChild.children[0].style.display = 'block';
+                            const posLabel = buttonHeight + 20;
+                            element.nextElementSibling.firstElementChild.children[0].style.top = '-' + posLabel + 'px';
                         } else {
                             element.nextElementSibling.firstElementChild.children[0].style.display = 'none';
                         }
                     }, 0);
                 }
-                        });
+            });
         });
     }
 };
@@ -427,7 +428,7 @@ export const callLoadData = (
 
             let jsonobject = '';
             try {
-               jsonobject = JSON.parse(res.content);
+                jsonobject = JSON.parse(res.content);
             } catch (e) {
 
                 const message = await getString('couldnotloaddata', 'local_wunderbyte_table');
@@ -809,21 +810,21 @@ export function infinitescrollEnabled(idstring) {
 function initializeComponents(idstring, encodedtable) {
     const selector = ".wunderbyte_table_container_" + idstring;
 
-        initializeCheckboxes(selector, idstring, encodedtable);
-        initializeSearch(selector, idstring, encodedtable);
-        initializeSort(selector, idstring, encodedtable);
-        initializeRowsSelect(selector, idstring, encodedtable);
-        initializeFilterSearch(selector, idstring, encodedtable);
-        initializeResetFilterButton(selector, idstring, encodedtable);
-        initializeEditTableButton(selector, idstring, encodedtable);
-        initializeReordering(selector, idstring, encodedtable);
+    initializeCheckboxes(selector, idstring, encodedtable);
+    initializeSearch(selector, idstring, encodedtable);
+    initializeSort(selector, idstring, encodedtable);
+    initializeRowsSelect(selector, idstring, encodedtable);
+    initializeFilterSearch(selector, idstring, encodedtable);
+    initializeResetFilterButton(selector, idstring, encodedtable);
+    initializeEditTableButton(selector, idstring, encodedtable);
+    initializeReordering(selector, idstring, encodedtable);
 
-        // A very strange error leads to a failed import from the reloadTable.js under some circumstances.
-        // Reload has to be called with this precaution therefore.
-        if (initializeReload) {
-            initializeReload(selector, idstring, encodedtable);
-        }
-        initializeActionButton(selector, idstring, encodedtable);
+    // A very strange error leads to a failed import from the reloadTable.js under some circumstances.
+    // Reload has to be called with this precaution therefore.
+    if (initializeReload) {
+        initializeReload(selector, idstring, encodedtable);
+    }
+    initializeActionButton(selector, idstring, encodedtable);
 
 }
 

@@ -13,9 +13,8 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/*
- * @package    local_wunderbyte_table
+/**
+ * @module    local_wunderbyte_table
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,7 +34,7 @@ var checked = {};
  * @param {string} idstring
  * @param {string} encodedtable
  */
- export function initializeCheckboxes(selector, idstring, encodedtable) {
+export function initializeCheckboxes(selector, idstring, encodedtable) {
 
   const filterContainer = document.querySelector(selector + SELECTORS.FILTER);
 
@@ -46,7 +45,7 @@ var checked = {};
   const filterElements = filterContainer.querySelectorAll("input[class^='filterelement']");
 
   if (!filterElements) {
-      return;
+    return;
   }
 
   // We create the key for the checked items of this table.
@@ -143,7 +142,7 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
  * @param {*} idstring
  * @param {*} encodedtable
  */
- export function toggleFilterelement(e, selector, idstring, encodedtable) {
+export function toggleFilterelement(e, selector, idstring, encodedtable) {
 
   e.stopPropagation();
   e.preventDefault();
@@ -162,8 +161,8 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
 
     // Reload the filtered elements via ajax.
     const filterobjects = getFilterObjects(idstring);
-          // eslint-disable-next-line no-console
-          console.log("filterobjects: " + filterobjects);
+    // eslint-disable-next-line no-console
+    console.log("filterobjects: " + filterobjects);
     const searchstring = getSearchInput(idstring);
     const sort = getSortSelection(idstring);
 
@@ -219,14 +218,14 @@ export function getDates(e, selector, idstring) {
     unsetEmptyFieldsInCheckedObject(name, null, idstring);
     // Vorher noch ein if exists etc.
     Object.keys(checked[idstring]).forEach(function(key) {
-        Object.keys(checked[idstring][key]).forEach(function(okey) {
-            if (okey == filtername) {
-              resetCheckedObject(idstring, key, filtername);
-              unsetEmptyFieldsInCheckedObject(key, null, idstring);
-            }
-          }
-        );
+      Object.keys(checked[idstring][key]).forEach(function(okey) {
+        if (okey == filtername) {
+          resetCheckedObject(idstring, key, filtername);
+          unsetEmptyFieldsInCheckedObject(key, null, idstring);
+        }
       }
+      );
+    }
     );
   }
   updateFilterCounter(name, selector, idstring);
@@ -333,7 +332,7 @@ function setTimespanFilter(filtercontainer, filtername, idstring, name) {
       secondoperator = "fo";
       break;
     default:
-    break;
+      break;
   }
   if (!secondcolumn) {
     secondcolumn = firstcolumn;
@@ -476,11 +475,11 @@ export function updateUrlWithFilterSearchSort(filterobjects, searchstring, sort,
     url.searchParams.append('wbtfilter', filterobjects);
   }
   if (searchstring !== "" &&
-  searchstring !== null) {
+    searchstring !== null) {
     url.searchParams.append('wbtsearch', searchstring);
   }
   if (sort !== "" &&
-  sort !== null) {
+    sort !== null) {
     url.searchParams.append('tsort', sort);
   }
   if (dir !== null &&
@@ -504,7 +503,7 @@ export function updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, s
   // The container will hold wunderbyteTableClass, wunderbyteTableFilter, wunderbyteTableSearch classes.
   let container = document.querySelector(".wunderbyte_table_container_" + idstring);
   if (!container) {
-      return;
+    return;
   }
 
   let url = '';
@@ -531,11 +530,11 @@ export function updateDownloadUrlWithFilterSearchSort(idstring, filterobjects, s
     url.searchParams.append('wbtfilter', filterobjects);
   }
   if (searchstring !== "" &&
-  searchstring !== null) {
+    searchstring !== null) {
     url.searchParams.append('wbtsearch', searchstring);
   }
   if (sort !== "" &&
-  sort !== null) {
+    sort !== null) {
     url.searchParams.append('tsort', sort);
   }
   if (dir !== null &&
@@ -595,17 +594,17 @@ export function getIntRange(e, selector, idstring) {
 
   const alertelement = filtercontainer.querySelector('div[id*="intrangefilter_alert"]');
   if (!isInt(fromvalue)
-      || !isInt(tovalue)) {
+    || !isInt(tovalue)) {
 
-      alertelement.removeAttribute('hidden');
+    alertelement.removeAttribute('hidden');
   } else {
-      alertelement.setAttribute('hidden', 'true');
+    alertelement.setAttribute('hidden', 'true');
 
-      // Stripping leading zeros.
-      fromvalue = parseInt(fromvalue, 10);
-      fromvalue = fromvalue.toString();
-      tovalue = parseInt(tovalue, 10);
-      tovalue = tovalue.toString();
+    // Stripping leading zeros.
+    fromvalue = parseInt(fromvalue, 10);
+    fromvalue = fromvalue.toString();
+    tovalue = parseInt(tovalue, 10);
+    tovalue = tovalue.toString();
   }
 
   if (fromvalue.length > 0 || tovalue.length > 0) {
@@ -694,9 +693,9 @@ function updateFilterCounter(name, selector, idstring) {
 
   let counter = checked[idstring][name] ? checked[idstring][name].length : 0;
   if ((counter > 0 && (typeof checked[idstring][name] === 'string') ||
-      (typeof checked[idstring][name] === 'object' && !Array.isArray(checked[idstring][name])))) {
-        // Handle different cases of filters here (datepicker, intrange).
-        // TODO: Find a better marker for difference of filters.
+    (typeof checked[idstring][name] === 'object' && !Array.isArray(checked[idstring][name])))) {
+    // Handle different cases of filters here (datepicker, intrange).
+    // TODO: Find a better marker for difference of filters.
     counter = 1;
   }
 

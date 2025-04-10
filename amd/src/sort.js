@@ -1,4 +1,3 @@
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,23 +13,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
- * @package    local_wunderbyte_table
+/**
+ * @module    local_wunderbyte_table
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 import {callLoadData} from 'local_wunderbyte_table/init';
 import {getFilterObjects} from 'local_wunderbyte_table/filter';
 import {getSearchInput} from 'local_wunderbyte_table/search';
 
 const SELECTOR = {
-  SORTCOLUMN: 'select.sortcolumn',
-  CHANGESORTORDER: 'a.changesortorder',
-  TABLECOLUMN: 'th.wb-table-column',
-  WBCONTAINER: ".wunderbyte_table_container_",
-  CHECKBOXES: 'input.wb-checkbox',
-  TABLEHEADERCHECKBOX: 'input.tableheadercheckbox',
+    SORTCOLUMN: 'select.sortcolumn',
+    CHANGESORTORDER: 'a.changesortorder',
+    TABLECOLUMN: 'th.wb-table-column',
+    WBCONTAINER: ".wunderbyte_table_container_",
+    CHECKBOXES: 'input.wb-checkbox',
+    TABLEHEADERCHECKBOX: 'input.tableheadercheckbox',
 };
 
 const SORT_ASC = 4;
@@ -43,12 +41,12 @@ const SORT_DESC = 3;
  * @param {*} encodedtable
  * @returns {void}
  */
- export function initializeSort(listContainer, idstring, encodedtable) {
+export function initializeSort(listContainer, idstring, encodedtable) {
 
     const container = document.querySelector(listContainer);
 
     if (!container) {
-      return;
+        return;
     }
 
     const sortColumnElement = container.querySelector(SELECTOR.SORTCOLUMN);
@@ -64,17 +62,17 @@ const SORT_DESC = 3;
 
     if (!sortColumnElement.dataset.initialized || !sortOrderElement.dataset.initialized) {
 
-      sortColumnElement.dataset.initialized = true;
-      sortOrderElement.dataset.initialized = true;
+        sortColumnElement.dataset.initialized = true;
+        sortOrderElement.dataset.initialized = true;
 
-      // We add two listener, one on the select, one on the sortorder button.
+        // We add two listener, one on the select, one on the sortorder button.
 
-      sortColumnElement.addEventListener('change', (e) => {
-        callSortAjax(e, idstring, encodedtable);
-      });
-      sortOrderElement.addEventListener('click', () => {
-        callSortAjax(null, idstring, encodedtable);
-      });
+        sortColumnElement.addEventListener('change', (e) => {
+            callSortAjax(e, idstring, encodedtable);
+        });
+        sortOrderElement.addEventListener('click', () => {
+            callSortAjax(null, idstring, encodedtable);
+        });
     }
 }
 
@@ -86,39 +84,39 @@ const SORT_DESC = 3;
  */
 export function initializeSortColumns(listContainer, idstring, encodedtable) {
 
-  const container = document.querySelector(listContainer);
+    const container = document.querySelector(listContainer);
 
-  const sortColumnHeaders = container.querySelectorAll(SELECTOR.TABLECOLUMN);
+    const sortColumnHeaders = container.querySelectorAll(SELECTOR.TABLECOLUMN);
 
-  // Add the listeners to column headers.
-  sortColumnHeaders.forEach(element => {
-    if (element.dataset.initialized) {
-      return;
-    }
-    element.dataset.initialized = true;
+    // Add the listeners to column headers.
+    sortColumnHeaders.forEach(element => {
+        if (element.dataset.initialized) {
+            return;
+        }
+        element.dataset.initialized = true;
 
-    element.addEventListener('click', e => {
+        element.addEventListener('click', e => {
 
-      let columnname = element.dataset.columnname;
+            let columnname = element.dataset.columnname;
 
-      switch (columnname) {
-        // In case we are in the checkboxes column...
-        case 'wbcheckbox':
-          // Checking if checkbox in table header is checked.
-          var checked = container.querySelector(SELECTOR.TABLEHEADERCHECKBOX).checked;
+            switch (columnname) {
+                // In case we are in the checkboxes column...
+                case 'wbcheckbox':
+                    // Checking if checkbox in table header is checked.
+                    var checked = container.querySelector(SELECTOR.TABLEHEADERCHECKBOX).checked;
 
-          // Applying state of header checkbox to checkboxes in table.
-          selectAllCheckboxes(idstring, checked);
-          e.target.dataset.checked = checked;
-          break;
-        default:
-          if (element.dataset.sortable) {
-          callSortAjax(columnname, idstring, encodedtable);
-          }
-      }
-    }
-    );
-  });
+                    // Applying state of header checkbox to checkboxes in table.
+                    selectAllCheckboxes(idstring, checked);
+                    e.target.dataset.checked = checked;
+                    break;
+                default:
+                    if (element.dataset.sortable) {
+                        callSortAjax(columnname, idstring, encodedtable);
+                    }
+            }
+        }
+        );
+    });
 }
 
 /**
@@ -129,82 +127,82 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
  */
 function callSortAjax(event, idstring, encodedtable) {
 
-  let sortcolumn = null;
-  let sortorder = null;
-  let reset = null;
+    let sortcolumn = null;
+    let sortorder = null;
+    let reset = null;
 
-  const container = document.querySelector(SELECTOR.WBCONTAINER + idstring);
-  const sortColumnElement = container.querySelector(SELECTOR.SORTCOLUMN);
+    const container = document.querySelector(SELECTOR.WBCONTAINER + idstring);
+    const sortColumnElement = container.querySelector(SELECTOR.SORTCOLUMN);
 
-  let sortOrderElement = container.querySelector("a.changesortorder i");
-  let className = null;
-  let columnheaderIsTrigger = false;
-
-  if (typeof event === 'string') {
-    // We are sure that we clicked on a column header.
-    sortOrderElement = container.querySelector(SELECTOR.TABLECOLUMN + '.' + event);
-    columnheaderIsTrigger = true;
-  }
-
-  className = sortOrderElement.className;
-
-  // If we get an event, we are in the sortcolum mode.
-  if (event !== null) {
+    let sortOrderElement = container.querySelector("a.changesortorder i");
+    let className = null;
+    let columnheaderIsTrigger = false;
 
     if (typeof event === 'string') {
-      // We have gotten the column directly as string.
-      sortcolumn = event;
+        // We are sure that we clicked on a column header.
+        sortOrderElement = container.querySelector(SELECTOR.TABLECOLUMN + '.' + event);
+        columnheaderIsTrigger = true;
+    }
+
+    className = sortOrderElement.className;
+
+    // If we get an event, we are in the sortcolum mode.
+    if (event !== null) {
+
+        if (typeof event === 'string') {
+            // We have gotten the column directly as string.
+            sortcolumn = event;
+        } else {
+            sortcolumn = event.target.value;
+        }
+
+        // We reset only on changed sortcolumn, not on order.
+        reset = 1;
+
+        if (!sortcolumn) {
+            return;
+        }
+
+        // eslint-disable-next-line no-console
+        console.log("Classname ", className);
+        // Get the sortorder by the icon and apply it.
+        if ((className.includes('desc') && columnheaderIsTrigger == false)
+            || (className.includes('asc') && columnheaderIsTrigger == true)) {
+            sortorder = SORT_DESC;
+        } else {
+            sortorder = SORT_ASC;
+        }
+
     } else {
-      sortcolumn = event.target.value;
+        // Else, we are in the sortorder mode.
+        // Get the sortorder by the icon and change it.
+        if (className.includes('asc')) {
+
+            sortorder = SORT_DESC;
+            sortOrderElement.className = className.replace('asc', 'desc');
+        } else {
+
+            sortorder = SORT_ASC;
+            sortOrderElement.className = className.replace('desc', 'asc');
+        }
+
+        // We also need the sortcolumn name to effectuate the change.
+        sortcolumn = sortColumnElement.selectedOptions[0].value;
     }
 
-    // We reset only on changed sortcolumn, not on order.
-    reset = 1;
+    const filterobjects = getFilterObjects(idstring);
+    const searchstring = getSearchInput(idstring);
 
-    if (!sortcolumn) {
-      return;
-    }
-
-    // eslint-disable-next-line no-console
-    console.log("Classname ", className);
-    // Get the sortorder by the icon and apply it.
-    if ((className.includes('desc') && columnheaderIsTrigger == false)
-    || (className.includes('asc') && columnheaderIsTrigger == true)) {
-      sortorder = SORT_DESC;
-    } else {
-      sortorder = SORT_ASC;
-    }
-
-  } else {
-    // Else, we are in the sortorder mode.
-    // Get the sortorder by the icon and change it.
-    if (className.includes('asc')) {
-
-      sortorder = SORT_DESC;
-      sortOrderElement.className = className.replace('asc', 'desc');
-    } else {
-
-      sortorder = SORT_ASC;
-      sortOrderElement.className = className.replace('desc', 'asc');
-    }
-
-    // We also need the sortcolumn name to effectuate the change.
-    sortcolumn = sortColumnElement.selectedOptions[0].value;
-  }
-
-   const filterobjects = getFilterObjects(idstring);
-   const searchstring = getSearchInput(idstring);
-
-   callLoadData(idstring,
-     encodedtable,
-     0, // We set page to 0 because we need to start the container anew.
-     sortcolumn,
-     null,
-     null,
-     sortorder,
-     reset,
-     filterobjects,
-     searchstring);
+    callLoadData(idstring,
+        encodedtable,
+        0, // We set page to 0 because we need to start the container anew.
+        sortcolumn,
+        null,
+        null,
+        sortorder,
+        reset,
+        filterobjects,
+        searchstring);
 }
 
 /**
@@ -214,13 +212,13 @@ function callSortAjax(event, idstring, encodedtable) {
  */
 export function getSortSelection(idstring) {
 
-  const inputElement = document.querySelector(SELECTOR.WBCONTAINER + idstring + ' select.sort');
+    const inputElement = document.querySelector(SELECTOR.WBCONTAINER + idstring + ' select.sort');
 
-  if (!inputElement) {
-    return null;
-  }
+    if (!inputElement) {
+        return null;
+    }
 
-  return '';
+    return '';
 }
 
 /**
@@ -230,14 +228,14 @@ export function getSortSelection(idstring) {
  */
 function selectAllCheckboxes(idstring, checked) {
 
-  const container = document.querySelector('#a' + idstring);
+    const container = document.querySelector('#a' + idstring);
 
-  const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOXES);
+    const checkboxes = container.querySelectorAll(SELECTOR.CHECKBOXES);
 
-  checkboxes.forEach(x => {
-    // Applying status of tableheadercheckbox to all checkboxes.
-    if (x.dataset.tableid == idstring) {
-      x.checked = checked;
-    }
-  });
+    checkboxes.forEach(x => {
+        // Applying status of tableheadercheckbox to all checkboxes.
+        if (x.dataset.tableid == idstring) {
+            x.checked = checked;
+        }
+    });
 }
