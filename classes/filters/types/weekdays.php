@@ -26,7 +26,6 @@ namespace local_wunderbyte_table\filters\types;
 
 use moodle_exception;
 use core_date;
-use local_wunderbyte_table\filter;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
 
@@ -170,8 +169,9 @@ class weekdays extends base {
         ];
         $filterspecificvalues = array_merge($filterspecificvalues, self::get_possible_weekdays_options());
         return $filterspecificvalues;
-	}
+    }
 
+    /**
      * Get filter options for weekdays.
      * @param wunderbyte_table $table
      * @param string $key

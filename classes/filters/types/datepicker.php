@@ -89,7 +89,8 @@ abstract class datepicker extends base {
                 'local_wunderbyte_table',
                 '',
                 $this->columnidentifier,
-                'Every column can have only one filter applied');
+                'Every column can have only one filter applied'
+            );
         }
     }
 

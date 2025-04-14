@@ -24,6 +24,7 @@
 
 namespace local_wunderbyte_table\filters\types;
 
+use core_date;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\filter;
 use local_wunderbyte_table\wunderbyte_table;
@@ -183,8 +184,9 @@ class hourlist extends base {
         ];
         $filterspecificvalues = array_merge($filterspecificvalues, self::get_possible_timed_options());
         return $filterspecificvalues;
-	}
+    }
 
+    /**
      * Makes sql requests.
      * @param wunderbyte_table $table
      * @param string $key
