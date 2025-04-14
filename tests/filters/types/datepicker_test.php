@@ -23,9 +23,8 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
-use moodle_exception;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use stdClass;
 
 
 /**
@@ -33,216 +32,143 @@ use ReflectionClass;
  */
 final class datepicker_test extends TestCase {
     /**
-     * Test get_data_for_filter_options() method.
-     * @covers \local_wunderbyte_table\filters\types\datepicker::__construct
-     * @covers \local_wunderbyte_table\filters\types\datepicker::add_filter
-     */
-    public function test_add_filter(): void {
-        $filter = [];
-        $columnidentifier = 'columnidentifier';
-        $datepickeroperatormanager = new datepickeroperator($columnidentifier);
-        $datepickeroperatormanager->add_filter($filter);
-        $this->assertArrayHasKey('id', $filter);
-        $this->assertArrayHasKey('columnidentifier', $filter);
-        $this->assertEquals('ID', $filter['id']['localizedname']);
-        $this->assertEquals(1, $filter['columnidentifier']['columnidentifier_wb_checked']);
-    }
-
-    /**
-     * Test add_filter() method.
-     * @covers \local_wunderbyte_table\filters\types\datepicker::add_options
-     * @covers \local_wunderbyte_table\filters\types\datepicker::get_operatoroptions
-     */
-    public function test_add_options(): void {
-        $columnidentifier = 'columnidentifier';
-        $weekdaysmanager = new datepickeroperator($columnidentifier);
-
-        $weekdaysmanager->add_options('standard', '<', 'Test Checkbox', '2025-01-01', '2025-12-31');
-
-        $reflection = new ReflectionClass($weekdaysmanager);
-        $property = $reflection->getProperty('options');
-        $property->setAccessible(true);
-        $optionsvalue = $property->getValue($weekdaysmanager);
-
-        $this->assertNotEmpty($optionsvalue);
-        $this->assertArrayHasKey($columnidentifier, $optionsvalue);
-        $this->assertSame('<', $optionsvalue[$columnidentifier]['operator']);
-        $this->assertSame('Test Checkbox', $optionsvalue[$columnidentifier]['checkboxlabel']);
-        $this->assertSame('2025-01-01', $optionsvalue[$columnidentifier]['defaultvalue']);
-
-        $weekdaysmanager->add_options('in between', '>', '', '2025-02-01', '2025-12-31', ['=', '<=']);
-
-        $optionsvalue = $property->getValue($weekdaysmanager);
-        $this->assertArrayHasKey($columnidentifier, $optionsvalue);
-        $this->assertSame('2025-02-01', $optionsvalue[$columnidentifier]['defaultvaluestart']);
-        $this->assertSame('2025-12-31', $optionsvalue[$columnidentifier]['defaultvalueend']);
-        $this->assertSame(['=', '<='], $optionsvalue[$columnidentifier]['possibleoperations']);
-
-        $this->expectException(moodle_exception::class);
-        $this->expectExceptionMessage('novalidoperator');
-        $weekdaysmanager->add_options('standard', 'invalid_operator');
-    }
-
-    /**
-     * Test add_to_categoryobject() method.
-     * @covers \local_wunderbyte_table\filters\types\datepicker::add_to_categoryobject
-     */
-    public function test_add_to_categoryobject(): void {
-        $categoryobject = [];
-
-        $filtersettings = [
-            'testkey' => [
-                "local_wunderbyte_table\\filters\\types\\datepicker" => true,
-                'datepicker' => [
-                    'Standard Label' => [
-                        'operator' => '<',
-                        'defaultvalue' => 1741824000,
-                        'checkboxlabel' => 'Test Checkbox',
-                    ],
-                    'InBetween Label' => [
-                        'columntimestart' => 'start_time_column',
-                        'columntimeend' => 'end_time_column',
-                        'defaultvaluestart' => 1741737600,
-                        'defaultvalueend' => 1741824000,
-                        'checkboxlabel' => 'Range Checkbox',
-                        'possibleoperations' => ['flexoverlap'],
-                    ],
-                ],
-            ],
-        ];
-
-        $fckey = 'testkey';
-        $values = [];
-
-        datepicker::add_to_categoryobject($categoryobject, $filtersettings, $fckey, $values);
-
-        $this->assertArrayHasKey('datepicker', $categoryobject);
-        $this->assertArrayHasKey('datepickers', $categoryobject['datepicker']);
-        $this->assertCount(2, $categoryobject['datepicker']['datepickers']);
-
-        $standardfilter = $categoryobject['datepicker']['datepickers'][0];
-        $this->assertSame('Standard Label', $standardfilter['label']);
-        $this->assertSame('<', $standardfilter['operator']);
-        $this->assertSame(1741824000, $standardfilter['timestamp']);
-        $this->assertSame('2025-03-13', $standardfilter['datereadable']);
-        $this->assertSame('08:00', $standardfilter['timereadable']);
-        $this->assertSame('Test Checkbox', $standardfilter['checkboxlabel']);
-
-        $inbetweenfilter = $categoryobject['datepicker']['datepickers'][1];
-        $this->assertSame('InBetween Label', $inbetweenfilter['label']);
-        $this->assertSame('start_time_column', $inbetweenfilter['startcolumn']);
-        $this->assertSame(1741737600, $inbetweenfilter['starttimestamp']);
-        $this->assertSame(1741737600, $inbetweenfilter['startdatereadable']);
-        $this->assertSame(1741824000, $inbetweenfilter['endtimestamp']);
-        $this->assertSame('Range Checkbox', $inbetweenfilter['checkboxlabel']);
-        $this->assertCount(1, $inbetweenfilter['possibleoperations']);
-        $this->assertSame('flexoverlap', $inbetweenfilter['possibleoperations'][0]['operator']);
-
-        $emptycategory = [];
-        datepicker::add_to_categoryobject($emptycategory, $filtersettings, 'nonexistentkey', $values);
-        $this->assertEmpty($emptycategory);
-    }
-
-    /**
-     * Test add_filter() method.
-     * @covers \local_wunderbyte_table\filters\types\datepicker::add_remove_button
-     */
-    public function test_apply_filter(): void {
-        $mformmock = $this->getMockBuilder(\MoodleQuickForm::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['addElement'])
-            ->getMock();
-
-        $filtertypename = 'testfilter';
-
-        $mformmock->expects($this->once())
-            ->method('addElement')
-            ->with([
-                $this->equalTo('button'),
-                $this->equalTo("remove[{$filtertypename}]"),
-                $this->stringContains('<i class="fa fa-trash"></i>'),
-                $this->callback(
-                    function ($options) use ($filtertypename) {
-                        return
-                            is_array($options)
-                            && isset($options['class'])
-                            && $options['class'] === 'btn remove-key-value'
-                            && isset($options['type'])
-                            && $options['type'] === 'button'
-                            && isset($options['data-groupid'])
-                            && $options['data-groupid'] === $filtertypename
-                            && isset($options['aria-label'])
-                            && $options['aria-label'] === "Remove key-value pair for {$filtertypename}";
-                    }
-                ),
-            ]);
-
-        datepicker::add_remove_button($mformmock, $filtertypename);
-    }
-
-    /**
-     * Test non_kestringy_value_pair_properties() method.
-     * @covers \local_wunderbyte_table\filters\types\datepicker::non_kestringy_value_pair_properties
-     * @covers \local_wunderbyte_table\filters\types\datepicker::add_remove_button
+     * Test get_operatoroptions_name() method.
+     * @covers \local_wunderbyte_table\filters\types\datepicker::get_operatoroptions_name
      *
      */
-    public function test_non_kestringy_value_pair_properties(): void {
-        $filtercolumn = 'testcolumn';
+    public function test_get_operatoroptions_name(): void {
+        $selectedoptions = ['0', '2'];
+        $expected = ['within', 'overlapstart'];
 
-        $expected = [
-            'localizedname',
-            'wbfilterclass',
-            'local_wunderbyte_table\filters\types\datepicker',
-            'testcolumn_wb_checked',
-        ];
-
-        $result = datepicker::non_kestringy_value_pair_properties($filtercolumn);
-
-        $this->assertIsArray($result);
+        $result = datepicker::get_operatoroptions_name($selectedoptions);
         $this->assertSame($expected, $result);
     }
 
     /**
-     * Test add_date_filter_head() method.
-     * @covers \local_wunderbyte_table\filters\types\datepicker::add_date_filter_head
+     * Test get_operatoroptions_index() method.
+     * @covers \local_wunderbyte_table\filters\types\datepicker::get_operatoroptions_index
      */
-    public function test_add_date_filter_head(): void {
-        $mformmock = $this->getMockBuilder(\MoodleQuickForm::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['addElement'])
-            ->getMock();
+    public function test_get_operatoroptions_index(): void {
+        $selectedoptions = ['within', 'overlapstart'];
+        $expected = [0, 2];
 
-        $filterlabel = 'Test Filter';
-        $horizontallinecounter = 1;
-        $htmlid = 'test-filter';
-
-        $mformmock->expects($this->exactly(4))
-            ->method('addElement')
-            ->withConsecutive(
-                [$this->equalTo('html'), $this->stringContains('<div id="test-filter">')],
-                [$this->equalTo('html'), $this->stringContains('<hr>')],
-                [$this->equalTo('html'), $this->stringContains('<b>Filter name: Test Filter</b>')]
-            );
-
-        datepicker::add_date_filter_head($mformmock, $filterlabel, $horizontallinecounter);
+        $result = datepicker::get_operatoroptions_index($selectedoptions);
+        $this->assertSame($expected, $result);
     }
 
     /**
-     * Test get_filterspecific_values() method.
-     * @covers \local_wunderbyte_table\filters\types\datepicker::get_filterspecific_values
+     * Test get_timestamp() method.
+     * @covers \local_wunderbyte_table\filters\types\datepicker::get_timestamp
      */
-    public function test_get_filterspecific_values(): void {
-        $data = [
+    public function test_get_timestamp(): void {
+        $input = ['day' => 10, 'month' => 3, 'year' => 2025];
+        $expected = mktime(0, 0, 0, 3, 10, 2025);
+
+        $result = datepicker::get_timestamp($input);
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Test get_moodle_form_date() method.
+     * @covers \local_wunderbyte_table\filters\types\datepicker::get_moodle_form_date
+     */
+    public function test_get_moodle_form_date(): void {
+        $timestamp = mktime(0, 0, 0, 3, 10, 2025);
+        $expected = ['day' => 10, 'month' => 3, 'year' => 2025];
+
+        $result = datepicker::get_moodle_form_date($timestamp);
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * Test validate_input() method.
+     * @covers \local_wunderbyte_table\filters\types\datepicker::validate_input
+     */
+    public function test_validate_input(): void {
+        $validdata = [
             'datepicker' => [
-                'filter1' => [],
-                'filter2' => ['name' => 'Already Named'],
+                'filter1' => ['name' => 'Valid Filter', 'operator' => '='],
             ],
         ];
-        $expectedresult = [
-            'filter1' => ['name' => 'filter1'],
-            'filter2' => ['name' => 'Already Named'],
+        $result = datepicker::validate_input($validdata);
+        $this->assertEmpty($result);
+
+        $invaliddata = [
+            'datepicker' => [
+                'filter1' => ['name' => '', 'checkboxlabel' => 'Some label', 'operator' => '='],
+            ],
         ];
-        $result = datepicker::get_filterspecific_values($data, 'dummy_column');
-        $this->assertSame($expectedresult, $result);
+        $result = datepicker::validate_input($invaliddata);
+        $this->assertArrayHasKey('filter1_group', $result);
+        $this->assertSame(get_string('datepickererrormandatory', 'local_wunderbyte_table'), $result['filter1_group']);
+    }
+
+    /**
+     * Test get_new_filter_values() method.
+     * @covers \local_wunderbyte_table\filters\types\datepicker::get_new_filter_values
+     */
+    public function test_get_new_filter_values(): void {
+        $data = new stdClass();
+        $data->datepicker = [
+            'filter1' => [
+                'name' => 'Filter One',
+                'checkboxlabel' => 'Check One',
+                'defaultvaluestart' => ['day' => 10, 'month' => 3, 'year' => 2025],
+                'defaultvalueend' => ['day' => 20, 'month' => 3, 'year' => 2025],
+                'possibleoperations' => [0, 2],
+            ],
+        ];
+        $data->localizedname = 'Localized Filter';
+        $data->wbfilterclass = 'custom_filter_class';
+        $data->testcolumn_wb_checked = '1';
+
+        $expected = [
+            'localizedname' => 'Localized Filter',
+            'custom_filter_class' => true,
+            'datepicker' => (object) [
+                'Filter One' => (object) [
+                    'checkboxlabel' => 'Check One',
+                    'columntimestart' => 'startdate',
+                    'columntimeend' => 'enddate',
+                    'labelstartvalue' => 'Timespan',
+                    'labelendvalue' => 'enddate',
+                    'defaultvaluestart' => mktime(0, 0, 0, 3, 10, 2025),
+                    'defaultvalueend' => mktime(0, 0, 0, 3, 20, 2025),
+                    'possibleoperations' => ['within', 'overlapstart'],
+                ],
+            ],
+            'testcolumn_wb_checked' => '1',
+            'wbfilterclass' => 'custom_filter_class',
+        ];
+
+        $result = datepicker::get_new_filter_values($data, 'testcolumn');
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Test render_mandatory_fields() method.
+     * @covers \local_wunderbyte_table\filters\types\datepicker::render_mandatory_fields
+     * @covers \local_wunderbyte_table\filters\types\datepicker::add_date_filter_head
+     * @covers \local_wunderbyte_table\filters\types\datepicker::set_date_filter_input
+     * @covers \local_wunderbyte_table\filters\types\datepicker::set_date_default_value_input
+     */
+    public function test_render_mandatory_fields(): void {
+        $mformmock = $this->getMockBuilder(\MoodleQuickForm::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['addElement', 'addGroup'])
+            ->getMock();
+
+        $data = [
+            'Filter1' => ['name' => 'Filter1'],
+            'Filter2' => ['name' => 'Filter2'],
+        ];
+
+        $mformmock->expects($this->atLeastOnce())
+            ->method('addElement');
+
+        $mformmock->expects($this->exactly(2))
+            ->method('addGroup');
+
+        datepicker::render_mandatory_fields($mformmock, $data);
     }
 }

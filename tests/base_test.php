@@ -32,7 +32,7 @@ use coding_exception;
 use Exception;
 use local_wunderbyte_table\external\load_data;
 use local_wunderbyte_table\filters\types\callback;
-use local_wunderbyte_table\filters\types\datepickerspan;
+use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\local\sortables\types\standardsortable;
 use moodle_exception;
@@ -315,7 +315,7 @@ final class base_test extends advanced_testcase {
         $callbackfilter->define_callbackfunction('local_wunderbyte_table\base_test::filter_iddivisiblebythree');
         $table->add_filter($callbackfilter);
 
-        $datepicker = new datepickerspan('enddate', get_string('enddate'));
+        $datepicker = new datepicker('enddate', get_string('enddate'));
         // For the datepicker, we need to add special options.
         $datepicker->add_options(
             'standard',

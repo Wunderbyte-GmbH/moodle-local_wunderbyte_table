@@ -28,7 +28,7 @@ use stdClass;
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
-class datepickeroperator extends datepicker {
+class datepickeroperator extends datepickerbase {
     /**
      * The expected value.
      * @param \MoodleQuickForm $mform

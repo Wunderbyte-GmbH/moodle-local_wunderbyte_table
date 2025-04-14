@@ -24,289 +24,282 @@
 
 namespace local_wunderbyte_table\filters\types;
 
-use coding_exception;
-use local_wunderbyte_table\filters\base;
-use local_wunderbyte_table\wunderbyte_table;
-use moodle_exception;
+use stdClass;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
-abstract class datepicker extends base {
+class datepicker extends datepickerbase {
     /**
-     *
-     * @var string
+     * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param array $data
      */
-    public static $newkeyvalue = [
-        0 => [0],
-    ];
-
-    /**
-     *
-     * @var string
-     */
-    public static $groupname = 'datepickergroup';
-    /**
-     * Get standard filter options.
-     * @param wunderbyte_table $table
-     * @param string $key
-     * @return array
-     */
-    public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
-        return [];
-    }
-
-    /**
-     * Add the filter to the array.
-     * @param array $filter
-     * @param bool $invisible
-     * @return void
-     * @throws moodle_exception
-     */
-    public function add_filter(array &$filter, bool $invisible = false) {
-
-        $options = [
-            'localizedname' => $this->localizedstring,
-            get_class($this) => true,
-            'datepicker' => $this->options,
-            $this->columnidentifier . '_wb_checked' => 1,
-        ];
-        $options['wbfilterclass'] = get_called_class();
-
-        // We always need to make sure that id column is present.
-        if (!isset($filter['id'])) {
-            $filter['id'] = [
-                'localizedname' => get_string('id', 'local_wunderbyte_table'),
-                'id_wb_checked' => 1,
-            ];
+    public static function render_mandatory_fields(&$mform, $data = null) {
+        if ($data === null) {
+            $data = self::$newkeyvalue;
         }
-
-        if (!isset($filter[$this->columnidentifier])) {
-            $filter[$this->columnidentifier] = $options;
-        } else {
-            throw new moodle_exception(
-                'filteridentifierconflict',
-                'local_wunderbyte_table',
-                '',
-                $this->columnidentifier,
-                'Every column can have only one filter applied'
-            );
-        }
-    }
-
-    /**
-     * Add options.
-     * @param string $type
-     * @param string $operator
-     * @param string $checkboxlabel
-     * @param string $defaultvaluestart
-     * @param string $defaultvalueend
-     * @param array $possibleoperations
-     * @return void
-     * @throws moodle_exception
-     * @throws coding_exception
-     */
-    public function add_options(
-        string $type = 'standard',
-        string $operator = '<',
-        string $checkboxlabel = '',
-        string $defaultvaluestart = '',
-        string $defaultvalueend = '',
-        array $possibleoperations = []
-    ) {
-        if (empty($possibleoperations)) {
-            $possibleoperations = self::get_operatoroptions();
-        }
-
-        if (!in_array($operator, ['=', '<', '>', '<=', '>='])) {
-            throw new moodle_exception('novalidoperator', 'local_wunderbyte_table');
-        }
-
-        $filter = [
-            'checkboxlabel' => !empty($checkboxlabel) ? $checkboxlabel : get_string('apply_filter', 'local_wunderbyte_table'),
-        ];
-
-        switch ($type) {
-            case 'standard':
-                $filter['operator'] = $operator;
-                $filter['defaultvalue'] = !empty($defaultvaluestart) ? $defaultvaluestart : 'now';
-                break;
-            case 'in between':
-                $filter['columntimestart'] = $this->columnidentifier;
-                $filter['columntimeend'] = $this->secondcolumnidentifier;
-                $filter['labelstartvalue'] = $this->localizedstring;
-                $filter['labelendvalue'] = $this->secondcolumnlocalized;
-                $filter['defaultvaluestart'] = $defaultvaluestart;
-                $filter['defaultvalueend'] = $defaultvalueend;
-                $filter['possibleoperations'] = $possibleoperations;
-
-                break;
-            default:
-                throw new moodle_exception('unsupportedfiltertype', 'local_wunderbyte_table');
-        }
-
-        $this->options[$this->localizedstring] = $filter;
-    }
-
-    /**
-     * Adds the array for the mustache template to render the categoryobject.
-     * If no special treatment is needed, it must be implemented in the filter class, but just return.
-     * The standard filter will take care of it.
-     * @param array $categoryobject
-     * @param array $filtersettings
-     * @param string $fckey
-     * @param array $values
-     * @return mixed
-     */
-    public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
-
-        if (!isset($filtersettings[$fckey][get_called_class()])) {
-            return;
-        }
-
-        $datepickerarray = $filtersettings[$fckey];
-
-        foreach ($datepickerarray['datepicker'] as $labelkey => $object) {
-            if (!isset($object['columntimestart'])) {
-                $defaulttimestamp = $datepickerarray['datepicker'][$labelkey]['defaultvalue'];
-
-                $datepickerobject = [
-                    'label' => $labelkey,
-                    'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
-                    'timestamp' => $defaulttimestamp,
-                    'datereadable' => $defaulttimestamp === 'now' ? 'now' : date('Y-m-d', $defaulttimestamp),
-                    'timereadable' => $defaulttimestamp === 'now' ? 'now' : date('H:i', $defaulttimestamp),
-                    'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
-                ];
-            } else { // Inbetween Filter applied.
-                // Prepare the array for output.
-                if (empty($datepickerarray['datepicker'][$labelkey]['possibleoperations'])) {
-                    $datepickerarray['datepicker'][$labelkey]['possibleoperations'] = self::get_operatoroptions();
-                }
-                $operationsarray = array_map(fn($y) => [
-                    'operator' => $y,
-                    'label' => get_string($y, 'local_wunderbyte_table'),
-                ], $datepickerarray['datepicker'][$labelkey]['possibleoperations']);
-
-                $datepickerobject = [
-                    'label' => $labelkey,
-                    'startcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimestart'],
-                    'starttimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
-                    'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
-                    'starttimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
-                    'endcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimeend'],
-                    'endtimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
-                    'enddatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
-                    'endtimereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvalueend'],
-                    'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
-                    'possibleoperations' => $operationsarray, // Array.
-                ];
+        $horizontallinecounter = 0;
+        foreach ($data as $filterlabel => $filtertype) {
+            if (empty($filterlabel) && count($data) != 1) {
+                continue;
             }
-            $categoryobject['datepicker']['datepickers'][] = $datepickerobject;
+            if (!empty($filterlabel)) {
+                self::add_date_filter_head($mform, $filterlabel, $horizontallinecounter);
+            }
+
+            $valuelabel = 'datepicker[' . $filterlabel . ']';
+            $inputs = self::set_date_filter_input($mform, $valuelabel);
+            self::set_date_default_value_input($mform, $valuelabel, $filtertype);
+
+            $mform->addGroup(
+                $inputs,
+                $filterlabel . '_group',
+                '',
+                ' ',
+                false
+            );
+            $horizontallinecounter++;
+            $mform->addElement('html', '</div>');
         }
     }
 
     /**
-     * Filter isn't applied here.
-     *
-     * @param string $filter
-     * @param string $columnname
-     * @param mixed $categoryvalue
-     * @param wunderbyte_table $table
-     *
-     * @return void
-     *
-     */
-    public function apply_filter(
-        string &$filter,
-        string $columnname,
-        $categoryvalue,
-        wunderbyte_table &$table
-    ): void {
-        return;
-    }
-
-    /**
-     * The expected value.
-     * @return array
-     */
-    public static function get_operatoroptions() {
-        return [
-            0 => "within",
-            1 => "overlapboth",
-            2 => "overlapstart",
-            3 => "overlapend",
-            4 => "before",
-            5 => "after",
-            6 => "flexoverlap",
-        ];
-    }
-
-
-    /**
      * The expected value.
      * @param \MoodleQuickForm $mform
-     * @param string $filtertypename
+     * @param string $valuelabel
+     * @return array
      */
-    public static function add_remove_button(&$mform, $filtertypename) {
-        $trashicon = '<i class="fa fa-trash"></i>';
-        $mform->addElement(
-            'button',
-            "remove[{$filtertypename}]",
-            $trashicon,
-            [
-                'class' => 'btn remove-key-value',
-                'type' => 'button',
-                'data-groupid' => $filtertypename,
-                'aria-label' => "Remove key-value pair for {$filtertypename}",
-            ]
+    public static function set_date_filter_input(&$mform, $valuelabel) {
+        $nameinput = $mform->createElement(
+            'text',
+            $valuelabel  . '[name]',
+            '',
+            ['placeholder' => get_string('datepickerplaceholdername', 'local_wunderbyte_table')]
         );
-    }
 
-    /**
-     * Handles form definition of filter classes.
-     * @param string $filtercolumn
-     * @return array
-     */
-    public static function non_kestringy_value_pair_properties($filtercolumn) {
+        $checkboxlabelinput = $mform->createElement(
+            'text',
+            $valuelabel  . '[checkboxlabel]',
+            '',
+            ['placeholder' => get_string('datepickerplaceholdercheckboxlabel', 'local_wunderbyte_table')]
+        );
+
+        $possibleoperationsinput = $mform->createElement(
+            'select',
+            $valuelabel . '[possibleoperations]',
+            '',
+            self::get_operatoroptions(),
+            ['multiple' => 'multiple']
+        );
+
+        $defaultvaluestartinput = $mform->createElement(
+            'date_selector',
+            $valuelabel  . '[defaultvaluestart]',
+            '',
+        );
+
+        $defaultvalueendinput = $mform->createElement(
+            'date_selector',
+            $valuelabel  . '[defaultvalueend]',
+            '',
+        );
+
         return [
-            'localizedname',
-            'wbfilterclass',
-            'local_wunderbyte_table\filters\types\datepicker',
-            $filtercolumn . '_wb_checked',
+            $mform->createElement(
+                'static',
+                '',
+                '',
+                '<br><label>' . get_string('datepickerheadingname', 'local_wunderbyte_table') . '</label>'
+            ),
+            $nameinput,
+            $mform->createElement(
+                'static',
+                '',
+                '',
+                '<br><label>' . get_string('datepickerheadingcheckboxlabel', 'local_wunderbyte_table') . '</label>'
+            ),
+            $checkboxlabelinput,
+            $mform->createElement(
+                'static',
+                '',
+                '',
+                '<br><label>' . get_string('datepickerheadingpossibleoperations', 'local_wunderbyte_table') . '</label>'
+            ),
+            $possibleoperationsinput,
+            $mform->createElement(
+                'static',
+                '',
+                '',
+                '<br><label>' . get_string('datepickerheadingdefaultvaluestart', 'local_wunderbyte_table') . '</label>'
+            ),
+            $defaultvaluestartinput,
+            $mform->createElement(
+                'static',
+                '',
+                '',
+                '<br><label>' . get_string('datepickerheadingdefaultvalueend', 'local_wunderbyte_table') . '</label>'
+            ),
+            $defaultvalueendinput,
         ];
     }
 
     /**
      * The expected value.
      * @param \MoodleQuickForm $mform
-     * @param string $filterlabel
-     * @param int $horizontallinecounter
+     * @param string $valuelabel
+     * @param array $filtertype
      */
-    public static function add_date_filter_head(&$mform, $filterlabel, $horizontallinecounter) {
-        $htmlid = strtolower(str_replace(' ', '-', $filterlabel));
-        $mform->addElement('html', '<div id="' . $htmlid . '">');
-        if ($horizontallinecounter > 0) {
-            $mform->addElement('html', '<hr>');
-        }
-        $mform->addElement('html', '<b>Filter name: ' . $filterlabel . '</b>');
-        self::add_remove_button($mform, $htmlid);
+    public static function set_date_default_value_input(&$mform, $valuelabel, $filtertype) {
+        $mform->setDefault(
+            $valuelabel . '[name]',
+            $filtertype['name'] ?? ''
+        );
+        $mform->setDefault(
+            $valuelabel . '[checkboxlabel]',
+            $filtertype['checkboxlabel'] ?? ''
+        );
+        $mform->setDefault(
+            $valuelabel . '[possibleoperations]',
+            self::get_operatoroptions_index($filtertype['possibleoperations'] ?? [])
+        );
+        $mform->setDefault(
+            $valuelabel . '[defaultvaluestart]',
+            $filtertype['defaultvaluestart'] ?? ''
+        );
+        $mform->setDefault(
+            $valuelabel . '[defaultvalueend]',
+            $filtertype['defaultvalueend'] ?? ''
+        );
     }
 
     /**
      * The expected value.
      * @param array $data
+     * @return array
+     */
+    public static function validate_input($data) {
+        $errors = [];
+        foreach ($data['datepicker'] as $datepickername => $datepickerinput) {
+            $errormsg = '';
+            if (
+                empty($datepickerinput['name'])  &&
+                (
+                    !empty($datepickername) ||
+                    !empty($datepickerinput['checkboxlabel'])
+                )
+            ) {
+                $errormsg .= get_string('datepickererrormandatory', 'local_wunderbyte_table');
+            }
+            if ($datepickerinput['operator'] == '"_qf__force_multiselect_submission"') {
+                $errormsg .= get_string('datepickererroroperations', 'local_wunderbyte_table');
+            }
+            if (!empty($errormsg)) {
+                $errors[$datepickername . '_group'] = $errormsg;
+            }
+        }
+        return $errors;
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
      * @param string $filtercolumn
      * @return array
      */
-    public static function get_filterspecific_values($data, $filtercolumn) {
-        if ($data['datepicker']) {
-            foreach ($data['datepicker'] as $name => &$datepicker) {
-                if (!isset($datepicker['name'])) {
-                    $datepicker['name'] = $name;
-                }
+    public static function get_new_filter_values($data, $filtercolumn) {
+        $datepickerfilter = new stdClass();
+        foreach ($data->datepicker as $key => $keyvaluepair) {
+            if (
+                !empty($keyvaluepair['name'])
+            ) {
+                $name = $keyvaluepair['name'];
+                $datepickerfilter->$name = (object) [
+                    'checkboxlabel' => $keyvaluepair['checkboxlabel'],
+                    'columntimestart' => 'startdate',
+                    'columntimeend' => 'enddate',
+                    'labelstartvalue' => 'Timespan',
+                    'labelendvalue' => 'enddate',
+                    'defaultvaluestart' => self::get_timestamp($keyvaluepair['defaultvaluestart']),
+                    'defaultvalueend' => self::get_timestamp($keyvaluepair['defaultvalueend']),
+                    'possibleoperations' => self::get_operatoroptions_name($keyvaluepair['possibleoperations']),
+                ];
             }
         }
-        return  $data['datepicker'] ?? [];
+        $filterenablelabel = $filtercolumn . '_wb_checked';
+        $filterspecificvalues = [
+            'localizedname' => $data->localizedname ?? '',
+            $data->wbfilterclass => true,
+            'datepicker' => $datepickerfilter,
+            $filterenablelabel => $data->$filterenablelabel ?? '0',
+            'wbfilterclass' => $data->wbfilterclass ?? '',
+        ];
+        return $filterspecificvalues;
+    }
+
+    /**
+     * The expected value.
+     * @param array $moodleformdate
+     * @return int
+     */
+    public static function get_timestamp($moodleformdate) {
+        return mktime(
+            0,
+            0,
+            0,
+            $moodleformdate['month'],
+            $moodleformdate['day'],
+            $moodleformdate['year']
+        );
+    }
+
+    /**
+     * The expected value.
+     * @param string $timestamp
+     * @return array
+     */
+    public static function get_moodle_form_date($timestamp) {
+        $moodleformdate = date_parse_from_format('Y-m-d', date('Y-m-d', $timestamp));
+
+        return [
+            'day' => $moodleformdate['day'],
+            'month' => $moodleformdate['month'],
+            'year' => $moodleformdate['year'],
+        ];
+    }
+
+    /**
+     * The expected value.
+     * @param array $selectedoptions
+     * @return array
+     */
+    public static function get_operatoroptions_name($selectedoptions) {
+        $possibleoperations = self::get_operatoroptions();
+        $possibleoperationsname = [];
+
+        foreach ($selectedoptions as $value) {
+            $possibleoperationsname[] = $possibleoperations[$value];
+        }
+        return $possibleoperationsname;
+    }
+
+    /**
+     * The expected value.
+     * @param array $selectedoptions
+     * @return array
+     */
+    public static function get_operatoroptions_index($selectedoptions) {
+        if (is_null($selectedoptions)) {
+            $selectedoptions = [];
+        }
+        $possibleoperations = self::get_operatoroptions();
+        $possibleoperationsindex = [];
+
+        foreach ($possibleoperations as $index => $value) {
+            if (in_array($value, $selectedoptions)) {
+                $possibleoperationsindex[] = $index;
+            }
+        }
+        return $possibleoperationsindex;
     }
 }

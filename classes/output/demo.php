@@ -27,7 +27,7 @@
 namespace local_wunderbyte_table\output;
 
 use local_wunderbyte_table\demo_table;
-use local_wunderbyte_table\filters\types\datepickerspan;
+use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\hierarchicalfilter;
 use local_wunderbyte_table\filters\types\hourlist;
 use local_wunderbyte_table\filters\types\intrange;
@@ -412,7 +412,7 @@ class demo implements renderable, templatable {
         $standardfilter = new standardfilter('shortname', get_string('shortname'));
         $table->add_filter($standardfilter);
 
-        $datepicker = new datepickerspan('enddate', get_string('enddate'));
+        $datepicker = new datepicker('enddate', get_string('enddate'));
         // For the datepicker, we need to add special options.
         $datepicker->add_options(
             'standard',
@@ -422,7 +422,7 @@ class demo implements renderable, templatable {
         );
         $table->add_filter($datepicker);
 
-        $datepicker = new datepickerspan(
+        $datepicker = new datepicker(
             'startdate',
             get_string('timespan', 'local_wunderbyte_table'),
             'enddate'

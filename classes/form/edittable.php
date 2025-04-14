@@ -129,7 +129,6 @@ class edittable extends dynamic_form {
     public function validation($data, $files) {
         $errors = [];
 
-        $errors['gs_wb_pagesize'] = get_string('valuehastobeint', 'local_wunderbyte_table');
         if (!is_number($data['gs_wb_pagesize'])) {
             $errors['gs_wb_pagesize'] = get_string('valuehastobeint', 'local_wunderbyte_table');
         }

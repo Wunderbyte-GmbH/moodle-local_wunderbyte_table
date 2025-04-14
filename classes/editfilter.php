@@ -39,7 +39,6 @@ define('LOCAL_WUNDERBYTE_TABLE_FILTERISACTIVE', 'wbfilterisactive_');
  * Edit filter class.
  */
 class editfilter {
-
     /**
      * This function will check for filter settings for the current user.
      * If there are non, it will return general settings for this table and if there are none...
