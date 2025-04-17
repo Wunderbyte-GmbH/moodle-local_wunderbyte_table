@@ -203,7 +203,7 @@ jobs:
 
           # Pre-build AMD files to avoid stale file warnings
           echo "=== Building AMD files before CI check ==="
-          grunt amd
+          grunt --gruntfile ../moodle/Gruntfile.js amd
           echo "AMD files built successfully"
 
           echo "Back to main directory: $(pwd)"
