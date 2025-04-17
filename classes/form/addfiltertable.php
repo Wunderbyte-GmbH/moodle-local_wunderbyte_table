@@ -37,7 +37,7 @@ use moodle_url;
  * @package     local_wunderbyte_table
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class addfitlertable extends dynamic_form {
+class addfiltertable extends dynamic_form {
     /**
      * {@inheritdoc}
      * @see moodleform::definition()

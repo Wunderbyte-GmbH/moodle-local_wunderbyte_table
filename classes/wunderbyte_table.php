@@ -2109,6 +2109,28 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * Get column names of all SQL columns of this table.
+     * @return array Array of column names.
+     */
+    public function get_sql_column_names(): array {
+        global $DB;
+
+        $sql = "SELECT {$this->sql->fields} FROM {$this->sql->from}";
+        $params = $this->sql->params ?? null;
+
+        // Limit result to 1 row to reduce load.
+        $limitedsql = $sql . ' LIMIT 1';
+        // Get one row from the result.
+        $row = $DB->get_record_sql($limitedsql, $params);
+        if (!$row) {
+            return [];
+        }
+
+        // Extract and return column names.
+        return array_keys((array) $row);
+    }
+
+    /**
      * This function replaces the given idstring with anotherone which is recreateable from the settings of the table class.
      * This is useful when we have e.g. a table created via shortcodes. We don't know how many of them there will be.
      * Random idstrings will not allow configurability, but hardcoding is not possible either.

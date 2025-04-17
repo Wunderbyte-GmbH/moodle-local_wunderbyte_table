@@ -44,7 +44,7 @@ class filter_manager extends filtersettings {
      * @param array $data
      * @return \MoodleQuickForm
      */
-    public function get_mandetory_filter_fields($classname, $data = []) {
+    public function get_mandatory_filter_fields($classname, $data = []) {
         $mform = new \MoodleQuickForm('dynamicform', 'post', '');
 
         $mform->addElement('html', '<div id="filter-add-field">');

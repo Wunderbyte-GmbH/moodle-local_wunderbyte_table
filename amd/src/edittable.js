@@ -95,7 +95,7 @@ export function addFilterTableModal(event, idstring, encodedtable) {
     // We two parents up, we find the right element with the necessary information.
     const element = event.target;
     const modalForm = new ModalForm({
-        formClass: "local_wunderbyte_table\\form\\addfitlertable",
+        formClass: "local_wunderbyte_table\\form\\addfiltertable",
         args: {
             idstring,
             encodedtable,
