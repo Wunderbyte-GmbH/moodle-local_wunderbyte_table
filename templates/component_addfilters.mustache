@@ -12,21 +12,17 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template local_wunderbyte_table/viewtable
-    Template which defines a mooduell view page.
+    @template local_wunderbyte_table/component_addfilters
+    Template which defines the component to add custom filters.
     Classes required for JS:
     * none
     Data attributes required for JS:
     * none
     Context variables required for this template:
-    * statistics - array: An array with values.
-    * opengames - array: empty array, will be filled with JS.
-    * finishedgames - array: empty array, will be filled with JS.
-    * highscores - array: empty array, will be filled with JS.
+    * none
 
     Example context (json):
     {
-       "edit": true
     }
 }}
 
@@ -37,6 +33,6 @@
         data-toggle="tooltip"
         data-placement="bottom"
         title="{{#str}} addwbtablefilter, local_wunderbyte_table {{/str}}">
-        <i class="fa fa-plus" aria-hidden="true"></i>
+        <i class="fa fa-filter" aria-hidden="true"></i>
     </a>
 </span>

@@ -75,8 +75,10 @@ class editfilter {
         } else {
             // At this point, we know that there is no user specific filter available.
             // There might be a general one in the DB.
-            if ((get_config('local_wunderbyte_table', 'allowedittable'))
-                && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => "0"])) {
+            if (
+                (get_config('local_wunderbyte_table', 'allowedittable'))
+                && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => "0"])
+            ) {
                 $jsonstring = tablesettings::return_jsontablesettings_from_db(0, $cachekey, 0);
                 $tablesettings = json_decode($jsonstring, true);
                 // For backwards compatibility, we also support only filtersettings.
@@ -84,7 +86,7 @@ class editfilter {
             } else {
                 // We have stored the columns to filter in the subcolumn "datafields".
                 if (!isset($table->subcolumns['datafields'])) {
-                    return '';
+                    return [];
                 }
                 $filtersettings = $table->subcolumns['datafields'];
 
@@ -94,14 +96,15 @@ class editfilter {
                 }
 
                 $tablesettings['filtersettings'] = $filtersettings;
-                filter::save_settings($table,
-                                      $cachekey,
-                                      $tablesettings);
+                filter::save_settings(
+                    $table,
+                    $cachekey,
+                    $tablesettings
+                );
             }
         }
 
         return $filtersettings;
-
     }
 
     /**
@@ -117,7 +120,7 @@ class editfilter {
         global $USER, $DB;
 
         $userspecifickey = $cachekey . '_' . $USER->id;
-        $cache = \cache::make($table->cachecomponent, $table->rawcachename);
+        $cache = cache::make($table->cachecomponent, $table->rawcachename);
 
         // First we see if the user has a user specific cache.
 
@@ -126,8 +129,10 @@ class editfilter {
         switch ($filterjson) {
             case false:
                 // If user specific key did not exist, we still need to look in the DB.
-                if (get_config('local_wunderbyte_table', 'allowedittable')
-                    && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => $USER->id])) {
+                if (
+                    get_config('local_wunderbyte_table', 'allowedittable')
+                    && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => $USER->id])
+                ) {
                     // If the key doesn't exist, it returns false. If only the key exists...
                     // ... it returns null.
                     $cache->set($userspecifickey, null);
@@ -136,10 +141,9 @@ class editfilter {
 
                 $filterjson = $cache->get($cachekey);
                 break;
-            // TODO: There will be an additional case with null for user-specific keys.
+            // Todo: There will be an additional case with null for user-specific keys.
         }
 
         return $filterjson;
-
     }
 }

@@ -156,7 +156,7 @@ abstract class datepickerbase extends base {
      * @param array $filtersettings
      * @param string $fckey
      * @param array $values
-     * @return mixed
+     * @return void
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
 
@@ -308,5 +308,15 @@ abstract class datepickerbase extends base {
             }
         }
         return  $data['datepicker'] ?? [];
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @param string $filtercolumn
+     * @return array
+     */
+    public static function get_new_filter_values($data, $filtercolumn) {
+        return [];
     }
 }

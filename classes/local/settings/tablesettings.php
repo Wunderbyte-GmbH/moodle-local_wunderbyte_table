@@ -85,6 +85,7 @@ class tablesettings {
         $table->filteronloadinactive = $settingsobject->general->filteronloadinactive;
         $table->placebuttonandpageelementsontop = $settingsobject->general->placebuttonandpageelementsontop;
         $table->infinitescroll = $settingsobject->general->infinitescroll;
+        $table->showaddfilterbutton = $settingsobject->general->showaddfilterbutton;
     }
 
     /**
@@ -158,6 +159,8 @@ class tablesettings {
 
         $mform->addElement('advcheckbox', 'gs_wb_showfilterontop', get_string('showfilterontop', 'local_wunderbyte_table'));
 
+        $mform->addElement('advcheckbox', 'gs_wb_showaddfilterbutton', get_string('showaddfilterbutton', 'local_wunderbyte_table'));
+
         $mform->addElement(
             'advcheckbox',
             'gs_wb_showdownloadbuttonatbottom',
@@ -208,31 +211,20 @@ class tablesettings {
         $ts = json_decode($jsontablesettings);
 
         $data->gs_wb_showdownloadbutton = $ts->general->showdownloadbutton ?? ($table->showdownloadbutton ? 1 : 0);
-
         $data->gs_wb_applyfilterondownload = $ts->general->applyfilterondownload ?? ($table->applyfilterondownload ? 1 : 0);
-
+        $data->gs_wb_showaddfilterbutton = $ts->general->showaddfilterbutton ?? ($table->showaddfilterbutton ? 1 : 0);
         $data->gs_wb_showreloadbutton = $ts->general->showreloadbutton ?? ($table->showreloadbutton ? 1 : 0);
-
         $data->gs_wb_showfilterontop = $ts->general->showfilterontop ?? ($table->showfilterontop ? 1 : 0);
-
         $data->gs_wb_showdownloadbuttonatbottom = $ts->general->showdownloadbuttonatbottom ??
             ($table->showdownloadbuttonatbottom ? 1 : 0);
-
         $data->gs_wb_showcountlabel = $ts->general->showcountlabel ?? ($table->showcountlabel ? 1 : 0);
-
         $data->gs_wb_stickyheader = $ts->general->stickyheader ?? ($table->stickyheader ? 1 : 0);
-
         $data->gs_wb_showrowcountselect = $ts->general->showrowcountselect ?? ($table->showrowcountselect ? 1 : 0);
-
         $data->gs_wb_addcheckboxes = $ts->general->addcheckboxes ?? ($table->addcheckboxes ? 1 : 0);
-
         $data->gs_wb_filteronloadinactive = $ts->general->filteronloadinactive ?? ($table->filteronloadinactive ? 1 : 0);
-
         $data->gs_wb_placebuttonandpageelementsontop
             = $ts->general->placebuttonandpageelementsontop ?? ($table->placebuttonandpageelementsontop ? 1 : 0);
-
         $data->gs_wb_pagesize = $ts->general->pagesize ?? $table->pagesize;
-
         $data->gs_wb_infinitescroll = $ts->general->infinitescroll ?? $table->infinitescroll;
     }
 

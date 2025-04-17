@@ -139,6 +139,13 @@ class table implements renderable, templatable {
     private $showdownloadbutton = true;
 
     /**
+     * Button to add custom filters to table.
+     *
+     * @var bool
+     */
+    private $showaddfilterbutton = true;
+
+    /**
      * Applyfilterondownload.
      *
      * @var bool
@@ -326,6 +333,7 @@ class table implements renderable, templatable {
         $this->showfilterbutton = $table->showfilterbutton;
         $this->applyfilterondownload = $table->applyfilterondownload;
         $this->showreloadbutton = $table->showreloadbutton;
+        $this->showaddfilterbutton = $table->showaddfilterbutton;
 
         if (
             get_config('local_wunderbyte_table', 'allowedittable')
@@ -739,6 +747,10 @@ class table implements renderable, templatable {
             if (!empty($this->applyfilterondownload)) {
                 $data['applyfilterondownload'] = "1";
             }
+        }
+
+        if ($this->showaddfilterbutton) {
+            $data['showaddfilterbutton'] = true;
         }
 
         if (!empty($this->categories)) {

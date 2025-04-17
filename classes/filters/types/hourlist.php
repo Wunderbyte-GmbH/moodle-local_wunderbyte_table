@@ -281,4 +281,14 @@ class hourlist extends base {
         }
         $filter .= " ) ";
     }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @param string $filtercolumn
+     * @return array
+     */
+    public static function get_new_filter_values($data, $filtercolumn) {
+        return [];
+    }
 }

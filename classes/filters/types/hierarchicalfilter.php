@@ -56,10 +56,9 @@ class hierarchicalfilter extends base {
      * @param array $filtersettings
      * @param string $fckey
      * @param array $values
-     * @return array
+     * @return void
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
-
         // Don't treat this filter if there are no values here.
         if (!is_array($values)) {
             return;
@@ -92,14 +91,7 @@ class hierarchicalfilter extends base {
         }
 
         // We have to check if we have a sortarray for this filtercolumn.
-        if (
-            isset($filtersettings[$fckey])
-            && count($filtersettings[$fckey]) > 0
-        ) {
-                            $sortarray = $filtersettings[$fckey];
-        } else {
-            $sortarray = null;
-        }
+        $sortarray = isset($filtersettings[$fckey]) && (count($filtersettings[$fckey]) > 0) ? $filtersettings[$fckey] : null;
 
         // First we create our sortedarray and add all values in the right order.
         if ($sortarray != null) {
@@ -142,7 +134,6 @@ class hierarchicalfilter extends base {
         foreach ($values as $subcategorykey => $subcategoryarray) {
             $categorycount = 0;
             foreach ($subcategoryarray as $valuekey => $valuevalue) {
-
                 // For custom fields, we get the actual string value from field controller.
                 $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname($fckey);
                 if (!empty($fieldcontroller)) {
@@ -176,7 +167,7 @@ class hierarchicalfilter extends base {
                 || count($categoryobject['hierarchy'][$subcategorykey]['values']) == 0
             ) {
                 // We don't add the filter if there is nothing in there.
-                return [];
+                return;
             }
 
             if ($sortarray == null) {

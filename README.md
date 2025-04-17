@@ -343,6 +343,16 @@ If you want to show it at the bottom of the table, you can use this:
 
     $table->showdownloadbuttonatbottom = true;
 
+## Allow users to add their own filters
+
+You can allow users with the capabiltiy 'local/wunderbyte_table:canedittable'
+to set individual filters for their table from the user interface.
+For this to work, the global setting 'allowedittable' needs to be turned on.
+
+You can add the "add filter" button like this:
+
+    $table->showaddfilterbutton = true;
+
 ### Display
 
 If you want to display multiple tables on one page, tabs can be enabled in templates.

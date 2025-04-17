@@ -158,6 +158,7 @@ $string['setwbtablefiltercolumn'] = 'Wähle eine Filterspalte';
 $string['setwbtablefiltercolumnoption'] = 'Bitte wähle eine Filterspalte';
 $string['setwbtablefiltertype'] = 'Wähle einen Filtertypen';
 $string['setwbtablefiltertypeoption'] = 'Bitte wähle einen Filtertypen';
+$string['showaddfilterbutton'] = 'Button "Benutzerdefinierte Filter hinzufügen" anzeigen';
 $string['showallrecords'] = 'Alle Einträge anzeigen';
 $string['showcountlabel'] = 'Anzahl der gefundenen Einträge anzeigen';
 $string['showdownloadbutton'] = 'Download-Button anzeigen';

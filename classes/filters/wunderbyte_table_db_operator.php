@@ -106,7 +106,7 @@ class wunderbyte_table_db_operator {
 
     /**
      * Set the key value pairs
-     * @param object $tables
+     * @param array $tables
      * @param array $filtersettings
      */
     public function persist_filter_settings($tables, $filtersettings) {

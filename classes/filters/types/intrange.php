@@ -77,7 +77,8 @@ class intrange extends base {
                 'local_wunderbyte_table',
                 '',
                 $this->columnidentifier,
-                'Every column can have only one filter applied');
+                'Every column can have only one filter applied'
+            );
         }
     }
 
@@ -95,7 +96,7 @@ class intrange extends base {
         string $checkboxlabel = '',
         int $defaultvaluestart = 0,
         int $defaultvalueend = 0
-        ) {
+    ) {
 
         $filter = [
             'checkboxlabel' => !empty($checkboxlabel) ? $checkboxlabel : get_string('apply_filter', 'local_wunderbyte_table'),
@@ -277,6 +278,16 @@ class intrange extends base {
      */
     public static function render_mandatory_fields(&$mform, $data = []) {
         $mform->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
+    }
+
+    /**
+     * The expected value.
+     * @param object $data
+     * @param string $filtercolumn
+     * @return array
+     */
+    public static function get_new_filter_values($data, $filtercolumn) {
+        return [];
     }
 
     /**

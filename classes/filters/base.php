@@ -203,12 +203,12 @@ abstract class base {
      * @param array $filtersettings
      * @param string $fckey
      * @param array $values
-     * @return array
+     * @return void
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
         // Don't treat this filter if there are no values here.
         if (!is_array($values)) {
-            return [];
+            return;
         }
 
         $valueswithcount = self::apply_filtercount($values, $fckey, $filtersettings);
@@ -326,7 +326,7 @@ abstract class base {
 
         if (!isset($categoryobject['default']) || count($categoryobject['default']['values']) == 0) {
             // We don't add the filter if there is nothing in there.
-            return [];
+            return;
         }
 
         if ($sortarray == null) {
@@ -336,7 +336,7 @@ abstract class base {
 
         // Make the arrays mustache ready, we have to jump through loops.
         $categoryobject['default']['values'] = array_values($categoryobject['default']['values']);
-        return [];
+        return;
     }
 
     /**

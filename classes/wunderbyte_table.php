@@ -139,6 +139,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Show button to add individual custom filters.
+     */
+    public $showaddfilterbutton = false;
+
+    /**
+     *
      * @var bool Apply filter on download.
      */
     public $applyfilterondownload = false;
