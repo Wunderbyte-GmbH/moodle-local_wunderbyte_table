@@ -183,7 +183,37 @@ jobs:
 
       - name: Grunt
         if: ${{ !cancelled() }}
-        run: moodle-plugin-ci grunt --max-lint-warnings 0
+        run: |
+          # Load NVM and use the version from .nvmrc
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          echo "Starting directory: $(pwd)"
+          # Go to moodle directory
+          cd moodle
+
+          # Use NVM to set Node version
+          nvm use
+          echo "Node version after nvm use: $(node -v)"
+
+          # Go back to the main directory
+          cd ../plugin
+
+          # Pre-build AMD files to avoid stale file warnings
+          echo "=== Building AMD files before CI check ==="
+          npx grunt amd
+          echo "AMD files built successfully"
+
+          echo "Back to main directory: $(pwd)"
+          # Current working directory
+          echo "Current directory: $(pwd)"
+
+          # Return to root directory to run moodle-plugin-ci grunt
+          cd ..
+          echo "Running moodle-plugin-ci grunt from directory: $(pwd)"
+
+          # Run the regular CI command
+          moodle-plugin-ci grunt --max-lint-warnings 0
         env:
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
 
