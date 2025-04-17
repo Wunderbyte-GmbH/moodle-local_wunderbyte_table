@@ -194,6 +194,8 @@ jobs:
 
           # Use NVM to set Node version
           nvm use
+          npm install
+          npm install -g grunt-cli
           echo "Node version after nvm use: $(node -v)"
 
           # Go back to the main directory
@@ -201,7 +203,7 @@ jobs:
 
           # Pre-build AMD files to avoid stale file warnings
           echo "=== Building AMD files before CI check ==="
-          npx grunt amd
+          grunt amd
           echo "AMD files built successfully"
 
           echo "Back to main directory: $(pwd)"
