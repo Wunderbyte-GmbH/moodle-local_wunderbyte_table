@@ -170,7 +170,7 @@ final class intrange_test extends TestCase {
         $mform = $this->createMock(MoodleQuickForm::class);
         $mform->expects($this->once())
             ->method('addElement')
-            ->with(['html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>']);
+            ->with('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
 
         intrange::render_mandatory_fields($mform);
     }
