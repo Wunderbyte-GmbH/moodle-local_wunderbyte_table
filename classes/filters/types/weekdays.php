@@ -62,16 +62,15 @@ class weekdays extends base {
      */
     public static function get_possible_weekdays_options() {
         return [
-            'monday' => get_string('monday', 'mod_booking'),
-            'tuesday' => get_string('tuesday', 'mod_booking'),
-            'wednesday' => get_string('wednesday', 'mod_booking'),
-            'thursday' => get_string('thursday', 'mod_booking'),
-            'friday' => get_string('friday', 'mod_booking'),
-            'saturday' => get_string('saturday', 'mod_booking'),
-            'sunday' => get_string('sunday', 'mod_booking'),
+            'monday' => get_string('monday', 'calendar'),
+            'tuesday' => get_string('tuesday', 'calendar'),
+            'wednesday' => get_string('wednesday', 'calendar'),
+            'thursday' => get_string('thursday', 'calendar'),
+            'friday' => get_string('friday', 'calendar'),
+            'saturday' => get_string('saturday', 'calendar'),
+            'sunday' => get_string('sunday', 'calendar'),
         ];
     }
-
 
     /**
      * Add the filter to the array.

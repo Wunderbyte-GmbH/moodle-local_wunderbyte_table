@@ -38,7 +38,6 @@ use local_wunderbyte_table\output\lazytable;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
 use table_sql;
-use local_wunderbyte_table\output\viewtable;
 use moodle_url;
 use stdClass;
 use coding_exception;
@@ -47,7 +46,6 @@ use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\local\sortables\base as basesort;
 use local_wunderbyte_table\filters\types\standardfilter;
 use local_wunderbyte_table\local\settings\tablesettings;
-use mod_booking\output\view;
 
 /**
  * Wunderbyte table class is an extension of table_sql.
