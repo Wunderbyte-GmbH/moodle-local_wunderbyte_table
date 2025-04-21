@@ -1,4 +1,4 @@
-@local @local_wunderbyte_table
+@local @local_wunderbyte_table @local_wunderbyte_table_navigation
 Feature: Baisc functionality of wunderbyte_table works as expected
 
   Background:
@@ -118,3 +118,21 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r16']" "xpath_element" should not exist
     And I wait "1" seconds
     And I should see "user20" in the "#demotable_4_r16" "css_element"
+
+  @javascript
+  Scenario: WB_Table navigation: switch view templates
+    Given I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Demo table 1"
+    ## Verify default - list viwe
+    And the field "wbtabletemplateswitcher" matches value "List view"
+    Then "//table[@id='demotable_1']" "xpath_element" should exist
+    And ".wunderbyte-table-grid" "css_element" should not exist
+    ## Switch to the Card view and verify
+    And I set the field "wbtabletemplateswitcher" to "Cards view"
+    And ".wunderbyte-table-grid" "css_element" should exist
+    And "//table[@id='demotable_1']" "xpath_element" should not exist
+    ## Reload page and verify Card view
+    And I reload the page
+    And ".wunderbyte-table-grid" "css_element" should exist
+    And "//table[@id='demotable_1']" "xpath_element" should not exist
