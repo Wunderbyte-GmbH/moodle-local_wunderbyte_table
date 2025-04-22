@@ -10,28 +10,28 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     ## Unfortunately, TinyMCE is slow and has misbehavior which might cause number of site-wide issues. So - we disable it.
     ## Forcing of timezome could be important for date validation.
     And the following "users" exist:
-      | username | firstname | lastname | timecreated                              |
-      | user1    | Username  | 1        | ## Friday, February 10, 2023 04:03 ##    |
-      | user2    | Username  | 2        | ## Friday, February 10, 2023 14:05 ##    |
-      | user3    | Username  | 3        | ## Monday, February 20, 2023 20:25 ##    |
-      | user4    | Username  | 4        | ## Tuesday, February 21, 2023 10:25 ##   |
-      | user5    | Username  | 5        | ## Wednesday, February 22, 2023 11:15 ## |
-      | user6    | Username  | 6        | ## Wednesday, March 1, 2023 15:35 ##     |
-      | user7    | Username  | 7        | ## Friday, March 10, 2023 04:05 ##       |
-      | user8    | Username  | 8        | ## Friday, March 10, 2023 12:05 ##       |
-      | user9    | Username  | 9        | ## Monday, March 20, 2023 17:25 ##       |
-      | user10   | Username  | 10       | ## Wednesday, May 1, 2024 9:35 ##        |
-      | user11   | Username  | 11       | ## Tuesday, May 7, 2024 19:35 ##         |
-      | user12   | Username  | 12       | ## Friday, May 17, 2024 16:35 ##         |
-      | teacher1 | Teacher   | 1        | ## Monday, May 27, 2024 22:35 ##         |
+      | username | firstname | lastname | timecreated                                        |
+      | user1    | Username  | 1        | ## Friday, February 10, 2023 04:03 GMT+01:00 ##    |
+      | user2    | Username  | 2        | ## Friday, February 10, 2023 14:05 GMT+01:00 ##    |
+      | user3    | Username  | 3        | ## Monday, February 20, 2023 20:25 GMT+01:00 ##    |
+      | user4    | Username  | 4        | ## Tuesday, February 21, 2023 10:25 GMT+01:00 ##   |
+      | user5    | Username  | 5        | ## Wednesday, February 22, 2023 11:15 GMT+01:00 ## |
+      | user6    | Username  | 6        | ## Wednesday, March 1, 2023 15:35 GMT+01:00 ##     |
+      | user7    | Username  | 7        | ## Friday, March 10, 2023 04:05 GMT+01:00 ##       |
+      | user8    | Username  | 8        | ## Friday, March 10, 2023 12:05 GMT+01:00 ##       |
+      | user9    | Username  | 9        | ## Monday, March 20, 2023 17:25 GMT+01:00 ##       |
+      | user10   | Username  | 10       | ## Wednesday, May 1, 2024 9:35 GMT+01:00 ##        |
+      | user11   | Username  | 11       | ## Tuesday, May 7, 2024 19:35 GMT+01:00 ##         |
+      | user12   | Username  | 12       | ## Friday, May 17, 2024 16:35 GMT+01:00 ##         |
+      | teacher1 | Teacher   | 1        | ## Monday, May 27, 2024 22:35 GMT+01:00 ##         |
     And the following "courses" exist:
-      | fullname | shortname | startdate  | enddate    | timecreated                   |
-      | Course 1 | C1        | 1652317261 | 1652835661 | ## February 10, 2021 4:13 ##  |
-      | Course 2 | C2        | 1683853261 | 1684371661 | ## February 10, 2022 14:05 ## |
-      | Course 3 | C3        | 1652317261 | 1652835661 | ## February 10, 2021 4:33 ##  |
-      | Course 4 | C4        | 1683853261 | 1684371661 | ## February 10, 2022 18:05 ## |
-      | Course 5 | C5        | 1652317261 | 1652835661 | ## February 10, 2021 11:33 ## |
-      | Course 6 | C6        | 1683853261 | 1684371661 | ## February 10, 2022 23:15 ## |
+      | fullname | shortname | startdate  | enddate    | timecreated                             |
+      | Course 1 | C1        | 1652317261 | 1652835661 | ## February 10, 2021 4:13 GMT+01:00 ##  |
+      | Course 2 | C2        | 1683853261 | 1684371661 | ## February 10, 2022 14:05 GMT+01:00 ## |
+      | Course 3 | C3        | 1652317261 | 1652835661 | ## February 10, 2021 4:33 GMT+01:00 ##  |
+      | Course 4 | C4        | 1683853261 | 1684371661 | ## February 10, 2022 18:05 GMT+01:00 ## |
+      | Course 5 | C5        | 1652317261 | 1652835661 | ## February 10, 2021 11:33 GMT+01:00 ## |
+      | Course 6 | C6        | 1683853261 | 1684371661 | ## February 10, 2022 23:15 GMT+01:00 ## |
     ## C1 - 12-18 May 2022, C2 - 12-18 May 2023
     And the following "course enrolments" exist:
       | user     | course | role           |
