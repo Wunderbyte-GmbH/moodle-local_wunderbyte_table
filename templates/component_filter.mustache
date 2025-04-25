@@ -152,7 +152,7 @@
         {{^expanded}}
             aria-expanded="false"
         {{/expanded}}
-    aria-controls="id_collapse_{{columnname}}" class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{columnname}}" data-toggle="dropdown" aria-haspopup="true">
+    aria-controls="id_collapse_{{columnname}}" class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{columnname}}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true">
         {{name}} <span class="filtercounter badge badge-light {{^filtercounter}}hidden{{/filtercounter}}">{{filtercounter}}</span>
     </button>
     <div class="dropdown-menu">
@@ -175,7 +175,7 @@
                 {{/default}}
                 {{#hierarchy}}
                     <ul class="wunderbyterFilterList hierarchy pt-2" data-moodletype="hierarchylist">
-                        <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton"  data-ident="{{columnname}}" data-toggle="collapse" role="button" role="button" aria-controls="collapseExample">
+                        <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton"  data-ident="{{columnname}}" data-toggle="collapse" data-bs-toggle="collapse" role="button" role="button" aria-controls="collapseExample">
                             <span class="filtercategorykeylabel">{{label}}</span> <span class="filtercategorycountlabel">{{#count}}({{count}}){{/count}}</span>
                         </button>
                         <div class="collapse" id="{{id}}">
