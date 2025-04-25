@@ -206,7 +206,7 @@ final class base_dataprovider_test extends advanced_testcase {
      * Test wb base full text search.
      *
      * @param string $tablecallback
-     * @param array $coursedata
+     * @param array $courses
      * @param array $expected
      *
      * @covers \local_wunderbyte_table\wunderbyte_table::query_db_cached
@@ -219,14 +219,14 @@ final class base_dataprovider_test extends advanced_testcase {
      *
      * @dataProvider wb_table_common_settings_provider
      */
-    public function test_dataprovider(string $tablecallback, array $coursedata, array $expected): void {
-        // Create the courses, depending on data provider.
-        $courses = [];
-        foreach ($coursedata as $coursearray) {
-            $courses[] = $this->create_test_courses($coursearray['coursestocreate'], $coursearray);
-        }
+    public function test_dataprovider(string $tablecallback, array $courses, array $expected): void {
 
         $this->setAdminUser();
+
+        // Create the courses, depending on data provider.
+        foreach ($courses as $coursearray) {
+            $testcourses = $this->create_test_courses($coursearray['coursestocreate'], $coursearray);
+        }
 
         $table = $this->{$tablecallback}();
 
