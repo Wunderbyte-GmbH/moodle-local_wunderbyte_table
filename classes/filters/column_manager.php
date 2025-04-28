@@ -53,7 +53,7 @@ class column_manager extends filtersettings {
      */
     public function __construct($params, $encodedtable) {
         $this->data = $params;
-        $this->filtercolumn = $params['filtercolumn'];
+        $this->filtercolumn = $params['filtercolumn'] ?? null;
         $this->mformedit = new \MoodleQuickForm('dynamicform', 'post', '');
         $this->mformadd = new \MoodleQuickForm('dynamicform', 'post', '');
         $this->filtersettings = self::get_filtersettings($encodedtable);

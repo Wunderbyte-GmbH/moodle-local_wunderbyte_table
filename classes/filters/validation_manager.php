@@ -62,7 +62,7 @@ class validation_manager extends filtersettings {
             }
             foreach ($form->_elements as $element) {
                 if (isset($element->_type) && in_array($element->_type, $this->valid_element_types())) {
-                    if ($this->is_error_on_new_pair($formkey, $errors['0_group'])) {
+                    if (isset($errors['0_group']) && $this->is_error_on_new_pair($formkey, $errors['0_group'])) {
                         $form->setElementError($element->getName(), $errors['0_group']);
                     } else if (isset($errors[$element->getName()]) && $formkey != 'filteraddfields') {
                         $form->setElementError($element->getName(), $errors[$element->getName()]);

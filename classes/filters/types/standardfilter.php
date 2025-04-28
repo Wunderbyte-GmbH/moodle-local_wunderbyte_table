@@ -111,11 +111,11 @@ class standardfilter extends base {
             }
             $elements = [];
             $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][key]', '', ['placeholder' => 'Key']);
-            if ($keyvaluepair['key']) {
+            if (!empty($keyvaluepair['key'])) {
                 $mform->setDefault('keyvaluepairs[' . $key . '][key]', $keyvaluepair['key']);
             }
             $elements[] = $mform->createElement('text', 'keyvaluepairs[' . $key . '][value]', '', ['placeholder' => 'Value']);
-            if ($keyvaluepair['value']) {
+            if (!empty($keyvaluepair['value'])) {
                 $mform->setDefault('keyvaluepairs[' . $key . '][value]', $keyvaluepair['value']);
             }
             if (!empty($key)) {

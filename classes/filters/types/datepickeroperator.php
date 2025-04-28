@@ -45,6 +45,8 @@ class datepickeroperator extends datepickerbase {
             }
             if (!empty($filterlabel)) {
                 self::add_date_filter_head($mform, $filterlabel, $horizontallinecounter);
+            } else {
+                continue;
             }
 
             $valuelabel = 'datepicker[' . $filterlabel . ']';
@@ -175,15 +177,17 @@ class datepickeroperator extends datepickerbase {
      */
     public static function validate_input($data) {
         $errors = [];
-        foreach ($data['datepicker'] as $datepickername => $datepickerinput) {
-            if (
-                empty($datepickerinput['name'])  &&
-                (
-                    !empty($datepickername) ||
-                    !empty($datepickerinput['checkboxlabel'])
-                )
-            ) {
-                $errors[$datepickername . '_group'] = get_string('datepickererrormandatory', 'local_wunderbyte_table');
+        if (!empty($data['datepicker'])) {
+            foreach ($data['datepicker'] as $datepickername => $datepickerinput) {
+                if (
+                    empty($datepickerinput['name'])  &&
+                    (
+                        !empty($datepickername) ||
+                        !empty($datepickerinput['checkboxlabel'])
+                    )
+                ) {
+                    $errors[$datepickername . '_group'] = get_string('datepickererrormandatory', 'local_wunderbyte_table');
+                }
             }
         }
         return $errors;

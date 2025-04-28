@@ -223,15 +223,15 @@ class hierarchicalfilter extends base {
             $elements = [];
             $keylabel = 'keyvaluepairs[' . $key . ']';
             $elements[] = $mform->createElement('text', $keylabel . '[key]', '', ['placeholder' => 'Hierarchical key']);
-            if ($keyvaluepair['key']) {
+            if (!empty($keyvaluepair['key'])) {
                 $mform->setDefault($keylabel . '[key]', $keyvaluepair['key']);
             }
             $elements[] = $mform->createElement('text', $keylabel . '[parent]', '', ['placeholder' => 'Parent']);
-            if ($keyvaluepair['parent']) {
+            if (!empty($keyvaluepair['parent'])) {
                 $mform->setDefault($keylabel . '[parent]', $keyvaluepair['parent']);
             }
             $elements[] = $mform->createElement('text', $keylabel . '[localizedname]', '', ['placeholder' => 'Localized name']);
-            if ($keyvaluepair['localizedname']) {
+            if (!empty($keyvaluepair['localizedname'])) {
                 $mform->setDefault($keylabel . '[localizedname]', $keyvaluepair['localizedname']);
             }
             if (!empty($key)) {

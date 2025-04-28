@@ -300,7 +300,7 @@ abstract class datepickerbase extends base {
      * @return array
      */
     public static function get_filterspecific_values($data, $filtercolumn) {
-        if ($data['datepicker']) {
+        if (!empty($data['datepicker'])) {
             foreach ($data['datepicker'] as $name => &$datepicker) {
                 if (!isset($datepicker['name'])) {
                     $datepicker['name'] = $name;
