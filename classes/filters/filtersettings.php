@@ -45,13 +45,8 @@ abstract class filtersettings {
         $key = $table->tablecachehash . $lang . '_filterjson';
         $settings = editfilter::return_filtersettings($table, $key);
 
-        // We only allow SQL columns.
-        $allowedcolumns = $table->get_sql_column_names();
         foreach ($table->columns as $index => $column) {
-            if (!in_array($index, $allowedcolumns)) {
-                continue;
-            }
-            if (!isset($settings[$index]) && isset($table->headers[$column])) {
+            if (!isset($settings[$index])) {
                 $settings[$index] = [
                     'localizedname' => $table->headers[$column],
                     $index . '_wb_checked' => 0,

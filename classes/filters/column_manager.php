@@ -23,6 +23,8 @@
  */
 namespace local_wunderbyte_table\filters;
 
+use local_wunderbyte_table\wunderbyte_table;
+
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
@@ -57,6 +59,7 @@ class column_manager extends filtersettings {
         $this->mformedit = new \MoodleQuickForm('dynamicform', 'post', '');
         $this->mformadd = new \MoodleQuickForm('dynamicform', 'post', '');
         $this->filtersettings = self::get_filtersettings($encodedtable);
+        $this->table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
     }
 
     /**
@@ -208,7 +211,7 @@ class column_manager extends filtersettings {
      * @param \MoodleQuickForm $mform
      */
     public function set_filter_columns(\MoodleQuickForm &$mform) {
-        $options = self::get_all_filter_columns($this->filtersettings);
+        $options = $this->get_all_filter_columns($this->filtersettings);
         if ($options) {
             $mform->addElement(
                 'select',
@@ -225,13 +228,19 @@ class column_manager extends filtersettings {
      * @param array $filterablecolumns
      * @return array
      */
-    public static function get_all_filter_columns($filterablecolumns) {
+    public function get_all_filter_columns($filterablecolumns) {
         $options = [
             '' => get_string('setwbtablefiltercolumnoption', 'local_wunderbyte_table'),
         ];
+        // We only allow filters for columns that are present in SQL.
+        // We do this because we want to avoid errors with custom columns created by col_functions.
+        $allowedcolumns = $this->table->get_sql_column_names();
         foreach ($filterablecolumns as $key => $filterablecolumn) {
+            if (!in_array($key, $allowedcolumns)) {
+                continue;
+            }
             if ($key != 'id') {
-                $options[$key] = $filterablecolumn['localizedname'];
+                $options[$key] = "{$filterablecolumn['localizedname']} ({$key})";
             }
         }
         return $options;
