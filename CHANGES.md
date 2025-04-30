@@ -1,3 +1,25 @@
+## Version 2.0.48 (2025043000)
+* New feature: Button to add individual filters can now be added in table settings for each table.
+* Improvement: Make sure adding filters is only possible for allowed SQL columns.
+* Improvement: All filter implemented and tested.
+* Improvement: Remove legacy code.
+* Improvement: Split datepicker class.
+* Improvement: Hierarchy filter implementation.
+* Improvement: Filter form.
+* Improvement: Refactoring class structure.
+* Improvement: Validation manager setup.
+* Improvement: Separate Moodle divs.
+* Improvement: Edit and add key value pair.
+* Improvement: Edit filter key value pair.
+* Improvement: Restructure to column manager.
+* Improvement: Add filter form.
+* Improvement: Allow table to be scrolled horizontally and add more space for right-sided components.
+* Improvement: Better filter sizes and reduce gaps.
+* Improvement: Add encodedtable in template for tests.
+* Bugfix: Fix weekdays strings.
+* Bugfix: Fix type error in unit tests.
+* Bugfix: Fix unit tests for filter types.
+
 ## Version 2.0.47 (2025040800)
 * Bugfix: Make sure switcher remembers selected template for table is encoded.
 
