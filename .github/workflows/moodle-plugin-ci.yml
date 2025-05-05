@@ -1,7 +1,5 @@
 name: Moodle Plugin CI
 
-name: Moodle Plugin CI
-
 on: [push, pull_request]
 
 concurrency:
@@ -17,10 +15,10 @@ jobs:
     with:
       # Custom configuration options
       # The following are example settings you might want to adjust based on your plugin's needs
-      
+
       # If you need to install additional plugins as dependencies
       # extra_plugin_runners: 'moodle-plugin-ci add-plugin danmarsden/moodle-mod_attendance --branch MOODLE_404_STABLE'
-      
+
       # If you need to disable specific tests
       disable_behat: true
       disable_grunt: true
@@ -33,19 +31,19 @@ jobs:
       # disable_phplint: false
       # disable_phpcpd: false
       # disable_ci_validate: false
-      
+
       # For strict code quality checks
       # codechecker_max_warnings: 0
-      
+
       # If you need to enable PHPMD
       # enable_phpmd: true
-      
+
       # If you need to ignore specific paths (third-party libraries are ignored by default)
       # ignore_paths: 'some/path,another/path'
-      
+
       # Override to exclude stale AMD file check (similar to your current workaround)
       # This might not be needed with the reusable workflow as it might handle this already
       # disable_grunt: true  # Only use this if you're having issues with grunt
-      
+
       # If you need to specify a custom minimum PHP version
       # min_php: '7.4'
