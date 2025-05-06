@@ -122,6 +122,56 @@ final class base_test extends advanced_testcase {
     }
 
     /**
+     * Test wb base functionality via webservice external class.
+     *
+     * @covers \wunderbyte_table::query_db_cached
+     * // @runInSeparateProcess
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     *
+     */
+    public function test_require_access(): void {
+        $this->setAdminUser();
+
+        // First, we create ten courses.
+        $this->create_test_courses(10);
+
+        $user = $this->getDataGenerator()->create_user();
+
+        $table = $this->create_demo2_table();
+        // Now we get back exactly 10.
+        $nrofrows = $this->get_rowscount_for_table($table);
+        $this->assertEquals(10, $nrofrows);
+
+        // Validate that login required to access table data.
+        require_logout();
+        $this->expectException(moodle_exception::class);
+        $this->get_rowscount_for_table($table);
+
+        // Set access data without login and validate it.
+        $this->setAdminUser();
+        $table->requirelogin = false;
+        require_logout();
+        $nrofrows = $this->get_rowscount_for_table($table);
+        $this->assertEquals(10, $nrofrows);
+
+        // Validate that user also can access table data.
+        $this->setUser($user);
+        $nrofrows = $this->get_rowscount_for_table($table);
+        $this->assertEquals(10, $nrofrows);
+
+        $this->setAdminUser();
+        $table->requirelogin = true;
+        $table->requirecapability = 'local/wunderbyte_table:canedittable';
+
+        // Validate that ordinary user (student) can not access table data anymore.
+        $this->setUser($user);
+        $this->expectException(moodle_exception::class);
+        $this->get_rowscount_for_table($table);
+    }
+
+    /**
      * Test wb filter functionality via webservice external class.
      *
      * @covers \wunderbyte_table::query_db_cached
@@ -453,7 +503,7 @@ final class base_test extends advanced_testcase {
         $jsonobject = json_decode($result['content']);
 
         if (!isset($jsonobject->table->rows)) {
-            throw new moodle_exception('test', 'test', '', json_encode($jsonobject));
+            throw new moodle_exception('no_items_available_yet', 'wunderbyte_table', '', json_encode($jsonobject));
         }
         $rows = $jsonobject->table->rows ?? 0;
         return $rows;
