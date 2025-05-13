@@ -182,7 +182,7 @@ class hourlist extends base {
             'wbfilterclass' => $data->wbfilterclass ?? '',
         ];
         $filterspecificvalues = array_merge($filterspecificvalues, self::get_possible_timed_options());
-        return $filterspecificvalues;
+        return [$filterspecificvalues, ''];
     }
 
     /**

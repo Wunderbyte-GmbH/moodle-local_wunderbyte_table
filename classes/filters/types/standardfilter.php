@@ -230,7 +230,7 @@ class standardfilter extends base {
                 ];
             }
         }
-        return $filterspecificvalues;
+        return [$filterspecificvalues, ''];
     }
 
     /**

@@ -172,7 +172,7 @@ class callback extends base {
             $filterenablelabel => $data->$filterenablelabel ?? '0',
             'wbfilterclass' => $data->wbfilterclass ?? '',
         ];
-        return $filterspecificvalues;
+        return [$filterspecificvalues, ''];
     }
 
     /**

@@ -302,7 +302,7 @@ class hierarchicalfilter extends base {
                 ];
             }
         }
-        return $filterspecificvalues;
+        return [$filterspecificvalues, ''];
     }
 
     /**

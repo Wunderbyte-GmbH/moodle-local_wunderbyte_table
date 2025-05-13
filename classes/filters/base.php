@@ -544,6 +544,6 @@ abstract class base {
             'wbfilterclass' => $data->wbfilterclass ?? '',
             $filterenablelabel => $data->$filterenablelabel ?? '0',
         ];
-        return $filterspecificvalues;
+        return [$filterspecificvalues, ''];
     }
 }

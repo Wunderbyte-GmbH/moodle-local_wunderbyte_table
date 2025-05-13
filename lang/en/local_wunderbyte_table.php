@@ -63,7 +63,6 @@ $string['datepickerheadingname'] = 'Name: ';
 $string['datepickerheadingoperation'] = 'Operations: ';
 $string['datepickerheadingpossibleoperations'] = 'Possible operations: ';
 $string['datepickermoodleexception'] = 'Every column can have only one filter applied';
-$string['datepickeroperator'] = 'Date filter with single date';
 $string['datepickerplaceholdercheckboxlabel'] = 'Insert a checkbox label';
 $string['datepickerplaceholdername'] = 'Insert a filter name';
 $string['datepickertype'] = 'Choose datepicker type';

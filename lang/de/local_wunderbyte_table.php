@@ -62,7 +62,6 @@ $string['datepickerheadingname'] = 'Name:';
 $string['datepickerheadingoperation'] = 'Operationen:';
 $string['datepickerheadingpossibleoperations'] = 'Mögliche Operationen:';
 $string['datepickermoodleexception'] = 'Jede Spalte kann nur einen Filter enthalten.';
-$string['datepickeroperator'] = 'Datumsfilter mit Einzeldatum';
 $string['datepickerplaceholdercheckboxlabel'] = 'Geben Sie eine Checkbox-Beschriftung ein';
 $string['datepickerplaceholdername'] = 'Geben Sie einen Filternamen ein';
 $string['datepickertype'] = 'Wähle einen Zeitfilter-Typen';
