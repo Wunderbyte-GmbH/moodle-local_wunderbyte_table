@@ -502,8 +502,9 @@ abstract class base {
      * The expected value.
      * @param \MoodleQuickForm $mform
      * @param array $data
+     * @param string $filterspecificvalue
      */
-    public static function render_mandatory_fields(&$mform, $data = []) {
+    public static function render_mandatory_fields(&$mform, $data = [], $filterspecificvalue = '') {
         $mform = new MoodleQuickForm('dynamicform', 'post', '');
         $mform->addElement(
             'static',

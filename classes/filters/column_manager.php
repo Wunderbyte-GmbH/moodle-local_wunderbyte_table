@@ -48,6 +48,10 @@ class column_manager extends filtersettings {
     /** @var array */
     protected $data;
 
+    /** @var string */
+    const FUNCTION_NAME = 'get_filterspecific_values';
+
+
     /**
      * Handles form definition of filter classes.
      * @param array $params
@@ -68,17 +72,24 @@ class column_manager extends filtersettings {
      */
     public function get_filtered_column_form() {
         $filtersettings = $this->filtersettings[$this->filtercolumn];
-        $functionname = 'get_filterspecific_values';
+        $classname = $filtersettings['wbfilterclass'];
+        $functionname = self::FUNCTION_NAME;
 
         foreach ($filtersettings as $key => $value) {
-            $classname = $filtersettings['wbfilterclass'];
-            if ($this->is_static_public_function($classname, $functionname)) {
-                $existingfilterdata = $classname::$functionname($filtersettings, $this->filtercolumn);
+            if ($this->is_static_public_function($classname, self::FUNCTION_NAME)) {
+                [$existingfilterdata, $filterspecificvalue] = $classname::$functionname($filtersettings, $this->filtercolumn);
             }
         }
+
         $this->set_general_filter_settings($filtersettings);
-        $this->set_available_filter_types($existingfilterdata ?? [], $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
-        $this->set_add_filter_key_value($existingfilterdata[0] ?? []);
+        $this->set_available_filter_types(
+            $existingfilterdata ?? [],
+            $this->filtersettings[$this->filtercolumn]['wbfilterclass']
+        );
+        $this->set_add_filter_key_value(
+            $existingfilterdata[0] ?? [],
+            $filterspecificvalue
+        );
         return [
             'filtereditfields' => $this->mformedit->toHtml(),
             'filteraddfields' => $this->mformadd->toHtml(),
@@ -91,18 +102,19 @@ class column_manager extends filtersettings {
      */
     public function get_filtered_column_form_persist_error() {
         $filtersettings = $this->data;
-        $functionname = 'get_filterspecific_values';
+        $classname = $this->data['wbfilterclass'];
+        $functionname = self::FUNCTION_NAME;
 
         foreach ($filtersettings as $key => $value) {
-            $classname = $filtersettings['wbfilterclass'];
             if ($this->is_static_public_function($classname, $functionname)) {
-                $existingfilterdata = $classname::$functionname($filtersettings, $this->filtercolumn);
+                [$existingfilterdata, $filterspecificvalue] = $classname::$functionname($filtersettings, $this->filtercolumn);
             }
         }
 
+        $keyvaluepairs = $existingfilterdata['keyvaluepairs']['value'] ?? $existingfilterdata;
         $this->set_general_filter_settings($filtersettings);
-        $this->set_available_filter_types($existingfilterdata ?? [], $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
-        $this->set_add_filter_key_value($existingfilterdata[0] ?? []);
+        $this->set_available_filter_types($keyvaluepairs ?? [], $this->filtersettings[$this->filtercolumn]['wbfilterclass']);
+        $this->set_add_filter_key_value($keyvaluepairs[0] ?? [], $filterspecificvalue);
         return [
             'filtereditfields' => $this->mformedit,
             'filteraddfields' => $this->mformadd,
@@ -146,7 +158,10 @@ class column_manager extends filtersettings {
     private function set_available_filter_types($existingfilterdata, $filterclass) {
         $this->mformedit->addElement('header', 'existing_pairs', 'Existing key value pairs');
         $staticfunction = 'render_mandatory_fields';
-        if (self::has_existingfilterdata($existingfilterdata)  && self::is_static_public_function($filterclass, $staticfunction)) {
+        if (
+            self::has_existingfilterdata($existingfilterdata)  &&
+            self::is_static_public_function($filterclass, $staticfunction)
+        ) {
             $filterclass::$staticfunction($this->mformedit, $existingfilterdata);
         } else {
             $this->mformedit->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No pairs exist</p>');
@@ -159,8 +174,13 @@ class column_manager extends filtersettings {
      * @return bool
      */
     private function has_existingfilterdata($existingfilterdata) {
+        $filtersite = count($existingfilterdata);
         if (
-            count($existingfilterdata) >= 1 &&
+            $filtersite > 1
+        ) {
+            return true;
+        } else if (
+            $filtersite == 1 &&
             !array_key_exists(0, $existingfilterdata)
         ) {
             return true;
@@ -173,12 +193,16 @@ class column_manager extends filtersettings {
      * Handles form definition of filter classes.
      * @param array $newkeyvaluepair
      */
-    private function set_add_filter_key_value($newkeyvaluepair) {
+    private function set_add_filter_key_value($newkeyvaluepair, $filterspecificvalue = []) {
         $this->mformadd->addElement('html', '<div id="filter-add-field">');
         $this->mformadd->addElement('header', 'add_pair', 'Add new key value pair');
 
         $classname = $this->data['wbfilterclass'] ?? $this->filtersettings[$this->data['filtercolumn']]['wbfilterclass'];
-        self::render_mandatory_fields($classname, [$newkeyvaluepair]);
+        self::render_mandatory_fields(
+            $classname,
+            [$newkeyvaluepair],
+            $filterspecificvalue
+        );
 
         $this->mformadd->addElement('html', '</div>');
     }
@@ -188,10 +212,14 @@ class column_manager extends filtersettings {
      * @param string $classname
      * @param array $newkeyvaluepair
      */
-    private function render_mandatory_fields($classname, $newkeyvaluepair) {
+    private function render_mandatory_fields($classname, $newkeyvaluepair, $filterspecificvalue = '') {
         $staticfunction = 'render_mandatory_fields';
         if (self::is_static_public_function($classname, $staticfunction)) {
-            $classname::$staticfunction($this->mformadd, $newkeyvaluepair ?? []);
+            $classname::$staticfunction(
+                $this->mformadd,
+                $newkeyvaluepair ?? [],
+                $filterspecificvalue
+            );
             $parts = explode("\\", $classname);
             $elementname = array_pop($parts) . 'group';
         }

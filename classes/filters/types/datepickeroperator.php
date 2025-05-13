@@ -34,7 +34,7 @@ class datepickeroperator extends datepickerbase {
      * @param \MoodleQuickForm $mform
      * @param array $data
      */
-    public static function render_mandatory_fields(&$mform, $data = null) {
+    public static function render_mandatory_fields(&$mform, $data = null, $filterspecificvalue = '') {
         if ($data === null) {
             $data = self::$newkeyvalue;
         }
@@ -100,33 +100,9 @@ class datepickeroperator extends datepickerbase {
         );
 
         return [
-            $mform->createElement(
-                'static',
-                '',
-                '',
-                '<br><label>' . get_string('datepickerheadingname', 'local_wunderbyte_table') . '</label>'
-            ),
             $nameinput,
-            $mform->createElement(
-                'static',
-                '',
-                '',
-                '<br><label>' . get_string('datepickerheadingcheckboxlabel', 'local_wunderbyte_table') . '</label>'
-            ),
             $checkboxlabelinput,
-            $mform->createElement(
-                'static',
-                '',
-                '',
-                '<br><label>' . get_string('datepickerheadingoperation', 'local_wunderbyte_table') . '</label>'
-            ),
             $operatorinput,
-            $mform->createElement(
-                'static',
-                '',
-                '',
-                '<br><label>' . get_string('datepickerheadingdefaultvalue', 'local_wunderbyte_table') . '</label>'
-            ),
             $defaultvalueinput,
         ];
     }

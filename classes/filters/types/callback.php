@@ -154,7 +154,7 @@ class callback extends base {
      * @param \MoodleQuickForm $mform
      * @param array $data
      */
-    public static function render_mandatory_fields(&$mform, $data = []) {
+    public static function render_mandatory_fields(&$mform, $data = [], $filterspecificvalue = '') {
         $mform->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
     }
 

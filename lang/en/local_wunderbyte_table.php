@@ -66,6 +66,7 @@ $string['datepickermoodleexception'] = 'Every column can have only one filter ap
 $string['datepickeroperator'] = 'Date filter with single date';
 $string['datepickerplaceholdercheckboxlabel'] = 'Insert a checkbox label';
 $string['datepickerplaceholdername'] = 'Insert a filter name';
+$string['datepickertype'] = 'Choose datepicker type';
 $string['december'] = 'December';
 $string['deletedatabody'] = 'You are about to submit this data: <br> "{$a->data}"';
 $string['deletedatasubmit'] = 'Delete';

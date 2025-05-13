@@ -18,6 +18,7 @@
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+import Ajax from 'core/ajax';
 import ModalForm from 'core_form/modalform';
 import {get_string as getString} from 'core/str';
 import {init as filterFieldsInit} from 'local_wunderbyte_table/filterfieldsreload';
@@ -113,6 +114,25 @@ export function addFilterTableModal(event, idstring, encodedtable) {
         console.log('form submitted response: ', response);
         window.location.reload();
     });
+    modalForm.addEventListener('change', (e) => {
+        if (e.target.name == 'subdatepicker_type') {
+            Ajax.call([{
+                methodname: 'local_wunderbyte_table_get_filter_specific_fields',
+                args: {filterspecifictype: e.target.value},
+                done: (response) => {
+                    const filteradd = document.getElementById('filter-add-field');
+                    if (filteradd && response.filteraddfields) {
+                        filteradd.innerHTML = response.filteraddfields;
+                    }
+                },
+                fail: (error) => {
+                    // eslint-disable-next-line no-console
+                    console.error('Web service error:', error);
+                }
+            }]);
+        }
+    });
+
     modalForm.show();
 }
 

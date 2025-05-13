@@ -31,14 +31,18 @@ define(['jquery'], function() {
                 if (!button) {
                     return;
                 }
-                var groupId = button.dataset.groupid;
-                var group = document.getElementById(groupId);
+                var groupName = button.dataset.groupid;
+                var group = document.querySelector('[data-groupname="' + groupName + '"]');
 
                 if (group) {
                     group.remove();
                 } else {
+                    group = document.getElementById(groupName);
+                    if (group) {
+                        group.remove();
+                    }
                     // eslint-disable-next-line no-console
-                    console.warn("Group not found:", groupId);
+                    console.warn("Group not found:", groupName);
                 }
             });
         }

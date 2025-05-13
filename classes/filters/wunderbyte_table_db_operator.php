@@ -81,7 +81,7 @@ class wunderbyte_table_db_operator {
                 get_string('successaddedfilternotification', 'local_wunderbyte_table'),
                 \core\output\notification::NOTIFY_SUCCESS
             );
-            $otherlangtables = $this->get_other_lang_tables($result->tablehash, $this->key);
+            $otherlangtables = $this->get_other_lang_tables($result->tablehash ?? '', $this->key);
             $this->persist_filter_settings($otherlangtables, $this->filtersettings);
         }
     }

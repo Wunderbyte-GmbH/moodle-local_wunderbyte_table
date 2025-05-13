@@ -24,6 +24,7 @@
 
 namespace local_wunderbyte_table\filters;
 
+use Exception;
 use MoodleQuickForm;
 
 /**
@@ -59,7 +60,7 @@ class filter_form_operator {
      * @param MoodleQuickForm $mform
      * @param array $submitteddata
      */
-    public static function persist_input_values($mform, $submitteddata) {
+    public static function persist_input_values(&$mform, $submitteddata) {
         $peristingvalue = 'filter_columns';
         $filtercolumn = $submitteddata[$peristingvalue];
 
@@ -88,7 +89,11 @@ class filter_form_operator {
      */
     private static function render_forms_to_html(&$filteredcolumnform) {
         foreach ($filteredcolumnform as $key => $form) {
-            $filteredcolumnform[$key] = $form->toHtml();
+            try {
+                $filteredcolumnform[$key] = $form->toHtml();
+            } catch (Exception $e) {
+                $filteredcolumnform[$key] = 'ERROR';
+            }
         }
     }
 

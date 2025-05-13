@@ -31,7 +31,7 @@ use external_api;
 use external_function_parameters;
 use external_value;
 use external_single_structure;
-use local_wunderbyte_table\filters\column_manager;
+use local_wunderbyte_table\filters\filter_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -45,7 +45,7 @@ require_once($CFG->libdir . '/externallib.php');
  * @author    Georg Maißer
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_filter_column_data extends external_api {
+class get_filter_specific_fields extends external_api {
     /**
      * Describes the parameters this webservice.
      *
@@ -53,32 +53,33 @@ class get_filter_column_data extends external_api {
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'filtercolumn'  => new external_value(PARAM_TEXT, 'Filter column', VALUE_REQUIRED),
-            'encodedtable'  => new external_value(PARAM_TEXT, 'Encodedtable', VALUE_REQUIRED),
+            'filterspecifictype'  => new external_value(PARAM_TEXT, 'Filter type', VALUE_REQUIRED),
         ]);
     }
 
     /**
      * Execute this webservice.
-     * @param string $filtercolumn
-     * @param string $encodedtable
+     * @param string $filtertype
      * @return array
      */
     public static function execute(
-        string $filtercolumn,
-        string $encodedtable
+        string $filtertype
     ) {
         global $PAGE;
         $PAGE->set_context(\context_system::instance());
-
         $params = [
-            'filtercolumn' => $filtercolumn,
-            'encodedtable' => $encodedtable,
+            'filterspecifictype' => $filtertype,
         ];
-        $params = self::validate_parameters(self::execute_parameters(), $params);
-        $columnmanager = new column_manager($params, $params['encodedtable']);
-        $filteredcolumnforms = $columnmanager->get_filtered_column_form();
-        return $filteredcolumnforms;
+        $classname = 'local_wunderbyte_table\filters\types\datepicker';
+        $filtermanager = new filter_manager();
+        $mandatoryfields = $filtermanager->get_mandatory_filter_fields(
+            $classname,
+            [],
+            $params['filterspecifictype']
+        );
+        return [
+            'filteraddfields' => $mandatoryfields->toHtml(),
+        ];
     }
 
     /**
@@ -88,7 +89,6 @@ class get_filter_column_data extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'filtereditfields' => new external_value(PARAM_RAW, 'fields html'),
             'filteraddfields' => new external_value(PARAM_RAW, 'fields html'),
         ]);
     }

@@ -159,7 +159,6 @@ abstract class datepickerbase extends base {
      * @return void
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
-
         if (!isset($filtersettings[$fckey][get_called_class()])) {
             return;
         }
@@ -295,6 +294,45 @@ abstract class datepickerbase extends base {
 
     /**
      * The expected value.
+     * @param \MoodleQuickForm $mform
+     * @param string $filterlabel
+     * @param int $horizontallinecounter
+     */
+    public static function add_type_dropdown(&$mform, $selected) {
+        $mform->registerNoSubmitButton('btn_subdatepickertype');
+        $buttonargs = ['style' => 'visibility:hidden;'];
+        $options = [
+            'span' => 'span',
+            'timestamp' => 'timestamp',
+        ];
+        $categoryselect = [
+            $mform->createElement(
+                'select',
+                'subdatepicker_type',
+                'Choose your fighter',
+                $options
+            ),
+            $mform->createElement(
+                'submit',
+                'btn_subdatepickertype',
+                'Choose your fighter',
+                $buttonargs
+            ),
+        ];
+
+        $mform->addGroup(
+            $categoryselect,
+            'subdatepicker_type',
+            get_string('datepickertype', 'local_wunderbyte_table'),
+            [' '],
+            false
+        );
+        $mform->setType('btn_subdatepickertype', PARAM_NOTAGS);
+        $mform->setDefault('subdatepicker_type', $selected);
+    }
+
+    /**
+     * The expected value.
      * @param array $data
      * @param string $filtercolumn
      * @return array
@@ -307,7 +345,7 @@ abstract class datepickerbase extends base {
                 }
             }
         }
-        return  $data['datepicker'] ?? [];
+        return  [$data['datepicker'] ?? [], $data['subdatepicker_type'] ?? 'span'];
     }
 
     /**

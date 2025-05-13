@@ -104,7 +104,7 @@ class standardfilter extends base {
      * @param \MoodleQuickForm $mform
      * @param array $data
      */
-    public static function render_mandatory_fields(&$mform, $data = [[]]) {
+    public static function render_mandatory_fields(&$mform, $data = [[]], $filterspecificvalue = '') {
         foreach ($data as $key => $keyvaluepair) {
             if (count($data) > 1 && empty($key)) {
                 continue;

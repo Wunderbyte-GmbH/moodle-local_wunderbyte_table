@@ -65,6 +65,7 @@ $string['datepickermoodleexception'] = 'Jede Spalte kann nur einen Filter enthal
 $string['datepickeroperator'] = 'Datumsfilter mit Einzeldatum';
 $string['datepickerplaceholdercheckboxlabel'] = 'Geben Sie eine Checkbox-Beschriftung ein';
 $string['datepickerplaceholdername'] = 'Geben Sie einen Filternamen ein';
+$string['datepickertype'] = 'Wähle einen Zeitfilter-Typen';
 $string['december'] = 'Dezember';
 $string['deletedatabody'] = 'Sie sind dabei, diese Daten zu löschen: <br> "{$a->data}"';
 $string['deletedatasubmit'] = 'Löschen';

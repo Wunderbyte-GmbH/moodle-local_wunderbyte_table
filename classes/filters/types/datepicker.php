@@ -24,6 +24,7 @@
 
 namespace local_wunderbyte_table\filters\types;
 
+use local_wunderbyte_table\filters\types\datepickers\datepicker_factory;
 use stdClass;
 
 /**
@@ -35,10 +36,11 @@ class datepicker extends datepickerbase {
      * @param \MoodleQuickForm $mform
      * @param array $data
      */
-    public static function render_mandatory_fields(&$mform, $data = null) {
+    public static function render_mandatory_fields(&$mform, $data = null, $filterspecificvalue = '') {
         if ($data === null) {
             $data = self::$newkeyvalue;
         }
+
         $horizontallinecounter = 0;
         foreach ($data as $filterlabel => $filtertype) {
             if (empty($filterlabel) && count($data) != 1) {
@@ -49,8 +51,17 @@ class datepicker extends datepickerbase {
             }
 
             $valuelabel = 'datepicker[' . $filterlabel . ']';
-            $inputs = self::set_date_filter_input($mform, $valuelabel);
-            self::set_date_default_value_input($mform, $valuelabel, $filtertype);
+
+            if ($filterlabel == 0) {
+                self::add_type_dropdown($mform, $filtertype['datepicker_type'] ?? $filterspecificvalue);
+                $inputs = datepicker_factory::set_input(
+                    $mform,
+                    $valuelabel,
+                    $filterspecificvalue
+                );
+            } else {
+                $inputs = datepicker_factory::get_and_set_input($mform, $valuelabel, $filtertype);
+            }
 
             $mform->addGroup(
                 $inputs,
@@ -70,7 +81,7 @@ class datepicker extends datepickerbase {
      * @param string $valuelabel
      * @return array
      */
-    public static function set_date_filter_input(&$mform, $valuelabel) {
+    public static function set_span_filter_input(&$mform, $valuelabel) {
         $nameinput = $mform->createElement(
             'text',
             $valuelabel  . '[name]',
@@ -96,47 +107,47 @@ class datepicker extends datepickerbase {
         $defaultvaluestartinput = $mform->createElement(
             'date_selector',
             $valuelabel  . '[defaultvaluestart]',
-            '',
+            'from'
         );
 
         $defaultvalueendinput = $mform->createElement(
             'date_selector',
             $valuelabel  . '[defaultvalueend]',
-            '',
+            0
         );
 
         return [
             $mform->createElement(
                 'static',
-                '',
+                'datepickerheadingname',
                 '',
                 '<br><label>' . get_string('datepickerheadingname', 'local_wunderbyte_table') . '</label>'
             ),
             $nameinput,
             $mform->createElement(
                 'static',
-                '',
+                'datepickerheadingcheckboxlabel',
                 '',
                 '<br><label>' . get_string('datepickerheadingcheckboxlabel', 'local_wunderbyte_table') . '</label>'
             ),
             $checkboxlabelinput,
             $mform->createElement(
                 'static',
-                '',
+                'datepickerheadingpossibleoperations',
                 '',
                 '<br><label>' . get_string('datepickerheadingpossibleoperations', 'local_wunderbyte_table') . '</label>'
             ),
             $possibleoperationsinput,
             $mform->createElement(
                 'static',
-                '',
+                'datepickerheadingdefaultvaluestart',
                 '',
                 '<br><label>' . get_string('datepickerheadingdefaultvaluestart', 'local_wunderbyte_table') . '</label>'
             ),
             $defaultvaluestartinput,
             $mform->createElement(
                 'static',
-                '',
+                'datepickerheadingdefaultvalueend',
                 '',
                 '<br><label>' . get_string('datepickerheadingdefaultvalueend', 'local_wunderbyte_table') . '</label>'
             ),
@@ -150,7 +161,7 @@ class datepicker extends datepickerbase {
      * @param string $valuelabel
      * @param array $filtertype
      */
-    public static function set_date_default_value_input(&$mform, $valuelabel, $filtertype) {
+    public static function set_span_default_value_input(&$mform, $valuelabel, $filtertype) {
         $mform->setDefault(
             $valuelabel . '[name]',
             $filtertype['name'] ?? ''
@@ -165,11 +176,11 @@ class datepicker extends datepickerbase {
         );
         $mform->setDefault(
             $valuelabel . '[defaultvaluestart]',
-            $filtertype['defaultvaluestart'] ?? ''
+            $filtertype['defaultvaluestart'] ?? time()
         );
         $mform->setDefault(
             $valuelabel . '[defaultvalueend]',
-            $filtertype['defaultvalueend'] ?? ''
+            $filtertype['defaultvalueend'] ?? time()
         );
     }
 
@@ -191,7 +202,10 @@ class datepicker extends datepickerbase {
             ) {
                 $errormsg .= get_string('datepickererrormandatory', 'local_wunderbyte_table');
             }
-            if ($datepickerinput['operator'] == '"_qf__force_multiselect_submission"') {
+            if (
+                isset($datepickerinput['operator']) &&
+                $datepickerinput['operator'] == '"_qf__force_multiselect_submission"'
+            ) {
                 $errormsg .= get_string('datepickererroroperations', 'local_wunderbyte_table');
             }
             if (!empty($errormsg)) {
@@ -214,16 +228,24 @@ class datepicker extends datepickerbase {
                 !empty($keyvaluepair['name'])
             ) {
                 $name = $keyvaluepair['name'];
-                $datepickerfilter->$name = (object) [
-                    'checkboxlabel' => $keyvaluepair['checkboxlabel'],
-                    'columntimestart' => 'startdate',
-                    'columntimeend' => 'enddate',
-                    'labelstartvalue' => 'Timespan',
-                    'labelendvalue' => 'enddate',
-                    'defaultvaluestart' => self::get_timestamp($keyvaluepair['defaultvaluestart']),
-                    'defaultvalueend' => self::get_timestamp($keyvaluepair['defaultvalueend']),
-                    'possibleoperations' => self::get_operatoroptions_name($keyvaluepair['possibleoperations']),
-                ];
+                if (isset($keyvaluepair['operator'])) {
+                    $datepickerfilter->$name = (object) [
+                        'checkboxlabel' => $keyvaluepair['checkboxlabel'],
+                        'operator' => $keyvaluepair['operator'],
+                        'defaultvalue' => self::get_timestamp($keyvaluepair['defaultvalue']),
+                    ];
+                } else {
+                    $datepickerfilter->$name = (object) [
+                        'checkboxlabel' => $keyvaluepair['checkboxlabel'],
+                        'columntimestart' => 'startdate',
+                        'columntimeend' => 'enddate',
+                        'labelstartvalue' => 'Timespan',
+                        'labelendvalue' => 'enddate',
+                        'defaultvaluestart' => self::get_timestamp($keyvaluepair['defaultvaluestart']),
+                        'defaultvalueend' => self::get_timestamp($keyvaluepair['defaultvalueend']),
+                        'possibleoperations' => self::get_operatoroptions_name($keyvaluepair['possibleoperations']),
+                    ];
+                }
             }
         }
         $filterenablelabel = $filtercolumn . '_wb_checked';

@@ -44,14 +44,14 @@ class filter_manager extends filtersettings {
      * @param array $data
      * @return \MoodleQuickForm
      */
-    public function get_mandatory_filter_fields($classname, $data = []) {
+    public function get_mandatory_filter_fields($classname, $data = [], $filterspecifictype = '') {
         $mform = new \MoodleQuickForm('dynamicform', 'post', '');
 
         $mform->addElement('html', '<div id="filter-add-field">');
         $mform->addElement('header', 'add_pair', 'Add new key value pair');
         $staticfunctionname = 'render_mandatory_fields';
         if (self::is_static_public_function($classname, $staticfunctionname)) {
-            $classname::$staticfunctionname($mform);
+            $classname::$staticfunctionname($mform, [[]], $filterspecifictype);
         }
         $mform->addElement('html', '</div>');
 

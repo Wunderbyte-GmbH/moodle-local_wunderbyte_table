@@ -26,7 +26,6 @@ namespace local_wunderbyte_table\filters\types;
 
 use core_date;
 use local_wunderbyte_table\filters\base;
-use local_wunderbyte_table\filter;
 use local_wunderbyte_table\wunderbyte_table;
 
 /**
@@ -164,7 +163,7 @@ class hourlist extends base {
      * @param \MoodleQuickForm $mform
      * @param array $data
      */
-    public static function render_mandatory_fields(&$mform, $data = []) {
+    public static function render_mandatory_fields(&$mform, $data = [], $filterspecificvalue = '') {
         $mform->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No further seetings needed</p>');
     }
 

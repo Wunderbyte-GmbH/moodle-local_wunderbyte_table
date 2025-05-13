@@ -43,8 +43,6 @@ class addfiltertable extends dynamic_form {
      * @see moodleform::definition()
      */
     public function definition() {
-        global $PAGE;
-
         $mform = $this->_form;
         $customdata = $this->_customdata;
         $ajaxformdata = $this->_ajaxformdata;
