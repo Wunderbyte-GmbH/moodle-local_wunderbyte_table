@@ -192,8 +192,9 @@ class column_manager extends filtersettings {
     /**
      * Handles form definition of filter classes.
      * @param array $newkeyvaluepair
+     * @param string $filterspecificvalue
      */
-    private function set_add_filter_key_value($newkeyvaluepair, $filterspecificvalue = []) {
+    private function set_add_filter_key_value($newkeyvaluepair, $filterspecificvalue = '') {
         $this->mformadd->addElement('html', '<div id="filter-add-field">');
         $this->mformadd->addElement('header', 'add_pair', 'Add new key value pair');
 
@@ -211,6 +212,7 @@ class column_manager extends filtersettings {
      * Handles form definition of filter classes.
      * @param string $classname
      * @param array $newkeyvaluepair
+     * @param string $filterspecificvalue
      */
     private function render_mandatory_fields($classname, $newkeyvaluepair, $filterspecificvalue = '') {
         $staticfunction = 'render_mandatory_fields';

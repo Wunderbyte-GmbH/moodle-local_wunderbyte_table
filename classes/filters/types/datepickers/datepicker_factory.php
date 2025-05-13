@@ -39,7 +39,7 @@ class datepicker_factory {
      * @return array
      */
     public static function get_and_set_input(&$mform, $valuelabel, $filtertype) {
-        $type = self::get_datepicker_type($filtertype['operator'] ?? $filtertype['possibleoperations']);
+        $type = self::get_datepicker_type($filtertype['operator'] ?? $filtertype['possibleoperations'] ?? '');
         $datepickersclass = 'local_wunderbyte_table\\filters\\types\\datepickers\\' . $type;
         if (class_exists($datepickersclass)) {
             $datepickerinstance = new $datepickersclass($mform, $valuelabel, $filtertype);

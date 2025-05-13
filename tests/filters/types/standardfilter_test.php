@@ -156,7 +156,7 @@ final class standardfilter_test extends TestCase {
         ];
         $filtercolumn = 'username';
 
-        $result = standardfilter::get_filterspecific_values($data, $filtercolumn);
+        [$result, $filterspecific] = standardfilter::get_filterspecific_values($data, $filtercolumn);
         $this->assertCount(2, $result);
         $this->assertArrayHasKey('one', $result);
     }

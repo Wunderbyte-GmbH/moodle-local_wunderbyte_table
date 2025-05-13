@@ -147,10 +147,7 @@ final class datepicker_test extends TestCase {
 
     /**
      * Test render_mandatory_fields() method.
-     * @covers \local_wunderbyte_table\filters\types\datepicker::render_mandatory_fields
-     * @covers \local_wunderbyte_table\filters\types\datepicker::add_date_filter_head
-     * @covers \local_wunderbyte_table\filters\types\datepicker::set_date_filter_input
-     * @covers \local_wunderbyte_table\filters\types\datepicker::set_date_default_value_input
+     * @covers \local_wunderbyte_table\filters\types\datepicker
      */
     public function test_render_mandatory_fields(): void {
         $mformmock = $this->getMockBuilder(\MoodleQuickForm::class)

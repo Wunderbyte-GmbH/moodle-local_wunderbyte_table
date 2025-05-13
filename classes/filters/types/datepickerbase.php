@@ -295,8 +295,7 @@ abstract class datepickerbase extends base {
     /**
      * The expected value.
      * @param \MoodleQuickForm $mform
-     * @param string $filterlabel
-     * @param int $horizontallinecounter
+     * @param string $selected
      */
     public static function add_type_dropdown(&$mform, $selected) {
         $mform->registerNoSubmitButton('btn_subdatepickertype');

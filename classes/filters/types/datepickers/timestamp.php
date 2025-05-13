@@ -53,6 +53,7 @@ class timestamp {
 
     /**
      * The expected value.
+     * @param bool $hidden
      * @return array
      */
     public function get_inputs($hidden = false) {

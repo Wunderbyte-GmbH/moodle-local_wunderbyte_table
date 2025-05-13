@@ -35,6 +35,7 @@ class datepicker extends datepickerbase {
      * The expected value.
      * @param \MoodleQuickForm $mform
      * @param array $data
+     * @param string $filterspecificvalue
      */
     public static function render_mandatory_fields(&$mform, $data = null, $filterspecificvalue = '') {
         if ($data === null) {

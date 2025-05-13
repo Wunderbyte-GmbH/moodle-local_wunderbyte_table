@@ -185,7 +185,7 @@ final class intrange_test extends TestCase {
         $data->wbfilterclass = 'intrange';
         $data->testcolumn_wb_checked = '1';
 
-        $result = intrange::get_filterspecific_values($data, 'testcolumn');
+        [$result, $filterspecific] = intrange::get_filterspecific_values($data, 'testcolumn');
 
         $this->assertEquals('Test Filter', $result['localizedname']);
         $this->assertEquals([], $result['intrange']);

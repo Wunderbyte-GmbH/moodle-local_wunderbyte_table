@@ -92,7 +92,7 @@ final class weekdays_test extends TestCase {
         $data->wbfilterclass = 'weekdays';
         $data->testcolumn_wb_checked = '1';
 
-        $result = weekdays::get_filterspecific_values($data, 'testcolumn');
+        [$result, $filterspecific] = weekdays::get_filterspecific_values($data, 'testcolumn');
 
         $this->assertEquals('Test Filter', $result['localizedname']);
         $this->assertEquals('1', $result['testcolumn_wb_checked']);

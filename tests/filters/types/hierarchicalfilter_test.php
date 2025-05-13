@@ -96,7 +96,7 @@ final class hierarchicalfilter_test extends TestCase {
             'filter2' => ['key' => 'key2', 'parent' => 'parent2', 'localizedname' => 'Localized 2'],
         ];
 
-        $result = hierarchicalfilter::get_filterspecific_values($data, 'testcolumn');
+        [$result, $filterspecific] = hierarchicalfilter::get_filterspecific_values($data, 'testcolumn');
         $this->assertSame($expected, $result);
     }
 

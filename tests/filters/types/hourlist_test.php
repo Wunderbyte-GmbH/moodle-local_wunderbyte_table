@@ -84,7 +84,7 @@ final class hourlist_test extends TestCase {
 
     /**
      * Test add_filter() method.
-     * @covers \local_wunderbyte_table\filters\types\hourlist::get_filterspecific_values
+     * @covers \local_wunderbyte_table\filters\types\hourlist
      */
     public function test_get_filterspecific_values(): void {
         $data = new \stdClass();
@@ -92,7 +92,7 @@ final class hourlist_test extends TestCase {
         $data->wbfilterclass = 'hourlist';
         $data->testcolumn_wb_checked = '1';
 
-        $result = hourlist::get_filterspecific_values($data, 'testcolumn');
+        [$result, $filterspecific] = hourlist::get_filterspecific_values($data, 'testcolumn');
 
         $this->assertEquals('Test Filter', $result['localizedname']);
         $this->assertEquals('1', $result['testcolumn_wb_checked']);

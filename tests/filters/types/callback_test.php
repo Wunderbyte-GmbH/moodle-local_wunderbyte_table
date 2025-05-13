@@ -140,7 +140,7 @@ final class callback_test extends TestCase {
         $data->wbfilterclass = 'callback';
         $data->testcolumn_wb_checked = '1';
 
-        $result = callback::get_filterspecific_values($data, 'testcolumn');
+        [$result, $filterspecific] = callback::get_filterspecific_values($data, 'testcolumn');
 
         $this->assertEquals('Test Filter', $result['localizedname']);
         $this->assertEquals('1', $result['testcolumn_wb_checked']);
