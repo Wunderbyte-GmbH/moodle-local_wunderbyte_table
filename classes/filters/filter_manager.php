@@ -42,6 +42,7 @@ class filter_manager extends filtersettings {
      * Handles form definition of filter classes.
      * @param string $classname
      * @param array $data
+     * @param string $filterspecifictype
      * @return \MoodleQuickForm
      */
     public function get_mandatory_filter_fields($classname, $data = [], $filterspecifictype = '') {
