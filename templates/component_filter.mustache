@@ -175,6 +175,12 @@
                 {{/default}}
                 {{#hierarchy}}
                     <ul class="wunderbyterFilterList hierarchy pt-2" data-moodletype="hierarchylist">
+                        <input class="hierarchycategory-checkbox" type="checkbox"
+                                value="{{value}}"
+                                id="{{index}}{{columnname}}{{idstring}}"
+                                {{checked}} name="{{id}}"
+                                data-key="{{label}}"
+                                data-targetvalue="{{columnname}}">
                         <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton"  data-ident="{{columnname}}" data-toggle="collapse" role="button" role="button" aria-controls="collapseExample">
                             <span class="filtercategorykeylabel">{{label}}</span> <span class="filtercategorycountlabel">{{#count}}({{count}}){{/count}}</span>
                         </button>
@@ -190,7 +196,6 @@
                                 {{/values}}
                             </div>
                         </div>
-
                     </ul>
                 {{/hierarchy}}
                 {{#datepicker}}

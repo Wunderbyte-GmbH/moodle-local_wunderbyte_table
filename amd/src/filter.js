@@ -43,6 +43,7 @@ export function initializeCheckboxes(selector, idstring, encodedtable) {
   }
   const selects = filterContainer.querySelectorAll("select[id^='filteroperationselect']");
   const filterElements = filterContainer.querySelectorAll("input[class^='filterelement']");
+  const hierarchcheckboxes = filterContainer.querySelectorAll('.hierarchycategory-checkbox');
 
   if (!filterElements) {
     return;
@@ -60,6 +61,10 @@ export function initializeCheckboxes(selector, idstring, encodedtable) {
 
   applyChangelistener(filterElements, selector, idstring, encodedtable);
   applyChangelistener(selects, selector, idstring, encodedtable);
+
+  if (hierarchcheckboxes) {
+    handleHierarchyCategoryCheckbox(hierarchcheckboxes, filterElements, selector, idstring, encodedtable);
+  }
 
   filterContainer.dataset.initialized = true;
 }
@@ -157,10 +162,20 @@ export function toggleFilterelement(e, selector, idstring, encodedtable) {
       getChecked(e.target.name, selector, idstring);
     }
 
-    // Reload the filtered elements via ajax.
+    triggerReload(idstring, encodedtable);
+  }, 400);
+}
+
+/**
+ * Trigger the reload with filter, search, sort.
+ *
+ * @param {*} idstring
+ * @param {*} encodedtable
+ *
+ */
+function triggerReload(idstring, encodedtable) {
+      // Reload the filtered elements via ajax.
     const filterobjects = getFilterObjects(idstring);
-    // eslint-disable-next-line no-console
-    console.log("filterobjects: " + filterobjects);
     const searchstring = getSearchInput(idstring);
     const sort = getSortSelection(idstring);
 
@@ -176,7 +191,6 @@ export function toggleFilterelement(e, selector, idstring, encodedtable) {
       null,
       filterobjects,
       searchstring);
-  }, 400);
 }
 
 /**
@@ -627,9 +641,6 @@ export function getFilterObjects(idstring) {
     return '';
   }
 
-  // eslint-disable-next-line no-console
-  console.log(idstring);
-
   let hasvalues = false;
 
   for (const [, value] of Object.entries(checked[idstring])) {
@@ -719,4 +730,37 @@ function updateFilterCounter(name, selector, idstring) {
       resetElement.classList.add('hidden');
     }
   }
+}
+
+/**
+ * Attach a click listener for these checkboxes to check all boxes in category.
+ *
+ * @param {*} parentCheckboxes
+ * @param {*} filterElements
+ * @param {*} selector
+ * @param {*} idstring
+ * @param {*} encodedtable
+ *
+ */
+function handleHierarchyCategoryCheckbox(parentCheckboxes, filterElements, selector, idstring, encodedtable) {
+    parentCheckboxes.forEach(parentCheckbox => {
+      parentCheckbox.addEventListener('click', function () {
+            // Get the closest parent <ul> element
+            const wrapper = parentCheckbox.closest('ul');
+
+            // Find all child checkboxes inside this <ul>
+            const childCheckboxes = wrapper.querySelectorAll('.form-check-input');
+
+            childCheckboxes.forEach(childCheckbox => {
+                // Only click if current state doesn't match parent
+                if (childCheckbox.checked !== parentCheckbox.checked) {
+                    childCheckbox.checked = parentCheckbox.checked; // Triggers associated JS
+                }
+            });
+            filterElements.forEach(element => {
+              getChecked(element.name, selector, idstring);
+            });
+            triggerReload(idstring, encodedtable);
+        });
+    });
 }
