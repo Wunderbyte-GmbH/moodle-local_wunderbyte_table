@@ -46,10 +46,14 @@ class editfilter {
      * If there is no setting in the DB (should only happen once for every table), setting is written.
      * @param wunderbyte_table $table
      * @param string $cachekey
+     * @param bool $fulltablesettings false by default, if true, then full tablesettings are returned.
      * @return array
      */
-    public static function return_filtersettings(wunderbyte_table $table, string $cachekey) {
-
+    public static function return_filtersettings(
+        wunderbyte_table $table,
+        string $cachekey,
+        bool $fulltablesettings = false
+    ): array {
         global $USER, $DB;
 
         // At this point, we know that we don't get the full filter for this user from Cache.
@@ -75,23 +79,32 @@ class editfilter {
         } else {
             // At this point, we know that there is no user specific filter available.
             // There might be a general one in the DB.
+            $jsonstring = tablesettings::return_jsontablesettings_from_db(0, $cachekey, 0);
+            $tablesettings = json_decode($jsonstring, true);
             if (
                 (get_config('local_wunderbyte_table', 'allowedittable'))
                 && $DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey, 'userid' => "0"])
             ) {
-                $jsonstring = tablesettings::return_jsontablesettings_from_db(0, $cachekey, 0);
-                $tablesettings = json_decode($jsonstring, true);
                 // For backwards compatibility, we also support only filtersettings.
                 $filtersettings = $tablesettings['filtersettings'] ?? $tablesettings;
             } else {
                 // We have stored the columns to filter in the subcolumn "datafields".
                 if (!isset($table->subcolumns['datafields'])) {
+                    if ($fulltablesettings) {
+                        $tablesettings['filtersettings'] = [];
+                        return $tablesettings;
+                    }
                     return [];
                 }
                 $filtersettings = $table->subcolumns['datafields'];
 
                 // We return the filtersettings right away.
-                if (empty(get_config('local_wunderbyte_table', 'allowedittable'))) {
+                if (!get_config('local_wunderbyte_table', 'allowedittable')) {
+                    // If param $fulltablesettings is set to true, we return the full tablesettings.
+                    if ($fulltablesettings) {
+                        return $tablesettings;
+                    }
+                    // By default, we return the filter settings only.
                     return $filtersettings;
                 }
 
@@ -103,7 +116,11 @@ class editfilter {
                 );
             }
         }
-
+        // If param $fulltablesettings is set to true, we return the full tablesettings.
+        if ($fulltablesettings) {
+            return $tablesettings;
+        }
+        // By default, we return the filter settings only.
         return $filtersettings;
     }
 

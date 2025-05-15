@@ -42,3 +42,7 @@
         </a>
     </span>
 {{/edit}}
+{{! If activated, we show a button to add custom filters. }}
+{{#showaddfilterbutton}}
+    {{> local_wunderbyte_table/component_addfilters }}
+{{/showaddfilterbutton}}

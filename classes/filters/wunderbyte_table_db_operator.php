@@ -38,7 +38,7 @@ class wunderbyte_table_db_operator {
     protected $key;
 
     /** @var array */
-    protected $filtersettings;
+    protected $tablesettings;
 
     /** @var object */
     protected $data;
@@ -55,14 +55,15 @@ class wunderbyte_table_db_operator {
         $this->data = $data;
         $lang = filter::current_language();
         $this->key = $table->tablecachehash . $lang . '_filterjson';
-        $this->filtersettings = editfilter::return_filtersettings($table, $this->key);
+        // Last param true gets full tablesettings.
+        $this->tablesettings = editfilter::return_filtersettings($table, $this->key, true);
     }
 
     /**
      * Set the key value pairs
      */
     public function set_existing_key_value_pairs() {
-        $this->filtersettings[$this->data->filter_columns] = $this->data->wbfilterclass::get_new_filter_values(
+        $this->tablesettings['filtersettings'][$this->data->filter_columns] = $this->data->wbfilterclass::get_new_filter_values(
             $this->data,
             $this->data->filter_columns
         );
@@ -75,14 +76,14 @@ class wunderbyte_table_db_operator {
         global $DB;
         $result = $DB->get_record($this->tablename, ['hash' => $this->key], 'id');
         if ($result) {
-            $result->jsonstring = json_encode($this->filtersettings);
+            $result->jsonstring = json_encode($this->tablesettings);
             $DB->update_record($this->tablename, $result);
             \core\notification::add(
                 get_string('successaddedfilternotification', 'local_wunderbyte_table'),
                 \core\output\notification::NOTIFY_SUCCESS
             );
             $otherlangtables = $this->get_other_lang_tables($result->tablehash ?? '', $this->key);
-            $this->persist_filter_settings($otherlangtables, $this->filtersettings);
+            $this->persist_filter_settings($otherlangtables, $this->tablesettings);
         }
     }
 
@@ -107,9 +108,9 @@ class wunderbyte_table_db_operator {
     /**
      * Set the key value pairs
      * @param array $tables
-     * @param array $filtersettings
+     * @param array $newtablesettings
      */
-    public function persist_filter_settings($tables, $filtersettings) {
+    public function persist_filter_settings($tables, $newtablesettings) {
         global $DB;
         foreach ($tables as $table) {
             $tablesettings = json_decode($table->jsonstring);
@@ -119,9 +120,9 @@ class wunderbyte_table_db_operator {
             }
 
             foreach ($tablesettings->filtersettings as $filtercolumn => $filtercolumnsettings) {
-                if (isset($filtersettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'])) {
+                if (isset($newtablesettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'])) {
                     $tablesettings->filtersettings->$filtercolumn->{$filtercolumn . '_wb_checked'} =
-                        $filtersettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'];
+                        $newtablesettings['filtersettings'][$filtercolumn][$filtercolumn . '_wb_checked'];
                 }
             }
 

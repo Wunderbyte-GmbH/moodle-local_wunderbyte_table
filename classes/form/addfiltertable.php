@@ -16,6 +16,7 @@
 
 namespace local_wunderbyte_table\form;
 
+use cache_helper;
 use local_wunderbyte_table\filters\filter_form_operator;
 use local_wunderbyte_table\filters\validation_manager;
 use local_wunderbyte_table\filters\wunderbyte_table_db_operator;
@@ -80,6 +81,10 @@ class addfiltertable extends dynamic_form {
         $wunderbyteoperator = new wunderbyte_table_db_operator($data, $table);
         $wunderbyteoperator->set_existing_key_value_pairs();
         $wunderbyteoperator->save_new_filter_options();
+
+        cache_helper::purge_by_event('setbackfilters');
+        cache_helper::purge_by_event('setbackencodedtables');
+        cache_helper::purge_by_event('changesinwunderbytetable');
 
         return $data;
     }

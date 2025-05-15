@@ -98,9 +98,6 @@
                          {{> local_wunderbyte_table/component_toggle }}
                          {{> local_wunderbyte_table/component_reload }}
                          {{> local_wunderbyte_table/component_edit }}
-                         {{> local_wunderbyte_table/component_addfilters }}
-                         {{#showaddfilterbutton}}
-                         {{/showaddfilterbutton}}
                     </div>
                     <div class="ml-auto">
                          {{> local_wunderbyte_table/component_switchtemplates }}
@@ -132,12 +129,12 @@
                <div class= "wunderbyteTableClass {{uniqueid}}" id="a{{idstring}}">
                     {{> local_wunderbyte_table/twtable_cards }}
                </div>
-               {{#showdownloadbuttonatbottom}}
-               <div class="ml-2">
-                    {{> local_wunderbyte_table/component_print }}
-               </div>
-               {{/showdownloadbuttonatbottom}}
           </div>
+          {{#showdownloadbuttonatbottom}}
+          <div class="ml-2">
+               {{> local_wunderbyte_table/component_print }}
+          </div>
+          {{/showdownloadbuttonatbottom}}
     </div>
     {{#js}}
         require(['local_wunderbyte_table/init'], function(init) {

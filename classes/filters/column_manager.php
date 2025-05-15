@@ -126,14 +126,18 @@ class column_manager extends filtersettings {
      * @param array $filtercolumn
      */
     private function set_general_filter_settings($filtercolumn) {
-        $this->mformedit->addElement('header', 'filter_enabled_header', 'General filter settings');
+        $this->mformedit->addElement(
+            'header',
+            'filter_enabled_header',
+            get_string('filterenabledheader', 'local_wunderbyte_table')
+        );
         $this->mformedit->addElement('text', 'localizedname', 'Filtername');
         $this->mformedit->setDefault('localizedname', $filtercolumn['localizedname']);
         $this->mformedit->addElement(
             'advcheckbox',
             $this->filtercolumn . '_wb_checked',
-            'Enable filter',
-            'Select checkobx if filter should be enabled'
+            get_string('enablefilter', 'local_wunderbyte_table'),
+            get_string('enablefilterdesc', 'local_wunderbyte_table')
         );
         $this->mformedit->setDefault($this->filtercolumn . '_wb_checked', $filtercolumn[$this->filtercolumn . '_wb_checked']);
 
@@ -156,7 +160,11 @@ class column_manager extends filtersettings {
      * @param string $filterclass
      */
     private function set_available_filter_types($existingfilterdata, $filterclass) {
-        $this->mformedit->addElement('header', 'existing_pairs', 'Existing key value pairs');
+        $this->mformedit->addElement(
+            'header',
+            'existing_pairs',
+            get_string('filterexistingkeyvaluepairs', 'local_wunderbyte_table')
+        );
         $staticfunction = 'render_mandatory_fields';
         if (
             self::has_existingfilterdata($existingfilterdata)  &&
@@ -164,7 +172,8 @@ class column_manager extends filtersettings {
         ) {
             $filterclass::$staticfunction($this->mformedit, $existingfilterdata);
         } else {
-            $this->mformedit->addElement('html', '<p id="no-pairs-message" class="alert alert-info">No pairs exist</p>');
+            $this->mformedit->addElement('html', '<p id="no-pairs-message" class="alert alert-info">'
+                . get_string('filternopairsexist', 'local_wunderbyte_table') . '</p>');
         }
     }
 
@@ -196,7 +205,7 @@ class column_manager extends filtersettings {
      */
     private function set_add_filter_key_value($newkeyvaluepair, $filterspecificvalue = '') {
         $this->mformadd->addElement('html', '<div id="filter-add-field">');
-        $this->mformadd->addElement('header', 'add_pair', 'Add new key value pair');
+        $this->mformadd->addElement('header', 'add_pair', get_string('filteraddnewkeyvaluepair', 'local_wunderbyte_table'));
 
         $classname = $this->data['wbfilterclass'] ?? $this->filtersettings[$this->data['filtercolumn']]['wbfilterclass'];
         self::render_mandatory_fields(
