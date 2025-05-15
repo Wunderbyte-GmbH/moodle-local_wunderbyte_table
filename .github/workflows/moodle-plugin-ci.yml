@@ -2,247 +2,44 @@ name: Moodle Plugin CI
 
 on: [push, pull_request]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  test:
-    runs-on: ubuntu-22.04
+  ci:
+    uses: Wunderbyte-GmbH/catalyst-moodle-workflows/.github/workflows/ci.yml@main
+    with:
+      disable_release: true  # Use true if using the tag-based release workflow
+      codechecker_max_warnings: 0
+      enable_phpmd: true
 
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_USER: 'postgres'
-          POSTGRES_HOST_AUTH_METHOD: 'trust'
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
-      mariadb:
-        image: mariadb:10.8
-        env:
-          MYSQL_USER: 'root'
-          MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 3
+      workarounds: |
+        echo "MUSTACHE_IGNORE_NAMES=twtable_list_row.mustache,twtable_cards_row.mustache" >> $GITHUB_ENV
+        # WORKAROUND 17/04/2025: The following code is a workaround for the "File is stale and needs to be rebuilt" error
+        # This occurs when AMD modules import Moodle core dependencies
+        # See issue: https://github.com/moodlehq/moodle-plugin-ci/issues/350
+        # This workaround should be removed once the issue is fixed upstream
+        # Load NVM and use the version from .nvmrc
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - php: 8.3
-            moodle-branch: MOODLE_405_STABLE
-            database: pgsql
-          - php: 8.3
-            moodle-branch: MOODLE_405_STABLE
-            database: mariadb
-          - php: 8.2
-            moodle-branch: MOODLE_405_STABLE
-            database: pgsql
-          - php: 8.2
-            moodle-branch: MOODLE_405_STABLE
-            database: mariadb
-          - php: 8.1
-            moodle-branch: MOODLE_405_STABLE
-            database: pgsql
-          - php: 8.1
-            moodle-branch: MOODLE_405_STABLE
-            database: mariadb
-          - php: 8.3
-            moodle-branch: MOODLE_404_STABLE
-            database: pgsql
-          - php: 8.3
-            moodle-branch: MOODLE_404_STABLE
-            database: mariadb
-          - php: 8.2
-            moodle-branch: MOODLE_404_STABLE
-            database: pgsql
-          - php: 8.2
-            moodle-branch: MOODLE_404_STABLE
-            database: mariadb
-          - php: 8.1
-            moodle-branch: MOODLE_404_STABLE
-            database: pgsql
-          - php: 8.1
-            moodle-branch: MOODLE_404_STABLE
-            database: mariadb
-          - php: 8.2
-            moodle-branch: MOODLE_403_STABLE
-            database: pgsql
-          - php: 8.2
-            moodle-branch: MOODLE_403_STABLE
-            database: mariadb
-          - php: 8.1
-            moodle-branch: MOODLE_403_STABLE
-            database: pgsql
-          - php: 8.1
-            moodle-branch: MOODLE_403_STABLE
-            database: mariadb
-          - php: 8.0
-            moodle-branch: MOODLE_403_STABLE
-            database: pgsql
-          - php: 8.0
-            moodle-branch: MOODLE_403_STABLE
-            database: mariadb
-          - php: 8.1
-            moodle-branch: MOODLE_402_STABLE
-            database: pgsql
-          - php: 8.1
-            moodle-branch: MOODLE_402_STABLE
-            database: mariadb
-          - php: 8.0
-            moodle-branch: MOODLE_402_STABLE
-            database: pgsql
-          - php: 8.0
-            moodle-branch: MOODLE_402_STABLE
-            database: mariadb
-          - php: 8.1
-            moodle-branch: MOODLE_401_STABLE
-            database: pgsql
-          - php: 8.1
-            moodle-branch: MOODLE_401_STABLE
-            database: mariadb
-          - php: 8.0
-            moodle-branch: MOODLE_401_STABLE
-            database: pgsql
-          - php: 8.0
-            moodle-branch: MOODLE_401_STABLE
-            database: mariadb
-          - php: 7.4
-            moodle-branch: MOODLE_401_STABLE
-            database: pgsql
-          - php: 7.4
-            moodle-branch: MOODLE_401_STABLE
-            database: mariadb
+        # Go to moodle directory
+        cd moodle
 
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-        with:
-          path: plugin
+        # Use NVM to set Node version and ensure grunt-cli is installed
+        nvm use
+        npm install
+        npm install -g grunt-cli
 
-      - name: Setup PHP ${{ matrix.php }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: ${{ matrix.extensions }}
-          ini-values: max_input_vars=5000
-          coverage: none
+        # Go back to plugin directory
+        cd ../plugin
 
-      - name: Initialise moodle-plugin-ci
-        run: |
-          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
-          echo $(cd ci/bin; pwd) >> $GITHUB_PATH
-          echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
-          sudo locale-gen en_AU.UTF-8
-          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
+        # Pre-build AMD files to avoid stale file warnings
+        echo "=== Building AMD files before CI check ==="
+        grunt --gruntfile ../moodle/Gruntfile.js amd
+        echo "AMD files built successfully"
 
-      - name: Install moodle-plugin-ci
-        run: |
-          moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
-        env:
-          DB: ${{ matrix.database }}
-          MOODLE_BRANCH: ${{ matrix.moodle-branch }}
-          MUSTACHE_IGNORE_NAMES: 'twtable_list_row.mustache,twtable_cards_row.mustache'
+        # Go Back to main directory
+        cd ..
+        # END OF WORKAROUND
 
-      - name: PHP Lint
-        if: ${{ !cancelled() }} # prevents CI run stopping if step failed.
-        run: moodle-plugin-ci phplint
-
-      - name: PHP Copy/Paste Detector
-        continue-on-error: true # This step will show errors but will not fail
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpcpd
-
-      - name: PHP Mess Detector
-        continue-on-error: true
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpmd
-
-      - name: Moodle Code Checker
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpcs --max-warnings 0
-
-      - name: Moodle PHPDoc Checker
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpdoc --max-warnings 0
-
-      - name: Validating
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci validate
-
-      - name: Check upgrade savepoints
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci savepoints
-
-      - name: Mustache Lint
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci mustache
-
-      - name: Grunt
-        if: ${{ !cancelled() }}
-        run: |
-          # WORKAROUND 17/04/2025: The following code is a workaround for the "File is stale and needs to be rebuilt" error 
-          # This occurs when AMD modules import Moodle core dependencies
-          # See issue: https://github.com/moodlehq/moodle-plugin-ci/issues/350
-          # This workaround should be removed once the issue is fixed upstream
-          
-          # Load NVM and use the version from .nvmrc
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-          # Go to moodle directory
-          cd moodle
-
-          # Use NVM to set Node version and ensure grunt-cli is installed
-          nvm use
-          npm install
-          npm install -g grunt-cli
-
-          # Go back to plugin directory
-          cd ../plugin
-
-          # Pre-build AMD files to avoid stale file warnings
-          echo "=== Building AMD files before CI check ==="
-          grunt --gruntfile ../moodle/Gruntfile.js amd
-          echo "AMD files built successfully"
-
-          # Go Back to main directory
-          cd ..
-
-          # END OF WORKAROUND - The following is the original command
-          
-          # Run the regular CI command
-          moodle-plugin-ci grunt --max-lint-warnings 0
-        env:
-          MOODLE_BRANCH: ${{ matrix.moodle-branch }}
-
-      - name: PHPUnit tests
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpunit --testdox
-
-      - name: Behat features
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci behat --profile chrome
-        ## Run --dump to get faild page HTML in the output stream
-        ## run: moodle-plugin-ci behat --profile chrome --dump
-
-      - name: Upload Behat Faildump
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: Behat Faildump (${{ join(matrix.*, ', ') }})
-          path: ${{ github.workspace }}/moodledata/behat_dump
-          retention-days: 2
-          if-no-files-found: ignore
-
-      # Inwoke remote SSH connection if necessary
-      #- name: Setup tmate session
-      #  if: ${{ failure() }}
-      #  uses: mxschmitt/action-tmate@v3
-
-      - name: Mark cancelled jobs as failed.
-        if: ${{ cancelled() }}
-        run: exit 1
+    secrets:
+      # Only needed if NOT using disable_release: true
+      moodle_org_token: ${{ secrets.MOODLE_ORG_TOKEN }}
