@@ -102,12 +102,24 @@ export const init = (idstring, encodedtable) => {
  * @param {string} idstring
  */
 const initHandleDropdown = (idstring) => {
-    const elements = document.querySelectorAll('.wunderbyte_table_container_' + idstring + ' .hierarchy > button');
-    if (elements) {
-        elements.forEach(element => {
+    const nocheckbox = document.querySelectorAll('.wunderbyte_table_container_' + idstring + ' .hierarchy > button');
+    const withcheckbox = document.querySelectorAll('.wunderbyte_table_container_' + idstring + ' .hierarchy > span > button');
+    if (nocheckbox) {
+        nocheckbox.forEach(element => {
             element.addEventListener('click', function(event) {
                 event.stopPropagation();
                 const sibling = element.nextElementSibling;
+                sibling.classList.toggle("show");
+                event.preventDefault();
+            });
+        });
+    }
+     if (withcheckbox) {
+        withcheckbox.forEach(element => {
+            element.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const parent = element.parentElement;
+                const sibling = parent.nextElementSibling;
                 sibling.classList.toggle("show");
                 event.preventDefault();
             });
