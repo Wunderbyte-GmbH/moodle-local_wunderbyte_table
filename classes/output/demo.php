@@ -136,13 +136,12 @@ class demo implements renderable, templatable {
         $table->add_filter($standardfilter);
 
         $hierarchicalfilter = new hierarchicalfilter('firstname', get_string('firstname'));
-        $hierarchicalfilter->add_options([
-            'Anna' => 'Anna localized',
-        ]);
+
         $hierarchicalfilter->add_options(
             [
                 'Anna' => [
                     'parent' => 'A',
+                    'localizedname' => 'Anna localized',
                 ],
                 'Billy' => [
                     'parent' => 'B',
@@ -154,7 +153,7 @@ class demo implements renderable, templatable {
                     'localizedname' => get_string('other', 'local_wunderbyte_table'),
                 ]
         ]);
-        //$table->add_filter($hierarchicalfilter);
+        $table->add_filter($hierarchicalfilter);
 
         $standardfilter = new standardfilter('lastname', get_string('lastname'));
         //$table->add_filter($standardfilter);
@@ -380,7 +379,6 @@ class demo implements renderable, templatable {
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
         //$table->filteronloadinactive = true; // By default, filter will be displayed next to table. Set filteronloadinactive true, if you want them to be hidden on load.
-
 
         return $table->outhtml(10, true);
     }
