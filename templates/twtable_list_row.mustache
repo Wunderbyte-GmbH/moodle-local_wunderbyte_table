@@ -49,12 +49,20 @@
 }}
 
 <tr id="{{rowid}}" class="{{rowclasses}}" {{#datafields}} data-{{key}}="{{value}}" {{/datafields}}>
-      {{#cardbody}}
-        {{#columnclass}}<td class="{{.}} {{key}} {{^value}}novalue{{/value}}" data-label="{{key}}" data-localized="{{localized}}">{{/columnclass}}
-                    {{{value}}}
-          {{#columniclassbefore}}
-            <i class="{{.}}" aria-hidden="true"></i>
-          {{/columniclassbefore}}
-        {{#columnclass}}</td>{{/columnclass}}
-      {{/cardbody}}
+  {{#cardbody}}
+    {{#columnclass}}
+      <td class="{{.}} {{key}} {{^value}}novalue{{/value}}" data-label="{{key}}" data-localized="{{localized}}">
+        {{{value}}}
+        {{#columniclassbefore}}
+          <i class="{{.}}" aria-hidden="true"></i>
+        {{/columniclassbefore}}
+      </td>
+    {{/columnclass}}
+    {{^columnclass}}
+      {{{value}}}
+      {{#columniclassbefore}}
+        <i class="{{.}}" aria-hidden="true"></i>
+      {{/columniclassbefore}}
+    {{/columnclass}}
+  {{/cardbody}}
 </tr>
