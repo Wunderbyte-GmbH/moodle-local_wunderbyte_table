@@ -744,7 +744,7 @@ function updateFilterCounter(name, selector, idstring) {
  */
 function handleHierarchyCategoryCheckbox(parentCheckboxes, filterElements, selector, idstring, encodedtable) {
     parentCheckboxes.forEach(parentCheckbox => {
-      parentCheckbox.addEventListener('click', function () {
+      parentCheckbox.addEventListener('click', function() {
             // Get the closest parent <ul> element
             const wrapper = parentCheckbox.closest('ul');
 
