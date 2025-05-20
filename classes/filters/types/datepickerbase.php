@@ -308,22 +308,22 @@ abstract class datepickerbase extends base {
             $mform->createElement(
                 'select',
                 'subdatepicker_type',
-                'Choose your fighter',
+                '',
                 $options
             ),
             $mform->createElement(
                 'submit',
                 'btn_subdatepickertype',
-                'Choose your fighter',
+                '',
                 $buttonargs
             ),
         ];
 
         $mform->addGroup(
             $categoryselect,
-            'subdatepicker_type',
+            'subdatepicker_group',
             get_string('datepickertype', 'local_wunderbyte_table'),
-            [' '],
+            ' ',
             false
         );
         $mform->setType('btn_subdatepickertype', PARAM_NOTAGS);

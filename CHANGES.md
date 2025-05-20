@@ -1,3 +1,18 @@
+## Version 2.0.49 (2025052000)
+* Improvement: Make sure adding filters does not destroy table settings and includes various small improvements
+* Improvement: Hierarchy filter checkbox layout changes
+* Improvement: Add checkbox for hierarchical category
+* Improvement: Add hierarchical filter to demo
+* Improvement: Datepicker merging
+* Bugfix: Rename group to subdatepicker_group.
+* Bugfix: Data adjustment
+* Bugfix: Better placement for allowed column check (SQL columns only)
+* Bugfix: Fixes for custom filters – missing empty checks, etc.
+* Bugfix: Add custom filter button to template for cards container
+* Tests: Add new PHPUnit test method test_require_access()
+* Tests: Fix timezone issues in weekdays/hourlist test
+* Tests: Scenario for WB_Table navigation – switch view templates
+
 ## Version 2.0.48 (2025043000)
 * New feature: Button to add individual filters can now be added in table settings for each table.
 * Improvement: Make sure adding filters is only possible for allowed SQL columns.
