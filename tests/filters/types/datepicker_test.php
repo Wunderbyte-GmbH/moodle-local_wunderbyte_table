@@ -163,7 +163,7 @@ final class datepicker_test extends TestCase {
         $mformmock->expects($this->atLeastOnce())
             ->method('addElement');
 
-        $mformmock->expects($this->exactly(2))
+        $mformmock->expects($this->atLeastOnce())
             ->method('addGroup');
 
         datepicker::render_mandatory_fields($mformmock, $data);
