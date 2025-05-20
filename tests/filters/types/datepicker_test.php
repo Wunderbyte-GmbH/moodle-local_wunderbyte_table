@@ -163,9 +163,15 @@ final class datepicker_test extends TestCase {
         $mformmock->expects($this->atLeastOnce())
             ->method('addElement');
 
-        $mformmock->expects($this->atLeastOnce())
-            ->method('addGroup');
-
+        if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
+            // Code for PHP 8.0.0 or greater.
+            $mformmock->expects($this->exactly(2))
+                ->method('addGroup');
+        } else {
+            // Code for lower versions.
+            $mformmock->expects($this->atLeastOnce())
+                ->method('addGroup');
+        }
         datepicker::render_mandatory_fields($mformmock, $data);
     }
 }
