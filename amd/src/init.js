@@ -323,6 +323,7 @@ export const isHidden = (el) => {
  * @param {null|string} filterobjects
  * @param {null|string} searchtext
  * @param {null|bool} replacerow
+ * @param {null|bool} replacecomponentscontainer
  */
 export const callLoadData = (
     idstring,
@@ -335,7 +336,8 @@ export const callLoadData = (
     treset = null,
     filterobjects = null,
     searchtext = null,
-    replacerow = false) => {
+    replacerow = false,
+    replacecomponentscontainer = false) => {
 
     if (loadings[idstring] && !replacerow) {
         return;
@@ -466,7 +468,11 @@ export const callLoadData = (
             if (!container) {
                 return;
             }
-            const componentscontainer = container.querySelector(".wunderbyte_table_components");
+
+            let componentscontainer = container.querySelector(".wunderbyte_table_components");
+            if (replacecomponentscontainer) {
+                componentscontainer = null;
+            }
 
             // If we only increase the scrollpage, we don't need to render everything again.
             if (replacerow
