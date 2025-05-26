@@ -356,7 +356,7 @@ export const callLoadData = (
     if (filterobjects === null) {
         filterobjects = getFilterObjects(idstring);
     }
-    // We always have to see if we need to apply a serachtextfilter.
+    // We always have to see if we need to apply a searchtextfilter.
     if (searchtext === null) {
         searchtext = getSearchInput(idstring);
     }
