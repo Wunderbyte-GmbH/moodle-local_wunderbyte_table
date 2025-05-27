@@ -1,3 +1,6 @@
+## Version 2.0.50 (2025052700)
+* Improvement: Enable table container to be reloaded entirely if needed
+
 ## Version 2.0.49 (2025052000)
 * Improvement: Make sure adding filters does not destroy table settings and includes various small improvements
 * Improvement: Hierarchy filter checkbox layout changes
