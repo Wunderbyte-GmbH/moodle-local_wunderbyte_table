@@ -190,6 +190,9 @@ const initToggleAside = (idstring) => {
             aside.classList.toggle('inactive');
             const wbtable = document.querySelector('.wunderbyte_table_container_' + idstring);
             wbtable.classList.toggle('inactivefilter');
+            if (!aside.classList.contains('inactive')) {
+            aside.childNodes[1].focus();
+            }
         });
     }
 
