@@ -1,3 +1,8 @@
+## Version 2.0.51 (2025060600)
+* Improvement: Switch to reusable moodle-plugin-ci.yml workflow.
+* Improvement: Accesibility - Focus on Filters.
+* Bugfix: Fix strings for AMOS.
+
 ## Version 2.0.50 (2025052700)
 * Improvement: Enable table container to be reloaded entirely if needed
 
