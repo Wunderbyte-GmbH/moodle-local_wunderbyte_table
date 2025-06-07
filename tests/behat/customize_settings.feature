@@ -41,8 +41,12 @@ Feature: As admin I want to ensure that customization of the wunderbyte_table se
   @javascript
   Scenario: WB_table: Verify filter settings working on download
     Given I log in as "admin"
-    And I set the following administration settings values:
-      | allowedittable | 1 |
+    ## Vizit settings page to validate it - instead of a just make a short call
+    ##And I set the following administration settings values:
+    ##  | allowedittable | 1 |
+    And I visit "/admin/category.php?category=local_wunderbyte_table"
+    And I set the field "s_local_wunderbyte_table_allowedittable" to "1"
+    And I press "Save changes"
     And I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
     ## Enable "filter on download", download table and verify file size
