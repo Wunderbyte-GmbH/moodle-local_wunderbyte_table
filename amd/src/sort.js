@@ -73,6 +73,11 @@ export function initializeSort(listContainer, idstring, encodedtable) {
         sortOrderElement.addEventListener('click', () => {
             callSortAjax(null, idstring, encodedtable);
         });
+        sortOrderElement.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                callSortAjax(null, idstring, encodedtable);
+        }
+});
     }
 }
 
