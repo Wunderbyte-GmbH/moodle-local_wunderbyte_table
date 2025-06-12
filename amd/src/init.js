@@ -624,10 +624,24 @@ export const callLoadData = (
                     addScrollFunctionality(idstring, encodedtable, element);
 
                     if (container) {
-                        container.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+                        const navbar = document.querySelector('.navbar');
+
+                        if (navbar) {
+
+                            const navbarHeight = navbar.offsetHeight;
+
+                            const offsetPosition = container.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                        } else {
+                            container.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
                     }
 
                     return true;
