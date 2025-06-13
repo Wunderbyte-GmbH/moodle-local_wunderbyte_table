@@ -610,9 +610,11 @@ class table implements renderable, templatable {
             return [];
         }
         $options = [];
-        $counter = 1;
+        $counter = 0;
         while ($counter <= 19) {
-            if ($counter < 11) {
+            if ($counter == 0) {
+                $pagenumber = 5;
+            } else if ($counter < 11) {
                 $pagenumber = $counter * 10;
             } else {
                 $pagenumber = ($counter - 9) * 100;
