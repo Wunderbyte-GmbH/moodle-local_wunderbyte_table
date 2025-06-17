@@ -1,3 +1,9 @@
+## Version 2.0.52 (2025061700)
+* Improvement: Accessibility - Sort Table on Enter
+* Improvement: Accessibility - Scroll into view with Navbar
+* Improvement: Add selectable 5 rows to pagecounter
+* Tests: Validate settings page
+
 ## Version 2.0.51 (2025060600)
 * Improvement: Switch to reusable moodle-plugin-ci.yml workflow.
 * Improvement: Accesibility - Focus on Filters.
