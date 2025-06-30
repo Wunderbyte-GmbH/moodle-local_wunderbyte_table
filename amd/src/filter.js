@@ -152,6 +152,9 @@ export function toggleFilterelement(e, selector, idstring, encodedtable) {
 
   setTimeout(() => {
     // Check if Checkbox corresponds to datepicker
+    if (e.target.type === 'checkbox') {
+            handleParentCheckbox(e.target);
+    }
     if (e.target.dataset.dateelement == 'dateelement') {
       getDates(e, selector, idstring);
     } else if (e.target.dataset.intrangeelement && e.target.dataset.intrangeelement.includes('intrangeelement')) {
@@ -164,6 +167,34 @@ export function toggleFilterelement(e, selector, idstring, encodedtable) {
 
     triggerReload(idstring, encodedtable);
   }, 400);
+}
+
+/**
+ * Handles the behavior of parent checkboxes in a hierarchical structure.
+ * When a child checkbox is checked/unchecked, this function updates the state
+ * of the parent checkbox accordingly. The parent checkbox will be checked if
+ * all children are checked, and unchecked if any child is unchecked.
+ *
+ * @param {HTMLInputElement} checkbox - The checkbox element that triggered the event
+ */
+function handleParentCheckbox(checkbox) {
+    const wrapper = checkbox.closest('ul.hierarchy');
+    if (!wrapper) {
+      return;
+    }
+    const spanElement = wrapper.querySelector('.d-flex');
+    const parentCheckbox = spanElement.querySelector('.hierarchycategory-checkbox');
+    if (!parentCheckbox) {
+      return;
+    }
+    const siblingCheckboxes = wrapper.querySelectorAll('.form-check-input');
+    const allChecked = Array.from(siblingCheckboxes).every(cb => cb.checked);
+
+    if (allChecked) {
+        parentCheckbox.checked = true;
+    } else if (Array.from(siblingCheckboxes).some(cb => !cb.checked)) {
+        parentCheckbox.checked = false;
+    }
 }
 
 /**
