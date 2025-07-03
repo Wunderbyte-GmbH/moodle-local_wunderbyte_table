@@ -23,15 +23,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use Behat\Mink\Exception\UnsupportedDriverActionException;
-use Behat\Mink\Exception\DriverException;
+require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
 /**
  * To create wunderbyte_table specific behat scearios.
  */
 class behat_local_wunderbyte_table extends behat_base {
     /**
-     * Clean bookig singleton cache
+     * Clean wbtable cache
      * @Given /^I clean wbtable cache$/
      * @return void
      */
