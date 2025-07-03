@@ -41,12 +41,9 @@ Feature: As admin I want to ensure that customization of the wunderbyte_table se
   @javascript
   Scenario: WB_table: Verify filter settings working on download
     Given I log in as "admin"
-    ## Vizit settings page to validate it - instead of a just make a short call
-    ##And I set the following administration settings values:
-    ##  | allowedittable | 1 |
-    And I visit "/admin/category.php?category=local_wunderbyte_table"
-    And I set the field "s_local_wunderbyte_table_allowedittable" to "1"
-    And I press "Save changes"
+    And I set the following administration settings values:
+      | allowedittable | 1 |
+    ## And I press "Save changes"
     And I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
     ## Enable "filter on download", download table and verify file size
@@ -83,4 +80,16 @@ Feature: As admin I want to ensure that customization of the wunderbyte_table se
     And I set the following administration settings values:
       | allowedittable |  |
     And I clean wbtable cache
+    And I log out
+
+  @javascript
+  Scenario: WB_table settings: control presence of strings on all settings pages
+    Given I log in as "admin"
+    And I visit "/admin/category.php?category=local_wunderbyte_table"
+    And I wait "1" seconds
+    And I visit "/admin/tool/behat/index.php"
+    And I set the field "component" to "behat_local_wunderbyte_table"
+    And I press "Filter"
+    And I should see "Clean wbtable cache" in the ".steps-definitions .step" "css_element"
+    ## Recommended admin pages
     And I log out
