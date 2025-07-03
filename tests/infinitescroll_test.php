@@ -67,7 +67,7 @@ final class infinitescroll_test extends advanced_testcase {
     /**
      * Test wb base functionality via webservice external class.
      *
-     * @covers \wunderbyte_table::query_db_cached
+     * @covers \local_wunderbyte_table\wunderbyte_table::query_db_cached
      * // @runInSeparateProcess
      *
      * @throws \coding_exception

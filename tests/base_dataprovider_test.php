@@ -129,8 +129,8 @@ final class base_dataprovider_test extends advanced_testcase {
     /**
      * Test wb filter functionality via webservice external class.
      *
-     * @covers \wunderbyte_table::query_db_cached
-     * @covers \wunderbyte_table::define_sortablecolumns
+     * @covers \local_wunderbyte_table\wunderbyte_table::query_db_cached
+     * @covers \local_wunderbyte_table\wunderbyte_table::define_sortablecolumns
      * @covers \local_wunderbyte_table\local\sortables\types\standardsortable
      *
      * @throws \coding_exception
