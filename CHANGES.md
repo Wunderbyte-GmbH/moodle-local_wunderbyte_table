@@ -1,3 +1,10 @@
+## Version 2.0.53 (2025070700)
+* Improvement: Hierarchy filter select behaviour
+* Bugfix: No filtercount for hierarchy filter
+* Tests: New behat scenario: WB_table settings: control presence of strings on all settings page
+* Tests: fix inclusion of behat_base class
+* Tests: linting: fix phpunit coverage warnings
+
 ## Version 2.0.52 (2025061700)
 * Improvement: Accessibility - Sort Table on Enter
 * Improvement: Accessibility - Scroll into view with Navbar
