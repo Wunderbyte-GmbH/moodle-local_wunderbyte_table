@@ -572,6 +572,15 @@ class table implements renderable, templatable {
                 $this->pagination['previouspage'] = $currpage - 1;
             }
             $this->pagination['pages'] = $pages;
+            $totalpagesarray = range(1, $numberofpages);
+            $totalpagesarray = array_map(function ($pagenum) use ($currpage) {
+                return [
+                    'value' => $pagenum,
+                    'selected' => ($pagenum == $currpage),
+                ];
+            }, $totalpagesarray);
+            $this->pagination['totalpages'] = $totalpagesarray;
+            $this->pagination['currentpage'] = $currpage;
         } else if ($table->infinitescroll > 0) {
             $this->pagination['nopages'] = 'nopages';
             $this->pagination['infinitescroll'] = true;
@@ -671,6 +680,7 @@ class table implements renderable, templatable {
             'searchtext' => $this->searchtext,
             'searchtextapplied' => $this->search,
             'pages' => $this->pagination['pages'] ?? null,
+            'totalpages' => $this->pagination['totalpages'] ?? null,
             'disableprevious' => $this->pagination['disableprevious'] ?? null,
             'disablenext' => $this->pagination['disablenext'] ?? null,
             'previouspage' => $this->pagination['previouspage'] ?? null,
