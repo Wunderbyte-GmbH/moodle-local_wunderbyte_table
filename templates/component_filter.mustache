@@ -190,7 +190,7 @@
                             <div class="card card-body">
                                 {{#values}}
                                     <li class="form-check">
-                                            <input class="filterelement form-check-input" type="checkbox" value="{{value}}" id="{{identifier}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
+                                            <input class="filterelement form-check-input hierarchychild-checkbox" type="checkbox" value="{{value}}" id="{{identifier}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
                                             <label class="form-check-label" for="{{identifier}}{{columnname}}{{idstring}}">
                                                 <span class="filterkeylabel">{{key}}</span> <span class="filtercountlabel">{{#count}}({{count}}){{/count}}</span>
                                             </label>

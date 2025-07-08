@@ -187,7 +187,7 @@ function handleParentCheckbox(checkbox) {
     if (!parentCheckbox) {
       return;
     }
-    const siblingCheckboxes = wrapper.querySelectorAll('.form-check-input');
+    const siblingCheckboxes = wrapper.querySelectorAll('.hierarchychild-checkbox');
     const allChecked = Array.from(siblingCheckboxes).every(cb => cb.checked);
 
     if (allChecked) {
