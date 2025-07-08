@@ -1,3 +1,6 @@
+## Version 2.0.54 (2025070800)
+* Bugfix: More specific selector for hierarchychild-checkbox
+
 ## Version 2.0.53 (2025070700)
 * Improvement: Hierarchy filter select behaviour
 * Bugfix: No filtercount for hierarchy filter
