@@ -118,6 +118,7 @@ $string['functiondoesntexist'] = 'Funktion des Aktionsbuttons exisitert nicht.';
 $string['genericbody'] = 'Sie sind dabei, diese Zeilen zu bearbeiten: <br> "{$a->data}"';
 $string['genericsubmit'] = 'Bestätigen';
 $string['generictitle'] = 'Möchten Sie wirklich diese Daten bearbeiten?';
+$string['gotopage'] = 'Gehe zu Seite:';
 $string['hierarchicalfilter'] = 'Hierachischer Filter';
 $string['hourlastmodified'] = 'Stunde, zu der zuletzt aktualisiert wurde';
 $string['hourlist'] = 'Stundenlistenfilter';
