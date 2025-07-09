@@ -371,6 +371,8 @@ class demo implements renderable, templatable {
 
         $table->pageable(true);
 
+        $table->gotopage = true;
+
         $table->stickyheader = true;
         $table->showcountlabel = true;
         // $table->showfilterontop = true;

@@ -160,6 +160,13 @@ class table implements renderable, templatable {
     private $showcountlabel = true;
 
     /**
+     * Go to page.
+     *
+     * @var bool
+     */
+    private $gotopage = false;
+
+    /**
      * Stickyheader.
      *
      * @var bool
@@ -345,6 +352,8 @@ class table implements renderable, templatable {
         }
 
         $this->showcountlabel = $table->showcountlabel;
+
+        $this->gotopage = $table->gotopage;
 
         $this->showfilterontop = $table->showfilterontop;
 
@@ -742,6 +751,11 @@ class table implements renderable, templatable {
 
         if ($this->showcountlabel) {
             $data['countlabel'] = true;
+        }
+
+        // Check if pagination and go to page are both enabled are there are more than one page.
+        if (!$data['nopages'] && $this->gotopage && count($this->pagination['totalpages']) >= 2) {
+            $data['gotopage'] = true;
         }
 
         if (!empty($this->stickyheader)) {
