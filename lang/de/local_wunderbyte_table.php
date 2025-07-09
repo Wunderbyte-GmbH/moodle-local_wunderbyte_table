@@ -172,6 +172,7 @@ $string['showdownloadbutton'] = 'Download-Button anzeigen';
 $string['showdownloadbuttonatbottom'] = 'Download-Button unter der Tabelle (statt oberhalb) anzeigen';
 $string['showfilter'] = 'Zeige diesen Filter';
 $string['showfilterontop'] = 'Filter über der Tabelle anzeigen';
+$string['showgotopage'] = 'Zeige Gehe zu Seite dropdown';
 $string['showreloadbutton'] = 'Reload-Button anzeigen';
 $string['showrowcountselect'] = 'Dropdown für Anzahl der anzuzeigenden Zeilen anzeigen';
 $string['somethingwentwrong'] = 'Etwas ist schiefgelaufen. Melden Sie den Fehler ihrem Admin';

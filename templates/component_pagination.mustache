@@ -69,6 +69,7 @@
             </ul>
             </nav>
         </div>
+        {{#gotopage}}
         <div class="wbt-gotopage float-right">
             <span>{{#str}} gotopage, local_wunderbyte_table {{/str}}</span>
             <select class="custom-select go-to-page-select" data-initial-value="5">
@@ -77,6 +78,7 @@
                 {{/totalpages}}
             </select>
         </div>
+        {{/gotopage}}
     </div>
 
 {{/nopages}}

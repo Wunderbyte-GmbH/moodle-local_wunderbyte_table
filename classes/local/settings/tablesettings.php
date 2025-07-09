@@ -78,6 +78,7 @@ class tablesettings {
         $table->showdownloadbuttonatbottom = $settingsobject->general->showdownloadbuttonatbottom;
         $table->showfilterontop = $settingsobject->general->showfilterontop;
         $table->showcountlabel = $settingsobject->general->showcountlabel;
+        $table->gotopage = $settingsobject->general->gotopage;
         $table->showrowcountselect = $settingsobject->general->showrowcountselect;
         $table->stickyheader = $settingsobject->general->stickyheader;
         $table->addcheckboxes = $settingsobject->general->addcheckboxes;
@@ -169,6 +170,8 @@ class tablesettings {
 
         $mform->addElement('advcheckbox', 'gs_wb_showcountlabel', get_string('showcountlabel', 'local_wunderbyte_table'));
 
+        $mform->addElement('advcheckbox', 'gs_wb_gotopage', get_string('showgotopage', 'local_wunderbyte_table'));
+
         $mform->addElement('advcheckbox', 'gs_wb_stickyheader', get_string('stickyheader', 'local_wunderbyte_table'));
 
         $mform->addElement('advcheckbox', 'gs_wb_showrowcountselect', get_string('showrowcountselect', 'local_wunderbyte_table'));
@@ -218,6 +221,7 @@ class tablesettings {
         $data->gs_wb_showdownloadbuttonatbottom = $ts->general->showdownloadbuttonatbottom ??
             ($table->showdownloadbuttonatbottom ? 1 : 0);
         $data->gs_wb_showcountlabel = $ts->general->showcountlabel ?? ($table->showcountlabel ? 1 : 0);
+        $data->gs_wb_gotopage = $ts->general->gotopage ?? ($table->gotopage ? 1 : 0);
         $data->gs_wb_stickyheader = $ts->general->stickyheader ?? ($table->stickyheader ? 1 : 0);
         $data->gs_wb_showrowcountselect = $ts->general->showrowcountselect ?? ($table->showrowcountselect ? 1 : 0);
         $data->gs_wb_addcheckboxes = $ts->general->addcheckboxes ?? ($table->addcheckboxes ? 1 : 0);

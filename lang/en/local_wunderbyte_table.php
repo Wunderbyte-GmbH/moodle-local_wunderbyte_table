@@ -175,6 +175,7 @@ $string['showdownloadbutton'] = 'Show download button';
 $string['showdownloadbuttonatbottom'] = 'Show download button at bottom of the table (instead of top)';
 $string['showfilter'] = 'Show this filter';
 $string['showfilterontop'] = 'Show filters on top of table';
+$string['showgotopage'] = 'Show Go to page dropdown';
 $string['showreloadbutton'] = 'Show reload button';
 $string['showrowcountselect'] = 'Show dropdown for number of rows';
 $string['somethingwentwrong'] = 'Something went wrong. Please contact your admin.';

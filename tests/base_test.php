@@ -383,6 +383,7 @@ final class base_test extends advanced_testcase {
 
         $table->stickyheader = false;
         $table->showcountlabel = true;
+        $table->gotopage = true;
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
