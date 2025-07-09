@@ -26,6 +26,19 @@
     grid-area: content;
 }
 
+.wunderbyte_table_container .wunderbyteTableClass .wbt-pagination-navs {
+    margin-top: 1rem;
+}
+
+.wunderbyte_table_container .wunderbyteTableClass .wbt-pagination-navs > div {
+    display: inline-block;
+}
+
+.wunderbyte_table_container .wunderbyteTableClass .wbt-pagination-navs .wbt-gotopage {
+    margin: 0 1rem;
+    color: grey;
+}
+
 .wunderbyte_table_container .icons-collapse-expand {
     margin-left: 3px;
 }
