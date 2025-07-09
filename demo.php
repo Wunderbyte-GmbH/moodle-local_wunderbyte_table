@@ -45,3 +45,5 @@ $outputdemo = new demo();
 echo $OUTPUT->render_from_template('local_wunderbyte_table/demo', $outputdemo->return_as_array());
 
 echo $OUTPUT->footer();
+
+// Delete this comment again.
