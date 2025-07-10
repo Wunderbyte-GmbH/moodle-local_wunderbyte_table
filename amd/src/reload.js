@@ -125,8 +125,10 @@ export function wbTableRowReload(element) {
 
 /**
  * Reload all other tables on the same page.
+ *
+ * @param {null|bool} scrollToTabletop
  */
-export function reloadAllTables() {
+export function reloadAllTables(scrollToTabletop = true) {
 
     // eslint-disable-next-line no-unused-vars
     for (const [key, value] of Object.entries(queries)) {
@@ -146,7 +148,9 @@ export function reloadAllTables() {
                     value.treset,
                     value.filterobjects,
                     value.searchtext,
-                    value.replacerow
+                    value.replacerow,
+                    null,
+                    scrollToTabletop
                 );
                 counter++;
             }
@@ -163,7 +167,9 @@ export function reloadAllTables() {
                 value.treset,
                 value.filterobjects,
                 value.searchtext,
-                value.replacerow
+                value.replacerow,
+                null,
+                scrollToTabletop
             );
         }
     }
