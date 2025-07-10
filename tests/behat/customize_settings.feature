@@ -89,6 +89,8 @@ Feature: As admin I want to ensure that customization of the wunderbyte_table se
     And I wait "1" seconds
     And I visit "/cache/admin.php"
     And I wait "1" seconds
+    And I visit "/admin/webservice/testclient.php"
+    And I wait "1" seconds
     And I visit "/admin/tool/behat/index.php"
     And I set the field "component" to "behat_local_wunderbyte_table"
     And I press "Filter"
