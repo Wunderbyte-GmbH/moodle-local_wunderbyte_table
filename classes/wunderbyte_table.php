@@ -385,6 +385,15 @@ class wunderbyte_table extends table_sql {
     public $showpagination = true;
 
     /**
+     * Show gotopage selectbox
+     *
+     * This will be displayed only if pagination is enabled, the "goto page" setting is true,
+     * and there is more than one page.
+     * @var bool
+     */
+    public $gotopage = false;
+
+    /**
      * Additional template data.
      * @var array
      */

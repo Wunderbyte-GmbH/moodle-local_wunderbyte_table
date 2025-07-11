@@ -160,6 +160,13 @@ class table implements renderable, templatable {
     private $showcountlabel = true;
 
     /**
+     * Go to page.
+     *
+     * @var bool
+     */
+    private $gotopage = false;
+
+    /**
      * Stickyheader.
      *
      * @var bool
@@ -345,6 +352,8 @@ class table implements renderable, templatable {
         }
 
         $this->showcountlabel = $table->showcountlabel;
+
+        $this->gotopage = $table->gotopage;
 
         $this->showfilterontop = $table->showfilterontop;
 
@@ -572,6 +581,15 @@ class table implements renderable, templatable {
                 $this->pagination['previouspage'] = $currpage - 1;
             }
             $this->pagination['pages'] = $pages;
+            $totalpagesarray = range(1, $numberofpages);
+            $totalpagesarray = array_map(function ($pagenum) use ($currpage) {
+                return [
+                    'value' => $pagenum,
+                    'selected' => ($pagenum == $currpage),
+                ];
+            }, $totalpagesarray);
+            $this->pagination['totalpages'] = $totalpagesarray;
+            $this->pagination['currentpage'] = $currpage;
         } else if ($table->infinitescroll > 0) {
             $this->pagination['nopages'] = 'nopages';
             $this->pagination['infinitescroll'] = true;
@@ -671,6 +689,7 @@ class table implements renderable, templatable {
             'searchtext' => $this->searchtext,
             'searchtextapplied' => $this->search,
             'pages' => $this->pagination['pages'] ?? null,
+            'totalpages' => $this->pagination['totalpages'] ?? null,
             'disableprevious' => $this->pagination['disableprevious'] ?? null,
             'disablenext' => $this->pagination['disablenext'] ?? null,
             'previouspage' => $this->pagination['previouspage'] ?? null,
@@ -732,6 +751,11 @@ class table implements renderable, templatable {
 
         if ($this->showcountlabel) {
             $data['countlabel'] = true;
+        }
+
+        // Check if pagination and go to page are both enabled are there are more than one page.
+        if (!$data['nopages'] && $this->gotopage && count($this->pagination['totalpages']) >= 2) {
+            $data['gotopage'] = true;
         }
 
         if (!empty($this->stickyheader)) {

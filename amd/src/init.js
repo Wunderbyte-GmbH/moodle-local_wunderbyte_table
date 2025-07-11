@@ -823,6 +823,19 @@ function addLinksToPagination(idstring, encodedtable, frag) {
             });
         }
     });
+
+    // Initialize go to page
+    var selectbox = frag.querySelector("select.go-to-page-select");
+    if (selectbox) {
+        selectbox.addEventListener('change', (event) => {
+            let target = event.target;
+            // eslint-disable-next-line no-console
+            console.log(target);
+            let pagenumber = target.value - 1;
+            callLoadData(idstring, encodedtable, pagenumber);
+
+        });
+    }
 }
 
 /**
