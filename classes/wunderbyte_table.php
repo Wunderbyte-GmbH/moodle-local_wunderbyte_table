@@ -397,6 +397,13 @@ class wunderbyte_table extends table_sql {
     public $switchtemplates = [];
 
     /**
+     * SQL to fetch all the records at once.
+     *
+     * @var string
+     */
+    public $totalrecordssql;
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
@@ -1081,6 +1088,10 @@ class wunderbyte_table extends table_sql {
 
         // We store our totalcountsql here, we might need it only later.
         $totalcountsql = "SELECT COUNT(*)
+                         FROM {$this->sql->from}
+                         WHERE {$this->sql->where}";
+
+        $this->totalrecordssql = "SELECT {$this->sql->fields}
                          FROM {$this->sql->from}
                          WHERE {$this->sql->where}";
 
