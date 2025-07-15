@@ -59,16 +59,21 @@
     }
 
     .wunderbyte-table-table table tr {
-        border-bottom: 3px solid #ddd;
+        border: 1px solid #ddd;
         display: block;
         margin-bottom: 0.625em;
     }
 
     .wunderbyte-table-table table td {
+        border-top: none;
         border-bottom: 1px solid #ddd;
         display: block;
         font-size: 0.8em;
         text-align: right;
+    }
+
+    .wunderbyte-table-table table td:last-child {
+        border-bottom: 0;
     }
 
     .wunderbyte-table-table table td:not(.wbcheckbox)::before {
