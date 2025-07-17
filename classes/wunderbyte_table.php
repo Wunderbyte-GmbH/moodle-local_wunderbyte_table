@@ -1010,7 +1010,7 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
-     * Define the columns for the sorting, use columnname string as entry in the array.
+     * Define the columns for the sorting.
      * @param array $sortablecolumns
      *
      * @return void
@@ -1018,7 +1018,7 @@ class wunderbyte_table extends table_sql {
     public function define_sortablecolumns(array $sortablecolumns) {
 
         foreach ($sortablecolumns as $key => $value) {
-            $this->sortablecolumns[] = $value;
+            $this->sortablecolumns[$key] = $value;
         }
     }
 
