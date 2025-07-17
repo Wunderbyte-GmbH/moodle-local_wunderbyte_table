@@ -157,6 +157,11 @@ In order for them to work, you must obey some rules: Filter basically just add a
 
 Filter, search and sort params selection triggers URL update. These params can also be applied to table on load via URL. These functions are not available if more than one table is displayed per page (multitable display).
 
+Important: both methods must be supplied with a complete array of columns which have to be used for filtering / sorting on each call!
+
+Note: Human-readable labels are supported for sortable columns only:
+    $table->define_sortablecolumns(['id' => 'ID', 'username' => 'Userame', 'firstname' => 'First Name']);
+
 ## Filter
 
 As for the filter, you have these further functionalities:
