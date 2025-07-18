@@ -1,3 +1,8 @@
+## Version 2.0.55 (2025071800)
+* New Feature: Go to page added
+* Improvement: mobile view styling
+* Improvement: Possibility to disable scrolling at tablereload
+
 ## Version 2.0.54 (2025070800)
 * Bugfix: More specific selector for hierarchychild-checkbox
 
