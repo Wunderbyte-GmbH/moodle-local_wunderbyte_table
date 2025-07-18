@@ -78,7 +78,7 @@ class tablesettings {
         $table->showdownloadbuttonatbottom = $settingsobject->general->showdownloadbuttonatbottom;
         $table->showfilterontop = $settingsobject->general->showfilterontop;
         $table->showcountlabel = $settingsobject->general->showcountlabel;
-        $table->gotopage = $settingsobject->general->gotopage;
+        $table->gotopage = $settingsobject->general->gotopage ?? false;
         $table->showrowcountselect = $settingsobject->general->showrowcountselect;
         $table->stickyheader = $settingsobject->general->stickyheader;
         $table->addcheckboxes = $settingsobject->general->addcheckboxes;
