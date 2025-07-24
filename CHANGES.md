@@ -1,3 +1,7 @@
+## Version 2.0.56 (2025072400)
+* Bugfix: fix undefined property, fallback for gotopage
+* Improvement: Fokus for elements in filter
+
 ## Version 2.0.55 (2025071800)
 * New Feature: Go to page added
 * Improvement: mobile view styling
