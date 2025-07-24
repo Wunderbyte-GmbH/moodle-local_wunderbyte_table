@@ -645,7 +645,7 @@
 
 .wunderbyteTableFilter .dropdownMenuButton.hideFocus.btn:focus,
 .btn.focus {
-    box-shadow: none;
+    /* box-shadow: none; */
 }
 
 .wunderbyteTableFilter .dropdown-item .form-check-label {
