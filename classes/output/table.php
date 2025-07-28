@@ -216,6 +216,12 @@ class table implements renderable, templatable {
 
     /**
      *
+     * @var bool Scroll to wb_table container on page load.
+     */
+    public $scrolltocontainer = true;
+
+    /**
+     *
      * @var bool Show download button at bottom instead of top (default).
      */
     public $showdownloadbuttonatbottom = false;
@@ -356,6 +362,8 @@ class table implements renderable, templatable {
         $this->gotopage = $table->gotopage;
 
         $this->showfilterontop = $table->showfilterontop;
+
+        $this->scrolltocontainer = $table->scrolltocontainer;
 
         $this->showdownloadbuttonatbottom = $table->showdownloadbuttonatbottom;
 
@@ -701,6 +709,7 @@ class table implements renderable, templatable {
             'errormessage' => !empty($this->errormessage) ? $this->errormessage : false,
             'showrowcountselect' => $this->showcountselect(),
             'showfilterontop' => $this->showfilterontop,
+            'scrolltocontainer' => $this->scrolltocontainer,
             'showdownloadbuttonatbottom' => $this->showdownloadbuttonatbottom,
             'displayelementsontop' => $this->placebuttonandpageelementsontop ?? null,
             'showspinner' => true,

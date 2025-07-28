@@ -605,6 +605,7 @@ class demo implements renderable, templatable {
         $table->showdownloadbutton = true;
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
+        // $table->scrolltocontainer = false;
 
         // $table->hide_filter();
 

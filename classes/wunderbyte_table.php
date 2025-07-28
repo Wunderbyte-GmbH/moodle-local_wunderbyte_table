@@ -125,6 +125,12 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var bool Scroll to top of container.
+     */
+    public $scrolltocontainer = true;
+
+    /**
+     *
      * @var bool Show the Components toggle.
      */
     public $showfilterbutton = true;

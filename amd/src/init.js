@@ -327,7 +327,6 @@ export const isHidden = (el) => {
  * @param {null|string} searchtext
  * @param {null|bool} replacerow
  * @param {null|bool} replacecomponentscontainer
- * @param {null|bool} scrollToTabletop
  */
 export const callLoadData = (
     idstring,
@@ -341,8 +340,7 @@ export const callLoadData = (
     filterobjects = null,
     searchtext = null,
     replacerow = false,
-    replacecomponentscontainer = false,
-    scrollToTabletop = true) => {
+    replacecomponentscontainer = false) => {
 
     if (loadings[idstring] && !replacerow) {
         return;
@@ -470,6 +468,7 @@ export const callLoadData = (
             // We can always expect a wunderbyte table container at this point.
             // The container will hold wunderbyteTableClass, wunderbyteTableFilter, wunderbyteTableSearch classes.
             let container = document.querySelector(".wunderbyte_table_container_" + idstring);
+
             if (!container) {
                 return;
             }
@@ -624,8 +623,11 @@ export const callLoadData = (
 
                     // This is the place where we are after lazyloading. We check if we need to reinitialize scrolllistener:
                     addScrollFunctionality(idstring, encodedtable, element);
-
-                    if (container && scrollToTabletop) {
+                    let scrolltotop = false;
+                    if (container && container.classList.contains('wunderbyte_table_scroll_on')) {
+                        scrolltotop = true;
+                    }
+                    if (container && scrolltotop) {
                         const navbar = document.querySelector('.navbar');
 
                         if (navbar) {
