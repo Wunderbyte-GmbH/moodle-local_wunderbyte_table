@@ -280,11 +280,14 @@ final class base_dataprovider_test extends advanced_testcase {
 
         $weekdaysfilter = new weekdays(
             'startdate',
-            get_string('startdate'),
-            'enddate',
-            get_string('enddate')
+            get_string('startdate')
+   //         'enddate',
+   //         get_string('enddate')
         );
         $table->add_filter($weekdaysfilter);
+
+        $intrangefilter = new intrange('enddate', "Unix timestamp given in course enddate");
+        $table->add_filter($intrangefilter);
 
         $weekdaysfilter = new weekdays('timecreated', get_string('timecreated'));
         $table->add_filter($weekdaysfilter);
@@ -583,8 +586,11 @@ final class base_dataprovider_test extends advanced_testcase {
             ],
         ];
 
+        $plus40month = strtotime('+40 month');
         $plusfifftymonth = strtotime('+50 month');
+        $plus55month = strtotime('+55 month');
         $plussixtymonth = strtotime('+60 month');
+        $plus80month = strtotime('+80 month');
         $standardcourses = [
             [
                 'coursestocreate' => 10,
@@ -666,6 +672,33 @@ final class base_dataprovider_test extends advanced_testcase {
         // Array of tests.
         $returnarray = [
             // Test name (description).
+            'filter_intrange_enddate' => [
+                'tablecallback' => 'create_demo_table',
+                'courses' => $standardcourses,
+                'expected' => [
+                    'getrowscount' => [
+                        [
+                            'assert' => 16,
+                        ],
+                        [
+                            'filterobjects' => '{"enddate":"1273449600,1596240000"}',
+                            'assert' => 2,
+                        ],
+                        [
+                            'filterobjects' => '{"enddate":"' . $plus40month . ',' . $plus80month . '"}',
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => '{"enddate":"' . $plus55month . ',' . $plus80month . '"}',
+                            'assert' => 1,
+                        ],
+                        [
+                            'filterobjects' => '{"enddate":"1273449600,' . $plussixtymonth . '"}',
+                            'assert' => 3,
+                        ],
+                    ],
+                ],
+            ],
             'filter_weekdays' => [
                 'tablecallback' => 'create_demo_table',
                 'courses' => $standardcourses,
