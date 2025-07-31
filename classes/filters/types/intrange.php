@@ -198,17 +198,17 @@ class intrange extends base {
         if ($DB->get_dbfamily() === 'postgres') {
             // PostgreSQL: Extract numbers from the string and cast to integer for comparison.
             $filter .= "
-            REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') IS NOT NULL
-            AND REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') != ''
-            AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '', 'g') AS INTEGER)";
+            REGEXP_REPLACE(CAST($columnname AS TEXT), '[^0-9]', '', 'g') IS NOT NULL
+            AND REGEXP_REPLACE(CAST($columnname AS TEXT), '[^0-9]', '', 'g') != ''
+            AND CAST(REGEXP_REPLACE(CAST($columnname AS TEXT), '[^0-9]', '', 'g') AS INTEGER)";
         } else {
             // MariaDB/MySQL.
             // phpcs:ignore moodle.Commenting.TodoComment.MissingInfoInline
             // TODO: Test if this works!!
             $filter .= "
-            REGEXP_REPLACE($columnname, '[^0-9]', '') IS NOT NULL
-            AND REGEXP_REPLACE($columnname, '[^0-9]', '') != ''
-            AND CAST(REGEXP_REPLACE($columnname, '[^0-9]', '') AS SIGNED)";
+            REGEXP_REPLACE(CAST($columnname AS CHAR), '[^0-9]', '') IS NOT NULL
+            AND REGEXP_REPLACE(CAST($columnname AS CHAR), '[^0-9]', '') != ''
+            AND CAST(REGEXP_REPLACE(CAST($columnname AS CHAR), '[^0-9]', '') AS SIGNED)";
         }
 
         // This part is identical for both db families.
