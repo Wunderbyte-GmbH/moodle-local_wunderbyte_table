@@ -1,3 +1,6 @@
+## Version 2.0.57 (2025073100)
+* Improvement: Optional Scroll to container
+
 ## Version 2.0.56 (2025072400)
 * Bugfix: fix undefined property, fallback for gotopage
 * Improvement: Fokus for elements in filter
