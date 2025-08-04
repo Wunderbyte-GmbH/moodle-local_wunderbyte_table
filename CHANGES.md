@@ -1,3 +1,6 @@
+## Version 2.0.58 (2025080400)
+* Improvement: Add support of unix timestamp fields for intrange filter.
+
 ## Version 2.0.57 (2025073100)
 * Improvement: Optional Scroll to container
 
