@@ -281,8 +281,6 @@ final class base_dataprovider_test extends advanced_testcase {
         $weekdaysfilter = new weekdays(
             'startdate',
             get_string('startdate')
-   //         'enddate',
-   //         get_string('enddate')
         );
         $table->add_filter($weekdaysfilter);
 
