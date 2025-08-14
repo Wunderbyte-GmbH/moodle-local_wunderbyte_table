@@ -31,7 +31,8 @@
 }}
 
 {{#showfilterbutton}}
-    <button type="button" id="asidecollapse_{{idstring}}" class="btn btn-primary asidecollapse-{{uniqueid}}"
+    <button aria-expanded="false" type="button" aria-controls="filteroptions_{{idstring}}" aria-label="{{#str}} filter, local_wunderbyte_table {{/str}}"
+        id="asidecollapse_{{idstring}}" class="btn btn-primary asidecollapse-{{uniqueid}}"
         data-toggle="tooltip" data-placement="bottom" name="{{#str}} filter, local_wunderbyte_table {{/str}}" title="{{#str}} filter, local_wunderbyte_table {{/str}}">
         <i class="fa fa-bars"></i>
     </button>
