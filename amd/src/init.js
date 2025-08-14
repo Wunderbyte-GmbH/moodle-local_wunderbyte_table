@@ -183,13 +183,19 @@ const initHandleDropdownFocusSearch = () => {
  */
 const initToggleAside = (idstring) => {
     const togglebutton = document.querySelector('#asidecollapse_' + idstring);
+    const wbtable = document.querySelector('.wunderbyte_table_container_' + idstring);
+    if (wbtable) {
+        const isInactiveFilter = wbtable.classList.contains('inactivefilter');
+        togglebutton.setAttribute('aria-expanded', isInactiveFilter ? 'false' : 'true');
+    }
 
     if (togglebutton) {
         togglebutton.addEventListener('click', () => {
             const aside = document.querySelector('.wunderbyte_table_container_' + idstring + ' aside');
             aside.classList.toggle('inactive');
-            const wbtable = document.querySelector('.wunderbyte_table_container_' + idstring);
             wbtable.classList.toggle('inactivefilter');
+            const isExpanded = togglebutton.getAttribute('aria-expanded') === 'true';
+            togglebutton.setAttribute('aria-expanded', !isExpanded);
             if (!aside.classList.contains('inactive')) {
             aside.childNodes[1].focus();
             }
