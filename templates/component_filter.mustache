@@ -156,7 +156,7 @@
         {{name}} <span class="filtercounter badge badge-light text-bs-light {{^filtercounter}}hidden{{/filtercounter}}">{{filtercounter}}</span>
     </button>
     <div class="dropdown-menu">
-       <div class="mt-2 ml-2 mr-2 {{show}}" id="id_collapse_{{columnname}}">
+       <div class="mt-2 ml-2 ms-2 mr-2 me-2 {{show}}" id="id_collapse_{{columnname}}">
            <label class="pl-4 ps-4 labelsearch">
                 <span class="small">{{ name }}</span>
             </label>
@@ -176,7 +176,7 @@
                 {{#hierarchy}}
                     <ul class="wunderbyterFilterList hierarchy pt-2" data-moodletype="hierarchylist">
                         <span class="d-flex">
-                        <input class="hierarchycategory-checkbox ml-1" type="checkbox"
+                        <input class="hierarchycategory-checkbox ml-1 ms-1" type="checkbox"
                                 value="{{value}}"
                                 id="{{index}}{{columnname}}{{idstring}}"
                                 {{checked}} name="{{id}}"
