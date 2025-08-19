@@ -269,7 +269,8 @@
     vertical-align: top;
 }
 
-.wunderbyteTableFilter .form-check-input {
+.wunderbyteTableFilter .form-check-input,
+.wunderbyteTableFilter .form-check .form-check-input[type="checkbox"] {
     position: absolute;
     left: 0;
     z-index: 30000001;
