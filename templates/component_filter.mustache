@@ -153,11 +153,11 @@
             aria-expanded="false"
         {{/expanded}}
     aria-controls="id_collapse_{{columnname}}" class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{columnname}}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true">
-        {{name}} <span class="filtercounter badge badge-light {{^filtercounter}}hidden{{/filtercounter}}">{{filtercounter}}</span>
+        {{name}} <span class="filtercounter badge badge-light text-bs-light {{^filtercounter}}hidden{{/filtercounter}}">{{filtercounter}}</span>
     </button>
     <div class="dropdown-menu">
        <div class="mt-2 ml-2 mr-2 {{show}}" id="id_collapse_{{columnname}}">
-           <label class="pl-4 labelsearch">
+           <label class="pl-4 ps-4 labelsearch">
                 <span class="small">{{ name }}</span>
             </label>
             <input class="search form-control mb-2 filtersearch" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
