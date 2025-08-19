@@ -25,6 +25,7 @@
 namespace local_wunderbyte_table\filters\types;
 use PHPUnit\Framework\TestCase;
 use local_wunderbyte_table\filters\types\standardfilter;
+use MoodleQuickForm;
 
 
 /**
@@ -169,35 +170,72 @@ final class standardfilter_test extends TestCase {
      */
     public function test_render_mandatory_fields(): void {
         $mformmock = $this->createMock(\MoodleQuickForm::class);
-        $mformmock->expects($this->exactly(6))
-            ->method('createElement')
-            ->withConsecutive(
-                ['text', 'keyvaluepairs[one][key]', '', ['placeholder' => 'Key']],
-                ['text', 'keyvaluepairs[one][value]', '', ['placeholder' => 'Value']],
-                ['button', 'remove[one_group]', '<i class="fa fa-trash"></i>', [
-                    'class' => 'btn remove-key-value',
-                    'type' => 'button',
-                    'data-groupid' => 'one_group',
-                    'aria-label' => 'Remove key-value pair for one',
-                ]],
-                ['text', 'keyvaluepairs[two][key]', '', ['placeholder' => 'Key']],
-                ['text', 'keyvaluepairs[two][value]', '', ['placeholder' => 'Value']],
-                ['button', 'remove[two_group]', '<i class="fa fa-trash"></i>', [
-                    'class' => 'btn remove-key-value',
-                    'type' => 'button',
-                    'data-groupid' => 'two_group',
-                    'aria-label' => 'Remove key-value pair for two',
-                ]]
-            );
+        $expectedcalls = [
+            ['text', 'keyvaluepairs[one][key]', '', ['placeholder' => 'Key']],
+            ['text', 'keyvaluepairs[one][value]', '', ['placeholder' => 'Value']],
+            ['button', 'remove[one_group]', '<i class="fa fa-trash"></i>', [
+                'class' => 'btn remove-key-value',
+                'type' => 'button',
+                'data-groupid' => 'one_group',
+                'aria-label' => 'Remove key-value pair for one',
+                ],
+            ],
+            ['text', 'keyvaluepairs[two][key]', '', ['placeholder' => 'Key']],
+            ['text', 'keyvaluepairs[two][value]', '', ['placeholder' => 'Value']],
+            ['button', 'remove[two_group]', '<i class="fa fa-trash"></i>', [
+                'class' => 'btn remove-key-value',
+                'type' => 'button',
+                'data-groupid' => 'two_group',
+                'aria-label' => 'Remove key-value pair for two',
+                ],
+            ],
+        ];
 
-        $mformmock->expects($this->exactly(4))
+        $callindex = 0;
+
+        $mformmock->expects($this->exactly(count($expectedcalls)))
+            ->method('createElement')
+            ->willReturnCallback(function (...$args) use (&$callindex, $expectedcalls) {
+                // Assert the arguments for the current invocation (order is enforced).
+                $this->assertEquals(
+                    $expectedcalls[$callindex],
+                    $args,
+                    "createElement() call #{$callindex} received unexpected arguments."
+                );
+
+                // If the real code needs returned objects, create or fetch them here.
+                // For most cases returning null is fine; otherwise prepare per-call return values.
+                $return = null;
+
+                $callindex++;
+
+                return $return;
+            });
+
+        unset($expectedcalls);
+        unset($callindex);
+
+        $expectedcalls = [
+            ['keyvaluepairs[one][key]', 'one'],
+            ['keyvaluepairs[one][value]', 'one_value'],
+            ['keyvaluepairs[two][key]', 'two'],
+            ['keyvaluepairs[two][value]', 'two_value'],
+        ];
+
+        $callindex = 0;
+
+        $mformmock->expects($this->exactly(count($expectedcalls)))
             ->method('setDefault')
-            ->withConsecutive(
-                ['keyvaluepairs[one][key]', 'one'],
-                ['keyvaluepairs[one][value]', 'one_value'],
-                ['keyvaluepairs[two][key]', 'two'],
-                ['keyvaluepairs[two][value]', 'two_value']
-            );
+            ->willReturnCallback(function (...$args) use (&$callindex, $expectedcalls) {
+                $this->assertEquals(
+                    $expectedcalls[$callindex],
+                    $args,
+                    "setDefault() call #{$callindex} received unexpected arguments."
+                );
+                $callindex++;
+                // SetDefault is void; returning null is harmless.
+                return null;
+            });
 
         $data = [
             'one' => [
