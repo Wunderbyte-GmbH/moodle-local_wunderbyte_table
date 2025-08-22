@@ -117,14 +117,14 @@
           <div class="wunderbyte_table_container {{uniqueid}} {{#showfilterontop}}showontop{{/showfilterontop}}">
                {{#showfilterontop}}
                <div class="filterheader">
-                <aside tabindex="-1" class="wunderbyte_table_components{{^showcomponentstoggle}} inactive{{/showcomponentstoggle}}">
+                <aside tabindex="-1" id="filteroptions_{{idstring}}" class="wunderbyte_table_components{{^showcomponentstoggle}} inactive{{/showcomponentstoggle}}">
                     {{> local_wunderbyte_table/component_filter }}
                     {{> local_wunderbyte_table/component_infinitescroll }}
                </aside>
                </div>
                {{/showfilterontop}}
                {{^showfilterontop}}
-               <aside  tabindex="-1" class="wunderbyte_table_components{{^showcomponentstoggle}} inactive{{/showcomponentstoggle}}">
+               <aside  tabindex="-1" id="filteroptions_{{idstring}}" class="wunderbyte_table_components{{^showcomponentstoggle}} inactive{{/showcomponentstoggle}}">
                     {{> local_wunderbyte_table/component_filter }}
                     {{> local_wunderbyte_table/component_infinitescroll }}
                </aside>

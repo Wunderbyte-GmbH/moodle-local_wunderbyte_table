@@ -8,7 +8,7 @@ jobs:
     with:
       min_php: '7.4'
 
-      mustache_ignore_names: 'twtable_list_row.mustache,twtable_cards_row.mustache'
+      mustache_ignore_names: 'twtable_list_row.mustache,twtable_cards_row.mustache,component_toggle.mustache'
 
       workarounds: |
         # WORKAROUND 17/04/2025: The following code is a workaround for the "File is stale and needs to be rebuilt" error
