@@ -35,6 +35,7 @@ use external_value;
 use external_single_structure;
 use local_wunderbyte_table\wunderbyte_table;
 use moodle_url;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -119,10 +120,12 @@ class load_data extends external_api {
                 self::validate_context($context);
                 require_capability($table->requirecapability, $context);
             } catch (Exception $e) {
+                // We expect the values to be json-parsable.
+                $emptyclass = new stdClass();
                 return [
-                    'template' => '',
-                    'content' => '',
-                    'filterjson' => '',
+                    'template' => $emptyclass,
+                    'content' => $emptyclass,
+                    'filterjson' => $emptyclass,
                 ];
             }
         } else {
