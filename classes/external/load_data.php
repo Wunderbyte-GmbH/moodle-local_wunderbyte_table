@@ -124,7 +124,7 @@ class load_data extends external_api {
                 $emptyclass = new stdClass();
                 return [
                     'template' => $emptyclass,
-                    'content' => $emptyclass,
+                    'content' => json_encode($emptyclass),
                     'filterjson' => $emptyclass,
                 ];
             }
