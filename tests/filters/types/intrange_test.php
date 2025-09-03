@@ -71,9 +71,9 @@ final class intrange_test extends TestCase {
         $property->setAccessible(true);
         $options = $property->getValue($intrange)['Test Label'];
 
-        $this->assertEquals('Test Checkbox', $options['checkboxlabel']);
-        $this->assertEquals(10, $options['defaultvaluestart']);
-        $this->assertEquals(50, $options['defaultvalueend']);
+        $this->assertSame('Test Checkbox', $options['checkboxlabel']);
+        $this->assertSame(10, $options['defaultvaluestart']);
+        $this->assertSame(50, $options['defaultvalueend']);
     }
 
     /**
@@ -100,11 +100,11 @@ final class intrange_test extends TestCase {
         $this->assertArrayHasKey('intrange', $categoryobject);
         $this->assertArrayHasKey('intranges', $categoryobject['intrange']);
         $this->assertCount(1, $categoryobject['intrange']['intranges']);
-        $this->assertEquals('label1', $categoryobject['intrange']['intranges'][0]['label']);
-        $this->assertEquals('testkey', $categoryobject['intrange']['intranges'][0]['column']);
-        $this->assertEquals(5, $categoryobject['intrange']['intranges'][0]['startvalue']);
-        $this->assertEquals(10, $categoryobject['intrange']['intranges'][0]['endvalue']);
-        $this->assertEquals('Test Checkbox', $categoryobject['intrange']['intranges'][0]['checkboxlabel']);
+        $this->assertSame('label1', $categoryobject['intrange']['intranges'][0]['label']);
+        $this->assertSame('testkey', $categoryobject['intrange']['intranges'][0]['column']);
+        $this->assertSame(5, $categoryobject['intrange']['intranges'][0]['startvalue']);
+        $this->assertSame(10, $categoryobject['intrange']['intranges'][0]['endvalue']);
+        $this->assertSame('Test Checkbox', $categoryobject['intrange']['intranges'][0]['checkboxlabel']);
     }
 
     /**
@@ -118,7 +118,7 @@ final class intrange_test extends TestCase {
 
         $intrange->apply_filter($filter, 'testcolumn', 123, $table);
 
-        $this->assertEquals('', $filter);
+        $this->assertSame('', $filter);
     }
 
     /**
@@ -154,12 +154,12 @@ final class intrange_test extends TestCase {
         intrange::prepare_filter_for_rendering($tableobject, $filterarray, 0);
 
         $this->assertArrayHasKey('show', $tableobject[0]);
-        $this->assertEquals('show', $tableobject[0]['show']);
-        $this->assertEquals('', $tableobject[0]['collapsed']);
-        $this->assertEquals('true', $tableobject[0]['expanded']);
-        $this->assertEquals('checked', $tableobject[0]['intrange']['intranges'][0]['checked']);
-        $this->assertEquals('10', $tableobject[0]['intrange']['intranges'][0]['startvalue']);
-        $this->assertEquals('20', $tableobject[0]['intrange']['intranges'][0]['endvalue']);
+        $this->assertSame('show', $tableobject[0]['show']);
+        $this->assertSame('', $tableobject[0]['collapsed']);
+        $this->assertSame('true', $tableobject[0]['expanded']);
+        $this->assertSame('checked', $tableobject[0]['intrange']['intranges'][0]['checked']);
+        $this->assertSame('10', $tableobject[0]['intrange']['intranges'][0]['startvalue']);
+        $this->assertSame('20', $tableobject[0]['intrange']['intranges'][0]['endvalue']);
     }
 
     /**
@@ -187,9 +187,9 @@ final class intrange_test extends TestCase {
 
         [$result, $filterspecific] = intrange::get_filterspecific_values($data, 'testcolumn');
 
-        $this->assertEquals('Test Filter', $result['localizedname']);
-        $this->assertEquals([], $result['intrange']);
-        $this->assertEquals('1', $result['testcolumn_wb_checked']);
-        $this->assertEquals('intrange', $result['wbfilterclass']);
+        $this->assertSame('Test Filter', $result['localizedname']);
+        $this->assertSame([], $result['intrange']);
+        $this->assertSame('1', $result['testcolumn_wb_checked']);
+        $this->assertSame('intrange', $result['wbfilterclass']);
     }
 }

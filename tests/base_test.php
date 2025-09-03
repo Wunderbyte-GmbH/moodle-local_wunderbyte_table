@@ -87,7 +87,7 @@ final class base_test extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table);
 
         // Now we get back exactly 10.
-        $this->assertEquals(10, $nrofrows);
+        $this->assertSame(10, $nrofrows);
 
         // Now we create another three courses.
         $this->create_test_courses(3, ['fullname' => 'filtercourse']);
@@ -95,7 +95,7 @@ final class base_test extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table);
 
         // Because of caching kicking in, we still get 10 items.
-        $this->assertEquals(10, $nrofrows);
+        $this->assertSame(10, $nrofrows);
 
         // Now we purge the cache.
         cache_helper::purge_by_event('changesinwunderbytetable');
@@ -103,7 +103,7 @@ final class base_test extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table);
 
         // After purging, we expect 13.
-        $this->assertEquals(13, $nrofrows);
+        $this->assertSame(13, $nrofrows);
 
         // Now we want to test pagination.
         $this->create_test_courses(30);
@@ -113,12 +113,12 @@ final class base_test extends advanced_testcase {
 
         $nrofrows = $this->get_rowscount_for_table($table);
 
-        $this->assertEquals(20, $nrofrows);
+        $this->assertSame(20, $nrofrows);
 
         // Now we fetch the third page. With 43 coures, we expect only three rows now.
         $nrofrows = $this->get_rowscount_for_table($table, 2);
 
-        $this->assertEquals(3, $nrofrows);
+        $this->assertSame(3, $nrofrows);
     }
 
     /**
@@ -142,7 +142,7 @@ final class base_test extends advanced_testcase {
         $table = $this->create_demo2_table();
         // Now we get back exactly 10.
         $nrofrows = $this->get_rowscount_for_table($table);
-        $this->assertEquals(10, $nrofrows);
+        $this->assertSame(10, $nrofrows);
 
         // Validate that login required to access table data.
         require_logout();
@@ -154,12 +154,12 @@ final class base_test extends advanced_testcase {
         $table->requirelogin = false;
         require_logout();
         $nrofrows = $this->get_rowscount_for_table($table);
-        $this->assertEquals(10, $nrofrows);
+        $this->assertSame(10, $nrofrows);
 
         // Validate that user also can access table data.
         $this->setUser($user);
         $nrofrows = $this->get_rowscount_for_table($table);
-        $this->assertEquals(10, $nrofrows);
+        $this->assertSame(10, $nrofrows);
 
         $this->setAdminUser();
         $table->requirelogin = true;
@@ -208,7 +208,7 @@ final class base_test extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table);
 
         // Now we get back exactly 10.
-        $this->assertEquals(10, $nrofrows);
+        $this->assertSame(10, $nrofrows);
 
         // On the 5th page, we expect exactly 5 items.
         $nrofrows = $this->get_rowscount_for_table(
@@ -217,7 +217,7 @@ final class base_test extends advanced_testcase {
             null,
         );
         // Now we get back exactly 10.
-        $this->assertEquals(5, $nrofrows);
+        $this->assertSame(5, $nrofrows);
 
         $rows = $this->get_rows_for_table(
             $table,
@@ -227,7 +227,7 @@ final class base_test extends advanced_testcase {
 
         $fullname = $rows[0]->datafields[1]->value;
         // Sorted by fullname, we get Test course 1 as first item.
-        $this->assertEquals("Test course 1", $fullname);
+        $this->assertSame("Test course 1", $fullname);
 
         $rows = $this->get_rows_for_table(
             $table,
@@ -240,11 +240,11 @@ final class base_test extends advanced_testcase {
 
         // Sorted by enrolled users, we get Test course 8 as first item.
         $fullname = $rows[0]->datafields[1]->value;
-        $this->assertEquals("Test course 8", $fullname);
+        $this->assertSame("Test course 8", $fullname);
 
         // The second item will be Test course 5.
         $fullname = $rows[1]->datafields[1]->value;
-        $this->assertEquals("Test course 5", $fullname);
+        $this->assertSame("Test course 5", $fullname);
     }
 
     /**
@@ -282,7 +282,7 @@ final class base_test extends advanced_testcase {
         $nrofrows = $this->get_rowscount_for_table($table);
 
         // Now we get back exactly 10.
-        $this->assertEquals(30, $nrofrows);
+        $this->assertSame(30, $nrofrows);
 
         $nrofrows = $this->get_rowscount_for_table(
             $table,
@@ -296,7 +296,7 @@ final class base_test extends advanced_testcase {
         );
 
         // Now we get back exactly 30.
-        $this->assertEquals(30, $nrofrows);
+        $this->assertSame(30, $nrofrows);
 
         $nrofrows = $this->get_rowscount_for_table(
             $table,
@@ -310,7 +310,7 @@ final class base_test extends advanced_testcase {
         );
 
         // Now we get back exactly 15.
-        $this->assertEquals(15, $nrofrows);
+        $this->assertSame(15, $nrofrows);
     }
 
     /**

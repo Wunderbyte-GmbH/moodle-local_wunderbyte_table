@@ -45,8 +45,8 @@ final class hourlist_test extends TestCase {
         $hourlistmanager->add_filter($filter);
         $this->assertArrayHasKey('id', $filter);
         $this->assertArrayHasKey('columnidentifier', $filter);
-        $this->assertEquals('ID', $filter['id']['localizedname']);
-        $this->assertEquals(1, $filter['columnidentifier']['columnidentifier_wb_checked']);
+        $this->assertSame('ID', $filter['id']['localizedname']);
+        $this->assertSame(1, $filter['columnidentifier']['columnidentifier_wb_checked']);
     }
 
     /**
@@ -94,8 +94,8 @@ final class hourlist_test extends TestCase {
 
         [$result, $filterspecific] = hourlist::get_filterspecific_values($data, 'testcolumn');
 
-        $this->assertEquals('Test Filter', $result['localizedname']);
-        $this->assertEquals('1', $result['testcolumn_wb_checked']);
-        $this->assertEquals('hourlist', $result['wbfilterclass']);
+        $this->assertSame('Test Filter', $result['localizedname']);
+        $this->assertSame('1', $result['testcolumn_wb_checked']);
+        $this->assertSame('hourlist', $result['wbfilterclass']);
     }
 }

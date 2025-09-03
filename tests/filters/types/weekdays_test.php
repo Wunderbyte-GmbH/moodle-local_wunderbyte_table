@@ -45,8 +45,8 @@ final class weekdays_test extends TestCase {
         $weekdaysmanager->add_filter($filter);
         $this->assertArrayHasKey('id', $filter);
         $this->assertArrayHasKey('columnidentifier', $filter);
-        $this->assertEquals('ID', $filter['id']['localizedname']);
-        $this->assertEquals(1, $filter['columnidentifier']['columnidentifier_wb_checked']);
+        $this->assertSame('ID', $filter['id']['localizedname']);
+        $this->assertSame(1, $filter['columnidentifier']['columnidentifier_wb_checked']);
     }
 
     /**
@@ -94,9 +94,9 @@ final class weekdays_test extends TestCase {
 
         [$result, $filterspecific] = weekdays::get_filterspecific_values($data, 'testcolumn');
 
-        $this->assertEquals('Test Filter', $result['localizedname']);
-        $this->assertEquals('1', $result['testcolumn_wb_checked']);
-        $this->assertEquals('weekdays', $result['wbfilterclass']);
+        $this->assertSame('Test Filter', $result['localizedname']);
+        $this->assertSame('1', $result['testcolumn_wb_checked']);
+        $this->assertSame('weekdays', $result['wbfilterclass']);
     }
 
     /**

@@ -105,7 +105,7 @@ final class infinitescroll_test extends advanced_testcase {
             $name = $row->datafields[1]->value;
             $shortnames[] = $row->datafields[2]->value;
             [$prefix1, $prefix2, $number] = explode(' ', $name);
-            $this->assertEquals((int)$number, $numberofcourses);
+            $this->assertSame((int)$number, $numberofcourses);
             $numberofcourses--;
         }
 
@@ -126,7 +126,7 @@ final class infinitescroll_test extends advanced_testcase {
         foreach ($allrows as $row) {
             $name = $row->datafields[1]->value;
             [$prefix1, $prefix2, $number] = explode(' ', $name);
-            $this->assertEquals((int)$number, $numberofcourses);
+            $this->assertSame((int)$number, $numberofcourses);
             $numberofcourses++;
         }
 
@@ -153,7 +153,7 @@ final class infinitescroll_test extends advanced_testcase {
         foreach ($allrows as $row) {
             $name = $row->datafields[2]->value;
             $shortname = array_shift($shortnames);
-            $this->assertEquals($name, $shortname);
+            $this->assertSame($name, $shortname);
         }
     }
 

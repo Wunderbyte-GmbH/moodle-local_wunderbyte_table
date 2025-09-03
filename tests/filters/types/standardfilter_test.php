@@ -65,7 +65,7 @@ final class standardfilter_test extends TestCase {
         $property->setAccessible(true);
         $result = $property->getValue($filter);
 
-        $this->assertEquals($options, $result);
+        $this->assertSame($options, $result);
     }
 
     /**
@@ -197,7 +197,7 @@ final class standardfilter_test extends TestCase {
             ->method('createElement')
             ->willReturnCallback(function (...$args) use (&$callindex, $expectedcalls) {
                 // Assert the arguments for the current invocation (order is enforced).
-                $this->assertEquals(
+                $this->assertSame(
                     $expectedcalls[$callindex],
                     $args,
                     "createElement() call #{$callindex} received unexpected arguments."
@@ -227,7 +227,7 @@ final class standardfilter_test extends TestCase {
         $mformmock->expects($this->exactly(count($expectedcalls)))
             ->method('setDefault')
             ->willReturnCallback(function (...$args) use (&$callindex, $expectedcalls) {
-                $this->assertEquals(
+                $this->assertSame(
                     $expectedcalls[$callindex],
                     $args,
                     "setDefault() call #{$callindex} received unexpected arguments."

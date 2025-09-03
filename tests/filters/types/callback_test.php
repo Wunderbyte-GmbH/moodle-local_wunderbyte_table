@@ -78,7 +78,7 @@ final class callback_test extends TestCase {
         $property = $reflection->getProperty($callbackfunction);
         $property->setAccessible(true);
         $callbackfunctionvalue = $property->getValue($callbackmanager);
-        $this->assertEquals($functionname, $callbackfunctionvalue);
+        $this->assertSame($functionname, $callbackfunctionvalue);
     }
 
     /**
@@ -93,7 +93,7 @@ final class callback_test extends TestCase {
         $not = false;
         $callbackmanager = new callback($columnidentifier);
         $result = $callbackmanager->filter_by_callback($records, $not);
-        $this->assertEquals($result, $records);
+        $this->assertSame($result, $records);
     }
 
     /**
@@ -142,8 +142,8 @@ final class callback_test extends TestCase {
 
         [$result, $filterspecific] = callback::get_filterspecific_values($data, 'testcolumn');
 
-        $this->assertEquals('Test Filter', $result['localizedname']);
-        $this->assertEquals('1', $result['testcolumn_wb_checked']);
-        $this->assertEquals('callback', $result['wbfilterclass']);
+        $this->assertSame('Test Filter', $result['localizedname']);
+        $this->assertSame('1', $result['testcolumn_wb_checked']);
+        $this->assertSame('callback', $result['wbfilterclass']);
     }
 }
