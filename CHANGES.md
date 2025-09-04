@@ -1,3 +1,8 @@
+## Version 2.0.59 (2025080900)
+* Improvement: Add aria attributes for filterbutton
+* Bugfix: Correct returntype for loading tables with requirelogin
+* Bugfix: Wrong check for existing toggle fixed
+
 ## Version 2.0.58 (2025080400)
 * Improvement: Add support of unix timestamp fields for intrange filter.
 
