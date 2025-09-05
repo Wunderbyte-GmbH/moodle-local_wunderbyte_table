@@ -507,6 +507,7 @@ class wunderbyte_table extends table_sql {
         [$component, $template] = $this->return_component_and_template();
 
         $tableobject = $this->printtable($pagesize, $useinitialsbar);
+        /** @var \local_wunderbyte_table\output\renderer $output */
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         return $output->render_table($tableobject, $component . "/" . $template);
     }
@@ -536,7 +537,7 @@ class wunderbyte_table extends table_sql {
         $tableobject = $this->printtable($pagesize, $useinitialsbar);
 
         $tableobject->filter_filter($onlyfilters);
-
+        /** @var \local_wunderbyte_table\output\renderer $output */
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         return $output->render_table($tableobject, $component . "/" . $template);
     }
@@ -621,6 +622,7 @@ class wunderbyte_table extends table_sql {
 
         // Retrieve the encoded table.
         $this->tablecachehash = $tablecachehash;
+        /** @var \local_wunderbyte_table\output\renderer $output */
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         $data = new lazytable($this->idstring, $tablecachehash, $this->infinitescroll);
         return [$this->idstring, $tablecachehash, $output->render_lazytable($data)];
@@ -759,9 +761,14 @@ class wunderbyte_table extends table_sql {
     public function finish_html() {
         global $PAGE;
 
+        // In the following function we return the template we want to use.
+        // This function also checks, if there is a special container template present. If so, we use it instead.
+        [$component, $template] = $this->return_component_and_template();
+
+        /** @var \local_wunderbyte_table\output\renderer $output */
         $output = $PAGE->get_renderer('local_wunderbyte_table');
         $table = new table($this);
-        echo $output->render_table($table);
+        echo $output->render_table($table, $component . "/" . $template);
     }
 
     /**
@@ -1860,9 +1867,9 @@ class wunderbyte_table extends table_sql {
      * This handles the colum checkboxes.
      *
      * @param stdClass $values
-     * @return void
+     * @return string
      */
-    public function col_wbcheckbox($values) {
+    public function col_wbcheckbox($values): string {
 
         global $OUTPUT;
 
@@ -1881,9 +1888,9 @@ class wunderbyte_table extends table_sql {
      * This handles the colum checkboxes.
      *
      * @param stdClass $values
-     * @return void
+     * @return string
      */
-    public function col_wbsortableitem($values) {
+    public function col_wbsortableitem($values): string {
 
         global $OUTPUT;
 
