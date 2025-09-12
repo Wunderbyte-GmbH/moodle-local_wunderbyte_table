@@ -27,7 +27,6 @@ use MoodleQuickForm;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-
 /**
  * Unit tests for hourlist_test class.
  */

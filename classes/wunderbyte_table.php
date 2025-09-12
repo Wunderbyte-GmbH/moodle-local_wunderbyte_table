@@ -512,7 +512,6 @@ class wunderbyte_table extends table_sql {
         return $output->render_table($tableobject, $component . "/" . $template);
     }
 
-
     /**
      * With this function, the table can be returned as html without lazy loading.
      * Can be overridden in child class with own renderer.
@@ -589,7 +588,6 @@ class wunderbyte_table extends table_sql {
 
         return $OUTPUT->render_from_template($component . "/" . $template, $data);
     }
-
 
     /**
      * A version of the out function which does not actually echo but just returns the html plus the idnumber.
@@ -783,8 +781,6 @@ class wunderbyte_table extends table_sql {
             $this->column_class[$column] = $classname;
         }
     }
-
-
 
     /**
      * Add one or more columns to a certain subcolumnidentifier.
@@ -1737,8 +1733,6 @@ class wunderbyte_table extends table_sql {
         // We have to use this function to apply the sql at the right place.
         $this->set_filter_sql($fields, $from, $this->sql->where, $filter, $this->sql->params);
     }
-
-
 
     /**
      * Copy of the parent function, but we don't automatically set the pagesize.

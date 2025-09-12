@@ -27,7 +27,6 @@ use local_wunderbyte_table\wunderbyte_table;
 use MoodleQuickForm;
 use PHPUnit\Framework\TestCase;
 
-
 /**
  * Unit tests for intrange_test class.
  */

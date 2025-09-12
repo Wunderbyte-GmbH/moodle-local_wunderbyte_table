@@ -27,7 +27,6 @@ use PHPUnit\Framework\TestCase;
 use local_wunderbyte_table\filters\types\standardfilter;
 use MoodleQuickForm;
 
-
 /**
  * Unit tests for standardfilter class.
  */
@@ -161,7 +160,6 @@ final class standardfilter_test extends TestCase {
         $this->assertCount(2, $result);
         $this->assertArrayHasKey('one', $result);
     }
-
 
     /**
      * Test define_sql() method.

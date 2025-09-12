@@ -70,7 +70,6 @@ If you want to enable scrolling within your table, you can set the stickyheader 
 With infinite scroll, your table will automatically reload additional rows once you scrolled to its bottom. To enable infinite scroll, you can define the number of rows that will be loaded - first on init and later with each reload - in the infinitescroll variable. Sticky Header and Infinite Scroll can be combined.
 If you don't use infinite scroll, pagination options will be displayed at the bottom of your table.
 
-
 ## Action buttons
 You can add a number of action buttons to your table. If you combine them with "$yourtable->addcheckboxes = true", you will be able to select single lines and execute your function with it. The methods will need to be implemented in your child class of wunderbyte table and they will be called via ajax. Example:
 
@@ -397,7 +396,6 @@ Example for a sortable:
 
     $standardsortable->define_cache('mod_booking', 'bookedusertable');
     $table->add_sortable($standardsortable);
-
 
 ## Installing via uploaded ZIP file ##
 1. Log in to your Moodle site as an admin and go to _Site administration >

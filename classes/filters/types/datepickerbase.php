@@ -241,7 +241,6 @@ abstract class datepickerbase extends base {
         ];
     }
 
-
     /**
      * The expected value.
      * @param \MoodleQuickForm $mform

@@ -27,7 +27,6 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use stdClass;
 
-
 /**
  * Unit tests for hourlist_test class.
  */

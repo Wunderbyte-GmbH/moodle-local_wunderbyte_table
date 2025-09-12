@@ -73,7 +73,6 @@ abstract class base {
      */
     public $cachecomponent;
 
-
     /**
      * Callable function
      *

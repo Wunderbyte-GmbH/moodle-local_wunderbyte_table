@@ -104,7 +104,6 @@ class demoform extends dynamic_form {
         return [];
     }
 
-
     /**
      * Get page URL for dynamic submission.
      * @return moodle_url

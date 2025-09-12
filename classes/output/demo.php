@@ -703,7 +703,6 @@ class demo implements renderable, templatable {
             ]
         ];
 
-
         $table->sort_default_column = 'username';
 
         // Work out the sql for the table.
@@ -725,7 +724,6 @@ class demo implements renderable, templatable {
 
         return $table->outhtml(10, true);
     }
-
 
     /**
      * Render data for use in template without need of renderer_base

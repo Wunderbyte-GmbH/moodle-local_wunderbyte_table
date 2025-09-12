@@ -51,7 +51,6 @@ class column_manager extends filtersettings {
     /** @var string */
     const FUNCTION_NAME = 'get_filterspecific_values';
 
-
     /**
      * Handles form definition of filter classes.
      * @param array $params
@@ -196,7 +195,6 @@ class column_manager extends filtersettings {
         }
         return false;
     }
-
 
     /**
      * Handles form definition of filter classes.

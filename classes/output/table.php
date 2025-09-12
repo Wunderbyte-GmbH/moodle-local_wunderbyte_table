@@ -46,7 +46,6 @@ class table implements renderable, templatable {
      */
     private $idstring = '';
 
-
     /**
      * uniqueid of the table, needed for output
      *

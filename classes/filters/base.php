@@ -129,7 +129,6 @@ abstract class base {
         );
     }
 
-
     /**
      * Set data for form.
      * @param stdClass $data

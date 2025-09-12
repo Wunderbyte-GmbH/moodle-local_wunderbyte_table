@@ -26,7 +26,6 @@ namespace local_wunderbyte_table\filters\types;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-
 /**
  * Unit tests for hourlist_test class.
  */

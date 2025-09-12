@@ -474,7 +474,6 @@ from DB when allowedittable is turned off or on.
 * Bugfix: Display timespan filter only if records contain values in column of filter.
 * Bugfix: Infinitescroll triggered at the bottom of the table.
 
-
 ## Version 1.6.4 (2023061600)
 * Improvement: Behat test - adjust scenarios to support hidden by default filter panel on the "course" and "Infinite scroll"  tabs.
 * Improvement: GitHub Code Checker: fix linting.

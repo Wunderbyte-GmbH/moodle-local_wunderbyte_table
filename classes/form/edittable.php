@@ -140,7 +140,6 @@ class edittable extends dynamic_form {
         return $errors;
     }
 
-
     /**
      * Get page URL for dynamic submission.
      * @return moodle_url

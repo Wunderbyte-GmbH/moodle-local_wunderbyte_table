@@ -66,7 +66,6 @@ class filter {
         }
     }
 
-
     /**
      * Returns a json for rendering the filter elements.
      * @param wunderbyte_table $table

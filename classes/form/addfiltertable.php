@@ -111,7 +111,6 @@ class addfiltertable extends dynamic_form {
         return $validationmanager->get_data_validation();
     }
 
-
     /**
      * Get page URL for dynamic submission.
      * @return moodle_url
