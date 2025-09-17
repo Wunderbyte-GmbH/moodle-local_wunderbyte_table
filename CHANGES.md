@@ -1,3 +1,6 @@
+## Version 2.0.60 (2025091700)
+* Improvement: Code quality - remove multiple empty lines and minor code quality improvements.
+
 ## Version 2.0.59 (2025080900)
 * Improvement: Add aria attributes for filterbutton
 * Bugfix: Correct returntype for loading tables with requirelogin
