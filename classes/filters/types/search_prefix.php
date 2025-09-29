@@ -109,7 +109,7 @@ class search_prefix extends base {
             global $DB;
 
             // Use the LIKE clause for searching prefixes.
-            $key = $table->set_params($categoryvalue);
+            $key = $table->set_params(strtolower($categoryvalue));
             $filter .= "{$columnname} = :$key";
         }
     }
