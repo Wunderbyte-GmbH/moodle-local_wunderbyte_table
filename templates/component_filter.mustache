@@ -249,6 +249,12 @@
                         </form>
                     {{/intranges}}
                 {{/intrange}}
+                {{#search_prefix}}
+                    <div class="prefix-filter">
+                        <label for="prefix-search">{{localizedname}}</label>
+                        <input type="text" id="prefixsearch{{idstring}}" name="prefixsearch" value="{{searchvalue}}" placeholder="{{#str}} searchtitleprefix, local_wunderbyte_table {{/str}}"/>
+                    </div>
+                {{/search_prefix}}
             </div>
     {{! <a class="dropdown-item" role="button">Action</a>
     <a class="dropdown-item" role="button">Another action</a>

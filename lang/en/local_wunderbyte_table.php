@@ -162,6 +162,7 @@ $string['reload'] = "Reload table";
 $string['saturday'] = 'Sat';
 $string['search'] = 'Search';
 $string['searchcountmessage'] = 'Search for "{$a}"';
+$string['searchtitleprefix'] = 'Search titleprefix';
 $string['selectedtimespan'] = 'selected timespan';
 $string['september'] = 'September';
 $string['setwbtablefiltercolumn'] = 'Choose filter column';

@@ -159,6 +159,7 @@ $string['reload'] = 'Tabelle neu laden';
 $string['saturday'] = 'Sa';
 $string['search'] = 'Suchen';
 $string['searchcountmessage'] = 'Suche für "{$a}"';
+$string['searchtitleprefix'] = 'Nach Titelprefix suchen';
 $string['selectedtimespan'] = 'gewählter Zeitspanne';
 $string['september'] = 'September';
 $string['setwbtablefiltercolumn'] = 'Wähle eine Filterspalte';

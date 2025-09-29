@@ -22,7 +22,7 @@ import Ajax from 'core/ajax';
 import Templates from 'core/templates';
 import Notification from 'core/notification';
 
-import {initializeCheckboxes, getFilterObjects} from 'local_wunderbyte_table/filter';
+import {initializeCheckboxes, getFilterObjects, initializeSearchInputListener} from 'local_wunderbyte_table/filter';
 import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
 import {initializeReload} from 'local_wunderbyte_table/reload';
@@ -867,6 +867,7 @@ function initializeComponents(idstring, encodedtable) {
     const selector = ".wunderbyte_table_container_" + idstring;
 
     initializeCheckboxes(selector, idstring, encodedtable);
+    initializeSearchInputListener(selector, idstring, encodedtable);
     initializeSearch(selector, idstring, encodedtable);
     initializeSort(selector, idstring, encodedtable);
     initializeRowsSelect(selector, idstring, encodedtable);

@@ -24,6 +24,7 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
 
 import {callLoadData, SELECTORS} from 'local_wunderbyte_table/init';
 import Templates from 'core/templates';
+import {debounce} from 'core/utils';
 
 // These variables are specific to the filter.
 var checked = {};
@@ -68,6 +69,32 @@ export function initializeCheckboxes(selector, idstring, encodedtable) {
 
   filterContainer.dataset.initialized = true;
 }
+
+
+/**
+ * Initialize Prefixsearch.
+ * @param {string} selector
+ * @param {string} idstring
+ * @param {string} encodedtable
+ */
+export function initializeSearchInputListener(selector, idstring, encodedtable) {
+  const container = document.querySelector(selector);
+  if (!container) {
+    return;
+  }
+
+  // Select the specific prefix search input by ID
+  const searchInput = container.querySelector(`#prefixsearch${idstring}`);
+
+  if (searchInput) {
+        searchInput.addEventListener('input', debounce(() => {
+         const searchValue = searchInput.value;
+          checked[idstring]['titleprefix'] = searchValue;
+          triggerReload(idstring, encodedtable);
+    }, 300));
+  }
+}
+
 /**
  * Apply change listener to list of nodes.
  * @param {*} nodelist
@@ -708,9 +735,7 @@ export const renderFilter = (filterjson, idstring, encodedtable) => {
   Templates.renderForPromise('local_wunderbyte_table/filter', filterjson).then(({html}) => {
 
     container.insertAdjacentHTML('afterbegin', html);
-
     initializeCheckboxes(selector, idstring, encodedtable);
-
     return;
   }).catch(e => {
     // eslint-disable-next-line no-console
