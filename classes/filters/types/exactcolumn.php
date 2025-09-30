@@ -95,7 +95,7 @@ class exactcolumn extends base {
         $categoryvalue,
         wunderbyte_table &$table
     ): void {
-        // Check that categoryvalue is a string and non-empty
+        // Check that categoryvalue is a string and non-empty.
         if (is_string($categoryvalue) && !empty($categoryvalue)) {
             global $DB;
 
