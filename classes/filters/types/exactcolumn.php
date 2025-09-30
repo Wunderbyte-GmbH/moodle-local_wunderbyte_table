@@ -31,7 +31,7 @@ use local_wunderbyte_table\wunderbyte_table;
 /**
  * SearchPrefix class is an extension of the base filter class.
  */
-class search_prefix extends base {
+class exactcolumn extends base {
     /**
      * Adds the array for the mustache template to render the categoryobject.
      * If no special treatment is needed, it must be implemented in the filter class, but just return.
@@ -47,7 +47,7 @@ class search_prefix extends base {
         if (!isset($filtersettings[$fckey][get_called_class()])) {
             return;
         }
-        $categoryobject['search_prefix'] = true;
+        $categoryobject['exactcolumn'] = true;
     }
 
     /**
@@ -62,18 +62,9 @@ class search_prefix extends base {
         $options = [
             'localizedname' => $this->localizedstring,
             get_class($this) => true,
-            'titleprefix' => $this->options,
             $this->columnidentifier . '_wb_checked' => 1,
         ];
         $options['wbfilterclass'] = get_called_class();
-
-        // We always need to make sure that id column is present.
-        // if (!isset($filter['id'])) {
-        //     $filter['id'] = [
-        //         'localizedname' => get_string('id', 'local_wunderbyte_table'),
-        //         'id_wb_checked' => 1,
-        //     ];
-        // }
 
         if (!isset($filter[$this->columnidentifier])) {
             $filter[$this->columnidentifier] = $options;
