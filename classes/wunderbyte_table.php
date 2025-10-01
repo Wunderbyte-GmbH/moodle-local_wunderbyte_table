@@ -699,19 +699,6 @@ class wunderbyte_table extends table_sql {
      */
     public function finish_output($closeexportclassdoc = true, $encodedtable = '') {
 
-        global $USER;
-
-        // At this point, we trigger the table_viewed event.
-        $context = $this->get_context();
-        $event = table_viewed::create([
-            'context' => $context,
-            'userid' => $USER->id,
-            'other' => [
-                'tablename' => $this->uniqueid,
-            ],
-        ]);
-        $event->trigger();
-
         if ($this->exportclass !== null) {
             $this->exportclass->finish_table();
             if ($closeexportclassdoc) {
