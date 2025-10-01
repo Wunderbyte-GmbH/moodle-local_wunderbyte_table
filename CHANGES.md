@@ -1,3 +1,7 @@
+## Version 2.0.61 (2025100100)
+* New Feature: exact column filter.
+* Improvement: Don't trigger table viewed event (for performance improvement)
+
 ## Version 2.0.60 (2025091700)
 * Improvement: Code quality - remove multiple empty lines and minor code quality improvements.
 
