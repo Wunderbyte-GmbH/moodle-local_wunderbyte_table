@@ -35,7 +35,6 @@ use local_wunderbyte_table\event\wbtable_event_base;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class table_viewed extends wbtable_event_base {
-
     /**
      * Init method.
      */

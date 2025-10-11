@@ -32,7 +32,6 @@ use templatable;
  * @package local_wunderbyte_table
  */
 class renderer extends plugin_renderer_base {
-
     /**
      * Render a wunderbyte_table.
      * @param templatable $viewtable

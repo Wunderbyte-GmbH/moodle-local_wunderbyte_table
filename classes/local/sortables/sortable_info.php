@@ -59,5 +59,4 @@ abstract class sortable_info {
             }
         }
     }
-
 }

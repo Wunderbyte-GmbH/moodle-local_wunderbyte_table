@@ -35,7 +35,6 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2024012501) {
-
         // Define table wunderbyte_table_settings to be created.
         $table = new xmldb_table('local_wunderbyte_table');
 
@@ -74,7 +73,6 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
     }
 
     if ($oldversion < 2024021600) {
-
         // Define field count to be added to local_wunderbyte_table.
         $table = new xmldb_table('local_wunderbyte_table');
         $field = new xmldb_field('count', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'timemodified');
@@ -89,7 +87,6 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
     }
 
     if ($oldversion < 2024042600) {
-
         // Define field tablehash to be added to local_wunderbyte_table.
         $table = new xmldb_table('local_wunderbyte_table');
         $field = new xmldb_field('tablehash', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'hash');

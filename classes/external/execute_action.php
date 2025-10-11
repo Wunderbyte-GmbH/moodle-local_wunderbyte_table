@@ -48,7 +48,6 @@ require_once($CFG->libdir . '/externallib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class execute_action extends external_api {
-
     /**
      * Describes the parameters this webservice.
      *
@@ -125,7 +124,7 @@ class execute_action extends external_api {
         ]);
         $event->trigger();
 
-        if (method_exists($table, 'action_' . $params['methodname']) ) {
+        if (method_exists($table, 'action_' . $params['methodname'])) {
             $result = $table->{'action_' . $params['methodname']}($params['id'], $params['data']);
         } else {
             $result = [

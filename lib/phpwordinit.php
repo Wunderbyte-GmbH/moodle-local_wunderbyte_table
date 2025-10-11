@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @param string $pclassname Which class to load
  */
-function local_wunderbyte_table_phpword_autoload ($pclassname) {
+function local_wunderbyte_table_phpword_autoload($pclassname) {
     $filename = __DIR__ . "/" . str_replace('\\', '/', $pclassname) . ".php";
     if (file_exists($filename)) {
         include($filename);
