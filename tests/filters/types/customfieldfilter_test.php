@@ -130,12 +130,17 @@ final class customfieldfilter_test extends advanced_testcase {
         // $this->assertCount(3, $table->rawdata);
 
         // Add customfield filter.
-        $customfieldfilter = new customfieldfilter(
-            'category,course_categories,name',
-            'category name',
-        );
+
+        // $customfieldfilter->set_sql('cagtegory IN (SELECT id FROM x where y)');
+
+        $customfieldfilter = new customfieldfilter('category');
+        $customfieldfilter->set_sql('category IN ( SELECT id FROM {:table} WHERE :where)');
+        $customfieldfilter->set_subquery_params([
+            'table' => 'course_categories',
+            'where' => '',
+        ]);
         $table->add_filter($customfieldfilter);
-        $table->apply_filter('{"category,course_categories,name":["Category 1", "Category 2"]}');
+        $table->apply_filter('{"category":["Category 1", "Category 2"]}');
         $table->outhtml(10000, true);
         $this->assertCount(5, $table->rawdata);
     }

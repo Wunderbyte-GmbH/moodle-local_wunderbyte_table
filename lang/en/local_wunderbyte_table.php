@@ -134,6 +134,7 @@ $string['loading'] = 'Loading...';
 $string['logfiltercaches'] = 'Debug feature: Save queries to DB. Has negative impact on performance. <span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['march'] = 'March';
 $string['may'] = 'May';
+$string['missingsubquery'] = 'Customfieldfilter: No SQL subquery provided. You must call set_sql() before applying the filter.';
 $string['module'] = 'Module';
 $string['monday'] = 'Mon';
 $string['newwbtablefiltername'] = 'New filter name';
