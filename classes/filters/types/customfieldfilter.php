@@ -31,7 +31,19 @@ use moodle_exception;
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
-class customfieldfilter extends standardfilter {
+class customfieldfilter extends base {
+    /**
+     *
+     * @var string
+     */
+    public static $groupname = 'customfieldfiltergroup';
+    /**
+     * Property to indicate if class has implemented a callback
+     *
+     * @var bool
+     */
+    public $hascallback = true;
+
     /**
      * Subquery string
      * @var string
@@ -40,9 +52,16 @@ class customfieldfilter extends standardfilter {
 
     /**
      * Sub query params.
-     * @var array
+     * @var string
      */
-    protected array $subqueryparams;
+    protected string $subquerycolumn;
+
+    /**
+     * SQL query that fetchs the data from the source. It should return 2 mandatroy elements and 1 optional column.
+     * SELECT x as id, y as name, z as description from {table}.
+     * @var string
+     */
+    protected static string $filteroptionsquery;
 
     /**
      * Apply the filter of hierachical class. Logic of Standardfilter can be applied here.
@@ -61,7 +80,7 @@ class customfieldfilter extends standardfilter {
         $categoryvalue,
         wunderbyte_table &$table
     ): void {
-        if (empty($this->subquery)) {
+        if (empty($this->sqlwithsubquery)) {
             throw new moodle_exception(
                 'missing_subquery',
                 'local_wunderbyte_table',
@@ -71,19 +90,16 @@ class customfieldfilter extends standardfilter {
                 You must call set_sql() before applying the filter, otherwise the filter cannot be applied.'
             );
         }
-        // $filter .= ' ' . $this->sqlwithsubquery . ' ';
 
         global $DB;
         $filtercounter = 1;
-
+        $generatedwhere = '';
         foreach ($categoryvalue as $key => $value) {
             $generatedwhere .= $filtercounter == 1 ? "" : " OR ";
             // Apply special filter here.
-            if (
-                isset($table->subcolumns['datafields'][$columnname]['jsonattribute'])
-            ) {
+            if (isset($table->subcolumns['datafields'][$columnname]['jsonattribute'])) {
                     $paramsvaluekey = $table->set_params("%" . $value . "%");
-                    $generatedwhere .= $DB->sql_like("$columnname", ":$paramsvaluekey", false);
+                    $generatedwhere .= $DB->sql_like("$this->subquerycolumn", ":$paramsvaluekey", false);
             } else {
                 // We want to find the value in an array of values.
                 // Therefore, we have to use or as well.
@@ -91,17 +107,14 @@ class customfieldfilter extends standardfilter {
                 $separator = $table->subcolumns['datafields'][$columnname]['explode'] ?? ",";
                 $paramsvaluekey = $table->set_params('%' . $separator . $value . $separator . '%', true);
                 $escapecharacter = wunderbyte_table::return_escape_character($value);
-                $concatvalue = $DB->sql_concat("'$separator'", $columnname, "'$separator'");
+                $concatvalue = $DB->sql_concat("'$separator'", $this->subquerycolumn, "'$separator'");
                 $generatedwhere .= $DB->sql_like("$concatvalue", ":$paramsvaluekey", false, false, false, $escapecharacter);
             }
             $filtercounter++;
         }
 
-        $filter .= $this->replace_sql_params(
-            $this->sqlwithsubquery,
-            $this->subqueryparams,
-            $generatedwhere
-        );
+        // Replaces placeholder with double dots (:) with the generated where condition.
+        $filter .= $this->adjust_sql_condition($generatedwhere);
     }
 
     /**
@@ -116,8 +129,7 @@ class customfieldfilter extends standardfilter {
      * $filter->set_sql("category IN (
      *     SELECT cc.id
      *     FROM m_course_categories cc
-     *     WHERE cc.name LIKE '%Math%'
-     *         OR cc.name ILIKE '%Computer%'
+     *     WHERE :WHERE
      * )");
      * ```
      *
@@ -126,9 +138,18 @@ class customfieldfilter extends standardfilter {
      * @return void
      */
     public function set_sql(string $sqlwithsubquery) {
-        if ($this->sql_contains_required_patterns($sqlwithsubquery)) {
+        // if ($this->sql_contains_required_patterns($sqlwithsubquery)) {
             $this->sqlwithsubquery = $sqlwithsubquery;
-        }
+        // }
+    }
+
+    /**
+     * Set the name column in the subquery.
+     * @param string $columnname
+     * @return void
+     */
+    public function set_subquery_column(string $columnname) {
+        $this->subquerycolumn = $columnname;
     }
 
     /**
@@ -147,7 +168,7 @@ class customfieldfilter extends standardfilter {
             'IN keyword' => '/\bIN\b/',
             'SELECT keyword' => '/\bSELECT\b/',
             'id FROM phrase' => '/\bID\s+FROM\b/',
-            'table name inside curly braces' => '/\{[A-Z0-9_]+\}/',
+            'table name inside curly braces' => '/\{\:[A-Z0-9_]+\}/',
             'WHERE keyword' => '/\bWHERE\b/',
         ];
 
@@ -162,52 +183,66 @@ class customfieldfilter extends standardfilter {
     }
 
     /**
-     * Sets replacements in the subquery.
-     * @param array $params
-     * @return void
-     */
-    public function set_subquery_params(array $params = []) {
-        $this->subqueryparams = $params;
-    }
-
-    /**
      * Replace placeholders in an SQL-like string with parameter values.
      *
-     * @param string $sql     The SQL string containing placeholders (e.g. :table, :param1).
-     * @param array  $params  Associative array of parameters ['table' => 'categories'].
-     * @throws \InvalidArgumentException If number of placeholders does not match $params,
-     *                                  or a placeholder has no corresponding key.
-     * @return string The string with placeholders replaced.
+     * @param string $generatedwhere
+     * @throws \InvalidArgumentException
+     *
+     * @return string
      */
-    protected function replace_sql_params(string $sql, array $params, string $generatedwhere): string {
+    protected function adjust_sql_condition(string $generatedwhere): string {
         // Find all placeholders like :param1, :table etc.
-        preg_match_all('/:([a-zA-Z0-9_]+)/', $sql, $matches);
+        preg_match_all('/:([a-zA-Z0-9_]+)/', $this->sqlwithsubquery, $matches);
 
         $placeholders = $matches[1] ?? [];
 
         // Check if counts match.
-        if (count($placeholders) !== count($params)) {
+        if (count($placeholders) !== 1) {
             throw new \InvalidArgumentException(sprintf(
-                'Parameter count mismatch: found %d placeholders in string but %d params provided.',
-                count($placeholders),
-                count($params)
+                'The placeholder is not found.',
             ));
         }
 
         // Replace each placeholder with its corresponding value.
-        foreach ($placeholders as $key) {
-            if (!array_key_exists($key, $params)) {
-                throw new \InvalidArgumentException("Missing parameter value for placeholder :{$key}");
-            }
-
-            // Escape value safely (you can adapt escaping rules as needed).
-            $value = $params[$key];
-            if (empty($value)) {
-                $value = $generatedwhere;
-            }
-            $sql = str_replace(':' . $key, $value, $sql);
-        }
+        $key = current($placeholders);
+        $sql = str_replace(
+            ':' . $key,
+            $generatedwhere,
+            $this->sqlwithsubquery
+        );
 
         return $sql;
+    }
+
+    /**
+     * Get standard filter options.
+     * @param wunderbyte_table $table
+     * @param string $key
+     * @return array
+     */
+    // public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
+    //     global $DB;
+
+    //     if (empty(self::$filteroptionsquery)) {
+    //         return \local_wunderbyte_table\filter::get_db_filter_column($table, $key);
+    //     }
+
+    //     $records = $DB->get_records_sql(self::$filteroptionsquery, []);
+
+    //     $returnarray = [];
+
+    //     foreach ($records as $record) {
+    //         $item = new \stdClass();
+    //         $item->$key = "{$record->name}";
+    //         $returnarray[$record->id] = $item;
+    //     }
+    //     return $returnarray ?? [];
+    // }
+
+    /**
+     *
+     */
+    public function set_filter_options_query(string $query) {
+        self::$filteroptionsquery = $query;
     }
 }
