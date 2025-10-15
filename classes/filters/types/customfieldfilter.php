@@ -57,6 +57,12 @@ class customfieldfilter extends base {
     protected string $subquerycolumn;
 
     /**
+     * Sub query params.
+     * @var string
+     */
+    protected int $fieldid;
+
+    /**
      * SQL query that fetchs the data from the source. It should return 2 mandatroy elements and 1 optional column.
      * SELECT x as id, y as name, z as description from {table}.
      * @var string
@@ -80,18 +86,32 @@ class customfieldfilter extends base {
         $categoryvalue,
         wunderbyte_table &$table
     ): void {
+        global $DB;
+
         if (empty($this->sqlwithsubquery)) {
-            throw new moodle_exception(
-                'missing_subquery',
-                'local_wunderbyte_table',
-                '',
-                null,
-                'Customfieldfilter: No SQL subquery provided.
-                You must call set_sql() before applying the filter, otherwise the filter cannot be applied.'
-            );
+            // If the user did not provide an SQL query, use the default one.
+            // However, the user must provide a custom field ID.
+            if (empty($this->fieldid)) {
+                throw new moodle_exception(
+                    'missing_subquery_and_fieldid',
+                    'local_wunderbyte_table',
+                    '',
+                    null,
+                    'Customfieldfilter: No SQL subquery or no fieldid provided.
+                    You must call set_sql() or set_sql_for_fieldid before applying the filter,
+                    otherwise the filter cannot be applied.'
+                );
+            }
+
+            $defaultsql =
+                    "id IN (SELECT instanceid
+                            FROM {customfield_data} cfd
+                            WHERE cfd.fieldid = {$this->fieldid}
+                            AND :where)";
+            $this->sqlwithsubquery = $defaultsql;
+            $this->subquerycolumn = 'cfd.value';
         }
 
-        global $DB;
         $filtercounter = 1;
         $generatedwhere = '';
         foreach ($categoryvalue as $key => $value) {
