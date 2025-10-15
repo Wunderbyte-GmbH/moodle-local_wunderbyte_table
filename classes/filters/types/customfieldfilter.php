@@ -134,22 +134,24 @@ class customfieldfilter extends base {
      * ```
      *
      * @param string $sqlwithsubquery The SQL subquery or condition fragment to apply.
+     * @param string $columnname
      *
      * @return void
      */
-    public function set_sql(string $sqlwithsubquery) {
-        // if ($this->sql_contains_required_patterns($sqlwithsubquery)) {
+    public function set_sql(string $sqlwithsubquery, string $columnname) {
+        if ($this->sql_contains_required_patterns($sqlwithsubquery)) {
             $this->sqlwithsubquery = $sqlwithsubquery;
-        // }
+            $this->subquerycolumn = $columnname;
+        }
     }
 
     /**
-     * Set the name column in the subquery.
-     * @param string $columnname
+     * Sets $filedid.
+     * @param int $fieldid
      * @return void
      */
-    public function set_subquery_column(string $columnname) {
-        $this->subquerycolumn = $columnname;
+    public function set_sql_for_fieldid(int $fieldid) {
+        $this->fieldid = $fieldid;
     }
 
     /**
@@ -167,15 +169,15 @@ class customfieldfilter extends base {
         $patterns = [
             'IN keyword' => '/\bIN\b/',
             'SELECT keyword' => '/\bSELECT\b/',
-            'id FROM phrase' => '/\bID\s+FROM\b/',
-            'table name inside curly braces' => '/\{\:[A-Z0-9_]+\}/',
+            'FROM phrase' => '/\bFROM\b/',
+            'table name inside curly braces' => '/\{.*\}/',
             'WHERE keyword' => '/\bWHERE\b/',
         ];
 
         // Check each pattern and throw exception if any is missing.
         foreach ($patterns as $label => $pattern) {
             if (!preg_match($pattern, $normalized)) {
-                throw new \InvalidArgumentException("Missing required SQL term: {$label}");
+                throw new \InvalidArgumentException("Your provided SQL must requires the term: {$label}");
             }
         }
 
