@@ -26,6 +26,7 @@
 namespace local_wunderbyte_table\filters\types;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
+use local_wunderbyte_table\filter;
 use moodle_exception;
 
 /**
@@ -242,24 +243,34 @@ class customfieldfilter extends base {
      * @param string $key
      * @return array
      */
-    // public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
-    //     global $DB;
+    public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
+        global $DB;
 
-    //     if (empty(self::$filteroptionsquery)) {
-    //         return \local_wunderbyte_table\filter::get_db_filter_column($table, $key);
-    //     }
+        /** @var customfieldfilter $filter */
+        $filter = $table->filters[$key];
+        $customfieldid = $filter->fieldid;
 
-    //     $records = $DB->get_records_sql(self::$filteroptionsquery, []);
+        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
+        // As this filter is made specifically for custom fields,
+        // we count the number of records for each value of the given $key in the custom field data table.
+        $sql = "
+            SELECT cfd.value as $key, COUNT('$key') as keycount
+            FROM {customfield_data} cfd
+            WHERE cfd.fieldid = :fieldid
+            GROUP BY cfd.value
+            ORDER BY $key ASC
+        ";
 
-    //     $returnarray = [];
+        $records = $DB->get_records_sql($sql, ['fieldid' => $customfieldid]);
 
-    //     foreach ($records as $record) {
-    //         $item = new \stdClass();
-    //         $item->$key = "{$record->name}";
-    //         $returnarray[$record->id] = $item;
-    //     }
-    //     return $returnarray ?? [];
-    // }
+        // If $records is empty, it means that $key is not a custom field,
+        // so we look inside the query to count the number of records for each value of the given key.
+        if (count($records) === 0) {
+            return filter::get_db_filter_column($table, $key);
+        }
+
+        return $records;
+    }
 
     /**
      *
