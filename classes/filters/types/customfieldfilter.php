@@ -138,6 +138,7 @@ class customfieldfilter extends base {
             }
             $filtercounter++;
         }
+        $generatedwhere .= ')';
 
         // Replaces placeholder with double dots (:) with the generated where condition.
         $filter .= $this->adjust_sql_condition($generatedwhere);
@@ -261,7 +262,7 @@ class customfieldfilter extends base {
         $filter = $table->filters[$key];
         $customfieldid = $filter->fieldid ?? null;
 
-        // If $records is empty, it means that $key is not a custom field,
+        // If $customfieldid is empty, it means that $key is not a custom field,
         // so we look inside the query to count the number of records for each value of the given key.
         if (empty($customfieldid)) {
             return filter::get_db_filter_column($table, $key);
@@ -279,12 +280,6 @@ class customfieldfilter extends base {
         ";
 
         $records = $DB->get_records_sql($sql, ['fieldid' => $customfieldid]);
-
-        // If $records is empty, it means that $key is not a custom field,
-        // so we look inside the query to count the number of records for each value of the given key.
-        if (count($records) === 0) {
-            return filter::get_db_filter_column($table, $key);
-        }
 
         return $records;
     }
