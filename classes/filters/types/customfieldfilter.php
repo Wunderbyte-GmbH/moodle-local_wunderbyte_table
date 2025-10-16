@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * The Wunderbyte table class is an extension of the tablelib table_sql class.
- *
- * @package local_wunderbyte_table
- * @copyright 2023 Wunderbyte Gmbh <info@wunderbyte.at>
- * @author Mahdi Poustini
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace local_wunderbyte_table\filters\types;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
@@ -30,7 +21,21 @@ use local_wunderbyte_table\filter;
 use moodle_exception;
 
 /**
- * Wunderbyte table class is an extension of table_sql.
+ *
+ * Class customfieldfilter
+ *
+ * This class provides functionality to filter Moodle data tables
+ * based on values stored in custom fields. It supports both standard
+ * filters and custom SQL subqueries for more complex data conditions.
+ *
+ * The class is typically used within the {@see wunderbyte_table} framework
+ * to dynamically inject WHERE clauses into SQL queries based on user-selected
+ * filter criteria.
+ *
+ * @package local_wunderbyte_table
+ * @copyright 2023 Wunderbyte Gmbh <info@wunderbyte.at>
+ * @author Mahdi Poustini
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class customfieldfilter extends base {
     /**
@@ -46,38 +51,38 @@ class customfieldfilter extends base {
     public $hascallback = true;
 
     /**
-     * Subquery string
+     * The SQL fragment or subquery string used in filtering.
+     * Must contain one placeholder (e.g. ':where') that will be replaced
+     * with dynamically generated conditions.
+     *
      * @var string
      */
     protected string $sqlwithsubquery = '';
 
     /**
-     * Sub query params.
+     * The column inside the subquery that will be used for filtering
+     * (e.g., 'cfd.value' in a customfield_data subquery).
+     *
      * @var string
      */
     protected string $subquerycolumn;
 
     /**
-     * Sub query params.
-     * @var string
+     * The custom field ID used for generating a default subquery when none is provided.
+     *
+     * @var int
      */
     protected int $fieldid;
 
     /**
-     * SQL query that fetchs the data from the source. It should return 2 mandatroy elements and 1 optional column.
-     * SELECT x as id, y as name, z as description from {table}.
-     * @var string
-     */
-    protected static string $filteroptionsquery;
-
-    /**
-     * Apply the filter of hierachical class. Logic of Standardfilter can be applied here.
+     * Applies the filter to a wunderbyte_table instance using either a custom SQL
+     * subquery or a default one based on field ID.
      *
      * @param string $filter
      * @param string $columnname
      * @param mixed $categoryvalue
      * @param wunderbyte_table $table
-     *
+     * @throws moodle_exception If no SQL subquery or field ID is provided.
      * @return void
      *
      */
@@ -155,9 +160,10 @@ class customfieldfilter extends base {
      * ```
      *
      * @param string $sqlwithsubquery The SQL subquery or condition fragment to apply.
-     * @param string $columnname
+     * @param string $columnname The column within the subquery that the filter condition applies to (e.g. 'cfd.value').
      *
      * @return void
+     * @throws \InvalidArgumentException If required SQL components (SELECT, FROM, WHERE, etc.) are missing.
      */
     public function set_sql(string $sqlwithsubquery, string $columnname) {
         if ($this->sql_contains_required_patterns($sqlwithsubquery)) {
@@ -206,10 +212,11 @@ class customfieldfilter extends base {
     }
 
     /**
-     * Replace placeholders in an SQL-like string with parameter values.
+     * Replaces the placeholder in the subquery with the generated WHERE condition.
      *
-     * @param string $generatedwhere
-     * @throws \InvalidArgumentException
+     * @param string $generatedwhere The dynamically generated WHERE condition string.
+     * @throws \InvalidArgumentException If the subquery does not contain exactly one placeholder.
+     * @return string The completed SQL query ready for execution.
      *
      * @return string
      */
@@ -238,10 +245,14 @@ class customfieldfilter extends base {
     }
 
     /**
-     * Get standard filter options.
-     * @param wunderbyte_table $table
-     * @param string $key
-     * @return array
+     * Retrieves data for populating filter dropdowns in the UI.
+     *
+     * If the custom field contains data, returns a count of distinct values.
+     * Otherwise, falls back to a generic database column count.
+     *
+     * @param wunderbyte_table $table The table instance.
+     * @param string $key The column or field key to aggregate values for.
+     * @return array An associative array of filter options and their counts.
      */
     public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
         global $DB;
@@ -270,12 +281,5 @@ class customfieldfilter extends base {
         }
 
         return $records;
-    }
-
-    /**
-     *
-     */
-    public function set_filter_options_query(string $query) {
-        self::$filteroptionsquery = $query;
     }
 }
