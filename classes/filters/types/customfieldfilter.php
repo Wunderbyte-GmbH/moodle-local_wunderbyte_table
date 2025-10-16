@@ -119,7 +119,7 @@ class customfieldfilter extends base {
         }
 
         $filtercounter = 1;
-        $generatedwhere = '';
+        $generatedwhere = '(';
         foreach ($categoryvalue as $key => $value) {
             $generatedwhere .= $filtercounter == 1 ? "" : " OR ";
             // Apply special filter here.
@@ -259,7 +259,13 @@ class customfieldfilter extends base {
 
         /** @var customfieldfilter $filter */
         $filter = $table->filters[$key];
-        $customfieldid = $filter->fieldid;
+        $customfieldid = $filter->fieldid ?? null;
+
+        // If $records is empty, it means that $key is not a custom field,
+        // so we look inside the query to count the number of records for each value of the given key.
+        if (empty($customfieldid)) {
+            return filter::get_db_filter_column($table, $key);
+        }
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         // As this filter is made specifically for custom fields,
