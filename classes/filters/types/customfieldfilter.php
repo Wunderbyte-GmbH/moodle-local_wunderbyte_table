@@ -75,6 +75,13 @@ class customfieldfilter extends base {
     protected int $fieldid;
 
     /**
+     * Indicates whether the user has provided a custom SQL query.
+     *
+     * @var bool
+     */
+    protected bool $iscustomsql = false;
+
+    /**
      * Applies the filter to a wunderbyte_table instance using either a custom SQL
      * subquery or a default one based on field ID.
      *
@@ -94,7 +101,7 @@ class customfieldfilter extends base {
     ): void {
         global $DB;
 
-        if (empty($this->sqlwithsubquery)) {
+        if (!$this->iscustomsql) {
             // If the user did not provide an SQL query, use the default one.
             // However, the user must provide a custom field ID.
             if (empty($this->fieldid)) {
@@ -167,6 +174,8 @@ class customfieldfilter extends base {
      * @throws \InvalidArgumentException If required SQL components (SELECT, FROM, WHERE, etc.) are missing.
      */
     public function set_sql(string $sqlwithsubquery, string $columnname) {
+        $this->iscustomsql = true;
+
         if ($this->sql_contains_required_patterns($sqlwithsubquery)) {
             $this->sqlwithsubquery = $sqlwithsubquery;
             $this->subquerycolumn = $columnname;
@@ -261,25 +270,39 @@ class customfieldfilter extends base {
         /** @var customfieldfilter $filter */
         $filter = $table->filters[$key];
         $customfieldid = $filter->fieldid ?? null;
+        $iscutomsql = $filter->iscustomsql ?? false;
 
         // If $customfieldid is empty, it means that $key is not a custom field,
         // so we look inside the query to count the number of records for each value of the given key.
-        if (empty($customfieldid)) {
+        if (empty($customfieldid) && !$iscutomsql) {
             return filter::get_db_filter_column($table, $key);
         }
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         // As this filter is made specifically for custom fields,
         // we count the number of records for each value of the given $key in the custom field data table.
-        $sql = "
-            SELECT cfd.value as $key, COUNT('$key') as keycount
-            FROM {customfield_data} cfd
-            WHERE cfd.fieldid = :fieldid
-            GROUP BY cfd.value
-            ORDER BY $key ASC
-        ";
+        if ($iscutomsql) {
+            $sql = "
+                SELECT cfd.value as $key, COUNT('$key') as keycount
+                FROM {customfield_data} cfd
+                JOIN {customfield_field} cff ON cff.id = cfd.fieldid
+                WHERE cff.shortname = :shortname
+                GROUP BY cfd.value
+                ORDER BY $key ASC
+            ";
+            $params = ['shortname' => $key];
+        } else {
+            $sql = "
+                SELECT cfd.value as $key, COUNT('$key') as keycount
+                FROM {customfield_data} cfd
+                WHERE cfd.fieldid = :fieldid
+                GROUP BY cfd.value
+                ORDER BY $key ASC
+            ";
+            $params = ['fieldid' => $customfieldid];
+        }
 
-        $records = $DB->get_records_sql($sql, ['fieldid' => $customfieldid]);
+        $records = $DB->get_records_sql($sql, $params);
 
         return $records;
     }
