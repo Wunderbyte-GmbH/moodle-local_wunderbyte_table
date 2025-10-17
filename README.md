@@ -306,6 +306,79 @@ You can define the attribute of the JSON object which should be used for the fil
     );
     $table->add_filter($standardfilter);
 
+### Customfiled filter
+The Custom filed allows to create filters on custom fields. You need to intantiate a filter and pass the name of the custom filed shortname into contructor.
+
+    $newfilter = new customfieldfilter('customfieldname', 'Custom field name');
+
+It is important to pass the custom field ID by calling `set_sql_for_fieldid` immediately after intantiation. It takes the custom field ID instead of custom field shortname to keep the condition performance in a high level.
+
+    set_sql_for_fieldid($customfieldid);
+
+If you need to select custom fields from the table rather than curomfield_field such as user_custom_filed you need to pass your prefered SQL into filter using `set_sql` function.
+
+    set_sql($sql, $columnname);
+
+The privoded $sql must respect a structure of a subquery select which have keywords `SELECT`, `FROM`, `WHERE` , table name inside `{}` and a `:where` placeholder.
+
+The argumnet `$column` is the name of the column which keeps the value inside the desired table. As an example, in hte case that we want to make a filter on a custom profile field with name `supervisor` we need to create a custom field filter as follow:
+
+    $newfilter = new customfieldfilter('supervisor', 'Supervisor ID');
+    $newfilter->set_sql(
+        'id IN (
+                SELECT userid
+                FROM {user_info_data} uid
+                WHERE uid.fieldid = CUSTOM_PROFILE_FIELD_ID
+                AND :where)
+        ',
+        'uid.data'
+        );
+
+As you know `data` is the name of the column which keeps value of 'supervisor' custom field in the `user_info_field` table.
+
+
+
+### Customfield filter
+
+The **Customfield filter** allows you to create filters on custom fields. You need to instantiate a filter and pass the shortname of the custom field into the constructor.
+
+```php
+$newfilter = new customfieldfilter('customfieldname', 'Custom field name');
+```
+
+It is important to pass the custom field ID by calling `set_sql_for_fieldid` immediately after instantiation.
+This method takes the custom field ID instead of the shortname to maintain high performance.
+
+```php
+$newfilter->set_sql_for_fieldid($customfieldid);
+```
+
+If you need to select custom fields from a table other than `customfield_field` (for example, `user_custom_field`), you need to pass your preferred SQL into the filter using the `set_sql` function.
+
+```php
+$newfilter->set_sql($sql, $columnname);
+```
+
+The provided `$sql` must follow the structure of a subquery `SELECT` statement containing the keywords `SELECT`, `FROM`, and `WHERE`, with table names enclosed in `{}` and a `:where` placeholder.
+
+The argument `$columnname` is the name of the column that holds the value inside the desired table.
+For example, if we want to create a filter on a custom profile field named `supervisor`, we can create a custom field filter as follows:
+
+```php
+$newfilter = new customfieldfilter('supervisor', 'Supervisor ID');
+$newfilter->set_sql(
+    'id IN (
+            SELECT userid
+            FROM {user_info_data} uid
+            WHERE uid.fieldid = CUSTOM_PROFILE_FIELD_ID
+            AND :where
+        )',
+    'uid.data'
+);
+```
+
+As you know, `data` is the name of the column that stores the value of the `supervisor` custom field in the `user_info_data` table.
+
 ## Sorting
 
 If the output template you want to use doesn't support clickable headers to sort (eg because you use cards), you might want to use the sort select. Just add
