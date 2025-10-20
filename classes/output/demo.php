@@ -195,6 +195,7 @@ class demo implements renderable, templatable {
         // $customfieldfilter1->set_sql_for_fieldid(110);
         // $table->add_filter($customfieldfilter1);
 
+
         // $customfieldfilter2 = new customfieldfilter('supervisor', 'Supervisor');
         // $customfieldfilter2->set_sql('id IN (
         //                                 SELECT id uid.userid
@@ -203,6 +204,7 @@ class demo implements renderable, templatable {
         //                                 'uid.data'
         //                             );
         // $table->add_filter($customfieldfilter2);
+        // Attention: You also need to select supervisor as a separate field in the SELECT clause of the main query.
 
         // Add action buttons to bottom of table. Demo of all defined types.
         // Define if it triggers a modal, if records need to be selected
