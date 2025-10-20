@@ -272,38 +272,37 @@ class customfieldfilter extends base {
         $customfieldid = $filter->fieldid ?? null;
         $iscutomsql = $filter->iscustomsql ?? false;
 
-        // If $customfieldid is empty, it means that $key is not a custom field,
+        // If $iscutomsql is set,
         // so we look inside the query to count the number of records for each value of the given key.
-        if (empty($customfieldid) && !$iscutomsql) {
+        if ($iscutomsql) {
             return filter::get_db_filter_column($table, $key);
         }
 
         // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
         // As this filter is made specifically for custom fields,
         // we count the number of records for each value of the given $key in the custom field data table.
-        if ($iscutomsql) {
-            $sql = "
-                SELECT cfd.value as $key, COUNT('$key') as keycount
-                FROM {customfield_data} cfd
-                JOIN {customfield_field} cff ON cff.id = cfd.fieldid
-                WHERE cff.shortname = :shortname
-                GROUP BY cfd.value
-                ORDER BY $key ASC
-            ";
-            $params = ['shortname' => $key];
-        } else {
-            $sql = "
-                SELECT cfd.value as $key, COUNT('$key') as keycount
-                FROM {customfield_data} cfd
-                WHERE cfd.fieldid = :fieldid
-                GROUP BY cfd.value
-                ORDER BY $key ASC
-            ";
-            $params = ['fieldid' => $customfieldid];
-        }
+        $sql = "
+            SELECT cfd.value as $key, COUNT('$key') as keycount
+            FROM {customfield_data} cfd
+            WHERE cfd.fieldid = :fieldid
+            GROUP BY cfd.value
+            ORDER BY $key ASC
+        ";
+        $params = ['fieldid' => $customfieldid];
 
         $records = $DB->get_records_sql($sql, $params);
 
-        return $records;
+        // If there are only empty strings, we don't want the filter to show.
+        if (
+            !$records
+            || (reset($records)->{$key} === null
+            || reset($records)->{$key} === '')
+        ) {
+            return [
+                'continue' => true,
+            ];
+        } else {
+            return $records;
+        }
     }
 }
