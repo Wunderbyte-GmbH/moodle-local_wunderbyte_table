@@ -27,6 +27,7 @@
 namespace local_wunderbyte_table\output;
 
 use local_wunderbyte_table\demo_table;
+use local_wunderbyte_table\filters\types\customfieldfilter;
 use local_wunderbyte_table\filters\types\datepicker;
 use local_wunderbyte_table\filters\types\hierarchicalfilter;
 use local_wunderbyte_table\filters\types\hourlist;
@@ -180,6 +181,28 @@ class demo implements renderable, templatable {
         // When true and action buttons are present, checkboxes will be rendered to every line / record.
         $table->addcheckboxes = true;
         // $table->sortablerows = true;
+
+        /*
+         * The custom field filter is mainly created to filter objects that have any custom fields,
+         *and not for user custom information. However, here you can see an example of its usage.
+         * For custom profile fields, you need to define a subquery SQL by yourself.
+         * As we have no custom field defined by default, we commented the sample code.
+         * Refer to the Wunderbyte readme file for more details.
+         */
+
+        // Sample custom profile field.
+        // $customfieldfilter1 = new customfieldfilter('supervisor', 'Supervisor');
+        // $customfieldfilter1->set_sql_for_fieldid(110);
+        // $table->add_filter($customfieldfilter1);
+
+        // $customfieldfilter2 = new customfieldfilter('supervisor', 'Supervisor');
+        // $customfieldfilter2->set_sql('id IN (
+        //                                 SELECT id uid.userid
+        //                                 FROM user_info_data uid
+        //                                 WHERE uid.fieldid = 110 AND :where)',
+        //                                 'uid.data'
+        //                             );
+        // $table->add_filter($customfieldfilter2);
 
         // Add action buttons to bottom of table. Demo of all defined types.
         // Define if it triggers a modal, if records need to be selected
