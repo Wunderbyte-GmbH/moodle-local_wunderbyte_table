@@ -27,7 +27,6 @@ use advanced_testcase;
 use context_course;
 use local_wunderbyte_table\wunderbyte_table;
 
-
 /**
  * Unit tests for standardfilter class.
  * @covers \local_wunderbyte_table\filters\types\customfieldfilter
@@ -153,7 +152,7 @@ final class customfieldfilter_test extends advanced_testcase {
     }
 
     public function test_if_customfiledfilter_filters_the_records_sample2(): void {
-        global $DB, $_GET;
+        global $CFG, $DB, $_GET;
 
         $_GET = [];
         $_POST = [];
@@ -200,6 +199,7 @@ final class customfieldfilter_test extends advanced_testcase {
         $exists = $DB->record_exists('user_info_field', ['shortname' => 'supervisor']);
         $this->assertTrue($exists, 'Custom profile field "supervisor" was not created.');
 
+        require_once($CFG->dirroot . '/user/profile/lib.php');
         // We set a supervisor ID for students 1, 3, 5, 7, 9.
         foreach ([1, 3, 5, 7, 9] as $id) {
             profile_save_data((object)['id' => $students[$id]->id, 'profile_field_supervisor' => 11111]);
