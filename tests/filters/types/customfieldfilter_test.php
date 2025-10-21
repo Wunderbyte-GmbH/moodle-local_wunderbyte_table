@@ -84,11 +84,12 @@ final class customfieldfilter_test extends advanced_testcase {
         // Enroll student 1 in course2. So the student1 is enrolled i both courses.
         $this->getDataGenerator()->enrol_user($students[1]->id, $course2->id, 'student');
 
-        // Assert that each course has 5 enrolled students.
+        // Assert that each course1 has 5 enrolled students.
         $enrolled1 = get_enrolled_users(context_course::instance($course1->id));
-        $enrolled2 = get_enrolled_users(context_course::instance($course2->id));
-
         $this->assertCount(5, $enrolled1, 'Course 1 should have 5 enrolled students.');
+
+        // Assert that each course2 has 6 enrolled students.
+        $enrolled2 = get_enrolled_users(context_course::instance($course2->id));
         $this->assertCount(6, $enrolled2, 'Course 2 should have 5 enrolled students.');
 
         // Now instantiate Wunderbyte table.
@@ -133,13 +134,11 @@ final class customfieldfilter_test extends advanced_testcase {
         $table->outhtml(10000, true);
         $this->assertCount(11, $table->rawdata);
 
-        // Test if optional_param works when passing filter options via $_GET.
-        $_GET['wbtfilter'] = '{"username":["student1"]}';
-        $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
-        $this->assertEquals('{"username":["student1"]}', $wbtfilter);
-
         // Add customfield filter.
         $_GET['wbtfilter'] = '{"category":["My Category 2"]}';
+        // Test if optional_param works when passing filter options via $_GET.
+        $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
+        $this->assertEquals('{"category":["My Category 2"]}', $wbtfilter);
 
         $customfieldfilter = new customfieldfilter('category');
         $customfieldfilter->set_sql(
@@ -261,12 +260,11 @@ final class customfieldfilter_test extends advanced_testcase {
         $table->outhtml(10000, true);
         $this->assertCount(11, $table->rawdata);
 
-        // Test if optional_param works when passing filter options via $_GET.
-        $_GET['wbtfilter'] = '{"supervisor":["11111"]}';
-        $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
-        $this->assertEquals('{"supervisor":["11111"]}', $wbtfilter);
         // Add customfield filter.
         $_GET['wbtfilter'] = '{"supervisor":["11111"]}';
+        // Test if optional_param works when passing filter options via $_GET.
+        $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
+        $this->assertEquals('{"supervisor":["11111"]}', $wbtfilter);
 
         $customfieldfilter = new customfieldfilter('supervisor');
         $subsql = "
