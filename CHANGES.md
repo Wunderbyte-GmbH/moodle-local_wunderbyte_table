@@ -1,3 +1,13 @@
+## Version 2.0.62 (2025103100)
+* New Feature: New filter type 'customfieldfilter'.
+* Improvement: New filter type to improve performance of query execution.
+* Improvement: Implement function get_data_for_filter_options.
+* Improvement: Fall back to the get_db_filter_column function when the field ID cannot be found.
+* Improvement: Add ample usage of custom filter to the demo file.
+* Bugfix: Use a query with a condition on cff.shortname if the user provides a custom SQL query.
+* Bugfix: Fallback on get_db_filter_column when a custom SQL is provided.
+* Bugfix: Resolve the error in the GitHub Action related to the profile_save_data function.
+
 ## Version 2.0.61 (2025100100)
 * New Feature: exact column filter.
 * Improvement: Don't trigger table viewed event (for performance improvement)
