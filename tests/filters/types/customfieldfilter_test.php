@@ -39,10 +39,10 @@ final class customfieldfilter_test extends advanced_testcase {
         $_POST = [];
     }
     /**
-     * Summary of test_if_customfiledfilter_filters_the_records
+     * Summary of test_if_customfieldfilter_filters_the_records
      * @return void
      */
-    public function test_if_customfiledfilter_filters_the_records_sample1(): void {
+    public function test_if_customfieldfilter_filters_the_records_sample1(): void {
         global $DB, $_GET;
 
         $_GET = [];
@@ -150,7 +150,7 @@ final class customfieldfilter_test extends advanced_testcase {
         $this->assertCount(6, $table->rawdata);
     }
 
-    public function test_if_customfiledfilter_filters_the_records_sample2(): void {
+    public function test_if_customfieldfilter_filters_the_records_sample2(): void {
         global $CFG, $DB, $_GET;
 
         $_GET = [];

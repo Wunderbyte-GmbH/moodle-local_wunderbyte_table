@@ -183,7 +183,7 @@ class customfieldfilter extends base {
     }
 
     /**
-     * Sets $filedid.
+     * Sets $fieldid.
      * @param int $fieldid
      * @return void
      */
