@@ -82,6 +82,13 @@ class customfieldfilter extends base {
     protected bool $iscustomsql = false;
 
     /**
+     * By default we count keys, but if false we return the options with no count.
+     *
+     * @var bool
+     */
+    protected bool $countkeys = true;
+
+    /**
      * Applies the filter to a wunderbyte_table instance using either a custom SQL
      * subquery or a default one based on field ID.
      *
@@ -275,12 +282,49 @@ class customfieldfilter extends base {
         // If $iscutomsql is set,
         // so we look inside the query to count the number of records for each value of the given key.
         if ($iscutomsql) {
-            return filter::get_db_filter_column($table, $key);
+            $records = filter::get_db_filter_column($table, $key);
+        } else {
+            // It is not possbile to count the number of records with get_db_filter_column function
+            // as it needs the column to be included in the selected fields and we have not this custom
+            // filed inside the selected fields when it is not a custom field.
+            // The $key param is the name of the column in the table, so we can safely use it directly without fear of injection.
+            // As this filter is made specifically for custom fields, we count the number of records for each value of
+            // the given $key in the custom field data table.
+            $records = self::get_db_filter_column_for_custom_field($table, $key);
         }
 
-        // The $key param is the name of the table in the column, so we can safely use it directly without fear of injection.
-        // As this filter is made specifically for custom fields,
-        // we count the number of records for each value of the given $key in the custom field data table.
+        // If we dont need count key, we don't return it.
+        if (!$filter->countkeys && empty($records['continue'])) {
+            foreach ($records as $key => $value) {
+                $value->keycount = false;
+                $records[$key] = $value;
+            }
+        }
+
+        return $records;
+    }
+
+    /**
+     * Returns the data for the filter if it is a custom field.
+     *
+     * It is not possbile to count the number of records with get_db_filter_column function
+     * as it needs the column to be included in the selected fields and we have not this custom filed inside the selected fields
+     * when it is not a custom field.
+     * The $key param is the name of the column in the table, so we can safely use it directly without fear of injection.
+     * As this filter is made specifically for custom fields, we count the number of records for each value of
+     * the given $key in the custom field data table.
+     *
+     * @param wunderbyte_table $table The table instance.
+     * @param string $key The column or field key to aggregate values for.
+     * @return array An associative array of filter options and their counts.
+     */
+    protected static function get_db_filter_column_for_custom_field(wunderbyte_table $table, string $key): array {
+        global $DB;
+
+        /** @var customfieldfilter $filter */
+        $filter = $table->filters[$key];
+        $customfieldid = $filter->fieldid ?? null;
+
         $sql = "
             SELECT cfd.value as $key, COUNT('$key') as keycount
             FROM {customfield_data} cfd
@@ -304,5 +348,13 @@ class customfieldfilter extends base {
         } else {
             return $records;
         }
+    }
+
+    /**
+     * Set $countkeys to false.
+     * @return void
+     */
+    public function dont_count_keys() {
+        $this->countkeys = false;
     }
 }
