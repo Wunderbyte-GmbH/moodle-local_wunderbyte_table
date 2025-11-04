@@ -91,6 +91,14 @@ class customfieldfilter extends base {
     protected bool $countkeys = true;
 
     /**
+     * By default, this filter uses the ILIKE operator to filter results in the WHERE condition.
+     * However, you can use the '=' operator instead. To use the '=' operator, you must call `use_operator_equal()`.
+     *
+     * @var string Can be 'ilike' or '='.
+     */
+    protected string $inuseoperator = 'ilike';
+
+    /**
      * Applies the filter to a wunderbyte_table instance using either a custom SQL
      * subquery or a default one based on field ID.
      *
@@ -134,6 +142,37 @@ class customfieldfilter extends base {
             $this->subquerycolumn = 'cfd.value';
         }
 
+        switch ($this->inuseoperator) {
+            case '=':
+                $generatedwhere = $this->generate_where_condition_using_equal($filter, $columnname, $categoryvalue, $table);
+                break;
+            case 'ilike':
+            default:
+                $generatedwhere = $this->generate_where_condition_using_ilike($filter, $columnname, $categoryvalue, $table);
+                break;
+        }
+
+        // Replaces placeholder with double dots (:) with the generated where condition.
+        $filter .= $this->adjust_sql_condition($generatedwhere);
+    }
+
+    /**
+     * Generated where condition using ILKE operator to filter out the results.
+     *
+     * @param string $filter
+     * @param string $columnname
+     * @param mixed $categoryvalue
+     * @param wunderbyte_table $table
+     * @return string
+     *
+     */
+    protected function generate_where_condition_using_ilike(
+        string &$filter,
+        string $columnname,
+        $categoryvalue,
+        wunderbyte_table &$table
+    ): string {
+        global $DB;
         $filtercounter = 1;
         $generatedwhere = '(';
         foreach ($categoryvalue as $key => $value) {
@@ -156,8 +195,37 @@ class customfieldfilter extends base {
         }
         $generatedwhere .= ')';
 
-        // Replaces placeholder with double dots (:) with the generated where condition.
-        $filter .= $this->adjust_sql_condition($generatedwhere);
+        return $generatedwhere;
+    }
+
+    /**
+     * Generated where condition using '=' operator to filter out the results.
+     *
+     * @param string $filter
+     * @param string $columnname
+     * @param mixed $categoryvalue
+     * @param wunderbyte_table $table
+     * @return string
+     *
+     */
+    protected function generate_where_condition_using_equal(
+        string &$filter,
+        string $columnname,
+        $categoryvalue,
+        wunderbyte_table &$table
+    ): string {
+        global $DB;
+        $filtercounter = 1;
+        $generatedwhere = '(';
+        foreach ($categoryvalue as $key => $value) {
+            $generatedwhere .= $filtercounter == 1 ? "" : " OR ";
+            $paramsvaluekey = $table->set_params($value, true);
+            $generatedwhere .= $this->subquerycolumn . '=' . ":$paramsvaluekey";
+            $filtercounter++;
+        }
+        $generatedwhere .= ')';
+
+        return $generatedwhere;
     }
 
     /**
@@ -381,5 +449,33 @@ class customfieldfilter extends base {
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }
+    }
+
+    /**
+     * Sets `$inuseoperator` to 'ilike'.
+     * This makes the generated query use the following format to filter the results.
+     *
+     *   ('' || ',' || COLUMNVALUE || ',' ILIKE '%desiredvalue%' ESCAPE '\')
+     *
+     * Note that this may cause the query to perform slower.
+     *
+     * @return void
+     */
+    public function use_operator_ilike(): void {
+        $this->inuseoperator = 'ilike';
+    }
+
+    /**
+     * Sets `$inuseoperator` to '='.
+     * This makes the generated query use the following format to filter the results.
+     *
+     * COLUMNVALUE = 'desiredvalue'
+     *
+     * Using '=' may make the query perform faster than 'ilike', but it only filters results that match the exact value.
+     *
+     * @return void
+     */
+    public function use_operator_equal(): void {
+        $this->inuseoperator = '=';
     }
 }
