@@ -84,6 +84,8 @@ class customfieldfilter extends base {
     /**
      * By default we count keys, but if false we return the options with no count.
      *
+     * You need to call add_options() and pass your own options when you set this property to false.
+     *
      * @var bool
      */
     protected bool $countkeys = true;
@@ -279,6 +281,18 @@ class customfieldfilter extends base {
         $customfieldid = $filter->fieldid ?? null;
         $iscutomsql = $filter->iscustomsql ?? false;
 
+        // If we dont need count key, we don't run the query to count it but we need the options.
+        // So we create it manulally based on the options we passed to the filter.
+        if (!$filter->countkeys) {
+            $records = [];
+            foreach ($filter->options as $k => $v) {
+                $option[$key] = $k;
+                $option['keycount'] = false;
+                $records[$k] = (object) $option;
+            }
+            return $records;
+        }
+
         // If $iscutomsql is set,
         // so we look inside the query to count the number of records for each value of the given key.
         if ($iscutomsql) {
@@ -291,14 +305,6 @@ class customfieldfilter extends base {
             // As this filter is made specifically for custom fields, we count the number of records for each value of
             // the given $key in the custom field data table.
             $records = self::get_db_filter_column_for_custom_field($table, $key);
-        }
-
-        // If we dont need count key, we don't return it.
-        if (!$filter->countkeys && empty($records['continue'])) {
-            foreach ($records as $key => $value) {
-                $value->keycount = false;
-                $records[$key] = $value;
-            }
         }
 
         return $records;
@@ -352,9 +358,28 @@ class customfieldfilter extends base {
 
     /**
      * Set $countkeys to false.
+     *
+     * You need to call add_options() and pass your own options when you call this function.
+     *
      * @return void
      */
     public function dont_count_keys() {
         $this->countkeys = false;
+    }
+
+    /**
+     * This function takes a key value pair of options.
+     * Only if there are actual results in the table, these options will be displayed.
+     * The keys are the results, the values are the localized strings.
+     * For the standard filter, it's not necessary to provide these options...
+     * They will be gathered automatically.
+     *
+     * @param array $options
+     * @return void
+     */
+    public function add_options(array $options = []) {
+        foreach ($options as $key => $value) {
+            $this->options[$key] = $value;
+        }
     }
 }
