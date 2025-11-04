@@ -119,6 +119,7 @@ $string['genericbody'] = 'Sie sind dabei, diese Zeilen zu bearbeiten: <br> "{$a-
 $string['genericsubmit'] = 'Bestätigen';
 $string['generictitle'] = 'Möchten Sie wirklich diese Daten bearbeiten?';
 $string['gotopage'] = 'Gehe zu Seite:';
+$string['hideallfiltershavingbypasscache'] = 'Alle Filter ausblenden, die das Umgehen des Caches verursachen.';
 $string['hierarchicalfilter'] = 'Hierachischer Filter';
 $string['hourlastmodified'] = 'Stunde, zu der zuletzt aktualisiert wurde';
 $string['hourlist'] = 'Stundenlistenfilter';

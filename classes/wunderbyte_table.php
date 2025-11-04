@@ -412,6 +412,12 @@ class wunderbyte_table extends table_sql {
     public $switchtemplates = [];
 
     /**
+     * Whether we need to bypass the cache or not.
+     * @var bool $bypasscache
+     */
+    protected $bypasscache = false;
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
@@ -1206,6 +1212,7 @@ class wunderbyte_table extends table_sql {
             !get_config('local_wunderbyte_table', 'turnoffcaching')
             && $this->cachecomponent
             && $this->rawcachename
+            && !$this->bypasscache
         ) {
             $cache = cache::make($this->cachecomponent, $this->rawcachename);
             $cachedrawdata = $cache->get($cachekey);
@@ -1601,6 +1608,9 @@ class wunderbyte_table extends table_sql {
             }
         }
 
+        // Get 'hide filters that cause the cache to be bypassed' option and check if it is enabled.
+        $hidefiltersthtabypasscache = get_config('loca_wunderbyte_table', 'hideallfiltershavingbypasscache');
+
         foreach ($filterobject as $categorykey => $categoryvalue) {
             if (!empty($categoryvalue)) {
                 // For the first filter in a category we append AND.
@@ -1617,6 +1627,18 @@ class wunderbyte_table extends table_sql {
                     } else {
                         $class = new $classname($categorykey, $filtersetting['localizedname']);
                     }
+
+                    // Check if the option 'hide filters that cause the cache to be bypassed' is enabled.
+                    // If yes, we don't apply the filters that their $bypasscache property is equal to true.
+                    if ($hidefiltersthtabypasscache && $class->bypasscache) {
+                        continue;
+                    }
+
+                    // If no, check if this filter wants the cache to be byüpassed.
+                    if ($class->bypasscache) {
+                        $this->bypasscache = true;
+                    }
+
                     $class->apply_filter($filter, $categorykey, $categoryvalue, $this);
 
                     // phpcs:ignore moodle.Commenting.TodoComment.MissingInfoInline
