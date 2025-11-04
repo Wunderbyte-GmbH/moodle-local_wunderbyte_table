@@ -81,6 +81,12 @@ abstract class base {
     public $expectedvalue;
 
     /**
+     * Set it to true if this filter should bypass the cache.
+     * @var bool bypasscache
+     */
+    public $bypasscache = false;
+
+    /**
      * Set the column which should be filtered and possibly localize it.
      * @param string $columnidentifier
      * @param string $localizedstring
@@ -156,6 +162,7 @@ abstract class base {
 
         $options['localizedname'] = $this->localizedstring;
         $options['wbfilterclass'] = get_called_class();
+        $options['wbbypasscache'] = $this->bypasscache;
         $options[$this->columnidentifier . '_wb_checked'] = $invisible ? 0 : 1;
 
         // We always need to make sure that id column is present.

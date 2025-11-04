@@ -120,6 +120,7 @@ $string['genericbody'] = 'You are about to treat this rows: <br> "{$a->data}"';
 $string['genericsubmit'] = 'Confirm';
 $string['generictitle'] = 'Do you really want to treat this data?';
 $string['gotopage'] = 'Go to page:';
+$string['hideallfiltershavingbypasscache'] = 'Hide all filters that cause the cache to be bypassed.';
 $string['hierarchicalfilter'] = 'Hierachy filter';
 $string['hourlastmodified'] = 'Hour, last time updated';
 $string['hourlist'] = 'Hourlist filter';

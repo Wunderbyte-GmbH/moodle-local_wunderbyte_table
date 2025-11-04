@@ -912,6 +912,10 @@ class table implements renderable, templatable {
 
         $categories = json_decode($table->filterjson, true);
 
+        if (get_config('local_wunderbyte_table', 'hideallfiltershavingbypasscache')) {
+            $categories['categories'] = array_filter($categories['categories'], fn($a) => empty($a['wbbypasscache']));
+        }
+
         if (!isset($categories['categories'])) {
             return null;
         }

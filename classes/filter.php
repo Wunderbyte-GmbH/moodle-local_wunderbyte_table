@@ -140,10 +140,13 @@ class filter {
                 $localizedname = $fckey;
             }
 
+            $wbbypasscache = $filtersettings[$fckey]['wbbypasscache'] ?? false;
+
             $categoryobject = [
                 'name' => $localizedname, // Localized name.
                 'columnname' => $fckey, // The column name.
                 'collapsed' => 'collapsed',
+                'wbbypasscache' => $wbbypasscache,
             ];
 
             if ($classname = $filtersettings[$fckey]['wbfilterclass'] ?? false) {

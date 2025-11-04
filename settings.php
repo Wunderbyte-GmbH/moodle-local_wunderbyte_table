@@ -78,4 +78,13 @@ if ($hassiteconfig) {
             0
         )
     );
+
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'local_wunderbyte_table/hideallfiltershavingbypasscache',
+            get_string('hideallfiltershavingbypasscache', 'local_wunderbyte_table'),
+            '',
+            0
+        )
+    );
 }
