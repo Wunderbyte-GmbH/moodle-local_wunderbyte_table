@@ -1635,7 +1635,7 @@ class wunderbyte_table extends table_sql {
                     }
 
                     // If no, check if this filter wants the cache to be byüpassed.
-                    if ($class->bypasscache) {
+                    if ($class->if_bypass_cache()) {
                         $this->bypasscache = true;
                     }
 
