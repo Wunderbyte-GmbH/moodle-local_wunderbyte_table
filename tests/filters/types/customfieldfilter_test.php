@@ -290,7 +290,7 @@ final class customfieldfilter_test extends advanced_testcase {
 
     /**
      * Tests whether the custom field filter returns a generated WHERE condition
-     * with either the ILIKE or EQUAL operator.
+     * with either the ILIKE (or LIKE in MySQL) or EQUAL operator.
      *
      * In this case, we just want to make sure that the following functions work properly.
      * We don’t create a real environment.
@@ -327,7 +327,7 @@ final class customfieldfilter_test extends advanced_testcase {
             case '=':
                 $customfieldfilter->use_operator_equal();
                 break;
-            case 'ILIKE':
+            case 'LIKE':
             default:
                 $customfieldfilter->use_operator_ilike();
         }
@@ -369,8 +369,8 @@ final class customfieldfilter_test extends advanced_testcase {
         $this->assertNotEmpty($records);
         $this->assertCount(count($options), $records);
         foreach ($records as $record) {
-            $this->assertObjectHasProperty('something', $record);
-            $this->assertObjectHasProperty('keycount', $record);
+            $this->assertTrue(property_exists($record, 'something'));
+            $this->assertTrue(property_exists($record, 'keycount'));
             $this->assertContains($record->something, array_keys($options));
             $this->assertFalse($record->keycount);
         }
@@ -422,8 +422,8 @@ final class customfieldfilter_test extends advanced_testcase {
      */
     public static function data_provider(): array {
         return [
-            'ILIKE' => [
-                'operator' => 'ILIKE',
+            'ILIKE/LIKE' => [
+                'operator' => 'LIKE',
             ],
             '=' => [
                 'operator' => '=',
