@@ -297,6 +297,9 @@ final class customfieldfilter_test extends advanced_testcase {
      * - use_operator_ilike()
      * - use_operator_equal()
      *
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::use_operator_ilike
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::use_operator_equal
+     *
      * @dataProvider data_provider
      *
      * @param string $operator
@@ -334,6 +337,43 @@ final class customfieldfilter_test extends advanced_testcase {
         $filter = "";
         $customfieldfilter->apply_filter($filter, $coulmname, $values, $table);
         $this->assertStringContainsString($operator, $filter);
+    }
+
+    /**
+     * Test if dont_count_keys function sets the countkey to false.
+     * If yes, we expect to get our desired result from get_data_for_filter_options() function.
+     *
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::dont_count_keys
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::get_data_for_filter_options
+     *
+     * @return void
+     */
+    public function test_dont_count_keys_function(): void {
+        // Instantiate Wunderbyte table.
+        $table = new wunderbyte_table('test_table2');
+        $table->set_filter_sql('*', "", '1=1', '');
+        // Instantiate a customfieldfilter.
+        $filter = new customfieldfilter('something', 'something');
+        // Add options to this filter.
+        $options = [
+            '1' => 'option 1',
+            '2' => 'option 2',
+        ];
+        $filter->add_options($options);
+        // It's very important.
+        $filter->dont_count_keys();
+        $table->add_filter($filter);
+        // As we called dont_count_keys(), the property countkeys will be set to false.
+        // Based on the logic, we expect to get a result containing our injected options from this function.
+        $records = $filter->get_data_for_filter_options($table, 'something');
+        $this->assertNotEmpty($records);
+        $this->assertCount(count($options), $records);
+        foreach ($records as $record) {
+            $this->assertObjectHasProperty('something', $record);
+            $this->assertObjectHasProperty('keycount', $record);
+            $this->assertContains($record->something, array_keys($options));
+            $this->assertFalse($record->keycount);
+        }
     }
 
     /**
@@ -390,7 +430,6 @@ final class customfieldfilter_test extends advanced_testcase {
             ],
         ];
     }
-
     protected function tearDown(): void {
         parent::tearDown();
         // Clean up globals after each test.
