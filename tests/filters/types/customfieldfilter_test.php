@@ -39,7 +39,7 @@ final class customfieldfilter_test extends advanced_testcase {
         $_POST = [];
     }
     /**
-     * Summary of test_if_customfieldfilter_filters_the_records
+     * test_if_customfieldfilter_filters_the_records_sample1
      * @return void
      */
     public function test_if_customfieldfilter_filters_the_records_sample1(): void {
@@ -150,6 +150,10 @@ final class customfieldfilter_test extends advanced_testcase {
         $this->assertCount(6, $table->rawdata);
     }
 
+    /**
+     * test_if_customfieldfilter_filters_the_records_sample2
+     * @return void
+     */
     public function test_if_customfieldfilter_filters_the_records_sample2(): void {
         global $CFG, $DB, $_GET;
 
@@ -285,6 +289,54 @@ final class customfieldfilter_test extends advanced_testcase {
     }
 
     /**
+     * Tests whether the custom field filter returns a generated WHERE condition
+     * with either the ILIKE or EQUAL operator.
+     *
+     * In this case, we just want to make sure that the following functions work properly.
+     * We don’t create a real environment.
+     * - use_operator_ilike()
+     * - use_operator_equal()
+     *
+     * @dataProvider data_provider
+     *
+     * @param string $operator
+     * @return void
+     */
+    public function test_ilike_or_equal_where_condition(string $operator): void {
+        // Instantiate Wunderbyte table.
+        $table = new wunderbyte_table('test_table2');
+        $table->set_filter_sql('*', "", '1=1', '');
+
+        $customfieldfilter = new customfieldfilter('supervisor');
+        $subsql = "
+            userid IN (
+                SELECT userid
+                FROM {user_info_data} uid
+                JOIN {user_info_field} uif ON uid.fieldid = uif.id
+                WHERE uif.shortname = 'supervisor'
+                AND :where
+            )
+        ";
+        $customfieldfilter->set_sql($subsql, 'uid.data');
+
+        $coulmname = 'anything';
+        switch ($operator) {
+            case '=':
+                $customfieldfilter->use_operator_equal();
+                break;
+            case 'ILIKE':
+            default:
+                $customfieldfilter->use_operator_ilike();
+        }
+        $table->add_filter($customfieldfilter);
+
+        $values = [1, 2, 3];
+        $filter = "";
+        $customfieldfilter->apply_filter($filter, $coulmname, $values, $table);
+        $this->assertStringContainsString($operator, $filter);
+    }
+
+    /**
      * Creates a custom user profile field.
      *
      * @param string $shortname Field shortname (e.g. 'supervisor')
@@ -322,6 +374,21 @@ final class customfieldfilter_test extends advanced_testcase {
         $field->defaultdataformat = FORMAT_HTML;
         $field->param1 = 30; // Max length for 'text'.
         $field->id = $DB->insert_record('user_info_field', $field);
+    }
+
+    /**
+     * Data provider which providers string.
+     * @return array
+     */
+    public static function data_provider(): array {
+        return [
+            'ILIKE' => [
+                'operator' => 'ILIKE',
+            ],
+            '=' => [
+                'operator' => '=',
+            ],
+        ];
     }
 
     protected function tearDown(): void {
