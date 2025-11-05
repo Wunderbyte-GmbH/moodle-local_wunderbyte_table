@@ -415,7 +415,7 @@ class wunderbyte_table extends table_sql {
      * Whether we need to bypass the cache or not.
      * @var bool $bypasscache
      */
-    protected $bypasscache = false;
+    public $bypasscache = false;
 
     /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
@@ -1630,7 +1630,7 @@ class wunderbyte_table extends table_sql {
 
                     // Check if the option 'hide filters that cause the cache to be bypassed' is enabled.
                     // If yes, we don't apply the filters that their $bypasscache property is equal to true.
-                    if ($hidefiltersthtabypasscache && $class->bypasscache) {
+                    if ($hidefiltersthtabypasscache && $class->if_bypass_cache()) {
                         continue;
                     }
 
