@@ -1609,7 +1609,7 @@ class wunderbyte_table extends table_sql {
         }
 
         // Get 'hide filters that cause the cache to be bypassed' option and check if it is enabled.
-        $hidefiltersthtabypasscache = get_config('loca_wunderbyte_table', 'hideallfiltershavingbypasscache');
+        $hideallfiltershavingbypasscache = get_config('loca_wunderbyte_table', 'hideallfiltershavingbypasscache');
 
         foreach ($filterobject as $categorykey => $categoryvalue) {
             if (!empty($categoryvalue)) {
@@ -1630,7 +1630,7 @@ class wunderbyte_table extends table_sql {
 
                     // Check if the option 'hide filters that cause the cache to be bypassed' is enabled.
                     // If yes, we don't apply the filters that their $bypasscache property is equal to true.
-                    if ($hidefiltersthtabypasscache && $class->if_bypass_cache()) {
+                    if ($hideallfiltershavingbypasscache && $class->if_bypass_cache()) {
                         continue;
                     }
 

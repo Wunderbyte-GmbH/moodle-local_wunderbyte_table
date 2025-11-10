@@ -347,7 +347,7 @@ class customfieldfilter extends base {
         /** @var customfieldfilter $filter */
         $filter = $table->filters[$key];
         $customfieldid = $filter->fieldid ?? null;
-        $iscutomsql = $filter->iscustomsql ?? false;
+        $iscustomsql = $filter->iscustomsql ?? false;
 
         // If we dont need count key, we don't run the query to count it but we need the options.
         // So we create it manulally based on the options we passed to the filter.
@@ -361,9 +361,9 @@ class customfieldfilter extends base {
             return $records;
         }
 
-        // If $iscutomsql is set,
+        // If $iscustomsql is set,
         // so we look inside the query to count the number of records for each value of the given key.
-        if ($iscutomsql) {
+        if ($iscustomsql) {
             $records = filter::get_db_filter_column($table, $key);
         } else {
             // It is not possbile to count the number of records with get_db_filter_column function
