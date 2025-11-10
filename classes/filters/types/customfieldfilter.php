@@ -410,12 +410,17 @@ class customfieldfilter extends base {
 
         $records = $DB->get_records_sql($sql, $params);
 
+        // Check if there minimum one valid key.
+        $novalidkey = true;
+        foreach ($records as $k => $v) {
+            if (!empty($k) && !empty($v->{$key})) {
+                $novalidkey = false;
+                break;
+            }
+        }
+
         // If there are only empty strings, we don't want the filter to show.
-        if (
-            !$records
-            || (reset($records)->{$key} === null
-            || reset($records)->{$key} === '')
-        ) {
+        if (!$records || $novalidkey) {
             return [
                 'continue' => true,
             ];
