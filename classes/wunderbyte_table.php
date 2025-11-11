@@ -418,6 +418,12 @@ class wunderbyte_table extends table_sql {
     public $bypasscache = false;
 
     /**
+     * The user ID for whom the table is going to be rendered.
+     * @var int $foruserid
+     */
+    public $foruserid = 0;
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
