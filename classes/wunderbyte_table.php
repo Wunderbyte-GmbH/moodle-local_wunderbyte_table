@@ -430,7 +430,7 @@ class wunderbyte_table extends table_sql {
      *
      * @param string $uniqueid Has to be really unique eg. by adding the cmid, so it's unique over all instances of one plugin!
      */
-    public function __construct($uniqueid) {
+    public function __construct($uniqueid, int $foruserid = 0) {
 
         global $PAGE;
 
@@ -447,6 +447,7 @@ class wunderbyte_table extends table_sql {
 
         parent::__construct($uniqueid);
 
+        $this->foruserid = $foruserid;
         $this->idstring = md5($uniqueid . $this->context->id ?? 1);
         $this->classname = get_class($this);
 
@@ -1816,7 +1817,9 @@ class wunderbyte_table extends table_sql {
         // We don't want errormessage in the encoded table.
         $this->errormessage = '';
 
-        $this->recreateidstring();
+        if ($this->foruserid === 0) {
+            $this->recreateidstring();
+        }
 
         if (empty($this->tablecachehash) || $newcache) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
