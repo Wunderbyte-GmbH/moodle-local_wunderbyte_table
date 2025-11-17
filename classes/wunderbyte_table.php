@@ -33,7 +33,6 @@ require_once("$CFG->libdir/tablelib.php");
 use cache;
 use context_system;
 use Exception;
-use local_wunderbyte_table\event\table_viewed;
 use local_wunderbyte_table\output\lazytable;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
@@ -429,6 +428,11 @@ class wunderbyte_table extends table_sql {
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
      *
      * @param string $uniqueid Has to be really unique eg. by adding the cmid, so it's unique over all instances of one plugin!
+     * @param int $foruserid Optional argument. We use this to store the userid on the table. Since the
+     *        table instance is cached, we can also retrieve it from the cached instance identified by the
+     *        idstring. When you pass $foruserid, this prevents the idstring from being recreated based
+     *        on the query, ensuring we do not receive an incorrect instance. This also has no effect on
+     *        caching of the same query.
      */
     public function __construct($uniqueid, int $foruserid = 0) {
 
