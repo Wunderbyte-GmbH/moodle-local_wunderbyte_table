@@ -123,7 +123,7 @@ class customfieldfilter extends base {
             // However, the user must provide a custom field ID.
             if (empty($this->fieldid)) {
                 throw new moodle_exception(
-                    'missing_subquery_and_fieldid',
+                    'missingsubqueryandfieldid',
                     'local_wunderbyte_table',
                     '',
                     null,

@@ -133,7 +133,9 @@ $string['loading'] = 'Laden...';
 $string['logfiltercaches'] = 'Debug-Feature: Speichere Query-Hashes in der DB. Das hat negative Auswirkugen auf die Performance <span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
 $string['march'] = 'März';
 $string['may'] = 'Mai';
-$string['missing_subquery'] = 'Customfieldfilter: Es wurde keine SQL-Subquery angegeben. Sie müssen set_sql() aufrufen, bevor der Filter angewendet wird.';
+$string['missingsubqueryandfieldid'] = 'Customfieldfilter: Keine SQL-Subquery oder kein FieldID angegeben.
+    Sie müssen set_sql() oder set_sql_for_fieldid aufrufen, bevor der Filter angewendet wird,
+    andernfalls kann der Filter nicht angewendet werden.';
 $string['module'] = 'Modul';
 $string['monday'] = 'Mo';
 $string['newwbtablefiltername'] = 'Neuen Filternamen';
