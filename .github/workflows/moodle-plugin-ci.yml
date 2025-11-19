@@ -1,7 +1,6 @@
 name: Moodle Plugin CI
 
 on: [push, pull_request]
-name: Moodle Plugin CI
 
 jobs:
   test:
