@@ -69,16 +69,16 @@ class actforuser {
      *  [allbookingoptions urlparamforuserid=id] → expects a URL containing a query parameter like: ?id=123456
      *
      * @param array $args Arguments passed to the shortcode.
-     * @return string The name of the URL parameter for the user ID.
+     * @return int User ID.
      */
-    public static function get_userid_from_urlparamforuserid(array $args): string {
+    public static function get_userid_from_urlparamforuserid(array $args): int {
         // Look for urlparamforuserid in $args.
         if (isset($args['urlparamforuserid']) && is_string($args['urlparamforuserid'])) {
             $paramforuserid = $args['urlparamforuserid'];
             if ($paramforuserid) {
                 $userid = optional_param($paramforuserid, 0, PARAM_INT);
                 $userid = $userid > 0 ? $userid : 0;
-                return $userid;
+                return (int) $userid;
             }
         }
 
@@ -94,7 +94,6 @@ class actforuser {
      *   [allbookingoptions foruserid=12345]
      *
      * @param array $args Arguments passed to the shortcode.
-     * @param int $defaultvalue The default value when the argument is not present.
      * @return int The user ID.
      */
     public static function get_userid_from_foruserid_arg(array $args): int {
