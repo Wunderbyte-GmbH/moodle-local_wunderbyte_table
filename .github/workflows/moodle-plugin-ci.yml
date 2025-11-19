@@ -30,7 +30,6 @@ jobs:
       mysql:
         image: mysql:8.4
         env:
-          MYSQL_USER: 'root'
           MYSQL_ALLOW_EMPTY_PASSWORD: "true"
           MYSQL_DATABASE: 'test'
         ports:
