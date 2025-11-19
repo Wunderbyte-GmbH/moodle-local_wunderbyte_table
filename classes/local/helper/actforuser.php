@@ -20,13 +20,44 @@ namespace local_wunderbyte_table\local\helper;
  * actforuser class.
  *
  * @package    local_wunderbyte_table
- * @copyright  2024 Wunderbyte GmbH <info@wunderbyte.at>
- * @author     Mahdi Poustini
+ * @copyright  2025 Wunderbyte GmbH <info@wunderbyte.at>
+ * @author     2025 Mahdi Poustini
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class actforuser {
     /**
-     * Returns the value of 'urlparamforuserid' if it is set.
+     * This function checks the given $args to see whether a user ID is provided
+     * either through the 'foruserid' argument or via an optional URL parameter
+     * whose name is defined by the 'urlparamforuserid' argument. Otherwise,
+     * it returns $defaultvalue.
+     *
+     * @param array $args Arguments passed to the shortcode.
+     * @param int $defaultvalue The default value when no user ID is found.
+     * @return int The user ID.
+     */
+    public static function get_foruserid(array $args, int $defaultvalue = 0) {
+        // Step 1: Check if the foruserid argument is set.
+        // This step succeeds only when a valid integer is provided via the foruserid argument.
+        $userid = self::get_userid_from_foruserid_arg($args);
+
+        // Step 2: If step 1 returns 0, check whether foruserid can be retrieved from the optional params.
+        // This step succeeds when a valid integer is provided via the optional params whose name
+        // matches the value passed through the urlparamforuserid argument.
+        if ($userid === 0) {
+            $userid = self::get_userid_from_urlparamforuserid($args);
+        }
+
+        // Step 3: If $userid is still 0, return the $defaultvalue.
+        if ($userid === 0) {
+            $userid = $defaultvalue;
+        }
+
+        return $userid;
+    }
+
+    /**
+     * Looks for the value of 'urlparamforuserid' if it is set.
+     * Then attempts to get user ID from url params.
      *
      * The 'urlparamforuserid' argument can be used to specify which optional parameter
      * in the URL provides the user ID. This prevents relying on a fixed parameter name
@@ -40,10 +71,36 @@ class actforuser {
      * @param array $args Arguments passed to the shortcode.
      * @return string The name of the URL parameter for the user ID.
      */
-    public static function get_urlparamforuserid(array $args): string {
+    public static function get_userid_from_urlparamforuserid(array $args): string {
+        // Look for urlparamforuserid in $args.
         if (isset($args['urlparamforuserid']) && is_string($args['urlparamforuserid'])) {
-            return $args['urlparamforuserid'];
+            $paramforuserid = $args['urlparamforuserid'];
+            if ($paramforuserid) {
+                $userid = optional_param($paramforuserid, 0, PARAM_INT);
+                $userid = $userid > 0 ? $userid : 0;
+                return $userid;
+            }
         }
-        return '';
+
+        return 0;
+    }
+
+    /**
+     * Returns the value of 'foruserid' if it is set.
+     *
+     * The 'foruserid' argument can be used to specify the user ID.
+     *
+     * Example usage:
+     *   [allbookingoptions foruserid=12345]
+     *
+     * @param array $args Arguments passed to the shortcode.
+     * @param int $defaultvalue The default value when the argument is not present.
+     * @return int The user ID.
+     */
+    public static function get_userid_from_foruserid_arg(array $args): int {
+        if (isset($args['foruserid']) && is_int($args['foruserid'])) {
+            return $args['foruserid'];
+        }
+        return 0;
     }
 }
