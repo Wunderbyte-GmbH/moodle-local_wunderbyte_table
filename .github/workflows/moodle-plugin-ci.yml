@@ -73,7 +73,7 @@ jobs:
           echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
       - name: Install moodle-plugin-ci
         run: |
-          moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
+          moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1 --db-port=${{ matrix.database == 'mysqli' && '3307' || (matrix.database == 'mariadb' && '3306' || '5432') }}
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}
