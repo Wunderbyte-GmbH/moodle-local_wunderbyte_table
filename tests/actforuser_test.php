@@ -134,7 +134,7 @@ final class actforuser_test extends advanced_testcase {
         ];
         // When there is URL parameter. It should return $expected for any $provideduserid.
         $_GET['myforuserid'] = $provideduserid;
-        $userid = actforuser::get_userid_from_urlparamforuserid($args);
+        $userid = actforuser::get_foruserid($args);
         $this->assertSame($expected, $userid);
     }
 
