@@ -43,7 +43,7 @@ jobs:
           SA_PASSWORD: 'YourStrong!Passw0rd'
         ports:
       - 1433:1433
-        options: --health-cmd="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong!Passw0rd -Q 'SELECT 1'" --health-interval 10s --health-timeout 5s --health-retries 10
+        options: --health-interval 10s --health-timeout 5s --health-retries 10
 
     strategy:
       fail-fast: false
