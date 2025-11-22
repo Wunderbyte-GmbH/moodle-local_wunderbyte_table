@@ -146,19 +146,19 @@ final class actforuser_test extends advanced_testcase {
     public static function user_id_provider(): array {
         return [
             'User ID: 0' => [
-                'userid' => 0,
+                'provideduserid' => 0,
                 'expected' => 0,
             ],
             'User ID: 10' => [
-                'userid' => 10,
+                'provideduserid' => 10,
                 'expected' => 10,
             ],
             'User ID: null' => [
-                'userid' => null,
+                'provideduserid' => null,
                 'expected' => 0,
             ],
             'User ID: abc' => [
-                'userid' => 'abc',
+                'provideduserid' => 'abc',
                 'expected' => 0,
             ],
         ];
