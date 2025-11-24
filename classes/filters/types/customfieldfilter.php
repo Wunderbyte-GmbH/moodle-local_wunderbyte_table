@@ -402,11 +402,14 @@ class customfieldfilter extends base {
         $sql = "
             SELECT cfd.value as $key, COUNT('$key') as keycount
             FROM {customfield_data} cfd
-            WHERE cfd.fieldid = :fieldid
+            WHERE cfd.fieldid = :countfieldid
+            AND cfd.instanceid IN (select id FROM {$table->sql->from} WHERE {$table->sql->where})
             GROUP BY cfd.value
             ORDER BY $key ASC
         ";
-        $params = ['fieldid' => $customfieldid];
+        $params = ['countfieldid' => $customfieldid];
+
+        $params = array_merge($params, $table->sql->params);
 
         $records = $DB->get_records_sql($sql, $params);
 
