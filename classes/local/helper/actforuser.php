@@ -97,8 +97,8 @@ class actforuser {
      * @return int The user ID.
      */
     public static function get_userid_from_foruserid_arg(array $args): int {
-        if (isset($args['foruserid']) && is_int($args['foruserid'])) {
-            return $args['foruserid'];
+        if (isset($args['foruserid']) && is_numeric($args['foruserid'])) {
+            return (int) $args['foruserid'];
         }
         return 0;
     }
