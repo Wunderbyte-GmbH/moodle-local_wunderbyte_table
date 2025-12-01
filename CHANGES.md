@@ -1,3 +1,6 @@
+## Version 3.0.0 (2025120101)
+* Improvement: Now supporting Moodle 4.5+ (skipped support for Moodle 4.1 - 4.4).
+
 ## Version 2.0.63 (2025120100)
 * Improvement: Add a new property ($bypasscache) to filters to prevent caching when any filter has this property set to true.
 * Improvement: Add property to determine whether to count keys of each option in custom field filter.
