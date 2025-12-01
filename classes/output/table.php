@@ -916,6 +916,9 @@ class table implements renderable, templatable {
             $categories['categories'] = array_filter($categories['categories'], fn($a) => empty($a['wbbypasscache']));
         }
 
+        // Re-index array.
+        $categories['categories'] = array_values($categories['categories']);
+
         if (!isset($categories['categories'])) {
             return null;
         }
