@@ -1,3 +1,17 @@
+## Version 2.0.63 (2025120100)
+* Improvement: Add a new property ($bypasscache) to filters to prevent caching when any filter has this property set to true.
+* Improvement: Add property to determine whether to count keys of each option in custom field filter.
+* Improvement: Use user-injected options as the data to be shown for the custom field filter when $countkeys is set to false.
+* Improvement: Add property to determine whether to use ILIKE or = operator to filter out the results in customfieldfilter.
+* Improvement: Add a new property to store the userid in the WB_Table instance.
+* Improvement: Add a new helper to get the parameter name that holds the user ID from $args.
+* Improvement: Add privacy provider (see pull request #59).
+* Improvement: Get foruserid from arguments or optional params.
+* Bugfix: Fix the condition that checks whether the foruserid argument is an integer.
+* Tests: New PHPUnit test to check how a filter affects reading data from the cache.
+* Tests: Extend customfield filter tests.
+* Tests: New test to cover actforuser.
+
 ## Version 2.0.62 (2025103100)
 * New Feature: New filter type 'customfieldfilter'.
 * Improvement: New filter type to improve performance of query execution.
