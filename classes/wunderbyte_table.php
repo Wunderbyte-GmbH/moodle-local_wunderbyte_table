@@ -423,6 +423,12 @@ class wunderbyte_table extends table_sql {
     public $foruserid = 0;
 
     /**
+     * Customfield columns.
+     * @var array
+     */
+    public $customfieldsinfoarray = [];
+
+    /**
      * Constructor. Does store uniqueid as hashed value and the actual classname.
      * The $uniqueid should be composed by ASCII alphanumeric characters, underlines and spaces only!
      * It is recommended to avoid of usage of simple single words like "table" to reduce chance of affecting by Moodle`s core CSS
@@ -2254,6 +2260,31 @@ class wunderbyte_table extends table_sql {
      */
     public function unset_template_data() {
         unset($this->templatedata);
+    }
+
+    /**
+     * Store additional columns information.
+     * Structure:
+     * keys => shortname of the column or customfield
+     * values => array of arrays with keys:
+     *    'colname' => shortname of the column or customfield,
+     *    'class' => classes for the column, e.g. "text-center",
+     *    'region' => region where the column should be displayed, e.g. "cardbody",
+     *    'iconclass' => iconclass of the icon, e.g. "far fa-wrench",
+     *
+     * @param array $customfieldsinfoarray array of customfield column information
+     */
+    public function set_customfields_info_array(array $customfieldsinfoarray = []): void {
+        $this->customfieldsinfoarray = $customfieldsinfoarray;
+    }
+
+    /**
+     * Get additional customfield columns information.
+     *
+     * @return array of customfield column information
+     */
+    public function get_customfields_info_array(): array {
+        return $this->customfieldsinfoarray ?? [];
     }
 
     /**
