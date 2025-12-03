@@ -25,6 +25,7 @@
 namespace local_wunderbyte_table\filters\types;
 use advanced_testcase;
 use context_course;
+use context_system;
 use local_wunderbyte_table\wunderbyte_table;
 
 /**
@@ -374,6 +375,138 @@ final class customfieldfilter_test extends advanced_testcase {
             $this->assertContains($record->something, array_keys($options));
             $this->assertFalse($record->keycount);
         }
+    }
+
+    /**
+     * This test first checks whether the following methods in the custom field filter
+     * work as expected:
+     *   - set_sql_for_fieldid
+     *   - use_operator_equal
+     *   - apply_filter
+     *
+     * It then verifies that the custom field filter actually filters the table results
+     * with real data. We create a custom field with the short name 'depcontact' and
+     * 20 courses—10 of them have this custom field set to the value 12345, and the
+     * other 10 have the value 56789.
+     *
+     * Finally, we check whether filtering works when applying a filter that should
+     * return only the courses with the custom field value 12345.
+     *
+     * @return void
+     */
+    public function test_set_sql_for_fieldid(): void {
+        // Reset the test environment.
+        $this->resetAfterTest(true);
+        $this->preventResetByRollback();
+
+        // Create two course categories.
+        $category1 = $this->getDataGenerator()->create_category(['name' => 'My Category 1']);
+
+        // Create custom field category in area course for courses.
+        $categorydata = new \stdClass();
+        $categorydata->name = 'My course desired fields';
+        $categorydata->component = 'core_course';
+        $categorydata->area = 'course';
+        $categorydata->itemid = 0;
+        $categorydata->contextid = context_system::instance()->id;
+        $category = $this->getDataGenerator()->create_custom_field_category((array) $categorydata);
+        $category->save();
+        // Create custom field for the courses.
+        $fielddata = new \stdClass();
+        $fielddata->categoryid = $category->get('id');
+        $fielddata->name = 'Owner departement contact';
+        $fielddata->shortname = 'depcontact';
+        $fielddata->type = 'text';
+        $fielddata->configdata = "";
+        $bookingfield = $this->getDataGenerator()->create_custom_field((array) $fielddata);
+        $bookingfield->save();
+
+        // Create some ourses & fill the custom field,
+        // 10 options have depconatct custom filed with value 12345
+        // and 10 options have depconatct custom filed with value 56789.
+        $totalcourses = 20;
+        for ($i = 0; $i < $totalcourses; $i++) {
+            // Create course.
+            $course = $this->getDataGenerator()->create_course([
+                'fullname' => 'Course ' . $i,
+                'category' => $category1->id,
+                'customfield_depcontact' => ($i % 2 === 0) ? 12345 : 56789,
+            ]);
+        }
+
+        $customfieldid = $bookingfield->get('id');
+        $customfieldfilter = new customfieldfilter('depcontact', 'Owner departement contact');
+        $customfieldfilter->set_sql_for_fieldid($customfieldid);
+        // Check if filter returns a SQL query which contains customfield_data table
+        // since when we call set_sql_for_fieldid function that means there is not custom SQL
+        // and the logic should use the default SQL.
+        // Here we dont check the table's result, we just check if customfieldfilter returns the correct SQL.
+        $filterstring = '';
+        $temptable = new wunderbyte_table('temp_table');
+        $temptable->add_filter($customfieldfilter);
+        $temptable->set_filter_sql('*', '{course}', 'category=' . $category1->id, '', []);
+        $temptable->outhtml(10, true);
+        $customfieldfilter->apply_filter($filterstring, 'depcontact', ['12345'], $temptable);
+        $this->assertNotEmpty($filterstring);
+        $expectedsql = "id IN (SELECT instanceid FROM {customfield_data} cfd
+                        WHERE cfd.fieldid = {$customfieldid}
+                        AND ( '' || ',' || cfd.value || ','  ILIKE :param1 ESCAPE '\'))";
+        $normalizedfilter = $this->remove_spaces_from_string($filterstring);
+        $normalizedexpected = $this->remove_spaces_from_string($expectedsql);
+        $this->assertStringContainsString($normalizedexpected, $normalizedfilter);
+
+        // We laso check the functionality of use_operator_equal.
+        // In this case the return SQL must contains = operator instead of ilike operator.
+        $customfieldfilter->use_operator_equal();
+        $filterstring = '';
+        $temptable = new wunderbyte_table('temp_table');
+        $temptable->add_filter($customfieldfilter);
+        $temptable->set_filter_sql('*', '{course}', 'category=' . $category1->id, '', []);
+        $temptable->outhtml(10, true);
+        $customfieldfilter->apply_filter($filterstring, 'depcontact', ['12345'], $temptable);
+        $this->assertNotEmpty($filterstring);
+        $expectedsql = "id IN (SELECT instanceid FROM {customfield_data} cfd
+                        WHERE cfd.fieldid = {$customfieldid}
+                        AND (cfd.value = :param1))";
+        $normalizedfilter = $this->remove_spaces_from_string($filterstring);
+        $normalizedexpected = $this->remove_spaces_from_string($expectedsql);
+        $this->assertStringContainsString($normalizedexpected, $normalizedfilter);
+
+        // Now we want to chech if custom fieldfilter is working correctly
+        // and we see correct result in the table when appliying a filter.
+        $table = new wunderbyte_table('sample_course_table');
+        $table->add_filter($customfieldfilter);
+        $table->set_filter_sql('*', '{course}', 'category=' . $category1->id, '', []);
+        $renderedtablehtml = $table->outhtml(10, true);
+        // We created 20 courses.
+        $this->assertCount(20, $table->rawdata);
+        preg_match('/<div[^>]*\sdata-encodedtable=["\']?([^"\'>\s]+)["\']?/i', $renderedtablehtml, $matches);
+        $encodedtable = $matches[1];
+        $this->assertNotEmpty($encodedtable);
+
+        // We still have no filter applied so we expect to see 20 records.
+        $cachedtable = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
+        $cachedtable->printtable($cachedtable->pagesize, $cachedtable->useinitialsbar, $cachedtable->downloadhelpbutton);
+        $this->assertEquals(20, $cachedtable->totalrows);
+
+        // Now we apply filter via url. We expect to see 10 records.
+        $_GET['wbtfilter'] = '{"depcontact":["12345"]}';
+        $cachedtable = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
+        $cachedtable->printtable($cachedtable->pagesize, $cachedtable->useinitialsbar, $cachedtable->downloadhelpbutton);
+        $this->assertEquals(10, $cachedtable->totalrows);
+    }
+
+    /**
+     * Removes any spaces from the given string.
+     * @param string $string
+     * @return array|string|null
+     */
+    private function remove_spaces_from_string(string $string): string {
+        // Remove leading/trailing junk.
+        $string = trim($string);
+        // Collapse repeated whitespace (including newlines) into a single space.
+        $string = preg_replace('/\s+/', '', $string);
+        return $string;
     }
 
     /**
