@@ -112,6 +112,10 @@ class load_data extends external_api {
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
+        if (!($table instanceof wunderbyte_table)) {
+            throw new \coding_exception('Expected instance of wunderbyte_table, got ' . gettype($table));
+        }
+
         // Normally, this webservice is only allowed for logged in users with some capabilites.
         // But this can be turned off for given tables.
         $context = $table->get_context();
