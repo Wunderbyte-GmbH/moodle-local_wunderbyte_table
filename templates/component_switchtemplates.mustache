@@ -43,7 +43,7 @@
 {{#switchtemplates}}
 <div class="wbtable-templateswitcher-container me-3" aria-label="Template switcher dropdown" style="display:inline-flex;">
     <i class="{{switchtemplatesiconclasses}} text-primary" aria-hidden="true"></i>
-    <select class="custom-select form-select wbtable-templateswitcher-select" id="wbtabletemplateswitcher" style="width: fit-content;"
+    <select class="form-select wbtable-templateswitcher-select" id="wbtabletemplateswitcher" style="width: fit-content;"
         data-id="1" data-type="wb_action_button" data-methodname="switchtemplates" data-nomodal="true">
         {{#templates}}
         <option value="{{template}} {{viewparam}}" {{#selected}}selected{{/selected}}>
