@@ -319,6 +319,8 @@ final class customfieldfilter_test extends advanced_testcase {
      * @return void
      */
     public function test_ilike_or_equal_where_condition(string $operator): void {
+        // Reset the test environment.
+        $this->resetAfterTest(true);
         // Instantiate Wunderbyte table.
         $table = new wunderbyte_table('test_table2');
         $table->set_filter_sql('*', "", '1=1', '');
@@ -362,6 +364,8 @@ final class customfieldfilter_test extends advanced_testcase {
      * @return void
      */
     public function test_dont_count_keys_function(): void {
+        // Reset the test environment.
+        $this->resetAfterTest(true);
         // Instantiate Wunderbyte table.
         $table = new wunderbyte_table('test_table2');
         $table->set_filter_sql('*', "", '1=1', '');
@@ -420,6 +424,8 @@ final class customfieldfilter_test extends advanced_testcase {
         // Scenario 3: For this scenario we create 19 courses that have 2 custom fields.
         // We first count the keys for each custom field, then apply one custom filter
         // and count the keys again.
+        // Reset the test environment.
+        $this->resetAfterTest(true);
         $category1 = $this->getDataGenerator()->create_category(['name' => 'My Category 1']);
 
         // Create custom field category in area course for courses.
