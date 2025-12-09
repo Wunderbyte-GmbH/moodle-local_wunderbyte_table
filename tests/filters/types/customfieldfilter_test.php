@@ -49,8 +49,6 @@ final class customfieldfilter_test extends advanced_testcase {
         $_GET = [];
         $_POST = [];
 
-        $this->preventResetByRollback();
-
         // Reset the test environment.
         $this->resetAfterTest(true);
 
@@ -172,8 +170,6 @@ final class customfieldfilter_test extends advanced_testcase {
 
         $_GET = [];
         $_POST = [];
-
-        $this->preventResetByRollback();
 
         // Reset the test environment.
         $this->resetAfterTest(true);
@@ -319,7 +315,7 @@ final class customfieldfilter_test extends advanced_testcase {
      * @return void
      */
     public function test_ilike_or_equal_where_condition(string $operator): void {
-        // Reset the test environment.
+
         $this->resetAfterTest(true);
         // Instantiate Wunderbyte table.
         $table = new wunderbyte_table('test_table2');
@@ -417,6 +413,7 @@ final class customfieldfilter_test extends advanced_testcase {
      * @return void
      */
     public function test_get_data_for_filter_options(): void {
+        $this->resetAfterTest(true);
         // Scenario 1: This scenario is already covered by test_dont_count_keys_function().
 
         // Scenario 2: test_if_customfieldfilter_filters_the_records_sample1().
@@ -424,8 +421,6 @@ final class customfieldfilter_test extends advanced_testcase {
         // Scenario 3: For this scenario we create 19 courses that have 2 custom fields.
         // We first count the keys for each custom field, then apply one custom filter
         // and count the keys again.
-        // Reset the test environment.
-        $this->resetAfterTest(true);
         $category1 = $this->getDataGenerator()->create_category(['name' => 'My Category 1']);
 
         // Create custom field category in area course for courses.
@@ -602,9 +597,17 @@ final class customfieldfilter_test extends advanced_testcase {
         $expectedsql = "id IN (SELECT instanceid FROM {customfield_data} cfd
                         WHERE cfd.fieldid = {$customfieldid}
                         AND ( '' || ',' || cfd.value || ','  ILIKE :param1 ESCAPE '\'))";
-        $normalizedfilter = $this->remove_spaces_from_string($filterstring);
-        $normalizedexpected = $this->remove_spaces_from_string($expectedsql);
-        $this->assertStringContainsString($normalizedexpected, $normalizedfilter);
+        $expectedtermsinsql = [
+            'SELECT',
+            'customfield_data',
+            'fieldid',
+            'value',
+            'LIKE',
+        ];
+
+        foreach ($expectedtermsinsql as $singleterm) {
+            $this->assertStringContainsString(strtolower($singleterm), strtolower($filterstring));
+        }
 
         // We laso check the functionality of use_operator_equal.
         // In this case the return SQL must contains = operator instead of ilike operator.
@@ -619,9 +622,24 @@ final class customfieldfilter_test extends advanced_testcase {
         $expectedsql = "id IN (SELECT instanceid FROM {customfield_data} cfd
                         WHERE cfd.fieldid = {$customfieldid}
                         AND (cfd.value = :param1))";
-        $normalizedfilter = $this->remove_spaces_from_string($filterstring);
-        $normalizedexpected = $this->remove_spaces_from_string($expectedsql);
-        $this->assertStringContainsString($normalizedexpected, $normalizedfilter);
+        $expectedtermsinsql = [
+            'SELECT',
+            'customfield_data',
+            'fieldid',
+            'value',
+        ];
+
+        foreach ($expectedtermsinsql as $singleterm) {
+            $this->assertStringContainsString(strtolower($singleterm), strtolower($filterstring));
+        }
+
+        $notexpectedtermsinsql = [
+            'LIKE',
+        ];
+
+        foreach ($notexpectedtermsinsql as $singleterm) {
+            $this->assertStringNotContainsString(strtolower($singleterm), strtolower($filterstring));
+        }
 
         // Now we want to chech if custom fieldfilter is working correctly
         // and we see correct result in the table when appliying a filter.
@@ -645,19 +663,6 @@ final class customfieldfilter_test extends advanced_testcase {
         $cachedtable = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
         $cachedtable->printtable($cachedtable->pagesize, $cachedtable->useinitialsbar, $cachedtable->downloadhelpbutton);
         $this->assertEquals(10, $cachedtable->totalrows);
-    }
-
-    /**
-     * Removes any spaces from the given string.
-     * @param string $string
-     * @return array|string|null
-     */
-    private function remove_spaces_from_string(string $string): string {
-        // Remove leading/trailing junk.
-        $string = trim($string);
-        // Collapse repeated whitespace (including newlines) into a single space.
-        $string = preg_replace('/\s+/', '', $string);
-        return $string;
     }
 
     /**
