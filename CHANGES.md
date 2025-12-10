@@ -1,3 +1,6 @@
+## Version 3.0.3 (2025121001)
+* Improvement: Set the default value of the hideallfiltershavingbypasscache setting to 1.
+
 ## Version 3.0.2 (2025121000)
 * Improvement: Make sure the encoded table is from the right class. Throw error if not.
 * Improvement: New possibility to store customfields info array in table class.
