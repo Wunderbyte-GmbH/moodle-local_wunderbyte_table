@@ -1,3 +1,11 @@
+## Version 3.0.2 (2025121000)
+* Improvement: Make sure the encoded table is from the right class. Throw error if not.
+* Improvement: New possibility to store customfields info array in table class.
+* Improvement: Various adjustments for Bootstrap 5 compatibility.
+* Bugfix: Re-index the array that holds the filters after removing some filters.
+* Tests: New PHPUnit test to cover more methods in customfieldfilter class.
+* Tests: New PHPUnit test to cover get_data_for_filter_options method of class customfieldfilter.
+
 ## Version 3.0.0 (2025120101)
 * Improvement: Now supporting Moodle 4.5+ (skipped support for Moodle 4.1 - 4.4).
 
