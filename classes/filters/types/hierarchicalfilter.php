@@ -31,7 +31,7 @@ use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 /**
  * Wunderbyte table class is an extension of table_sql.
  */
-class hierarchicalfilter extends base {
+class hierarchicalfilter extends customfieldfilter {
     /**
      * This function takes a key value pair of options.
      * Only if there are actual results in the table, these options will be displayed.
@@ -206,8 +206,13 @@ class hierarchicalfilter extends base {
         $categoryvalue,
         wunderbyte_table &$table
     ): void {
-        $standardfilter = new standardfilter($columnname);
-        $standardfilter->apply_filter($filter, $columnname, $categoryvalue, $table);
+        // When fieldid is set, we consider the requested field as a custom field filter.
+        if (!empty($this->fieldid)) {
+            parent::apply_filter($filter, $columnname, $categoryvalue, $table);
+        } else {
+            $standardfilter = new standardfilter($columnname);
+            $standardfilter->apply_filter($filter, $columnname, $categoryvalue, $table);
+        }
     }
 
     /**
