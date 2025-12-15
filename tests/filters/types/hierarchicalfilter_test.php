@@ -23,6 +23,9 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+use advanced_testcase;
+use context_system;
+use local_wunderbyte_table\wunderbyte_table;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use stdClass;
@@ -30,7 +33,7 @@ use stdClass;
 /**
  * Unit tests for hourlist_test class.
  */
-final class hierarchicalfilter_test extends TestCase {
+final class hierarchicalfilter_test extends advanced_testcase {
     /**
      * Test get_operatoroptions_name() method.
      * @covers \local_wunderbyte_table\filters\types\hierarchicalfilter::add_options
@@ -188,5 +191,89 @@ final class hierarchicalfilter_test extends TestCase {
         $this->assertCount(2, $categoryobject['hierarchy']);
         $this->assertArrayHasKey('label', $categoryobject['hierarchy'][0]);
         $this->assertArrayHasKey('values', $categoryobject['hierarchy'][0]);
+    }
+
+    /**
+     * In this test, we check whether the hierarchical filter works on custom fields
+     * when they are not selected via a join in the main query.
+     *
+     * @covers \local_wunderbyte_table\filters\types\hierarchicalfilter
+     * @return void
+     */
+    public function test_hierarchical_filter_works_on_customfields_without_joining(): void {
+        $this->resetAfterTest(true);
+
+        // Create custom field category in area course for courses.
+        $categorydata = new stdClass();
+        $categorydata->name = 'My course desired fields';
+        $categorydata->component = 'core_course';
+        $categorydata->area = 'course';
+        $categorydata->itemid = 0;
+        $categorydata->contextid = context_system::instance()->id;
+        $category = $this->getDataGenerator()->create_custom_field_category((array) $categorydata);
+        $category->save();
+        // Create custom field for the courses.
+        $fielddata = new stdClass();
+        $fielddata->categoryid = $category->get('id');
+        $fielddata->name = 'Owner departement contact';
+        $fielddata->shortname = 'depcontact';
+        $fielddata->type = 'text';
+        $fielddata->configdata = "";
+        $bookingfield1 = $this->getDataGenerator()->create_custom_field((array) $fielddata);
+        $bookingfield1->save();
+
+        // Create course category.
+        $category1 = $this->getDataGenerator()->create_category(['name' => 'My Category 1']);
+
+        // Create some courses & fill the custom field,
+        // 4 options have depconatct custom filed with value 12345 (indexes 0,3,6,9) and
+        // 6 options have depconatct custom filed with value 56789.
+        $totalcourses = 10;
+        for ($i = 0; $i < $totalcourses; $i++) {
+            // Create course.
+            $course = $this->getDataGenerator()->create_course([
+                'fullname' => 'Course ' . $i,
+                'category' => $category1->id,
+                'customfield_depcontact' => ($i % 3 === 0) ? 12345 : 56789,
+            ]);
+        }
+
+        $cfid1 = $bookingfield1->get('id');
+        $hierarchicalfilter = new hierarchicalfilter('depcontact', 'Owner departement contact');
+        $hierarchicalfilter->set_sql_for_fieldid($cfid1);
+        $hierarchicalfilter->add_options([
+            'explode' => ',',
+            'cat 1' => [
+                'parent' => 'cat 1',
+                'localizedname' => '12345',
+            ],
+            'cat 2' => [
+                'parent' => 'cat 2',
+                'localizedname' => '56789',
+            ],
+        ]);
+
+        // Now we want to check whether the customfieldfilter is working correctly
+        // and whether the table shows the correct results when a filter is applied.
+        $table = new wunderbyte_table('sample_course_table');
+
+        // Add filter.
+        $table->add_filter($hierarchicalfilter);
+
+        $table->set_filter_sql('*', '{course}', 'category=' . $category1->id, '', []);
+        $renderedtablehtml = $table->outhtml(10, true);
+        // We created 10 courses.
+        $this->assertCount(10, $table->rawdata);
+
+        // Get encodedtable string.
+        preg_match('/<div[^>]*\sdata-encodedtable=["\']?([^"\'>\s]+)["\']?/i', $renderedtablehtml, $matches);
+        $encodedtable = $matches[1];
+        $this->assertNotEmpty($encodedtable);
+
+        // Now we apply filter via url. We expect to see 4 records.
+        $_GET['wbtfilter'] = '{"depcontact":["12345"]}';
+        $cachedtable = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
+        $cachedtable->printtable($cachedtable->pagesize, $cachedtable->useinitialsbar, $cachedtable->downloadhelpbutton);
+        $this->assertEquals(4, $cachedtable->totalrows);
     }
 }
