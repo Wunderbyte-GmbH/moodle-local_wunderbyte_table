@@ -82,6 +82,13 @@ class actforuser {
             }
         }
 
+        // FALLBACK: If argument 'urlparamforuserid' is not set, we still try to use 'userid' parameter from URL.
+        if (!isset($args['urlparamforuserid'])) {
+            $userid = optional_param('userid', 0, PARAM_INT);
+            $userid = $userid > 0 ? $userid : 0;
+            return (int) $userid;
+        }
+
         return 0;
     }
 
