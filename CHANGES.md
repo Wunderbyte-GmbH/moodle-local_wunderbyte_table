@@ -1,3 +1,9 @@
+## Version 3.0.4 (2025121700)
+* Improvement: Hierarchical filters work with custom fields when they are not joined to the main table.
+* Improvement: FALLBACK: If argument 'urlparamforuserid' is not set, we still try to use 'userid' parameter from URL.
+* Bugfix: Filterview Shortcode Moodle 5 Fix.
+* Test: Add a new PHPUnit test case to verify that the hierarchical filter works on custom fields without joining them in the main query.
+
 ## Version 3.0.3 (2025121001)
 * Improvement: Set the default value of the hideallfiltershavingbypasscache setting to 1.
 
