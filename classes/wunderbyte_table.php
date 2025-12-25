@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table;
+use local_wunderbyte_table\local\performance\performance;
 use local_wunderbyte_table\local\sortables\sortable_info;
 use mod_booking\singleton_service;
 
@@ -492,8 +493,9 @@ class wunderbyte_table extends table_sql {
      */
     public function lazyout($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
+        performance::start_measurement('startlazyout');
         [$idnumber, $encodedtable, $html] = $this->lazyouthtml($pagesize, $useinitialsbar, $downloadhelpbutton);
-
+        performance::start_measurement('endlazyout');
         echo $html;
     }
 
@@ -705,9 +707,14 @@ class wunderbyte_table extends table_sql {
         $this->setup();
 
         // First we query without the filter.
-        $this->query_db_cached($this->pagesize, $useinitialsbar);
 
+        performance::start_measurement('runquerydb');
+        $this->query_db_cached($this->pagesize, $useinitialsbar);
+        performance::end_measurement('runquerydb');
+
+        performance::start_measurement('runbuildtable');
         $this->build_table();
+        performance::end_measurement('runbuildtable');
         $this->close_recordset();
 
         return $this->finish_output(true, $encodedtable);
