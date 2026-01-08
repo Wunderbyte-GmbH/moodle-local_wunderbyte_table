@@ -520,6 +520,8 @@ class demo implements renderable, templatable {
         $table->showreloadbutton = true;
         $table->showrowcountselect = true;
         $table->filteronloadinactive = true;
+        // Set to false if you want to download all records.
+        $table->applyfilterondownload = false;
 
         return $table->outhtml(10, true);
     }

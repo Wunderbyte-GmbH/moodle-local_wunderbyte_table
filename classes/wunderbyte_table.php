@@ -150,7 +150,7 @@ class wunderbyte_table extends table_sql {
      *
      * @var bool Apply filter on download.
      */
-    public $applyfilterondownload = false;
+    public $applyfilterondownload = true;
 
     /**
      *

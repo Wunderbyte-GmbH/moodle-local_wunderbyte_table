@@ -388,6 +388,10 @@ If you want to show it at the bottom of the table, you can use this:
 
     $table->showdownloadbuttonatbottom = true;
 
+If a filter is set, by default the filter applies also to the download. If you want to disable the filter for download, set:
+
+    $table->applyfilterondownload = false;
+
 ## Allow users to add their own filters
 
 You can allow users with the capabiltiy 'local/wunderbyte_table:canedittable'

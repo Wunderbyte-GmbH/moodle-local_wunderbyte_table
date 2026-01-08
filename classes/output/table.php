@@ -149,7 +149,7 @@ class table implements renderable, templatable {
      *
      * @var bool
      */
-    private $applyfilterondownload = false;
+    private $applyfilterondownload = true;
 
     /**
      * Countlabel.
@@ -778,7 +778,7 @@ class table implements renderable, templatable {
         if ($this->showdownloadbutton) {
             $data['print'] = true;
             $data['printoptions'] = $this->printoptions;
-            if (!empty($this->applyfilterondownload)) {
+            if (isset($this->applyfilterondownload) && !empty($this->applyfilterondownload)) {
                 $data['applyfilterondownload'] = "1";
             }
         }
