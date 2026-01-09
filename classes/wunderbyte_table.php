@@ -2211,6 +2211,7 @@ class wunderbyte_table extends table_sql {
                 if (
                     !strpos($sql, ':' . $key . ' ')
                     && !strpos($sql, ':' . $key . ')')
+                    && !strpos($sql, ':' . $key . ',')
                     && !strpos($sql, ':' . $key . PHP_EOL)
                 ) {
                         unset($params[$key]);
