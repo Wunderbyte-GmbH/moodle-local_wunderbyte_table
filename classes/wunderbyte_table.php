@@ -493,9 +493,9 @@ class wunderbyte_table extends table_sql {
      */
     public function lazyout($pagesize, $useinitialsbar, $downloadhelpbutton = '') {
 
-        performance::start_measurement('startlazyout');
+        performance::start_measurement('lazyout');
         [$idnumber, $encodedtable, $html] = $this->lazyouthtml($pagesize, $useinitialsbar, $downloadhelpbutton);
-        performance::start_measurement('endlazyout');
+        performance::end_measurement('lazyout');
         echo $html;
     }
 
