@@ -41,12 +41,12 @@ class wbt_field_controller extends field_controller implements wbt_field_control
     /**
      * Get the actual string value of the customfield.
      *
-     * @param string $key
+     * @param string|array $key
      * @param bool $formatstring
      * @param bool $keyisencoded
      * @return string the string value
      */
-    public function get_option_value_by_key(string $key, bool $formatstring = true, bool $keyisencoded = false): string {
+    public function get_option_value_by_key(string|array $key, bool $formatstring = true, bool $keyisencoded = false): string {
         global $DB;
 
         if (!empty($key)) {
