@@ -41,26 +41,48 @@ class wbt_field_controller extends field_controller implements wbt_field_control
     /**
      * Get the actual string value of the customfield by index.
      *
-     * @param string $key
+     * @param string|array $key
      * @param bool $formatstring
      * @param bool $keyisencoded
      * @return string the string value for the index
      */
-    public function get_option_value_by_key(string $key, bool $formatstring = true, bool $keyisencoded = false): string {
+    public function get_option_value_by_key(string|array $key, bool $formatstring = true, bool $keyisencoded = false): string {
         global $DB;
 
         $sql = $this->get_configdata_property('dynamicsql');
         try {
             $records = $DB->get_records_sql($sql);
         } catch (\Throwable $th) {
+            if (is_array($key)) {
+                return implode(', ', $key);
+            }
             return $key;
         }
-        if (isset($records[$key])) {
+        if (
+            is_string($key)
+            && isset($records[$key])
+        ) {
             $returnvalue = $records[$key]->data ?? $key;
             if ($formatstring) {
                 $returnvalue = format_string($returnvalue);
             }
             return $returnvalue;
+        } else if (
+            is_array($key)
+        ) {
+            $returnvalues = [];
+            foreach ($key as $k) {
+                if (isset($records[$k])) {
+                    $returnvalue = $records[$k]->data ?? $k;
+                    if ($formatstring) {
+                        $returnvalue = format_string($returnvalue);
+                    }
+                    $returnvalues[] = $returnvalue;
+                } else {
+                    $returnvalues[] = $k;
+                }
+            }
+            return implode(', ', $returnvalues);
         } else {
             return $key;
         }
