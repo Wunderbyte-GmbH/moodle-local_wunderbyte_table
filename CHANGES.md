@@ -1,3 +1,11 @@
+## Version 3.0.5 (2026011500)
+* Improvement: Make sure field controllers work with multi-selection in dynamic custom fields and return values (not keys).
+* Improvement: Apply filter on download by default.
+* Improvement: Add performance class and measurements.
+* Bugfix: Moodle 5 bootstrap fix.
+* Bugfix: Cleaning param now works also with :userid, syntax.
+* Bugfix: Fix lazyout measurement.
+
 ## Version 3.0.4 (2025121700)
 * Improvement: Hierarchical filters work with custom fields when they are not joined to the main table.
 * Improvement: FALLBACK: If argument 'urlparamforuserid' is not set, we still try to use 'userid' parameter from URL.
