@@ -1678,10 +1678,31 @@ class wunderbyte_table extends table_sql {
                 // Create a list of allowed keys that can be used for filtering.
                 $availablefilters = json_decode($this->filterjson);
                 if (!empty($availablefilters->categories)) {
-                    $allowedfilters = array_map(fn($item) => $item->columnname, $availablefilters->categories);
+                    foreach ($availablefilters->categories as $category) {
+                        $allowedfilters[] = $category->columnname;
+                        // There is an exception for the datepicker: we need to add both the start and end columns as well.
+                        if (
+                            $category->wbfilterclass === 'local_wunderbyte_table\filters\types\datepicker'
+                            &&
+                            is_object($category->datepicker)
+                        ) {
+                            foreach ($category->datepicker->datepickers as $dp) {
+                                $allowedfilters[] = $dp->startcolumn;
+                                if (!empty($dp->endcolumn)) {
+                                    $allowedfilters[] = $dp->endcolumn;
+                                }
+                            }
+                        }
+                    }
                 } else {
                     $allowedfilters = [];
                 }
+
+                // It’s not important to collect a list of columns that have filters, but rather a list of valid column names
+                // that allows us to compare them with the columns posted by the user for filtering, to prevent injection.
+                // For this reason, we merge any column name from any property that likely holds a column name.
+                $allowedfilters = array_merge($allowedfilters, array_keys($this->columns));
+                $allowedfilters = array_unique($allowedfilters);
 
                 foreach ($categoryvalue as $key => $value) {
                     $filter .= ($categorycounter == 1) ? "" : " AND ";
