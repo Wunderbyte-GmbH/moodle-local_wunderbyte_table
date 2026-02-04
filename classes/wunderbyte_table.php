@@ -1675,6 +1675,14 @@ class wunderbyte_table extends table_sql {
                     }
                 }
 
+                // Create a list of allowed keys that can be used for filtering.
+                $availablefilters = json_decode($this->filterjson);
+                if (!empty($availablefilters->categories)) {
+                    $allowedfilters = array_map(fn($item) => $item->columnname, $availablefilters->categories);
+                } else {
+                    $allowedfilters = [];
+                }
+
                 foreach ($categoryvalue as $key => $value) {
                     $filter .= ($categorycounter == 1) ? "" : " AND ";
                     $valuecounter = 1;
@@ -1684,8 +1692,8 @@ class wunderbyte_table extends table_sql {
                             $filter .= ($valuecounter == 1) ? "" : " AND ";
 
                             // In order to make sure we are dealing with real column names and no sql injection...
-                            if (!array_key_exists($categorykey, $this->columns)) {
-                                continue; // Or throw moodle_exception.
+                            if (!in_array($categorykey, $allowedfilters)) {
+                                continue;
                             }
 
                             // We check against allowed operators.
@@ -1693,7 +1701,7 @@ class wunderbyte_table extends table_sql {
                                 'in', 'not in', 'between', 'not between', 'is', 'is not', 'rlike', 'not rlike',
                                 'regexp', 'not regexp', 'ilike', 'not ilike'];
                             if (!in_array($operator, $allowedops, true)) {
-                                continue; // Or throw moodle_exception.
+                                continue;
                             }
 
                             $paramkey = $this->set_params((string)$timestamp, false);
