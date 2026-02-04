@@ -1683,7 +1683,22 @@ class wunderbyte_table extends table_sql {
                             // Time values will be concatenated via AND.
                             $filter .= ($valuecounter == 1) ? "" : " AND ";
 
-                            $filter .= $categorykey . ' ' . $operator . ' ' . $timestamp;
+                            // In order to make sure we are dealing with real column names and no sql injection...
+                            if (!array_key_exists($categorykey, $this->columns)) {
+                                continue; // Or throw moodle_exception.
+                            }
+
+                            // We check against allowed operators.
+                            $allowedops = ['=', '<', '<=', '>', '>=', '<>', 'like', 'not like',
+                                'in', 'not in', 'between', 'not between', 'is', 'is not', 'rlike', 'not rlike',
+                                'regexp', 'not regexp', 'ilike', 'not ilike'];
+                            if (!in_array($operator, $allowedops, true)) {
+                                continue; // Or throw moodle_exception.
+                            }
+
+                            $paramkey = $this->set_params((string)$timestamp, false);
+                            $filter .= " {$categorykey} {$operator} :{$paramkey} ";
+
                             $valuecounter++;
                         }
                     } else {
