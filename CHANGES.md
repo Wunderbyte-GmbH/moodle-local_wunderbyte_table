@@ -1,3 +1,6 @@
+## Version 3.0.8 (2026020501)
+* Revert "Hotfix: Hierarchical filter remains base class". Use new customfieldfilter class as parent.
+
 ## Version 3.0.7 (2026020500)
 * Bugfix: Make sure all filters work again after sql bugfix
 
