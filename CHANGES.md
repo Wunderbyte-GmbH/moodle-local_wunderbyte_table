@@ -1,5 +1,8 @@
+## Version 3.0.7 (2026020500)
+* Bugfix: Make sure all filters work again after sql bugfix
+
 ## Version 3.0.6 (2026020300)
-* Bugfix: Fix theoretical SQL injection bug.
+* Bugfix: Fix possible SQL injection bug.
 
 ## Version 3.0.5 (2026011500)
 * Improvement: Make sure field controllers work with multi-selection in dynamic custom fields and return values (not keys).
