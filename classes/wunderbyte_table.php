@@ -1687,7 +1687,9 @@ class wunderbyte_table extends table_sql {
                             is_object($category->datepicker)
                         ) {
                             foreach ($category->datepicker->datepickers as $dp) {
-                                $allowedfilters[] = $dp->startcolumn;
+                                if (!empty($dp->startcolumn)) {
+                                    $allowedfilters[] = $dp->startcolumn;
+                                }
                                 if (!empty($dp->endcolumn)) {
                                     $allowedfilters[] = $dp->endcolumn;
                                 }
