@@ -2256,19 +2256,21 @@ class wunderbyte_table extends table_sql {
      * @return void
      */
     public static function unset_unused_params_in_sql(string $sql, array &$params) {
+        if (empty($params)) {
+            return;
+        }
+
+        // Match real placeholders like :param or :param-key, but skip PostgreSQL casts like ::text.
+        preg_match_all('/(?<!:):([a-zA-Z_][a-zA-Z0-9_-]*)(?![a-zA-Z0-9_-])/', $sql, $matches);
+        $usedparams = array_flip($matches[1] ?? []);
 
         foreach ($params as $key => $value) {
-            // If the key is an int, we can't run this.
-            if (!is_int($key)) {
-                // We only exclude it when we are sure that it's really there.
-                if (
-                    !strpos($sql, ':' . $key . ' ')
-                    && !strpos($sql, ':' . $key . ')')
-                    && !strpos($sql, ':' . $key . ',')
-                    && !strpos($sql, ':' . $key . PHP_EOL)
-                ) {
-                        unset($params[$key]);
-                }
+            // Skip positional parameters.
+            if (is_int($key)) {
+                continue;
+            }
+            if (!isset($usedparams[$key])) {
+                unset($params[$key]);
             }
         }
     }
