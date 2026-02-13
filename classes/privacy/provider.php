@@ -33,7 +33,7 @@ use core_privacy\local\request\writer;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package local_wunderbyte_table
  */
-class provider implements core_userlist_provider, core_user_data_provider, plugin_provider, \core_privacy\local\metadata\provider {
+class provider implements \core_privacy\local\metadata\provider, core_userlist_provider, core_user_data_provider, plugin_provider {
     /**
      * @var array $tables Array of tables.
      */
