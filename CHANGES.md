@@ -1,3 +1,6 @@
+## Version 3.0.9 (2026021600)
+* Improvement: More reliable way of cleaning params.
+
 ## Version 3.0.8 (2026020501)
 * Revert "Hotfix: Hierarchical filter remains base class". Use new customfieldfilter class as parent.
 
