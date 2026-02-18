@@ -56,7 +56,10 @@ export function initializeCheckboxes(selector, idstring, encodedtable) {
   }
 
   // We run through all the filter elements and make sure that we store the state we received from php.
+  // getDates() returns early for non-datepicker elements, so it is safe to call for all of them.
+  // getChecked() guards itself against overwriting datepicker state (plain objects).
   filterElements.forEach(element => {
+    getDates({target: element}, selector, idstring);
     getChecked(element.name, selector, idstring);
   });
 
@@ -258,6 +261,11 @@ function triggerReload(idstring, encodedtable) {
  * @param {*} idstring
  */
 export function getDates(e, selector, idstring) {
+
+  // Only datepicker elements carry the data-dateelement attribute.
+  if (e.target.dataset.dateelement !== 'dateelement') {
+    return;
+  }
 
   let name = e.target.dataset.columnname;
   let filtercontainer = e.target.closest(".datepickerform");
@@ -756,12 +764,24 @@ function updateFilterCounter(name, selector, idstring) {
 
   const wbTable = document.querySelector(selector);
 
-  let counter = checked[idstring][name] ? checked[idstring][name].length : 0;
-  if ((counter > 0 && (typeof checked[idstring][name] === 'string') ||
-    (typeof checked[idstring][name] === 'object' && !Array.isArray(checked[idstring][name])))) {
-    // Handle different cases of filters here (datepicker, intrange).
-    // TODO: Find a better marker for difference of filters.
-    counter = 1;
+  // Compute the active-filter count generically regardless of value type:
+  //   string        → 1 when non-empty              (intrange: "1000,2000")
+  //   plain array   → number of selected items       (regular checkboxes: ['opt1','opt2'])
+  //   array + named props → number of named entries  (datepicker state on array: arr.Completed = {…})
+  //   plain object  → 1 when non-empty               (clean datepicker: {Completed: {>=:ts, <=:ts}})
+  //   absent/empty  → 0
+  const filterValue = checked[idstring][name];
+  let counter = 0;
+  if (filterValue) {
+    if (typeof filterValue === 'string') {
+      counter = 1;
+    } else if (Array.isArray(filterValue)) {
+      // Non-numeric named keys indicate datepicker data attached to the array.
+      const namedKeyCount = Object.keys(filterValue).filter(k => isNaN(Number(k))).length;
+      counter = namedKeyCount > 0 ? namedKeyCount : filterValue.length;
+    } else if (typeof filterValue === 'object') {
+      counter = Object.keys(filterValue).length > 0 ? 1 : 0;
+    }
   }
 
   const labelElement = wbTable.querySelector('[data-ident=' + name + '] span.filtercounter');
@@ -814,6 +834,7 @@ function handleHierarchyCategoryCheckbox(parentCheckboxes, filterElements, selec
                 }
             });
             filterElements.forEach(element => {
+              // Skip datepicker elements - they will be handled by getDates() function instead.
               getChecked(element.name, selector, idstring);
             });
             triggerReload(idstring, encodedtable);
