@@ -17,6 +17,7 @@
 namespace local_wunderbyte_table\privacy;
 
 use core_privacy\local\metadata\collection;
+use core_privacy\local\metadata\provider as metadata_provider;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
@@ -27,13 +28,13 @@ use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 
 /**
- * Privacy Subsystem for local_wunderbyte_table implementing null_provider.
+ * Privacy Subsystem for local_wunderbyte_table implementing metadata_provider.
  *
  * @copyright  2024 Owen Herbert <owenherbert@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package local_wunderbyte_table
  */
-class provider implements core_userlist_provider, core_user_data_provider, plugin_provider, \core_privacy\local\metadata\provider {
+class provider implements core_userlist_provider, core_user_data_provider, metadata_provider, plugin_provider {
     /**
      * @var array $tables Array of tables.
      */
