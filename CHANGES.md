@@ -1,3 +1,7 @@
+## Version 3.1.0 (2026022400)
+* Bugfix: Fix intrange filter.
+* Bugfix: Fix filters when table uses pagination.
+
 ## Version 3.0.9 (2026021600)
 * Improvement: More reliable way of cleaning params.
 
