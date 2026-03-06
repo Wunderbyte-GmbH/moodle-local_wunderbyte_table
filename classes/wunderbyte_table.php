@@ -346,6 +346,20 @@ class wunderbyte_table extends table_sql {
     public $filteronloadinactive = false;
 
     /**
+     * Optional customfield component for filtering (e.g. 'mod_booking').
+     *
+     * @var string
+     */
+    public $customfieldcomponent = '';
+
+    /**
+     * Optional customfield area for filtering (e.g. 'booking').
+     *
+     * @var string
+     */
+    public $customfieldarea = '';
+
+    /**
      * Filter to be applied from URL
      *
      * @var string

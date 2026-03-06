@@ -135,7 +135,11 @@ class hierarchicalfilter extends customfieldfilter {
             $categorycount = 0;
             foreach ($subcategoryarray as $valuekey => $valuevalue) {
                 // For custom fields, we get the actual string value from field controller.
-                $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname($fckey);
+                $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname(
+                    $fckey,
+                    $filtersettings['_customfieldcomponent'] ?? '',
+                    $filtersettings['_customfieldarea'] ?? ''
+                );
                 if (!empty($fieldcontroller)) {
                     $cfstringvalueforvaluekey = $fieldcontroller->get_option_value_by_key($valuekey);
                     if ($cfstringvalueforvaluekey == wbt_field_controller_info::WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND) {

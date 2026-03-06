@@ -61,16 +61,18 @@ class wbt_field_controller_info {
             return new $class($record->id, $record);
         }
         // By default, we return the text controller.
-        return new \local_wunderbyte_table\local\customfield\field\text\wbt_field_controller($record->id, $record);
+        return new wbt_field_controller($record->id, $record);
     }
 
     /**
      * Create instances of field controllers for all provided customfield shortnames.
      *
      * @param array $shortnames array of customfield shortnames
+     * @param string $component optional component to filter by (e.g. 'mod_booking')
+     * @param string $area optional area to filter by (e.g. 'booking')
      * @return void
      */
-    public static function instantiate_by_shortnames(array $shortnames) {
+    public static function instantiate_by_shortnames(array $shortnames, string $component = '', string $area = '') {
         global $DB;
 
         if (empty($shortnames)) {
@@ -79,15 +81,30 @@ class wbt_field_controller_info {
 
         [$inorequal, $inparams] = $DB->get_in_or_equal($shortnames, SQL_PARAMS_NAMED);
 
+        $where = "cf.shortname $inorequal";
+        if (!empty($component)) {
+            $inparams['cfcomponent'] = $component;
+            $where .= ' AND cc.component = :cfcomponent';
+        }
+        if (!empty($area)) {
+            $inparams['cfarea'] = $area;
+            $where .= ' AND cc.area = :cfarea';
+        }
+
+        // Order by cf.id DESC so the newest field per shortname is processed first.
         $sql = "SELECT cf.shortname AS filtercolumn, cf.*
-                FROM {customfield_field} cf
-                WHERE cf.shortname $inorequal";
+                  FROM {customfield_field} cf
+                  JOIN {customfield_category} cc ON cf.categoryid = cc.id
+                 WHERE $where
+              ORDER BY cf.id DESC";
         $records = $DB->get_records_sql($sql, $inparams);
 
         foreach ($records as $record) {
-            // We only add the instance, if a field controller exists.
-            if ($instance = self::create($record)) {
-                self::$instances[$record->shortname] = $instance;
+            // Only take the first (newest) instance per shortname.
+            if (!isset(self::$instances[$record->shortname])) {
+                if ($instance = self::create($record)) {
+                    self::$instances[$record->shortname] = $instance;
+                }
             }
         }
     }
@@ -96,26 +113,43 @@ class wbt_field_controller_info {
      * Get the field controller from the singleton $instances.
      *
      * @param string $shortname shortname of field controller customfield
+     * @param string $component optional component to filter by (e.g. 'mod_booking')
+     * @param string $area optional area to filter by (e.g. 'booking')
      * @return wbt_field_controller_base the field controller for the customfield record
      */
-    public static function get_instance_by_shortname(string $shortname) {
+    public static function get_instance_by_shortname(string $shortname, string $component = '', string $area = '') {
         if (!empty(self::$instances[$shortname])) {
             return self::$instances[$shortname];
         } else {
             global $DB;
-            $sql = "SELECT cf.shortname AS filtercolumn, cf.*
-                FROM {customfield_field} cf
-                WHERE cf.shortname = :shortname";
+
+            $where = 'cf.shortname = :shortname';
             $params = ['shortname' => $shortname];
-            if ($record = $DB->get_record_sql($sql, $params)) {
-                // We only add the instance, if a field controller exists.
+
+            if (!empty($component)) {
+                $params['cfcomponent'] = $component;
+                $where .= ' AND cc.component = :cfcomponent';
+            }
+            if (!empty($area)) {
+                $params['cfarea'] = $area;
+                $where .= ' AND cc.area = :cfarea';
+            }
+
+            // Order by cf.id DESC and take the first record (newest) when not fully scoped.
+            $sql = "SELECT cf.shortname AS filtercolumn, cf.*
+                      FROM {customfield_field} cf
+                      JOIN {customfield_category} cc ON cf.categoryid = cc.id
+                     WHERE $where
+                  ORDER BY cf.id DESC";
+
+            if ($record = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE)) {
                 if ($instance = self::create($record)) {
                     self::$instances[$record->shortname] = $instance;
                     return $instance;
                 }
             }
         }
-        // Fallback: By default, we return text controller.
+        // Fallback: By default, we return the text controller.
         return new wbt_field_controller();
     }
 }

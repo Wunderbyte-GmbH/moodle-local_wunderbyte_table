@@ -129,7 +129,15 @@ class filter {
 
         $filterjson = ['categories' => []];
 
-        wbt_field_controller_info::instantiate_by_shortnames(array_keys($filtercolumns));
+        wbt_field_controller_info::instantiate_by_shortnames(
+            array_keys($filtercolumns),
+            $table->customfieldcomponent,
+            $table->customfieldarea
+        );
+
+        // Pass customfield component and area through filtersettings so filter classes can use them.
+        $filtersettings['_customfieldcomponent'] = $table->customfieldcomponent;
+        $filtersettings['_customfieldarea'] = $table->customfieldarea;
 
         foreach ($filtercolumns as $fckey => $values) {
             // Special treatment for key localizedname.
