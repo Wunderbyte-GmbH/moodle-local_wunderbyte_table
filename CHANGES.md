@@ -1,3 +1,9 @@
+## Version 3.1.1 (2026030900)
+* New feature: Introduce new checkbox custom field controller.
+* Improvement: Remove customfields info array functionality as it belongs to mod_booking.
+* Improvement: Make sure field controllers use component and area correctly.
+* Improvement: No empty strings in imploded dynamic field controller return values.
+
 ## Version 3.1.0 (2026022400)
 * Bugfix: Fix intrange filter.
 * Bugfix: Fix filters when table uses pagination.
