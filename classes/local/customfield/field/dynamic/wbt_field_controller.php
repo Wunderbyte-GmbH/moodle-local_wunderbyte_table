@@ -77,9 +77,13 @@ class wbt_field_controller extends field_controller implements wbt_field_control
                     if ($formatstring) {
                         $returnvalue = format_string($returnvalue);
                     }
-                    $returnvalues[] = $returnvalue;
+                    if ($returnvalue !== '') {
+                        $returnvalues[] = $returnvalue;
+                    }
                 } else {
-                    $returnvalues[] = $k;
+                    if ($k !== '') {
+                        $returnvalues[] = $k;
+                    }
                 }
             }
             return implode(', ', $returnvalues);
