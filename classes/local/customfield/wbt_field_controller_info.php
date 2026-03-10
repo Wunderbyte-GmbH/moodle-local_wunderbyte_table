@@ -100,10 +100,17 @@ class wbt_field_controller_info {
         $records = $DB->get_records_sql($sql, $inparams);
 
         foreach ($records as $record) {
+            $key = $record->shortname;
+            if (!empty($area)) {
+                $key = "$area-$key";
+            }
+            if (!empty($component)) {
+                $key = "$component-$key";
+            }
             // Only take the first (newest) instance per shortname.
-            if (!isset(self::$instances[$record->shortname])) {
+            if (!isset(self::$instances[$key])) {
                 if ($instance = self::create($record)) {
-                    self::$instances[$record->shortname] = $instance;
+                    self::$instances[$key] = $instance;
                 }
             }
         }
@@ -118,8 +125,17 @@ class wbt_field_controller_info {
      * @return wbt_field_controller_base the field controller for the customfield record
      */
     public static function get_instance_by_shortname(string $shortname, string $component = '', string $area = '') {
-        if (!empty(self::$instances[$shortname])) {
-            return self::$instances[$shortname];
+        // Key for static singleton.
+        $key = $shortname;
+        if (!empty($area)) {
+            $key = "$area-$key";
+        }
+        if (!empty($component)) {
+            $key = "$component-$key";
+        }
+
+        if (!empty(self::$instances[$key])) {
+            return self::$instances[$key];
         } else {
             global $DB;
 
@@ -144,7 +160,7 @@ class wbt_field_controller_info {
 
             if ($record = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE)) {
                 if ($instance = self::create($record)) {
-                    self::$instances[$record->shortname] = $instance;
+                    self::$instances[$key] = $instance;
                     return $instance;
                 }
             }
