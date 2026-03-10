@@ -57,7 +57,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         }
         $i = $index - 1;
         if ($i < 0 || $i >= count($optionsarray)) {
-            return wbt_field_controller_info::WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND;
+            return '';
         }
         $returnvalue = $optionsarray[$i];
         if ($formatstring) {
