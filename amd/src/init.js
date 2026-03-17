@@ -25,7 +25,7 @@ import Notification from 'core/notification';
 import {initializeCheckboxes, getFilterObjects, initializeSearchInputListener} from 'local_wunderbyte_table/filter';
 import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
-import {initializeReload} from 'local_wunderbyte_table/reload';
+import {initializeReload, reloadAllTables} from 'local_wunderbyte_table/reload';
 import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 import {initializeEditTableButton} from 'local_wunderbyte_table/edittable';
 import {initializeReordering} from 'local_wunderbyte_table/reordering';
@@ -53,6 +53,27 @@ export const SELECTORS = {
     WBTABLE: "wunderbyte-table-",
     DOWNLOADELEMENT: "form.wb-table-download-buttons",
 };
+
+/**
+ * Initialize automatic table reload on tab switch and browser back navigation.
+ * This function sets up event listeners for visibility changes and popstate events.
+ */
+function initializeAutoReload() {
+    // Reload tables when switching back to this tab
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            reloadAllTables(true);
+        }
+    });
+
+    // Reload tables when using browser back button
+    window.addEventListener('popstate', () => {
+        reloadAllTables(true);
+    });
+}
+
+// Initialize auto-reload listeners when module loads
+initializeAutoReload();
 
 /**
  * Gets called from mustache template.
