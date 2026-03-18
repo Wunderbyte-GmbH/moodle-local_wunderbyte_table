@@ -133,6 +133,28 @@ export function reloadAllTables(scrollToTabletop = true) {
     // eslint-disable-next-line no-unused-vars
     for (const [key, value] of Object.entries(queries)) {
 
+        const selector = ".wunderbyte_table_container_" + value.idstring;
+        const container = document.querySelector(selector);
+
+        // If the table container is not present, there is nothing to reload.
+        if (!container) {
+            continue;
+        }
+
+        // Skip reload when a visible Bootstrap modal is currently open inside this container.
+        const openModal = container.querySelector('.modal.show');
+        if (openModal) {
+            // eslint-disable-next-line no-console
+            console.log('found modal', openModal);
+            const style = window.getComputedStyle(openModal);
+            const isVisible = style.display !== 'none' && style.visibility !== 'hidden';
+            // eslint-disable-next-line no-console
+            console.log('found visibble', style, isVisible);
+            if (isVisible) {
+                continue;
+            }
+        }
+
         // When we have infinite scroll, we need to all the currently shown pages.
         if (infinitescrollEnabled(value.idstring)) {
             let counter = 0;
