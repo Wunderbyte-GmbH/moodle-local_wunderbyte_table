@@ -144,12 +144,8 @@ export function reloadAllTables(scrollToTabletop = true) {
         // Skip reload when a visible Bootstrap modal is currently open inside this container.
         const openModal = container.querySelector('.modal.show');
         if (openModal) {
-            // eslint-disable-next-line no-console
-            console.log('found modal', openModal);
             const style = window.getComputedStyle(openModal);
             const isVisible = style.display !== 'none' && style.visibility !== 'hidden';
-            // eslint-disable-next-line no-console
-            console.log('found visibble', style, isVisible);
             if (isVisible) {
                 continue;
             }
