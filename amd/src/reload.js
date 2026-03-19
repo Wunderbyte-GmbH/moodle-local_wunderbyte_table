@@ -19,7 +19,7 @@
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-import {callLoadData, queries, infinitescrollEnabled} from 'local_wunderbyte_table/init';
+import {callLoadData, queries, infinitescrollEnabled, returnHiddenElement} from 'local_wunderbyte_table/init';
 import {getFilterObjects} from 'local_wunderbyte_table/filter';
 import {getSearchInput} from 'local_wunderbyte_table/search';
 import {getSortSelection} from 'local_wunderbyte_table/sort';
@@ -140,6 +140,12 @@ export function reloadAllTables(scrollToTabletop = true) {
         if (!container) {
             continue;
         }
+        const hiddenElement = returnHiddenElement(container);
+        if (hiddenElement) {
+            continue;
+        }
+        // eslint-disable-next-line no-console
+        console.log('Reloading table with idstring: ' + value.idstring);
 
         // Skip reload when a visible Bootstrap modal is currently open inside this container.
         const openModal = container.querySelector('.modal.show');

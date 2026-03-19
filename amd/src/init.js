@@ -811,7 +811,7 @@ function scrollListener(element, idstring, encodedtable) {
  * @param {node} element
  * @returns {null|node}
  */
-function returnHiddenElement(element) {
+export function returnHiddenElement(element) {
     // We look if we find a hidden parent. If not, we load right away.
     while (element !== null) {
         if (!isHidden(element)) {
