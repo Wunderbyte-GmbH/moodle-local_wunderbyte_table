@@ -151,6 +151,16 @@ export function reloadAllTables(scrollToTabletop = true) {
             }
         }
 
+        // Skip reload when an open collapsible is present inside this container.
+        const openCollapse = container.querySelector('.collapse.show');
+        if (openCollapse) {
+            const style = window.getComputedStyle(openCollapse);
+            const isVisible = style.display !== 'none' && style.visibility !== 'hidden';
+            if (isVisible) {
+                continue;
+            }
+        }
+
         // When we have infinite scroll, we need to all the currently shown pages.
         if (infinitescrollEnabled(value.idstring)) {
             let counter = 0;
