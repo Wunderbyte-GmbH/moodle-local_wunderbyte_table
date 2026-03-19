@@ -807,11 +807,6 @@ class table implements renderable, templatable {
             $data['shoppingcartisavailable'] = true;
         }
 
-        // We need a param to check in the css if the version is minimum 4.2.
-        if ($CFG->version >= 2023042400) {
-            $data['moodleversionminfourtwo'] = 'moodleversionminfourtwo';
-        }
-
         // Make sure switchtemplates array is not passed, if it's empty.
         if (empty($this->switchtemplates)) {
             $data['switchtemplates'] = null;

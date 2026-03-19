@@ -166,6 +166,7 @@
 
 .wunderbyte-table-table th[data-sortable]::before {
     content: "\f0de";
+    font: var(--fa-font-solid);
     font-size: 14px;
     font-family: 'FontAwesome', 'Font Awesome 6 Free';
     top: 35%;
@@ -173,23 +174,9 @@
 }
 
 .wunderbyte-table-table th[data-sortable]::after {
-    content: "\f0d7";
-    font-size: 14px;
-    font-family: 'FontAwesome', 'Font Awesome 6 Free';
-    top: 40%;
-}
-
-.wunderbyte-table-table.moodleversionminfourtwo th[data-sortable]::before {
-    content: "\f0de";
-    font: var(--fa-font-solid);
-    font-family: 'FontAwesome', 'Font Awesome 6 Free';
-    top: 35%;
-    right: 0;
-}
-
-.wunderbyte-table-table.moodleversionminfourtwo th[data-sortable]::after {
     content: "\f0dd";
     font: var(--fa-font-solid);
+    font-size: 14px;
     font-family: 'FontAwesome', 'Font Awesome 6 Free';
     top: 40%;
 }
@@ -642,11 +629,6 @@
     bottom: 2%;
     z-index: -10;
     border-radius: 2px;
-}
-
-.wunderbyteTableFilter .dropdownMenuButton.hideFocus.btn:focus,
-.btn.focus {
-    /* box-shadow: none; */
 }
 
 .wunderbyteTableFilter .dropdown-item .form-check-label {
