@@ -1,3 +1,15 @@
+## Version 3.1.2 (2026032600)
+* New feature: Implement date custom field controller.
+* Improvement: Get rid of legacy code for moodleversionminfourtwo CSS stylings.
+* Improvement: No automatic reload of tables with an open modal.
+* Improvement: On browser Back or tab switch WB Tables are always reloaded to reflect an update which happened at a different place.
+* Bugfix: Do not reload tables for hidden containers.
+* Bugfix: Don't reload all tables when an open bootstrap collapsible is present.
+* Bugfix: Also catch null in date field controller.
+* Bugfix: catch null customfield values.
+* Bugfix: Static singleton needs component and area in keys.
+* Bugfix: Fix bug in select (dropdown) custom field controller when nothing is selected.
+
 ## Version 3.1.1 (2026030900)
 * New feature: Introduce new checkbox custom field controller.
 * Improvement: Remove customfields info array functionality as it belongs to mod_booking.
