@@ -59,7 +59,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
             }
 
             // For normal text fields we might need format_string.
-            if ($formatstring) {
+            if ($formatstring && !is_numeric($returnvalue)) {
                 $returnvalue = format_string($returnvalue);
             }
             return $returnvalue;
