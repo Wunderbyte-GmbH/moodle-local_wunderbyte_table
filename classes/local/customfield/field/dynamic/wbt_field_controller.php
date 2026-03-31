@@ -65,7 +65,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
             return $key;
         }
         if (
-            is_string($key)
+            (is_string($key) || is_int($key))
             && isset($records[$key])
         ) {
             $returnvalue = $records[$key]->data ?? $key;
