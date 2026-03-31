@@ -18,7 +18,7 @@
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-import ModalFactory from 'core/modal_factory';
+import ModalSaveCancel from 'core/modal_save_cancel';
 import ModalEvents from 'core/modal_events';
 import Ajax from 'core/ajax';
 import {showNotification} from 'local_wunderbyte_table/notifications';
@@ -155,20 +155,17 @@ async function showConfirmationModal(button, idstring, encodedtable, result) {
   }
   const localizedstrings = await getStrings(strings);
 
-  ModalFactory.create({type: ModalFactory.types.SAVE_CANCEL}).then(modal => {
-
-    modal.setTitle(localizedstrings[0]);
-    modal.setBody(localizedstrings[1]);
-    modal.setSaveButtonText(localizedstrings[2]);
-    modal.getRoot().on(ModalEvents.save, function() {
-      chooseActionToTransmit(button, idstring, encodedtable, result);
-    });
-    modal.show();
-    return modal;
-  }).catch(e => {
-    // eslint-disable-next-line no-console
-    console.log(e);
+  const modal = await ModalSaveCancel.create({
+    title: localizedstrings[0],
+    body: localizedstrings[1],
+    buttons: {
+      save: localizedstrings[2],
+    },
   });
+  modal.getRoot().on(ModalEvents.save, function() {
+    chooseActionToTransmit(button, idstring, encodedtable, result);
+  });
+  modal.show();
 }
 
 /**
