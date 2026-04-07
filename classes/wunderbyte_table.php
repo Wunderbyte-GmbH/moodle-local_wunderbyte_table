@@ -25,7 +25,6 @@
 namespace local_wunderbyte_table;
 use local_wunderbyte_table\local\performance\performance;
 use local_wunderbyte_table\local\sortables\sortable_info;
-use mod_booking\singleton_service;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -600,14 +599,16 @@ class wunderbyte_table extends table_sql {
 
         $rawdata = $this->rawdata;
         $rowswithdates = [];
-        foreach ($rawdata as $rowraw) {
-            $rowdata = singleton_service::get_instance_of_booking_option_settings($rowraw->id);
-            if (count($rowdata->sessions) > 0) {
-                foreach ($rowdata->sessions as $session) {
-                    $url = new moodle_url('/mod/booking/optionview.php', ['optionid' => $rowdata->id,
-                                                                              'cmid' => $rowdata->cmid]);
-                    $session->url = $url->out(false);
-                    array_push($rowswithdates, $session);
+        if (class_exists('mod_booking\singleton_service')) {
+            foreach ($rawdata as $rowraw) {
+                $rowdata = \mod_booking\singleton_service::get_instance_of_booking_option_settings($rowraw->id);
+                if (count($rowdata->sessions) > 0) {
+                    foreach ($rowdata->sessions as $session) {
+                        $url = new moodle_url('/mod/booking/optionview.php', ['optionid' => $rowdata->id,
+                                                                                  'cmid' => $rowdata->cmid]);
+                        $session->url = $url->out(false);
+                        array_push($rowswithdates, $session);
+                    }
                 }
             }
         }
