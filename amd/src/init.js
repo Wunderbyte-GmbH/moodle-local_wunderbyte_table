@@ -62,13 +62,13 @@ function initializeAutoReload() {
     // Reload tables when switching back to this tab
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
-            reloadAllTables(true);
+            reloadAllTables(false);
         }
     });
 
     // Reload tables when using browser back button
     window.addEventListener('popstate', () => {
-        reloadAllTables(true);
+        reloadAllTables(false);
     });
 }
 
