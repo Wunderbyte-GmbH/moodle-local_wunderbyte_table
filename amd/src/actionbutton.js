@@ -255,7 +255,7 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
         showNotification(data.message, "danger");
       }
 
-      reloadAllTables();
+      reloadAllTables(false);
 
       // We check if the table is within a modal and if so, we make sure that this modal...
       // Stays scrollable by making sure that the body keeps the modal-open class.
@@ -406,7 +406,7 @@ async function showEditFormModal(button, titleText, bodyText, saveButtonText, id
       // Reload whole site.
       window.location.reload();
     } else {
-      reloadAllTables();
+      reloadAllTables(false);
     }
 
     if (data.message && data.message.length > 0) {

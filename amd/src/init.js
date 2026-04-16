@@ -367,7 +367,7 @@ export const callLoadData = (
     searchtext = null,
     replacerow = false,
     replacecomponentscontainer = false,
-    scrolltotop = true) => {
+    scrolltotop = false) => {
 
     if (loadings[idstring] && !replacerow) {
         return;
