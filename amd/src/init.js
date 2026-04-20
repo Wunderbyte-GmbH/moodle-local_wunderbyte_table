@@ -70,6 +70,13 @@ function initializeAutoReload() {
     window.addEventListener('popstate', () => {
         reloadAllTables(false);
     });
+
+    // Reload tables when switching between Bootstrap tabs so that tables
+    // which were hidden (and therefore skipped by reloadAllTables) pick up
+    // any data changes that happened while they were in an inactive tab.
+    document.addEventListener('shown.bs.tab', () => {
+        reloadAllTables(false);
+    });
 }
 
 // Initialize auto-reload listeners when module loads
