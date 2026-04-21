@@ -1,3 +1,14 @@
+## Version 3.1.4 (2026042100)
+* Improvement: Limit autoscroll even further.
+* Improvement: Reload tables on tab switch.
+
+## Version 3.1.3 (2026041400)
+* Improvement: replaced modal factory with core modal.
+* Bugfix: skipping format string if numeric to prevent float to int conversion.
+* Bugfix: Allow int as key of dynamicfields.
+* Bugfix: autoreload does not force scroll to top.
+* Bugfix: autoscroll working correctly.
+
 ## Version 3.1.2 (2026032600)
 * New feature: Implement date custom field controller.
 * Improvement: Get rid of legacy code for moodleversionminfourtwo CSS stylings.
