@@ -1743,7 +1743,12 @@ class wunderbyte_table extends table_sql {
                     } else {
                         $filter .= $categorycounter == 1 ? "" : " AND ";
 
-                        $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
+                        // In order to make sure we are dealing with real column names and no sql injection...
+                        if (!in_array($categorykey, $allowedfilters, true)) {
+                            continue;
+                        }
+                        $paramkey = $this->set_params((string)$value, false);
+                        $filter .= " {$categorykey} = :{$paramkey} ";
                     }
 
                     $categorycounter++;
