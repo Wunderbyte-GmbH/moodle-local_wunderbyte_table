@@ -1286,8 +1286,12 @@ class wunderbyte_table extends table_sql {
             try {
                 $this->query_db($pagesize, $useinitialsbar);
             } catch (Exception $e) {
+                // Never expose raw DB error messages to the caller: they may contain
+                // table names, column names, or query fragments that could aid an attacker.
+                // Log the full detail server-side only; return a safe generic message.
                 if ($CFG->debug > 0) {
-                    $this->errormessage .= $e->getMessage();
+                    debugging('wunderbyte_table query error: ' . $e->getMessage(), DEBUG_DEVELOPER);
+                    $this->errormessage .= get_string('somethingwentwrong', 'local_wunderbyte_table');
                 } else {
                     $this->errormessage = get_string('somethingwentwrong', 'local_wunderbyte_table');
                 }
@@ -1463,6 +1467,129 @@ class wunderbyte_table extends table_sql {
 
         $this->set_sql($fields, $from, $where, $params);
         $this->sql->filter = $filter;
+    }
+
+    /**
+     * Applies pre-validated structured filter rules to the SQL filter.
+     *
+     * Each element of $rules must be an array produced by
+     * \local_wunderbyte_table\filters\filter_normalizer::normalize_structured().
+     * Rules are expected to be already validated; this method only performs
+     * the column-whitelist check and builds parameterised SQL fragments.
+     *
+     * Only columns present in the table's column list or in the allowed filter
+     * settings are accepted. Any rule whose column is not in the whitelist is
+     * silently skipped so that an attacker cannot probe for column names via
+     * error messages.
+     *
+     * @param array $rules Normalised filter rules (from filter_normalizer).
+     * @return void
+     */
+    public function apply_structured_filter_rules(array $rules): void {
+
+        // Build the allowed-column whitelist exactly as apply_filter() does.
+        $allowedfilters = $this->get_allowed_filter_columns();
+
+        $filter = '';
+
+        foreach ($rules as $rule) {
+            if (!is_array($rule)) {
+                continue;
+            }
+
+            $column   = $rule['column']   ?? '';
+            $operator = $rule['operator'] ?? '';
+
+            // Column must be on the whitelist.
+            if (!in_array($column, $allowedfilters, true)) {
+                continue;
+            }
+
+            // Operator must be in the map (should already be guaranteed by the normalizer).
+            $sqlopname = \local_wunderbyte_table\filters\filter_normalizer::OPERATOR_MAP[$operator] ?? null;
+            if ($sqlopname === null) {
+                continue;
+            }
+
+            switch ($operator) {
+                case 'isnull':
+                    $filter .= " AND {$column} IS NULL";
+                    break;
+
+                case 'isnotnull':
+                    $filter .= " AND {$column} IS NOT NULL";
+                    break;
+
+                case 'in':
+                    $placeholders = [];
+                    foreach (($rule['values'] ?? []) as $v) {
+                        $k = $this->set_params((string)$v, false);
+                        $placeholders[] = ":$k";
+                    }
+                    if (!empty($placeholders)) {
+                        $filter .= " AND {$column} IN (" . implode(',', $placeholders) . ")";
+                    }
+                    break;
+
+                case 'between':
+                    $k1 = $this->set_params((string)($rule['value']  ?? ''), false);
+                    $k2 = $this->set_params((string)($rule['value2'] ?? ''), false);
+                    $filter .= " AND {$column} BETWEEN :{$k1} AND :{$k2}";
+                    break;
+
+                default:
+                    // All scalar operators: =, <>, <, <=, >, >=, LIKE, NOT LIKE.
+                    $k = $this->set_params((string)($rule['value'] ?? ''), false);
+                    $filter .= " AND {$column} {$sqlopname} :{$k}";
+                    break;
+            }
+        }
+
+        if (empty($this->sql->filter)) {
+            $this->sql->filter = $filter;
+        } else {
+            $this->sql->filter .= $filter;
+        }
+    }
+
+    /**
+     * Returns the list of column names that are allowed to appear in filter expressions.
+     *
+     * The list is the union of:
+     *   - column names registered on this table instance, and
+     *   - column names advertised by the filter JSON (incl. datepicker start/end columns).
+     *
+     * This method is extracted from apply_filter() so that it can be reused by
+     * apply_structured_filter_rules() without code duplication.
+     *
+     * @return array  Unique, indexed array of allowed column-name strings.
+     */
+    public function get_allowed_filter_columns(): array {
+        $allowedfilters = [];
+
+        $availablefilters = json_decode($this->filterjson ?? '');
+        if (!empty($availablefilters->categories)) {
+            foreach ($availablefilters->categories as $category) {
+                $allowedfilters[] = $category->columnname;
+                // Datepicker filters expose additional start/end columns.
+                if (
+                    ($category->wbfilterclass ?? '') === 'local_wunderbyte_table\filters\types\datepicker'
+                    && is_object($category->datepicker ?? null)
+                ) {
+                    foreach ($category->datepicker->datepickers as $dp) {
+                        if (!empty($dp->startcolumn)) {
+                            $allowedfilters[] = $dp->startcolumn;
+                        }
+                        if (!empty($dp->endcolumn)) {
+                            $allowedfilters[] = $dp->endcolumn;
+                        }
+                    }
+                }
+            }
+        }
+
+        $allowedfilters = array_merge($allowedfilters, array_keys($this->columns));
+        return array_unique($allowedfilters);
     }
 
     /**
@@ -1684,35 +1811,8 @@ class wunderbyte_table extends table_sql {
                 }
 
                 // Create a list of allowed keys that can be used for filtering.
-                $availablefilters = json_decode($this->filterjson);
-                if (!empty($availablefilters->categories)) {
-                    foreach ($availablefilters->categories as $category) {
-                        $allowedfilters[] = $category->columnname;
-                        // There is an exception for the datepicker: we need to add both the start and end columns as well.
-                        if (
-                            $category->wbfilterclass === 'local_wunderbyte_table\filters\types\datepicker'
-                            &&
-                            is_object($category->datepicker)
-                        ) {
-                            foreach ($category->datepicker->datepickers as $dp) {
-                                if (!empty($dp->startcolumn)) {
-                                    $allowedfilters[] = $dp->startcolumn;
-                                }
-                                if (!empty($dp->endcolumn)) {
-                                    $allowedfilters[] = $dp->endcolumn;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    $allowedfilters = [];
-                }
-
-                // It’s not important to collect a list of columns that have filters, but rather a list of valid column names
-                // that allows us to compare them with the columns posted by the user for filtering, to prevent injection.
-                // For this reason, we merge any column name from any property that likely holds a column name.
-                $allowedfilters = array_merge($allowedfilters, array_keys($this->columns));
-                $allowedfilters = array_unique($allowedfilters);
+                // Use the shared helper to avoid duplicating whitelist-building logic.
+                $allowedfilters = $this->get_allowed_filter_columns();
 
                 foreach ($categoryvalue as $key => $value) {
                     $filter .= ($categorycounter == 1) ? "" : " AND ";
@@ -2097,15 +2197,28 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
-     * If we have filter or search params in the URL, they will be applied.
+     * If we have filter or search params in the URL/POST, they will be applied.
+     *
+     * Priority:
+     *   1. Structured filters (wbt_structured_filters) — new API, set by load_data.php.
+     *   2. Legacy wbtfilter JSON string — kept for backward compatibility.
      *
      * @return void
      */
     private function apply_filter_and_search_from_url() {
+        $wbtstructuredfilters = optional_param('wbt_structured_filters', '', PARAM_RAW);
         $wbtfilter = optional_param('wbtfilter', '', PARAM_RAW);
         $wbtsearch = optional_param('wbtsearch', '', PARAM_RAW);
 
-        if (!empty($wbtfilter) || !empty($wbtsearch)) {
+        if (!empty($wbtstructuredfilters)) {
+            // New structured path: rules have already been validated by filter_normalizer
+            // inside load_data.php, so we just apply them directly.
+            $rules = json_decode($wbtstructuredfilters, true);
+            if (is_array($rules) && count($rules) > 0) {
+                $this->apply_structured_filter_rules($rules);
+            }
+        } else if (!empty($wbtfilter) || !empty($wbtsearch)) {
+            // Legacy path.
             $this->apply_filter($wbtfilter, $wbtsearch);
         }
 
@@ -2113,6 +2226,7 @@ class wunderbyte_table extends table_sql {
             $this->apply_searchtext($wbtsearch);
         }
     }
+
     /**
      * Unsetting all sorting settings from session.
      * Important for application of default sort params.
