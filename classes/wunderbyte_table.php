@@ -1747,6 +1747,9 @@ class wunderbyte_table extends table_sql {
                         if (!in_array($categorykey, $allowedfilters, true)) {
                             continue;
                         }
+                        // $value is a scalar here (objects/arrays are handled by the if-branch
+                        // above). Use equality as the only meaningful comparison for a plain
+                        // scalar value and bind it via a named placeholder to prevent injection.
                         $paramkey = $this->set_params((string)$value, false);
                         $filter .= " {$categorykey} = :{$paramkey} ";
                     }
