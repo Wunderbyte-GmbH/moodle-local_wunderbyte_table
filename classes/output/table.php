@@ -1036,7 +1036,7 @@ class table implements renderable, templatable {
                                     }
                                 }
                             }
-                        } else {
+                        } else if (isset($potentialfiltercolumn['default']['values'])) {
                             // So we can now check all the entries in the filterobject...
                             // ...to see if we find the concrete filter at the right place (values) in the tableobject.
                             foreach ($potentialfiltercolumn['default']['values'] as $vkey => $value) {

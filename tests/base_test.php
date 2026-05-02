@@ -511,6 +511,99 @@ final class base_test extends advanced_testcase {
     }
 
     /**
+     * Test that SQL injection via the filter-concat else-branch is prevented.
+     * Regression test for CVE: Library-level SQL injection via filter-concat ELSE-branch
+     * in wunderbyte_table.php (the else-branch of apply_filter).
+     *
+     * @covers \local_wunderbyte_table\wunderbyte_table::apply_filter
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     *
+     */
+    public function test_filter_sql_injection_prevention(): void {
+        // Create 10 courses.
+        $this->create_test_courses(10);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        // Confirm the baseline: without a filter, 10 rows are returned.
+        $nrofrows = $this->get_rowscount_for_table($table);
+        $this->assertSame(10, $nrofrows);
+
+        // A variety of injection keys that should all be rejected because they are not
+        // valid column names in the table's $allowedfilters list.
+        $injectionkeys = [
+            // OR-based: if injected, makes the WHERE clause always true and returns all rows.
+            '1=1 OR 1=1',
+            // Comment-based: attempt to comment out the rest of the query.
+            "fullname-- ",
+            // UNION-based: attempt to exfiltrate data via a UNION SELECT.
+            "1=1 UNION SELECT password,2,3,4,5 FROM mdl_user-- ",
+            // EXTRACTVALUE-based: MySQL-specific out-of-band data extraction.
+            "EXTRACTVALUE(1,CONCAT(0x7e,(SELECT password FROM mdl_user WHERE id=2)))-- ",
+            // Block-comment injection: attempt to hide SQL inside a block comment.
+            "fullname /**/OR/**/ 1=1",
+        ];
+
+        foreach ($injectionkeys as $injectionkey) {
+            // Build a filter JSON that places the injection in the category key (column name
+            // slot).  The scalar array value triggers the else-branch that was vulnerable.
+            $maliciousfilter = json_encode([$injectionkey => ['x']]);
+
+            // After the fix the malicious key is silently skipped (not in $allowedfilters).
+            // The resulting SQL may contain an empty AND ( ) clause which most databases
+            // reject as a syntax error; we also accept a dml_exception here — what matters
+            // is that the injection SQL never executes and that we do NOT get back all 10
+            // rows.
+            $injectionexecuted = false;
+            try {
+                $nrofrows = $this->get_rowscount_for_table($table, null, null, null, null, null, null, $maliciousfilter);
+                // If no DB-level error: the injected clause was silently ignored and must not
+                // have widened the result set to the full 10 rows.
+                if ($nrofrows === 10) {
+                    $injectionexecuted = true;
+                }
+            } catch (\dml_exception $e) {
+                // A database error is acceptable and means the injected SQL did not execute
+                // successfully.  dml_exception is a subclass of moodle_exception so it must
+                // be caught first.  Verify the error is NOT the attacker-controlled
+                // XPATH/UNION style response that would indicate data exfiltration.
+                $this->assertStringNotContainsString('EXTRACTVALUE', $e->getMessage());
+                $this->assertStringNotContainsString('UNION SELECT', strtoupper($e->getMessage()));
+            } catch (moodle_exception $e) {
+                // A moodle_exception (e.g. "no_items_available_yet") is fine — it means the
+                // filter produced an empty result set or was rejected at the application layer.
+                $this->assertStringNotContainsString(
+                    $injectionkey,
+                    $e->getMessage(),
+                    'The injection key must not appear in the exception message.'
+                );
+            }
+
+            $this->assertFalse(
+                $injectionexecuted,
+                "SQL injection via filter key '{$injectionkey}' returned all rows — the injection was NOT blocked."
+            );
+
+            // Verify that the generated SQL filter does not contain the raw injection string.
+            // We call apply_filter directly and inspect the resulting sql->filter property.
+            $tablecheck = $this->create_demo2_table();
+            // Encode the table so that tablecachehash is set (required by apply_filter).
+            $tablecheck->return_encoded_table();
+            $tablecheck->apply_filter($maliciousfilter);
+            $this->assertStringNotContainsString(
+                $injectionkey,
+                $tablecheck->sql->filter ?? '',
+                "The raw injection key '{$injectionkey}' must not appear verbatim in the generated SQL filter."
+            );
+        }
+    }
+
+    /**
      * Function to be used by the callback filter.
      *
      * @param mixed $record

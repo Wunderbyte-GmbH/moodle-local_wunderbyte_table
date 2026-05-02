@@ -445,7 +445,13 @@ final class base_dataprovider_test extends advanced_testcase {
             if (!isset($options['fullname'])) {
                 $courseoptions['fullname'] = 'Test course ' . $counter;
             }
-            $returnarray[$counter] = $this->getDataGenerator()->create_course($courseoptions);
+            $course = $this->getDataGenerator()->create_course($courseoptions);
+            // Create_course() overwrites timecreated with time(); force the test value.
+            if (!empty($options['timecreated'])) {
+                $DB->update_record('course', (object)['id' => $course->id, 'timecreated' => $options['timecreated']]);
+                $course->timecreated = $options['timecreated'];
+            }
+            $returnarray[$counter] = $course;
         }
         return $returnarray;
     }

@@ -1684,7 +1684,10 @@ class wunderbyte_table extends table_sql {
                 }
 
                 // Create a list of allowed keys that can be used for filtering.
-                $availablefilters = json_decode($this->filterjson);
+                $availablefilters = null;
+                if (is_string($this->filterjson) && $this->filterjson !== '') {
+                    $availablefilters = json_decode($this->filterjson);
+                }
                 if (!empty($availablefilters->categories)) {
                     foreach ($availablefilters->categories as $category) {
                         $allowedfilters[] = $category->columnname;
@@ -1741,9 +1744,15 @@ class wunderbyte_table extends table_sql {
                             $valuecounter++;
                         }
                     } else {
-                        $filter .= $categorycounter == 1 ? "" : " AND ";
-
-                        $filter .= $categorykey . ' ' . key((array) $value) . ' ' . current((array) $value);
+                        // In order to make sure we are dealing with real column names and no sql injection...
+                        if (!in_array($categorykey, $allowedfilters, true)) {
+                            continue;
+                        }
+                        // Value is a scalar here (objects/arrays are handled by the if-branch
+                        // above). Use equality as the only meaningful comparison for a plain
+                        // scalar value and bind it via a named placeholder to prevent injection.
+                        $paramkey = $this->set_params((string)$value, false);
+                        $filter .= " {$categorykey} = :{$paramkey} ";
                     }
 
                     $categorycounter++;
