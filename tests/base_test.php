@@ -604,6 +604,301 @@ final class base_test extends advanced_testcase {
     }
 
     /**
+     * Calls load_data::execute() with a structured filters array and returns the rows.
+     *
+     * @param wunderbyte_table $table
+     * @param array $filters Structured filter rules as accepted by the new API.
+     * @param string|null $searchtext
+     * @return array
+     */
+    public function get_rows_for_table_structured(
+        wunderbyte_table $table,
+        array $filters,
+        $searchtext = null
+    ): array {
+        $encodedtable = $table->return_encoded_table();
+        $result = load_data::execute(
+            $encodedtable,
+            null,   // page
+            null,   // tsort
+            null,   // thide
+            null,   // tshow
+            null,   // tdir
+            null,   // treset
+            null,   // wbtfilter (legacy, intentionally empty)
+            $searchtext ?? '',
+            $filters
+        );
+        $jsonobject = json_decode($result['content']);
+        if (!isset($jsonobject->table->rows)) {
+            // Avoid including the full response object in the message to prevent
+            // leaking internal data structures in test output.
+            throw new moodle_exception('no_items_available_yet', 'wunderbyte_table');
+        }
+        return $jsonobject->table->rows ?? [];
+    }
+
+    /**
+     * Test basic structured filter with the 'eq' operator.
+     *
+     * @covers \local_wunderbyte_table\wunderbyte_table::apply_structured_filter_rules
+     * @covers \local_wunderbyte_table\filters\filter_normalizer::normalize_structured
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public function test_structured_filter_basic_eq(): void {
+        $this->create_test_courses(5);
+        // One course with a distinctive name.
+        $this->create_test_courses(1, ['shortname' => 'UNIQUE_SC_EQ']);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        $filters = [
+            ['column' => 'shortname', 'operator' => 'eq', 'value' => 'UNIQUE_SC_EQ'],
+        ];
+
+        $rows = $this->get_rows_for_table_structured($table, $filters);
+        $this->assertCount(1, $rows, 'eq filter should return exactly one row');
+        $this->assertSame('UNIQUE_SC_EQ', $rows[0]->shortname);
+    }
+
+    /**
+     * Test structured filter with the 'like' operator.
+     *
+     * @covers \local_wunderbyte_table\wunderbyte_table::apply_structured_filter_rules
+     */
+    public function test_structured_filter_like(): void {
+        $this->create_test_courses(4);
+        $this->create_test_courses(3, ['shortname' => 'LIKE_SC_TEST']);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        $filters = [
+            ['column' => 'shortname', 'operator' => 'like', 'value' => '%LIKE_SC%'],
+        ];
+
+        $rows = $this->get_rows_for_table_structured($table, $filters);
+        $this->assertCount(3, $rows, 'like filter should return 3 matching rows');
+    }
+
+    /**
+     * Test structured filter with an unknown column — the rule must be silently
+     * dropped and no injection must take place.
+     *
+     * @covers \local_wunderbyte_table\wunderbyte_table::apply_structured_filter_rules
+     */
+    public function test_structured_filter_unknown_column(): void {
+        $this->create_test_courses(5);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        // The column does not exist in the allowed list.
+        $filters = [
+            ['column' => 'nonexistent_column', 'operator' => 'eq', 'value' => 'x'],
+        ];
+
+        // Should not throw; the unknown column is silently skipped and all 5 rows come back.
+        $rows = $this->get_rows_for_table_structured($table, $filters);
+        $this->assertCount(5, $rows, 'Unknown column must be silently skipped (no fewer rows than baseline)');
+    }
+
+    /**
+     * Test structured filter with an unknown operator — the normalizer must reject
+     * the rule and not pass it through.
+     *
+     * @covers \local_wunderbyte_table\filters\filter_normalizer::validate_rule
+     */
+    public function test_structured_filter_unknown_operator(): void {
+        $this->create_test_courses(5);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        $filters = [
+            ['column' => 'shortname', 'operator' => 'INVALID_OP', 'value' => 'x'],
+        ];
+
+        // The rule is silently dropped; all 5 rows come back.
+        $rows = $this->get_rows_for_table_structured($table, $filters);
+        $this->assertCount(5, $rows, 'Unknown operator must be silently dropped');
+    }
+
+    /**
+     * Test that the normalizer rejects a filter list that exceeds MAX_RULES.
+     *
+     * @covers \local_wunderbyte_table\filters\filter_normalizer::normalize_structured
+     */
+    public function test_structured_filter_too_many_rules(): void {
+        $this->create_test_courses(3);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        // Build 51 rules (MAX_RULES = 50).
+        $filters = [];
+        for ($i = 0; $i <= 50; $i++) {
+            $filters[] = ['column' => 'shortname', 'operator' => 'eq', 'value' => "x$i"];
+        }
+
+        $this->expectException(moodle_exception::class);
+        // The exception is thrown by filter_normalizer before any SQL runs.
+        $this->get_rows_for_table_structured($table, $filters);
+    }
+
+    /**
+     * Test structured filter with the 'in' operator.
+     *
+     * @covers \local_wunderbyte_table\wunderbyte_table::apply_structured_filter_rules
+     */
+    public function test_structured_filter_in_operator(): void {
+        $this->create_test_courses(1, ['shortname' => 'IN_SC_A']);
+        $this->create_test_courses(1, ['shortname' => 'IN_SC_B']);
+        $this->create_test_courses(3, ['shortname' => 'OTHER_SC']);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        $filters = [
+            [
+                'column'   => 'shortname',
+                'operator' => 'in',
+                'values'   => ['IN_SC_A', 'IN_SC_B'],
+            ],
+        ];
+
+        $rows = $this->get_rows_for_table_structured($table, $filters);
+        $this->assertCount(2, $rows, 'in filter should return exactly 2 rows');
+
+        $shortnames = array_column((array)$rows, 'shortname');
+        sort($shortnames);
+        $this->assertSame(['IN_SC_A', 'IN_SC_B'], $shortnames);
+    }
+
+    /**
+     * Test that the normalizer rejects an IN list that exceeds MAX_IN_LIST.
+     *
+     * @covers \local_wunderbyte_table\filters\filter_normalizer::validate_rule
+     */
+    public function test_structured_filter_in_list_too_large(): void {
+        $this->create_test_courses(1);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+
+        $values = [];
+        for ($i = 0; $i <= 100; $i++) {
+            $values[] = "v$i";
+        }
+        $filters = [
+            ['column' => 'shortname', 'operator' => 'in', 'values' => $values],
+        ];
+
+        $this->expectException(moodle_exception::class);
+        // The exception is thrown by filter_normalizer before any SQL runs.
+        $this->get_rows_for_table_structured($table, $filters);
+    }
+
+    /**
+     * Test that the response from the webservice includes the 'usedfilterformat' field
+     * set to 'structured' when new filters are provided, and 'legacy' for wbtfilter.
+     *
+     * @covers \local_wunderbyte_table\external\load_data::execute
+     */
+    public function test_structured_filter_response_format_field(): void {
+        $this->create_test_courses(3);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $table = $this->create_demo2_table();
+        $encodedtable = $table->return_encoded_table();
+
+        // With structured filters: expect usedfilterformat = 'structured'.
+        $result = load_data::execute(
+            $encodedtable, null, null, null, null, null, null, null, '',
+            [['column' => 'shortname', 'operator' => 'eq', 'value' => 'x']]
+        );
+        $this->assertSame('structured', $result['usedfilterformat']);
+
+        // With no filters: expect usedfilterformat = 'legacy'.
+        $table2 = $this->create_demo2_table();
+        $encodedtable2 = $table2->return_encoded_table();
+        $result2 = load_data::execute(
+            $encodedtable2, null, null, null, null, null, null, null, ''
+        );
+        $this->assertSame('legacy', $result2['usedfilterformat']);
+    }
+
+    /**
+     * Test that SQL injection via the structured filter column field is prevented.
+     * The column name goes through filter_normalizer (alphanumeric + underscore only)
+     * and then through the column whitelist check in apply_structured_filter_rules.
+     *
+     * @covers \local_wunderbyte_table\filters\filter_normalizer::validate_rule
+     * @covers \local_wunderbyte_table\wunderbyte_table::apply_structured_filter_rules
+     */
+    public function test_structured_filter_sql_injection_via_column(): void {
+        $this->create_test_courses(5);
+
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
+
+        $injectioncolumns = [
+            '1=1 OR 1=1',
+            "fullname-- ",
+            "fullname /**/OR/**/ 1=1",
+            "id; DROP TABLE mdl_course--",
+        ];
+
+        foreach ($injectioncolumns as $injectcol) {
+            $table = $this->create_demo2_table();
+
+            // If the column contains invalid characters the normalizer returns null and
+            // the rule is dropped, so all 5 rows come back — injection did NOT succeed.
+            // An exception at the DB level is also acceptable (the injection never ran).
+            try {
+                $rows = $this->get_rows_for_table_structured(
+                    $table,
+                    [['column' => $injectcol, 'operator' => 'eq', 'value' => 'x']]
+                );
+                $this->assertCount(
+                    5,
+                    $rows,
+                    "Injection via column '{$injectcol}' must not narrow the result set"
+                );
+            } catch (\dml_exception $e) {
+                // A DB error is fine — the injection SQL did not execute successfully.
+                $this->assertStringNotContainsString('DROP', strtoupper($e->getMessage()));
+            } catch (moodle_exception $e) {
+                // moodle_exception is fine too (e.g. normalizer rejection).
+                $this->assertStringNotContainsString(
+                    $injectcol,
+                    $e->getMessage(),
+                    'The injection string must not appear in the exception message.'
+                );
+            }
+        }
+    }
+
+    /**
      * Function to be used by the callback filter.
      *
      * @param mixed $record

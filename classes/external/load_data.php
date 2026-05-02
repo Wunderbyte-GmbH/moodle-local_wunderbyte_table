@@ -31,9 +31,12 @@ use cache;
 use Exception;
 use external_api;
 use external_function_parameters;
+use external_multiple_structure;
 use external_value;
 use external_single_structure;
+use local_wunderbyte_table\filters\filter_normalizer;
 use local_wunderbyte_table\wunderbyte_table;
+use moodle_exception;
 use moodle_url;
 use stdClass;
 
@@ -66,6 +69,27 @@ class load_data extends external_api {
             'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_REQUIRED),
             'wbtfilter'  => new external_value(PARAM_RAW, 'reset value', VALUE_REQUIRED),
             'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
+            // Structured filter rules (new API). When non-empty, takes priority over wbtfilter.
+            'filters' => new external_multiple_structure(
+                new external_single_structure([
+                    'column'   => new external_value(PARAM_ALPHANUMEXT,
+                        'column name to filter on', VALUE_REQUIRED),
+                    'operator' => new external_value(PARAM_ALPHANUMEXT,
+                        'operator name: eq, ne, lt, lte, gt, gte, like, notlike, in, between, isnull, isnotnull',
+                        VALUE_REQUIRED),
+                    'value'    => new external_value(PARAM_RAW,
+                        'scalar value (for eq/ne/lt/lte/gt/gte/like/notlike)', VALUE_OPTIONAL, null),
+                    'value2'   => new external_value(PARAM_RAW,
+                        'second scalar value (for between operator)', VALUE_OPTIONAL, null),
+                    'values'   => new external_multiple_structure(
+                        new external_value(PARAM_RAW, 'list entry for in operator'),
+                        'values list (for in operator)', VALUE_OPTIONAL, []
+                    ),
+                ]),
+                'structured filter rules (new API, takes priority over wbtfilter when non-empty)',
+                VALUE_OPTIONAL,
+                []
+            ),
         ]);
     }
 
@@ -78,8 +102,9 @@ class load_data extends external_api {
      * @param string $tshow
      * @param integer $tdir
      * @param integer $treset
-     * @param string $filterobjects
+     * @param string $filterobjects Legacy raw-JSON filter string (wbtfilter). Deprecated: prefer $filters.
      * @param string $searchtext
+     * @param array $filters Structured filter rules (new API). Takes priority over $filterobjects when non-empty.
      * @return array
      */
     public static function execute(
@@ -91,7 +116,8 @@ class load_data extends external_api {
         $tdir = null,
         $treset = null,
         $filterobjects = null,
-        $searchtext = null
+        $searchtext = null,
+        $filters = []
     ) {
 
         global $PAGE;
@@ -106,6 +132,7 @@ class load_data extends external_api {
                 'treset' => $treset,
                 'wbtfilter' => $filterobjects,
                 'searchtext' => $searchtext ?? "",
+                'filters' => $filters ?? [],
         ];
 
         $params = self::validate_parameters(self::execute_parameters(), $params);
@@ -168,8 +195,32 @@ class load_data extends external_api {
         // We need to support both keys, for legacy reasons.
         $params['wbtsearch'] = $params['searchtext'];
 
+        // Structured filters (new API) take priority over the legacy wbtfilter string.
+        // When filters rules are provided we validate/normalise them and store as JSON
+        // in a dedicated $_POST key so that wunderbyte_table picks them up through its
+        // own apply_filter_and_search_from_url() method without touching wbtfilter.
+        $usedfilterformat = 'legacy';
+        if (!empty($params['filters'])) {
+            // This may throw moodle_exception for limit violations (too many rules, IN list too
+            // large).  We intentionally let those propagate so the caller receives a clear error.
+            $normalizedrules = filter_normalizer::normalize_structured($params['filters']);
+            // Pass the normalised rules through $_POST so that the table can read them.
+            $_POST['wbt_structured_filters'] = json_encode($normalizedrules);
+            // Suppress the legacy filter so it does not interfere.
+            $params['wbtfilter'] = '';
+            $usedfilterformat = 'structured';
+        } else {
+            // No structured filters in this request.  Explicitly clear any stale value that
+            // might have been set by a previous call in the same PHP process (e.g. in tests).
+            unset($_POST['wbt_structured_filters']);
+        }
+
         // The table lib class expects $_POST variables to be present, so we have to set them.
         foreach ($params as $key => $value) {
+            if ($key === 'filters') {
+                // The 'filters' key is handled above; do not forward the raw array to $_POST.
+                continue;
+            }
             $_POST[$key] = $value;
         }
 
@@ -202,6 +253,7 @@ class load_data extends external_api {
             $result['template'] = $table->tabletemplate;
             $result['content'] = json_encode($tabledata);
             $result['filterjson'] = $table->filterjson ?? '';
+            $result['usedfilterformat'] = $usedfilterformat;
         }
 
         return $result;
@@ -217,6 +269,8 @@ class load_data extends external_api {
             'template' => new external_value(PARAM_TEXT, 'template name'),
             'content' => new external_value(PARAM_RAW, 'json content'),
             'filterjson' => new external_value(PARAM_RAW, 'filter json to create checkboxes', VALUE_OPTIONAL, ''),
+            'usedfilterformat' => new external_value(PARAM_ALPHA,
+                'which filter path was used: "structured" or "legacy"', VALUE_OPTIONAL, 'legacy'),
         ]);
     }
 }
