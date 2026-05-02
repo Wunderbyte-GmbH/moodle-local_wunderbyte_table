@@ -16,8 +16,6 @@
 
 namespace local_wunderbyte_table\local\performance;
 
-use mod_booking\local\performance\performance_measurer;
-
 /**
  * Class supports the performance measurements of mod_booking.
  *
@@ -38,7 +36,7 @@ class performance {
             $pluginman->get_plugin_info('mod_booking')
             && class_exists('mod_booking\local\performance\performance_measurer')
         ) {
-            $measurer = performance_measurer::instance();
+            $measurer = \mod_booking\local\performance\performance_measurer::instance();
             if (!$measurer) {
                 return;
             }
@@ -58,7 +56,7 @@ class performance {
             $pluginman->get_plugin_info('mod_booking')
             && class_exists('mod_booking\local\performance\performance_measurer')
         ) {
-            $measurer = performance_measurer::instance();
+            $measurer = \mod_booking\local\performance\performance_measurer::instance();
             if (!$measurer) {
                 return;
             }
