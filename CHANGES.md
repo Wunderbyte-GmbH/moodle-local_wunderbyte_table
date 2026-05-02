@@ -1,3 +1,6 @@
+## Version 3.2.0 (2026050100)
+* Bugfix: Fix potential sql injection
+
 ## Version 3.1.4 (2026042100)
 * Improvement: Limit autoscroll even further.
 * Improvement: Reload tables on tab switch.
