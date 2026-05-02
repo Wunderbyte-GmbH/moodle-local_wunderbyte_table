@@ -631,7 +631,9 @@ final class base_test extends advanced_testcase {
         );
         $jsonobject = json_decode($result['content']);
         if (!isset($jsonobject->table->rows)) {
-            throw new moodle_exception('no_items_available_yet', 'wunderbyte_table', '', json_encode($jsonobject));
+            // Avoid including the full response object in the message to prevent
+            // leaking internal data structures in test output.
+            throw new moodle_exception('no_items_available_yet', 'wunderbyte_table');
         }
         return $jsonobject->table->rows ?? [];
     }

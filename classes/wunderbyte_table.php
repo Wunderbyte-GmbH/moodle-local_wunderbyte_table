@@ -1490,6 +1490,9 @@ class wunderbyte_table extends table_sql {
         // Build the allowed-column whitelist exactly as apply_filter() does.
         $allowedfilters = $this->get_allowed_filter_columns();
 
+        // Cache the operator map to avoid repeated class-constant lookups inside the loop.
+        $operatormap = \local_wunderbyte_table\filters\filter_normalizer::OPERATOR_MAP;
+
         $filter = '';
 
         foreach ($rules as $rule) {
@@ -1506,7 +1509,7 @@ class wunderbyte_table extends table_sql {
             }
 
             // Operator must be in the map (should already be guaranteed by the normalizer).
-            $sqlopname = \local_wunderbyte_table\filters\filter_normalizer::OPERATOR_MAP[$operator] ?? null;
+            $sqlopname = $operatormap[$operator] ?? null;
             if ($sqlopname === null) {
                 continue;
             }

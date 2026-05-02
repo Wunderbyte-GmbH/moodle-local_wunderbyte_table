@@ -127,9 +127,9 @@ class filter_normalizer {
      * @throws moodle_exception  When the IN list exceeds MAX_IN_LIST.
      */
     public static function validate_rule(array $rule) {
-        // Column: must be non-empty and contain only alphanumeric characters and underscores.
+        // Column: must be non-empty and start with a letter, followed by alphanumeric chars and underscores.
         $column = trim((string)($rule['column'] ?? ''));
-        if ($column === '' || !preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
+        if ($column === '' || !preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $column)) {
             return null;
         }
         if (strlen($column) > self::MAX_STRING_LENGTH) {
