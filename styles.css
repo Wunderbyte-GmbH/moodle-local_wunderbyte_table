@@ -247,7 +247,7 @@
 }
 
 .wunderbyteTableFilter .form-check-label {
-    color: #77838f;
+    color: #5f6b76;
     font-size: 1rem;
     padding-left: 6px;
     position: relative;
@@ -410,7 +410,6 @@
 }
 
 .wunderbyteTableFilter .datepickerform {
-    margin: 20px;
     padding: 10px;
     position: relative;
     display: block;
@@ -420,7 +419,7 @@
 
 .wunderbyteTableFilter .datepicker-label {
 
-    color: #77838f;
+    color: #5f6b76;
     font-size: 1rem;
     padding-top: 6px;
     padding-left: 6px;
@@ -431,13 +430,13 @@
 
 .wunderbyteTableFilter .datepicker-input {
 
-    color: #77838f;
+    color: #5f6b76;
     padding-left: 6px;
-    border: #77838f;
+    border: #5f6b76;
 }
 
 .wunderbyteTableFilter .datepicker-input:hover {
-    box-shadow: 0 0 1px 1px #77838f;
+    box-shadow: 0 0 1px 1px #5f6b76;
 }
 
 .wunderbyteTableFilter .intrangeform {
@@ -451,7 +450,7 @@
 
 .wunderbyteTableFilter .intrange-label {
 
-    color: #77838f;
+    color: #5f6b76;
     font-size: 1rem;
     padding-top: 6px;
     padding-left: 6px;
@@ -462,12 +461,12 @@
 
 .wunderbyteTableFilter .intrange-input {
     padding-left: 6px;
-    border: #77838f;
+    border: #5f6b76;
     box-shadow: 0 0 1px 1px #98a3ad;
 }
 
 .wunderbyteTableFilter .intrange-input:hover {
-    box-shadow: 0 0 1px 1px #77838f;
+    box-shadow: 0 0 1px 1px #5f6b76;
 }
 
 .wunderbyteTableFilter .alert-warning {
@@ -634,6 +633,12 @@
 .wunderbyteTableFilter .dropdown-item .form-check-label {
     white-space: normal;
     word-break: break-all;
+}
+
+
+.wunderbyteTableFilter .dropdown-item:hover .form-check-label,
+.wunderbyteTableFilter .dropdown-item:focus .form-check-label {
+    color: #fff;
 }
 
 @media screen and (max-width: 991px) {
