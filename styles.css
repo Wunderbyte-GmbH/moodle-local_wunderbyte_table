@@ -636,6 +636,12 @@
     word-break: break-all;
 }
 
+
+.wunderbyteTableFilter .dropdown-item:hover .form-check-label,
+.wunderbyteTableFilter .dropdown-item:focus .form-check-label {
+    color: #fff;
+}
+
 @media screen and (max-width: 991px) {
     .wunderbyte_table_filter_on .wunderbyte_table_container {
         display: block;
