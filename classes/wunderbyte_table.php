@@ -142,6 +142,15 @@ class wunderbyte_table extends table_sql {
     public $showdownloadbutton = false;
 
     /**
+     * Restrict the download formats shown in the selector.
+     * An empty array means all enabled formats are shown.
+     * Example: ['pdf'] to show only the PDF format.
+     *
+     * @var array
+     */
+    public $alloweddownloadformats = [];
+
+    /**
      *
      * @var bool Show button to add individual custom filters.
      */

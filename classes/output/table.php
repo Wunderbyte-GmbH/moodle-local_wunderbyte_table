@@ -613,9 +613,10 @@ class table implements renderable, templatable {
      */
     private function return_dataformat_selector() {
         $formats = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+        $allowed = $this->wbtable->alloweddownloadformats ?? [];
         $printoptions = [];
         foreach ($formats as $format) {
-            if ($format->is_enabled()) {
+            if ($format->is_enabled() && (empty($allowed) || in_array($format->name, $allowed, true))) {
                 $printoptions[] = [
                     'value' => $format->name,
                     'label' => get_string('dataformat', $format->component),
