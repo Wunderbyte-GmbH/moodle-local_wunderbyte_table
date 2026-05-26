@@ -704,6 +704,17 @@ export function getIntRange(e, selector, idstring) {
 export function getFilterObjects(idstring) {
 
   if (!(idstring in checked)) {
+    // Before returning empty, seed from the URL wbtfilter param (e.g. on initial lazyload
+    // where callLoadData fires before initializeCheckboxes has read the DOM state).
+    const urlFilter = new URLSearchParams(window.location.search).get('wbtfilter');
+    if (urlFilter) {
+      try {
+        checked[idstring] = JSON.parse(urlFilter);
+        return urlFilter;
+      } catch (e) {
+        // Invalid JSON – fall through to return empty.
+      }
+    }
     return '';
   }
 
@@ -800,7 +811,10 @@ function updateFilterCounter(name, selector, idstring) {
   const resetElement = wbTable.querySelector('.reset-filter-button');
 
   if (resetElement) {
-    if (totalfiltercounter > 0) {
+    // Also keep the reset button visible when the URL still carries an active wbtfilter
+    // but the JS checked state has not been populated yet (e.g. initial lazyload).
+    const urlHasFilter = !!new URLSearchParams(window.location.search).get('wbtfilter');
+    if (totalfiltercounter > 0 || urlHasFilter) {
       resetElement.classList.remove('hidden');
     } else {
       resetElement.classList.add('hidden');
