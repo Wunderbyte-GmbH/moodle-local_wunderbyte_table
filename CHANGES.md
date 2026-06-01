@@ -1,3 +1,9 @@
+## Version 3.2.1 (2026060100)
+* New feature: Add possibility to restrict allowed download formats.
+* Improvement: Still show remove filter button.
+* Improvement: Add css class to easily style or hide specific filters.
+* Improvement: Lots of little fixes for better accessibility.
+
 ## Version 3.2.0 (2026050100)
 * Bugfix: Fix potential sql injection
 
