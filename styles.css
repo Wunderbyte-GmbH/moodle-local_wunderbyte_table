@@ -247,7 +247,7 @@
 }
 
 .wunderbyteTableFilter .form-check-label {
-    color: #5f6b76;
+    color: black;
     font-size: 1rem;
     padding-left: 6px;
     position: relative;
@@ -576,10 +576,6 @@
     width: 100%;
 }
 
-.wunderbyteTableFilter .form-check-label {
-    color: black;
-}
-
 .hierarchybutton {
     margin-bottom: 4px;
     position: relative;
@@ -631,6 +627,7 @@
 }
 
 .wunderbyteTableFilter .dropdown-item .form-check-label {
+    color: black;
     white-space: normal;
     word-break: break-all;
 }
