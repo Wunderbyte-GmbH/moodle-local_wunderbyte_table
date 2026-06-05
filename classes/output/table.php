@@ -867,7 +867,12 @@ class table implements renderable, templatable {
             }
 
             $item['sortid'] = $key;
-            $item['key'] = $value;
+            if (is_array($value) && isset($value['label'])) {
+                $component = $value['component'] ?? 'local_wunderbyte_table';
+                $item['key'] = get_string($value['label'], $component);
+            } else {
+                $item['key'] = $value;
+            }
             $item['selected'] = '';
 
             if (in_array($key, array_keys($sortcolumns))) {
