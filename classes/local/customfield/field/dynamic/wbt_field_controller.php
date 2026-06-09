@@ -28,6 +28,7 @@ namespace local_wunderbyte_table\local\customfield\field\dynamic;
 // Important: Use the field controller for the right customfield.
 use customfield_dynamic\field_controller;
 use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
+use context_system;
 
 /**
  * Extension of the customfield field controller for Wunderbyte table.
@@ -70,7 +71,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         ) {
             $returnvalue = $records[$key]->data ?? $key;
             if ($formatstring) {
-                $returnvalue = format_string($returnvalue);
+                $returnvalue = format_string($returnvalue, true, ['context' => context_system::instance()]);
             }
             return $returnvalue;
         } else if (
@@ -81,7 +82,7 @@ class wbt_field_controller extends field_controller implements wbt_field_control
                 if (isset($records[$k])) {
                     $returnvalue = $records[$k]->data ?? $k;
                     if ($formatstring) {
-                        $returnvalue = format_string($returnvalue);
+                        $returnvalue = format_string($returnvalue, true, ['context' => context_system::instance()]);
                     }
                     if ($returnvalue !== '') {
                         $returnvalues[] = $returnvalue;

@@ -28,6 +28,7 @@ namespace local_wunderbyte_table\local\customfield\field\textarea;
 // Important: Use the field controller for the right customfield.
 use customfield_textarea\field_controller;
 use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
+use context_system;
 
 /**
  * Extension of the customfield field controller for Wunderbyte table.
@@ -61,7 +62,11 @@ class wbt_field_controller extends field_controller implements wbt_field_control
             }
 
             if ($formatstring) {
-                $returnvalue = format_text($returnvalue);
+                $returnvalue = format_text(
+                    $returnvalue,
+                    FORMAT_MOODLE,
+                    ['context' => context_system::instance()]
+                );
             }
             return $returnvalue;
         }

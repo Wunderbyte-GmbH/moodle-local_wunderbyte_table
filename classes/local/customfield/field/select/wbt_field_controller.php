@@ -28,8 +28,7 @@ namespace local_wunderbyte_table\local\customfield\field\select;
 // Important: Use the field controller for the right customfield.
 use customfield_select\field_controller;
 use local_wunderbyte_table\local\customfield\wbt_field_controller_base;
-use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
-use stdClass;
+use context_system;
 
 /**
  * Extension of the customfield field controller for Wunderbyte table.
@@ -68,7 +67,9 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         }
         $returnvalue = $optionsarray[$i];
         if ($formatstring) {
-            $returnvalue = format_string($returnvalue);
+            // Pass an explicit context to avoid relying on $PAGE->context, which may not be
+            // set in web service or CLI contexts (e.g. entity calendar callbacks).
+            $returnvalue = format_string($returnvalue, true, ['context' => context_system::instance()]);
         }
         return $returnvalue;
     }
