@@ -49,11 +49,6 @@ use stdClass;
  * @covers \local_wunderbyte_table\filters\types\alloptionshierarchicalfilter
  */
 final class alloptionshierarchicalfilter_test extends advanced_testcase {
-
-    // ---------------------------------------------------------------------------
-    // Helpers
-    // ---------------------------------------------------------------------------
-
     /**
      * Create a custom field category + text field and return the field object.
      *
@@ -117,10 +112,6 @@ final class alloptionshierarchicalfilter_test extends advanced_testcase {
         return (int)$cachedtable->totalrows;
     }
 
-    // ---------------------------------------------------------------------------
-    // Unit tests: add_to_categoryobject
-    // ---------------------------------------------------------------------------
-
     /**
      * All options from the sortarray appear in the hierarchy even when $values is
      * completely empty (no DB records at all).
@@ -137,7 +128,7 @@ final class alloptionshierarchicalfilter_test extends advanced_testcase {
             ],
         ];
 
-        // $values is empty — simulates zero DB records for this filter column.
+        // Values is empty — simulates zero DB records for this filter column.
         alloptionshierarchicalfilter::add_to_categoryobject($categoryobject, $filtersettings, 'competency', []);
 
         $this->assertArrayHasKey('hierarchy', $categoryobject);
@@ -186,19 +177,25 @@ final class alloptionshierarchicalfilter_test extends advanced_testcase {
             }
         }
 
-        // '1' has 5 records.
+        // Option '1' has 5 records.
         $this->assertArrayHasKey('1', $itemsbyvalue, 'Value 1 must be present.');
         $this->assertSame(5, $itemsbyvalue['1']['count']);
 
-        // '2' and '3' have no DB records — count must be explicitly 0, not missing.
+        // Options '2' and '3' have no DB records — count must be explicitly 0, not missing.
         $this->assertArrayHasKey('2', $itemsbyvalue, 'Value 2 must be present even with no DB records.');
-        $this->assertArrayHasKey('count', $itemsbyvalue['2'],
-            'count key must exist on empty item to prevent Mustache context walk-up.');
+        $this->assertArrayHasKey(
+            'count',
+            $itemsbyvalue['2'],
+            'count key must exist on empty item to prevent Mustache context walk-up.'
+        );
         $this->assertSame(0, $itemsbyvalue['2']['count']);
 
         $this->assertArrayHasKey('3', $itemsbyvalue, 'Value 3 must be present even with no DB records.');
-        $this->assertArrayHasKey('count', $itemsbyvalue['3'],
-            'count key must exist on empty item to prevent Mustache context walk-up.');
+        $this->assertArrayHasKey(
+            'count',
+            $itemsbyvalue['3'],
+            'count key must exist on empty item to prevent Mustache context walk-up.'
+        );
         $this->assertSame(0, $itemsbyvalue['3']['count']);
     }
 
@@ -272,15 +269,17 @@ final class alloptionshierarchicalfilter_test extends advanced_testcase {
 
         $subcategorylabels = array_column($categoryobject['hierarchy'], 'label');
 
-        $this->assertContains('Teaching', $subcategorylabels,
-            'Teaching subcategory must appear even with no DB records.');
-        $this->assertContains('Research', $subcategorylabels,
-            'Research subcategory must appear even with no DB records.');
+        $this->assertContains(
+            'Teaching',
+            $subcategorylabels,
+            'Teaching subcategory must appear even with no DB records.'
+        );
+        $this->assertContains(
+            'Research',
+            $subcategorylabels,
+            'Research subcategory must appear even with no DB records.'
+        );
     }
-
-    // ---------------------------------------------------------------------------
-    // Regression: standard hierarchicalfilter still hides empty options
-    // ---------------------------------------------------------------------------
 
     /**
      * Regression guard: the standard hierarchicalfilter must still omit options
@@ -308,13 +307,12 @@ final class alloptionshierarchicalfilter_test extends advanced_testcase {
         }
 
         $this->assertContains(1, $renderedvalues, 'Option 1 with DB record must appear.');
-        $this->assertNotContains(2, $renderedvalues,
-            'Option 2 without DB record must NOT appear in standard hierarchicalfilter.');
+        $this->assertNotContains(
+            2,
+            $renderedvalues,
+            'Option 2 without DB record must NOT appear in standard hierarchicalfilter.'
+        );
     }
-
-    // ---------------------------------------------------------------------------
-    // Integration tests: full table + custom field + filter application
-    // ---------------------------------------------------------------------------
 
     /**
      * Integration test: all statically-defined options appear in the filterjson
@@ -375,8 +373,11 @@ final class alloptionshierarchicalfilter_test extends advanced_testcase {
 
         $this->assertArrayHasKey('1', $renderedvalues, 'Option 1 (has records) must be in filterjson.');
         $this->assertArrayHasKey('2', $renderedvalues, 'Option 2 (no records) must ALSO be in filterjson.');
-        $this->assertSame(0, $renderedvalues['2']['count'],
-            'Option 2 must have count=0, not inherited from parent subcategory (Mustache walk-up prevention).');
+        $this->assertSame(
+            0,
+            $renderedvalues['2']['count'],
+            'Option 2 must have count=0, not inherited from parent subcategory (Mustache walk-up prevention).'
+        );
     }
 
     /**
@@ -499,8 +500,10 @@ final class alloptionshierarchicalfilter_test extends advanced_testcase {
         $table->set_filter_sql('*', '{course}', 'category = ' . $emptycategory->id, '', []);
         $table->outhtml(100, true);
 
-        $this->assertNotEmpty($table->filterjson,
-            'filterjson must be populated even when no DB records exist — filter must not be suppressed.');
+        $this->assertNotEmpty(
+            $table->filterjson,
+            'filterjson must be populated even when no DB records exist — filter must not be suppressed.'
+        );
 
         $filterjson = json_decode($table->filterjson, true);
         $compcategory = null;
@@ -511,8 +514,10 @@ final class alloptionshierarchicalfilter_test extends advanced_testcase {
             }
         }
 
-        $this->assertNotNull($compcategory,
-            'comp4 filter category must appear in filterjson even with no DB records.');
+        $this->assertNotNull(
+            $compcategory,
+            'comp4 filter category must appear in filterjson even with no DB records.'
+        );
 
         $renderedvalues = [];
         foreach ($compcategory['hierarchy'] as $subcategory) {
