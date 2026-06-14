@@ -38,11 +38,13 @@ Feature: Filtering functionality of wunderbyte_table works as expected
       | page     | PageName1  | PageDesc1  | C1     | PAGE1    |
     And I change viewport size to "1600x3000"
 
-  @javascript
+  @javascript @accessibility
   Scenario: WB_Table: Filter tables on different tabs using input field
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
+    ## Validate accessibility of booking options table before booking
+    And the page should meet accessibility standards
     And I set the field "search-demotable_1" to "teacher"
     And I wait "1" seconds
     And I should see "teacher1" in the "#demotable_1_r1" "css_element"
