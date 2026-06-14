@@ -37,6 +37,8 @@ if (!has_capability('moodle/site:config', $syscontext)) {
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url('/local/wunderbyte_table/demo.php');
+$PAGE->set_title(get_string('pluginname', 'local_wunderbyte_table'));
+$PAGE->set_heading(get_string('pluginname', 'local_wunderbyte_table'));
 
 echo $OUTPUT->header();
 

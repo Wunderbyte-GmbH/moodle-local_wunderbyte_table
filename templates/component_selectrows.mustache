@@ -39,7 +39,8 @@
 }}
 
 {{#showrowcountselect}}
-    <select class="rowsperpage" name="selectrowsperpage-{{uniqueid}}">
+    <select class="rowsperpage" name="selectrowsperpage-{{uniqueid}}"
+            aria-label="{{#str}} rowsperpage, local_wunderbyte_table {{/str}}">
         {{#options}}
             <option value={{value}} {{selected}}>{{label}}</option>
         {{/options}}

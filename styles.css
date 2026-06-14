@@ -36,7 +36,13 @@
 
 .wunderbyte_table_container .wunderbyteTableClass .wbt-pagination-navs .wbt-gotopage {
     margin: 0 1rem;
-    color: grey;
+    color: #595959;
+}
+
+.wunderbyte_table_container input[type="checkbox"].form-check-input,
+.wunderbyte_table_container input[type="checkbox"].tableheadercheckbox {
+    min-width: 24px;
+    min-height: 24px;
 }
 
 .wunderbyte_table_container .icons-collapse-expand {
