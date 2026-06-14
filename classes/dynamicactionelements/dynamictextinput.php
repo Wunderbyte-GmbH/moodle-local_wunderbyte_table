@@ -42,12 +42,13 @@ class dynamictextinput {
             'istextinput' => true,
             'id' => $valueid . '-' . $uniqueid,
             'name' => $uniqueid . '-' . $valueid,
+            'label' => get_string('textinputforrow', 'local_wunderbyte_table', $valueid),
             'class' => 'form-control',
+            'placeholder' => get_string('textinputplaceholder', 'local_wunderbyte_table'),
+            'maxlength' => 255,
             'methodname' => 'textinputchange',
             'data' => [
                 'id' => $valueid,
-                'placeholder' => 'Enter some text...',
-                'maxlength' => 255,
             ]
         ];
     }

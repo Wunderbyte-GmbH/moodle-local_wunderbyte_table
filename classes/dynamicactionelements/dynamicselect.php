@@ -42,6 +42,7 @@ class dynamicselect {
             'isselect' => true,
             'id' => $valueid . '-' . $uniqueid,
             'name' => $uniqueid . '-' . $valueid,
+            'label' => get_string('selectoptionforrow', 'local_wunderbyte_table', $valueid),
             'class' => 'form-select',
             'methodname' => 'selectoption',
             'data' => [

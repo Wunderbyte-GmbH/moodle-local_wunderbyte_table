@@ -34,6 +34,6 @@
 }}
 
 <div class="form-check form-check-inline">
-  <input class="form-check-input wb-checkbox {{checkboxclass}}" type="checkbox" id="{{id}}_{{tableid}}" name="{{name}}" value="wb_checkbox_{{id}}" data-tableid="{{tableid}}" {{#checked}}checked{{/checked}}>
+  <input class="form-check-input wb-checkbox {{checkboxclass}}" type="checkbox" id="{{id}}_{{tableid}}" name="{{name}}" value="wb_checkbox_{{id}}" data-tableid="{{tableid}}" aria-label="{{#str}} selectrow, local_wunderbyte_table, {{id}} {{/str}}" {{#checked}}checked{{/checked}}>
   <label class="form-check-label wb-checkbox {{checkboxclass}}" for="{{id}}_{{tableid}}" data-tableid="{{tableid}}">{{label}}</label>
 </div>
