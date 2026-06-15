@@ -66,19 +66,24 @@ export function initializeFilterSearch(containerselector) {
     }
 
     inputElements.forEach(function(inputElement) {
+        const parentElement = inputElement.parentNode;
+        let records = parentElement.querySelectorAll('input.filterelement.form-check-input[type="checkbox"]');
+
+        // Always re-evaluate visibility so filters that gain checkboxes after an AJAX
+        // reload also get the search field shown (not blocked by dataset.initialized).
+        if (records.length > 0) {
+            inputElement.removeAttribute('hidden');
+        }
+
+        // Only attach the keyup listener once.
         if (!inputElement.dataset.initialized) {
             inputElement.dataset.initialized = true;
 
-            // Get all records of filter.
-            const parentElement = inputElement.parentNode;
-            let records = parentElement.querySelectorAll('input.filterelement.form-check-input[type="checkbox"]');
-
-            // Display searchfield with minimum of 13 records.
-            if (records.length > 0) {
-                inputElement.removeAttribute('hidden');
-            }
-
             inputElement.addEventListener('keyup', () => {
+                // Re-query so the listener works on checkboxes added after init.
+                let currentRecords = parentElement.querySelectorAll(
+                    'input.filterelement.form-check-input[type="checkbox"]'
+                );
 
                 let searchstring = null;
                 let match = false;
@@ -93,7 +98,7 @@ export function initializeFilterSearch(containerselector) {
 
                 // Check if value of records contains searchstring.
                 // If contained, display it, else hide.
-                records.forEach(function(record) {
+                currentRecords.forEach(function(record) {
                     let value = record.dataset.key.toLowerCase();
                     const listelement = record.parentNode;
                     if (value.includes(searchstring.toLowerCase())) {
