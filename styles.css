@@ -462,13 +462,14 @@
     padding-left: 6px;
     position: relative;
     margin-bottom: 6px;
-    vertical-align: top;
+    display: block;
 }
 
 .wunderbyteTableFilter .intrange-input {
     padding-left: 6px;
     border: #5f6b76;
     box-shadow: 0 0 1px 1px #98a3ad;
+    width: calc(100%);
 }
 
 .wunderbyteTableFilter .intrange-input:hover {
