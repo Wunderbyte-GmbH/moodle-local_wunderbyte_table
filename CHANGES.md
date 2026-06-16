@@ -1,3 +1,9 @@
+## Version 3.2.2 (2026061600)
+* Improvement: Enable overwriting of countlabel
+* Improvement: New filter type to allow display of empty categories
+* Bugfix: Pass an explicit context to avoid relying on $PAGE->context, which may not be set in web service or CLI contexts
+* Bugfix: Update filtersearch on ajax
+
 ## Version 3.2.1 (2026060100)
 * New feature: Add possibility to restrict allowed download formats.
 * Improvement: Still show remove filter button.
