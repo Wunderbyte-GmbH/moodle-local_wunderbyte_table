@@ -159,6 +159,20 @@ class table implements renderable, templatable {
     private $showcountlabel = true;
 
     /**
+     * Lang string identifier used for the count label.
+     *
+     * @var string
+     */
+    private $countlabel = 'countlabel';
+
+    /**
+     * Component the count-label string belongs to.
+     *
+     * @var string
+     */
+    private $countlabelcomponent = 'local_wunderbyte_table';
+
+    /**
      * Go to page.
      *
      * @var bool
@@ -357,6 +371,9 @@ class table implements renderable, templatable {
         }
 
         $this->showcountlabel = $table->showcountlabel;
+
+        $this->countlabel = $table->countlabel ?? 'countlabel';
+        $this->countlabelcomponent = $table->countlabelcomponent ?? 'local_wunderbyte_table';
 
         $this->gotopage = $table->gotopage;
 
@@ -686,8 +703,8 @@ class table implements renderable, templatable {
             'norecords' => $this->totalrecords == 0 ? true : false,
             'filteredrecords' => $this->filteredrecords,
             'countlabelstring' => get_string(
-                'countlabel',
-                'local_wunderbyte_table',
+                $this->countlabel,
+                $this->countlabelcomponent,
                 (object)[
                     'totalrecords' => $this->totalrecords,
                     'filteredrecords' => $this->totalrows,

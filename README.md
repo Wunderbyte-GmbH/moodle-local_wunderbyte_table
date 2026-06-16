@@ -419,6 +419,21 @@ For the display of localized names in tableheaders, use the define_headers funct
     $table->define_headers(array_values($columns));
     $table->define_columns(array_keys($columns));
 
+## Count label
+The table can display a label in its header showing how many records were found (e.g. "5 of 20 records found"). Turn it on with:
+
+    $table->showcountlabel = true;
+
+By default the generic 'countlabel' string from local_wunderbyte_table is used. If you want a wording specific to your plugin (e.g. "5 of 20 bookings found"), you can point the table to your own language string when instantiating it:
+
+    $table->define_countlabel('entriescount', 'your_plugin');
+
+Your string must use the same placeholders as the default one so the counts are rendered, e.g. in lang/en/mod_booking.php:
+
+    $string['entriescount'] = '{$a->filteredrecords} of {$a->totalrecords} entries found';
+
+The second argument (the component) is optional and defaults to 'local_wunderbyte_table'. The chosen string is kept across ajax reloads (sorting, filtering, pagination).
+
 ## Lazy loading vs. direct out
 To lazy load wunderbyte table (eg. for loading in tabs or modals) you need to call $table->lazyout() instead of $table->out. While out will return the html to echo, lazyout echos right away. If you want the html of lazyout, use $table->lazyouthtml();
 

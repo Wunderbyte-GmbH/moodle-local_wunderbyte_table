@@ -113,6 +113,18 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
+     * @var string Lang string identifier used for the count label.
+     */
+    public $countlabel = 'countlabel';
+
+    /**
+     *
+     * @var string Component the count-label string belongs to.
+     */
+    public $countlabelcomponent = 'local_wunderbyte_table';
+
+    /**
+     *
      * @var bool Show the download button at the bottom of the table (on top is the default).
      */
     public $showdownloadbuttonatbottom = false;
@@ -884,6 +896,22 @@ class wunderbyte_table extends table_sql {
         $this->add_subcolumns('cardheader', $columns, false);
 
         $this->headers = $columns;
+    }
+
+    /**
+     * Define a custom language string for the records count label.
+     *
+     * The referenced string must use the same placeholders as the default
+     * 'countlabel' string ({$a->filteredrecords} and {$a->totalrecords}) for
+     * the counts to be rendered correctly.
+     *
+     * @param string $identifier lang string identifier
+     * @param string $component  component the string lives in
+     * @return void
+     */
+    public function define_countlabel(string $identifier, string $component = 'local_wunderbyte_table') {
+        $this->countlabel = $identifier;
+        $this->countlabelcomponent = $component;
     }
 
     /**
