@@ -602,7 +602,7 @@
     height: 46px;
     top: -49px;
     left: -1px;
-    width: calc(100% + 2px);
+    width: calc(100% - 32px);
 }
 
 .dropdown-menu .labelsearch {
