@@ -1,3 +1,8 @@
+## Version 3.2.3 (2026061800)
+* Improvement: Replace the alloptionshierarchicalfilter class with a reusable show_all_options() flag on the filter types (hierarchicalfilter, customfieldfilter and standardfilter). Default behaviour is unchanged.
+* Bugfix: Hierarchical filters used on a plain column (without set_sql_for_fieldid) are displayed again - their options are fetched from the column instead of the custom field data table.
+* Make countlabel properties private to prevent misconfiguration
+
 ## Version 3.2.2 (2026061600)
 * Improvement: Enable overwriting of countlabel
 * Improvement: New filter type to allow display of empty categories
