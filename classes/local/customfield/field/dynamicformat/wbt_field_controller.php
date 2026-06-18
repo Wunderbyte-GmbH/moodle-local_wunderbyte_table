@@ -68,13 +68,27 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         if ($key === null) {
             return '';
         }
-        $sql = $this->get_configdata_property('dynamicsql');
-        $records = self::fetch_dynamic_records($sql);
-        if ($records === null) {
+        // Moodle's DML rewrites {word} into a prefixed table name (see moodle_database::fix_table_names),
+        // which would destroy a multilang2 closing tag embedded in the query result. Swap it for a
+        // placeholder the DML regex ignores, then restore the real tag in the results below so
+        // filter_multilang2 can process it.
+        // Only the exact '{mlang}' is mangled by the DML regex; spaced variants (e.g. '{ mlang}')
+        // already pass through untouched, so a plain str_replace is all that is needed.
+        $mlangplaceholder = '@@MLANG_CLOSE@@';
+        $dynamicsql = $this->get_configdata_property('dynamicsql') ?? '';
+        $sql = str_replace('{mlang}', $mlangplaceholder, $dynamicsql);
+        try {
+            $records = $DB->get_records_sql($sql);
+        } catch (\Throwable $th) {
             if (is_array($key)) {
                 return implode(', ', $key);
             }
             return $key;
+        }
+        foreach ($records as $record) {
+            if (isset($record->data) && is_string($record->data)) {
+                $record->data = str_replace($mlangplaceholder, '{mlang}', $record->data);
+            }
         }
         if (
             (is_string($key) || is_int($key))
