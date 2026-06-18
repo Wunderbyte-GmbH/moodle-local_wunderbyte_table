@@ -372,8 +372,8 @@ class table implements renderable, templatable {
 
         $this->showcountlabel = $table->showcountlabel;
 
-        $this->countlabel = $table->countlabel ?? 'countlabel';
-        $this->countlabelcomponent = $table->countlabelcomponent ?? 'local_wunderbyte_table';
+        $this->countlabel = $table->get_countlabel();
+        $this->countlabelcomponent = $table->get_countlabelcomponent();
 
         $this->gotopage = $table->gotopage;
 

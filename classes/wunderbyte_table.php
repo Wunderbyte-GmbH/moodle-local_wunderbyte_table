@@ -915,6 +915,24 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * Return the lang string identifier used for the count label.
+     *
+     * @return string
+     */
+    public function get_countlabel(): string {
+        return $this->countlabel;
+    }
+
+    /**
+     * Return the component the count-label string belongs to.
+     *
+     * @return string
+     */
+    public function get_countlabelcomponent(): string {
+        return $this->countlabelcomponent;
+    }
+
+    /**
      * Add one or more classes to some or all of the columns already specified in special subcolumnidentifier.
      * If no subcolumns are specified, all of them are treated. Classes array nedds to have form of...
      * ... ['classidentifier' => 'classname'] where {{classidentifier}} should be used in mustache template...
