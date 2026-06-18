@@ -113,15 +113,15 @@ class wunderbyte_table extends table_sql {
 
     /**
      *
-     * @var string Lang string identifier used for the count label.
+     * @var string Lang string identifier used for the count label. Set it via $table->define_countlabel.
      */
-    public $countlabel = 'countlabel';
+    private $countlabel = 'countlabel';
 
     /**
      *
-     * @var string Component the count-label string belongs to.
+     * @var string Component the count-label string belongs to. Set it via $table->define_countlabel.
      */
-    public $countlabelcomponent = 'local_wunderbyte_table';
+    private $countlabelcomponent = 'local_wunderbyte_table';
 
     /**
      *
