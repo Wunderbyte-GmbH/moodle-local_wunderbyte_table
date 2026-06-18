@@ -235,7 +235,12 @@ By default a filter only shows options that have matching records. If you also w
 
     $hierarchicalfilter->show_all_options();
 
-The same flag is available on the `customfieldfilter`. For a custom field with a predefined set of options (e.g. a select field), enabling it displays every defined option, even those that are not used by any record yet:
+The same flag is available on the `standardfilter` and `customfieldfilter`. For the `standardfilter` it shows every option you passed to `add_options()`, even those with no matching records:
+
+    $standardfilter->add_options(['1' => 'first department', '2' => 'second department']);
+    $standardfilter->show_all_options();
+
+For the `customfieldfilter`, the complete option set is taken from the field definition. For a custom field with a predefined set of options (e.g. a select field), enabling it displays every defined option, even those that are not used by any record yet:
 
     $customfieldfilter->show_all_options();
 

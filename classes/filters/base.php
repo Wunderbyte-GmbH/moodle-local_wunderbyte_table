@@ -254,6 +254,32 @@ abstract class base {
             unset($filtersettings[$fckey]['json']);
         }
 
+        // When show all options is enabled, add every developer-defined option (from add_options())
+        // that has no matching records, so it is still displayed with a count of 0. We skip the
+        // reserved keys that carry filter metadata rather than actual options.
+        if ($showalloptions) {
+            $reservedkeys = [
+                'localizedname',
+                'wbfilterclass',
+                'wbbypasscache',
+                'showalloptions',
+                'explode',
+                'jsonattribute',
+                'json',
+                $fckey . '_wb_checked',
+            ];
+            foreach (($filtersettings[$fckey] ?? []) as $optionkey => $optionvalue) {
+                if (in_array($optionkey, $reservedkeys, true)) {
+                    continue;
+                }
+                if (!isset($values[$optionkey])) {
+                    // Present the option even though it has no matching records (count handled as 0 below).
+                    $values[$optionkey] = 0;
+                    $valueswithcount[$optionkey] = 0;
+                }
+            }
+        }
+
         // We have to check if we have a sortarray for this filtercolumn.
         if (
             isset($filtersettings[$fckey])

@@ -150,14 +150,25 @@ class demo implements renderable, templatable {
                 'Leon' => [
                     'parent' => 'L',
                 ],
+                'Empty' => [ // Probably no records match this option.
+                    'parent' => 'Empty',
+                ],
+                'Aaaa' => [ // Probably no records match this option.
+                    'parent' => 'A',
+                    'localizedname' => 'Aaaa localized',
+                ],
                 'other' => [
                     'localizedname' => get_string('other', 'local_wunderbyte_table'),
                 ]
         ]);
+        // With show_all_options() the defined options (Anna, Aaaa, Billy, Leon) are displayed even
+        // when no record matches them (shown with a count of 0). Remove this call to only show
+        // options that have matching records.
+        $hierarchicalfilter->show_all_options();
         $table->add_filter($hierarchicalfilter);
 
         $standardfilter = new standardfilter('lastname', get_string('lastname'));
-        //$table->add_filter($standardfilter);
+        $table->add_filter($standardfilter);
 
         $standardfilter = new standardfilter('email', get_string('email'));
         $table->add_filter($standardfilter);
@@ -170,6 +181,7 @@ class demo implements renderable, templatable {
             '1' => 'first department',
             '2' => 'second department',
         ]);
+        $standardfilter->show_all_options();
         $table->add_filter($standardfilter);
 
         $hourslistfilter = new hourlist('timemodified', get_string('hourlastmodified', 'local_wunderbyte_table'));

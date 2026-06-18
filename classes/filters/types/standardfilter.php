@@ -220,6 +220,7 @@ class standardfilter extends base {
         $filterunspecificvalues = [
             'localizedname',
             'wbfilterclass',
+            'showalloptions',
             $filterenablelabel,
         ];
         $filterspecificvalues = [];

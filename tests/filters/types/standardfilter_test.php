@@ -162,6 +162,72 @@ final class standardfilter_test extends TestCase {
     }
 
     /**
+     * With show_all_options() enabled, the standard filter displays every developer-defined
+     * option (from add_options()), including those without matching records (with count 0),
+     * while options with records keep their correct count.
+     *
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::add_to_categoryobject
+     */
+    public function test_show_all_options(): void {
+        $categoryobject = [];
+        $filtersettings = [
+            'department' => [
+                'showalloptions' => true,
+                'wbfilterclass' => standardfilter::class,
+                'department_wb_checked' => 1,
+                '1' => 'first department',
+                '2' => 'second department',
+            ],
+        ];
+
+        // Only option '1' has a DB record (count 3); option '2' has none.
+        standardfilter::add_to_categoryobject($categoryobject, $filtersettings, 'department', ['1' => 3]);
+
+        $this->assertArrayHasKey('default', $categoryobject);
+        $items = [];
+        foreach ($categoryobject['default']['values'] as $item) {
+            $items[$item['value']] = $item;
+        }
+
+        // Both options present; metadata keys must NOT appear as options.
+        $this->assertArrayHasKey('1', $items, 'Option with records must appear.');
+        $this->assertArrayHasKey('2', $items, 'Option without records must ALSO appear with show_all_options().');
+        $this->assertCount(2, $items, 'Only the two real options must be rendered (no metadata keys).');
+
+        $this->assertSame('first department', $items['1']['key']);
+        $this->assertSame(3, $items['1']['count']);
+
+        $this->assertSame('second department', $items['2']['key']);
+        $this->assertSame(0, $items['2']['count'], 'Unused option must have count 0.');
+    }
+
+    /**
+     * Regression guard: by default (show_all_options() off), the standard filter only shows
+     * options that have matching records.
+     *
+     * @covers \local_wunderbyte_table\filters\types\standardfilter::add_to_categoryobject
+     */
+    public function test_default_does_not_show_empty_options(): void {
+        $categoryobject = [];
+        $filtersettings = [
+            'department' => [
+                'wbfilterclass' => standardfilter::class,
+                'department_wb_checked' => 1,
+                '1' => 'first department',
+                '2' => 'second department',
+            ],
+        ];
+
+        // Only option '1' has a DB record.
+        standardfilter::add_to_categoryobject($categoryobject, $filtersettings, 'department', ['1' => 3]);
+
+        $values = array_column($categoryobject['default']['values'], 'value');
+        // Numeric option keys are coerced to int by PHP.
+        $this->assertContains(1, $values);
+        $this->assertNotContains(2, $values, 'Unused option must NOT appear by default.');
+    }
+
+    /**
      * Test define_sql() method.
      * @covers \local_wunderbyte_table\filters\types\standardfilter::render_mandatory_fields
      * @covers \local_wunderbyte_table\filters\types\standardfilter::generate_delete_button
