@@ -24,6 +24,7 @@
 
 namespace local_wunderbyte_table\filters\types;
 
+use local_wunderbyte_table\filter;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
 use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
@@ -46,6 +47,32 @@ class hierarchicalfilter extends customfieldfilter {
         foreach ($options as $key => $value) {
             $this->options[$key] = $value;
         }
+    }
+
+    /**
+     * Get data for filter options.
+     *
+     * A hierarchical filter can be used on a plain column (no custom field), just like the
+     * standard filter. In that case there is no fieldid and no custom SQL, so we fetch the
+     * distinct values directly from the column instead of looking them up in the custom field
+     * data table. This mirrors the fallback that apply_filter() already does for plain columns.
+     *
+     * @param wunderbyte_table $table
+     * @param string $key
+     * @return array
+     */
+    public static function get_data_for_filter_options(wunderbyte_table $table, string $key) {
+        $filter = $table->filters[$key];
+
+        // When the filter is bound to a custom field (or a custom SQL subquery), keep the
+        // custom field behaviour. The same applies if counting is disabled (dont_count_keys),
+        // where the parent returns the static options as is. Otherwise, treat it as a plain
+        // column and fetch the distinct values directly from it.
+        if ($filter->countkeys && empty($filter->fieldid) && empty($filter->iscustomsql)) {
+            return filter::get_db_filter_column($table, $key);
+        }
+
+        return parent::get_data_for_filter_options($table, $key);
     }
 
     /**

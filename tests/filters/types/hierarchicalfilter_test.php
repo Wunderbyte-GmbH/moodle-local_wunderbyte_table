@@ -59,6 +59,43 @@ final class hierarchicalfilter_test extends advanced_testcase {
     }
 
     /**
+     * A hierarchical filter used on a plain column (no set_sql_for_fieldid(), no custom SQL)
+     * must fetch its distinct values directly from the column, like the standard filter does,
+     * instead of looking them up in the custom field data table (which would yield nothing and
+     * cause the whole filter to be dropped).
+     *
+     * @covers \local_wunderbyte_table\filters\types\hierarchicalfilter::get_data_for_filter_options
+     */
+    public function test_get_data_for_filter_options_on_plain_column(): void {
+        $this->resetAfterTest(true);
+
+        $this->getDataGenerator()->create_user(['firstname' => 'Anna', 'lastname' => 'A']);
+        $this->getDataGenerator()->create_user(['firstname' => 'Billy', 'lastname' => 'B']);
+        $this->getDataGenerator()->create_user(['firstname' => 'Zoe', 'lastname' => 'Z']);
+
+        $table = new wunderbyte_table('hier_plaincolumn_' . uniqid());
+        $filter = new hierarchicalfilter('firstname', 'Firstname');
+        // No set_sql_for_fieldid() — this is a plain column, exactly like the demo.
+        $filter->add_options([
+            'Anna'  => ['parent' => 'A', 'localizedname' => 'Anna localized'],
+            'Billy' => ['parent' => 'B'],
+            'other' => ['localizedname' => 'Other'],
+        ]);
+        $table->add_filter($filter);
+        $table->set_filter_sql('*', '{user}', '1=1', '', []);
+
+        $data = hierarchicalfilter::get_data_for_filter_options($table, 'firstname');
+
+        // Must NOT return the 'continue' skip signal — the filter has to be shown.
+        $this->assertArrayNotHasKey('continue', $data, 'Plain-column hierarchical filter must not be skipped.');
+
+        $firstnames = array_map(fn($r) => $r->firstname, $data);
+        $this->assertContains('Anna', $firstnames);
+        $this->assertContains('Billy', $firstnames);
+        $this->assertContains('Zoe', $firstnames, 'Values not in add_options must still be fetched (caught by "other").');
+    }
+
+    /**
      * Test validate_input() method.
      * @covers \local_wunderbyte_table\filters\types\hierarchicalfilter::validate_input
      */
