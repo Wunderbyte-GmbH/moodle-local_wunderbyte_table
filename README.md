@@ -230,6 +230,16 @@ The hierarchical filter will allow to order your results in a special way. Assum
 
 The hierarchical filter will just add a (only one!) layer for the defined values. With 'other', we have implemented a catch function which will take care of all values you didn't define. In our example above, if suddenly we find seven and eight in the DB, they would be added the the "Other" Category. To rename this category, just add it with the key "other" and your own localized string.
 
+#### Show all options (including empty ones)
+By default a filter only shows options that have matching records. If you also want to display options (or whole categories) that currently have no matching records, call `show_all_options()` on the filter. Those empty options are shown with a count of 0. This is off by default.
+
+    $hierarchicalfilter->show_all_options();
+
+The same flag is available on the `customfieldfilter`. For a custom field with a predefined set of options (e.g. a select field), enabling it displays every defined option, even those that are not used by any record yet:
+
+    $customfieldfilter->show_all_options();
+
+### Datepicker filter
 For columns that contain date and time values (as Unix timestamp) you can enable a datepicker to allow users to filter the values:
 
     $datepicker = new datepicker('enddate', get_string('enddate'));
@@ -242,7 +252,6 @@ For columns that contain date and time values (as Unix timestamp) you can enable
     );
     $table->add_filter($datepicker);
 
-### Datepicker filter
 A special type of datepicker filter is the timespan filter which will take the input of two date- and timepickers and apply to two columnvalues of a record. This enables comparison of two timespans. Possible operations are 'within', 'overlapboth', 'overlapstart', 'overlapend', 'before', 'after' and 'flexoverlap'.
 "Overlapstart" filter will only display records with starttime before and ending within the timespan of the filter, "within" filter will display records starting after and ending before the values of the filter timespan. "Flexoverlap" will include all kinds of overlaping: overlapping the beginning, the end, both sides or within.
 The possibleoperations array is containing a whitelist, if none specified, all are applied.

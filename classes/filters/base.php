@@ -87,6 +87,14 @@ abstract class base {
     protected $bypasscache = false;
 
     /**
+     * If true, the filter also displays options/categories that currently have no
+     * matching records (shown with a count of 0). Defaults to false, which keeps the
+     * standard behaviour of only showing options that have records.
+     * @var bool showalloptions
+     */
+    protected bool $showalloptions = false;
+
+    /**
      * Set the column which should be filtered and possibly localize it.
      * @param string $columnidentifier
      * @param string $localizedstring
@@ -163,6 +171,7 @@ abstract class base {
         $options['localizedname'] = $this->localizedstring;
         $options['wbfilterclass'] = get_called_class();
         $options['wbbypasscache'] = $this->if_bypass_cache();
+        $options['showalloptions'] = $this->if_show_all_options();
         $options[$this->columnidentifier . '_wb_checked'] = $invisible ? 0 : 1;
 
         // We always need to make sure that id column is present.
@@ -212,6 +221,9 @@ abstract class base {
      * @return void
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
+        // When show all options is enabled, options without matching records are also displayed (with a count of 0).
+        $showalloptions = !empty($filtersettings[$fckey]['showalloptions']);
+
         // Don't treat this filter if there are no values here.
         if (!is_array($values)) {
             return;
@@ -329,6 +341,10 @@ abstract class base {
             // Count may not be used, so we have an extra check.
             if (!empty($valueswithcount[$valuekey])) {
                 $itemobject['count'] = $valueswithcount[$valuekey];
+            } else if ($showalloptions) {
+                // Explicitly set count to 0 for options with no records, so the template
+                // does not inherit a count from the surrounding context.
+                $itemobject['count'] = 0;
             }
 
             $categoryobject['default']['values'][$valuekey] = $itemobject;
@@ -579,5 +595,27 @@ abstract class base {
      */
     public function if_bypass_cache(): bool {
         return $this->bypasscache;
+    }
+
+    /**
+     * Enables display of all defined options for this filter.
+     *
+     * When enabled, options/categories that currently have no matching records are
+     * still displayed (with a count of 0) instead of being hidden.
+     *
+     * @param bool $value
+     * @return void
+     */
+    public function show_all_options(bool $value = true): void {
+        $this->showalloptions = $value;
+    }
+
+    /**
+     * Checks whether all options should be displayed, including those with no records.
+     *
+     * @return bool True if all options should be shown, false otherwise.
+     */
+    public function if_show_all_options(): bool {
+        return $this->showalloptions;
     }
 }

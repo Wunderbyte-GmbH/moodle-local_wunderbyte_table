@@ -18,6 +18,7 @@ namespace local_wunderbyte_table\filters\types;
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
 use local_wunderbyte_table\filter;
+use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 use moodle_exception;
 
 /**
@@ -430,6 +431,56 @@ class customfieldfilter extends base {
         } else {
             return $records;
         }
+    }
+
+    /**
+     * Adds the array for the mustache template to render the categoryobject.
+     *
+     * When show all options is enabled, every predefined option of the custom field is added,
+     * so options without matching records are also displayed (with a count of 0). The complete
+     * set of options is taken from the field definition via the field controller. Only field
+     * types that expose their possible values (e.g. select) are affected; free-text fields
+     * return only used values, so the flag is a harmless no-op for them.
+     *
+     * @param array $categoryobject
+     * @param array $filtersettings
+     * @param string $fckey
+     * @param array $values
+     * @return void
+     */
+    public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
+        if (!empty($filtersettings[$fckey]['showalloptions'])) {
+            $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname(
+                $fckey,
+                $filtersettings['_customfieldcomponent'] ?? '',
+                $filtersettings['_customfieldarea'] ?? ''
+            );
+            if (!empty($fieldcontroller)) {
+                // A controller without a backing field definition (e.g. a custom-SQL filter)
+                // cannot enumerate options; in that case we simply add nothing.
+                try {
+                    $optionsarray = $fieldcontroller->get_values_array();
+                } catch (\Throwable $e) {
+                    $optionsarray = [];
+                }
+                foreach ($optionsarray as $optionindex => $optionlabel) {
+                    // Only predefined option lists (e.g. select fields) expose their full set of
+                    // possible values as strings. Free-text fields return used values as objects.
+                    if (!is_string($optionlabel) || trim($optionlabel) === '') {
+                        continue;
+                    }
+                    // For select fields the stored value is the 1-based option index.
+                    $optionkey = (string)((int)$optionindex + 1);
+                    if (!isset($values[$optionkey])) {
+                        // Present the option even though it has no matching records yet.
+                        // The parent sets its count to 0.
+                        $values[$optionkey] = 0;
+                    }
+                }
+            }
+        }
+
+        parent::add_to_categoryobject($categoryobject, $filtersettings, $fckey, $values);
     }
 
     /**

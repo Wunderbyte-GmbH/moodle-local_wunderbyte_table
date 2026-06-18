@@ -706,6 +706,106 @@ final class customfieldfilter_test extends advanced_testcase {
     }
 
     /**
+     * Create a custom field category + select field with the given options.
+     *
+     * @param string $shortname
+     * @param string $options newline-separated option labels
+     * @return \core_customfield\field_controller
+     */
+    private function create_custom_select_field(string $shortname, string $options): \core_customfield\field_controller {
+        $categorydata = new \stdClass();
+        $categorydata->name = 'Select Fields';
+        $categorydata->component = 'core_course';
+        $categorydata->area = 'course';
+        $categorydata->itemid = 0;
+        $categorydata->contextid = context_system::instance()->id;
+        $category = $this->getDataGenerator()->create_custom_field_category((array)$categorydata);
+        $category->save();
+
+        $field = $this->getDataGenerator()->create_custom_field([
+            'categoryid' => $category->get('id'),
+            'name' => $shortname,
+            'shortname' => $shortname,
+            'type' => 'select',
+            'configdata' => ['options' => $options],
+        ]);
+        $field->save();
+        return $field;
+    }
+
+    /**
+     * With show_all_options() enabled, the custom field filter displays every predefined option
+     * of a select field, including those without matching records (with a count of 0), while
+     * options with records keep their correct count.
+     *
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::add_to_categoryobject
+     */
+    public function test_show_all_options_adds_unused_customfield_options(): void {
+        $this->resetAfterTest(true);
+
+        $this->create_custom_select_field('colourall', "Red\nGreen\nBlue");
+
+        // Red (option index 1) has 5 records, Blue (index 3) has 2, Green (index 2) has none.
+        $values = ['1' => 5, '3' => 2];
+        $filtersettings = [
+            'colourall' => [
+                'showalloptions' => true,
+                'wbfilterclass' => customfieldfilter::class,
+            ],
+        ];
+
+        $categoryobject = [];
+        customfieldfilter::add_to_categoryobject($categoryobject, $filtersettings, 'colourall', $values);
+
+        $this->assertArrayHasKey('default', $categoryobject);
+        $items = [];
+        foreach ($categoryobject['default']['values'] as $item) {
+            $items[$item['key']] = $item;
+        }
+
+        $this->assertArrayHasKey('Red', $items, 'Option with records must appear.');
+        $this->assertArrayHasKey('Blue', $items, 'Option with records must appear.');
+        $this->assertArrayHasKey('Green', $items, 'Unused option must ALSO appear with show_all_options().');
+
+        $this->assertSame(5, $items['Red']['count']);
+        $this->assertSame(2, $items['Blue']['count']);
+        $this->assertSame(0, $items['Green']['count'], 'Unused option must have count 0.');
+
+        // The filter value carries the storage key (the 1-based option index).
+        $this->assertEquals('2', $items['Green']['value']);
+    }
+
+    /**
+     * Regression guard: by default (show_all_options() off), the custom field filter only shows
+     * options that have matching records.
+     *
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::add_to_categoryobject
+     */
+    public function test_default_does_not_add_unused_customfield_options(): void {
+        $this->resetAfterTest(true);
+
+        $this->create_custom_select_field('colourdef', "Red\nGreen\nBlue");
+
+        // Red (index 1) and Blue (index 3) have records; Green (index 2) has none.
+        $values = ['1' => 5, '3' => 2];
+        $filtersettings = [
+            'colourdef' => [
+                'wbfilterclass' => customfieldfilter::class,
+            ],
+        ];
+
+        $categoryobject = [];
+        customfieldfilter::add_to_categoryobject($categoryobject, $filtersettings, 'colourdef', $values);
+
+        $this->assertArrayHasKey('default', $categoryobject);
+        $labels = array_column($categoryobject['default']['values'], 'key');
+
+        $this->assertContains('Red', $labels);
+        $this->assertContains('Blue', $labels);
+        $this->assertNotContains('Green', $labels, 'Unused option must NOT appear by default.');
+    }
+
+    /**
      * Data provider which providers string.
      * @return array
      */

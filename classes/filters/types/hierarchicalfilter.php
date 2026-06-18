@@ -59,9 +59,16 @@ class hierarchicalfilter extends customfieldfilter {
      * @return void
      */
     public static function add_to_categoryobject(array &$categoryobject, array $filtersettings, string $fckey, array $values) {
+        // When show all options is enabled, options/categories without matching records are also displayed.
+        $showalloptions = !empty($filtersettings[$fckey]['showalloptions']);
+
         // Don't treat this filter if there are no values here.
         if (!is_array($values)) {
-            return;
+            if (!$showalloptions) {
+                return;
+            }
+            // With show all options we still build the filter from the static options.
+            $values = [];
         }
 
         $valueswithcount = base::apply_filtercount($values, $fckey, $filtersettings);
@@ -97,19 +104,30 @@ class hierarchicalfilter extends customfieldfilter {
         if ($sortarray != null) {
             $sortedarray = [];
             foreach ($sortarray as $sortkey => $sortvalue) {
+                // Skip non-array entries — these are filter metadata (wbfilterclass, explode, showalloptions, etc.).
+                if (!is_array($sortvalue)) {
+                    continue;
+                }
+
+                // In standard mode we only keep options that have matching records.
+                if (!$showalloptions && !isset($values[$sortkey])) {
+                    continue;
+                }
+
+                if (isset($sortvalue['localizedname'])) {
+                    $localizedname = $sortvalue['localizedname'];
+                } else {
+                    $localizedname = $sortkey;
+                }
+
+                if (isset($sortvalue['parent'])) {
+                    $sortedarray[$sortvalue['parent']][$localizedname] = $sortkey;
+                } else {
+                    $sortedarray['other'][$localizedname] = $sortkey;
+                }
+
+                // Remove from values if it was present (we've now handled it).
                 if (isset($values[$sortkey])) {
-                    if (isset($sortvalue['localizedname'])) {
-                        $localizedname = $sortvalue['localizedname'];
-                    } else {
-                        $localizedname = $sortkey;
-                    }
-
-                    if (isset($sortvalue['parent'])) {
-                        $sortedarray[$sortvalue['parent']][$localizedname] = $sortkey;
-                    } else {
-                        $sortedarray['other'][$localizedname] = $sortkey;
-                    }
-
                     unset($values[$sortkey]);
                 }
             }
@@ -161,6 +179,11 @@ class hierarchicalfilter extends customfieldfilter {
                     if ($itemobject['count']) {
                         $categorycount += (int)$itemobject['count'] ?? 0;
                     }
+                } else if ($showalloptions) {
+                    // Explicitly set count to 0 for items with no DB records.
+                    // Without this key, Mustache walks up the context stack and inherits
+                    // the parent subcategory count, showing a wrong "N records" label.
+                    $itemobject['count'] = 0;
                 }
 
                 $categoryobject['hierarchy'][$subcategorykey]['values'][$valuekey] = $itemobject;
@@ -170,6 +193,10 @@ class hierarchicalfilter extends customfieldfilter {
                 !isset($categoryobject['hierarchy'][$subcategorykey])
                 || count($categoryobject['hierarchy'][$subcategorykey]['values']) == 0
             ) {
+                if ($showalloptions) {
+                    // Keep processing the remaining subcategories instead of bailing out.
+                    continue;
+                }
                 // We don't add the filter if there is nothing in there.
                 return;
             }
@@ -190,7 +217,9 @@ class hierarchicalfilter extends customfieldfilter {
         }
 
         // Make the arrays mustache ready, we have to jump through loops.
-        $categoryobject['hierarchy'] = array_values($categoryobject['hierarchy']);
+        if (isset($categoryobject['hierarchy'])) {
+            $categoryobject['hierarchy'] = array_values($categoryobject['hierarchy']);
+        }
     }
 
     /**
@@ -300,6 +329,7 @@ class hierarchicalfilter extends customfieldfilter {
         $filterunspecificvalues = [
             'localizedname',
             'wbfilterclass',
+            'showalloptions',
             $filterenablelabel,
         ];
         $filterspecificvalues = [];

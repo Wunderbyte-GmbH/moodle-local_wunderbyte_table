@@ -110,7 +110,12 @@ class filter {
 
             // Some filters might want us to continue here.
             if (isset($rawdata['continue'])) {
-                continue;
+                // If show all options is enabled, we keep the filter and build it from its
+                // static options even though there are no matching records in the database.
+                if (empty($value['showalloptions'])) {
+                    continue;
+                }
+                $rawdata = [];
             }
 
             $filtercolumns[$key] = [];
