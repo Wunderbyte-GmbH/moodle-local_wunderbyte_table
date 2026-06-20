@@ -83,7 +83,7 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I should see "guest" in the "#demotable_4_r2" "css_element"
     And I should see "2 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
 
-  @javascript
+  @javascript @accessibility
   Scenario: Filter course table in wb_table by fullname and hourlist
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -93,40 +93,35 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     ## We have to hide site's row 1st - - because we do not know "timecreate" for site!
     And I click on ".demotable_2 [aria-controls=\"id_collapse_fullname\"]" "css_element"
     And I set the field "Course 1" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I wait until the page is ready
     And I set the field "Course 2" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I wait until the page is ready
     And I set the field "Course 3" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I wait until the page is ready
     And I set the field "Course 4" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I wait until the page is ready
     And I set the field "Course 5" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I wait until the page is ready
     And I set the field "Course 6" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I wait until the page is ready
     And I should see "6 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Hide filter - required for a new filter tool
     And I click on "//div[contains(@class, 'demotable_2')]//aside[contains(@class, 'wunderbyte_table_components')]" "xpath_element"
     ## Use hourlist filrer now
     And I click on ".demotable_2 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     When I set the field "04:00 - 05:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
-    ##And I wait until the page is ready - does bot work in this case.
     And I wait "2" seconds
     Then I should see "2 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And I should see "Course 3" in the "#demotable_2_r2" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r3']" "xpath_element" should not exist
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I set the field "04:00 - 05:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to ""
-    And I wait until the page is ready
     And I set the field "11:00 - 12:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
-    And I wait until the page is ready
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I should see "Course 5" in the "#demotable_2_r1" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
     And I should see "1 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I set the field "11:00 - 12:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to ""
-    And I wait until the page is ready
     And I set the field "23:00 - 24:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
-    And I wait until the page is ready
     And I should see "Course 6" in the "#demotable_2_r1" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
     And I should see "1 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
