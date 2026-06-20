@@ -220,7 +220,7 @@ class weekdays extends base {
                 $sql = "SELECT weekday, COUNT(*) as count
                         FROM (
                             SELECT LOWER(DATE_FORMAT(
-                                CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz'), '%W'
+                                COALESCE(CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz'), FROM_UNIXTIME($key)), '%W'
                             )) AS weekday
                             FROM {$table->sql->from}
                             WHERE {$table->sql->where} AND $key IS NOT NULL
@@ -277,7 +277,7 @@ class weekdays extends base {
                     break;
                 default:
                     $filter .= " LOWER(DATE_FORMAT(
-                    CONVERT_TZ(FROM_UNIXTIME($columnname), 'UTC', '$tz'), '%W'
+                    COALESCE(CONVERT_TZ(FROM_UNIXTIME($columnname), 'UTC', '$tz'), FROM_UNIXTIME($columnname)), '%W'
                     )) = :$paramsvaluekey
                     AND $columnname IS NOT NULL";
             }

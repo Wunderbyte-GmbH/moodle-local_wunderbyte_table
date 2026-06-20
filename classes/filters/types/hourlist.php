@@ -216,7 +216,7 @@ class hourlist extends base {
                 $sql = "SELECT hours, COUNT(*) as count
                         FROM (
                             SELECT EXTRACT(
-                                HOUR FROM CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz')
+                                HOUR FROM COALESCE(CONVERT_TZ(FROM_UNIXTIME($key), 'UTC', '$tz'), FROM_UNIXTIME($key))
                             ) AS hours
                             FROM {$table->sql->from}
                             WHERE {$table->sql->where} AND $key IS NOT NULL
@@ -273,7 +273,7 @@ class hourlist extends base {
                     break;
                 default:
                     $filter .= " EXTRACT(
-                     HOUR FROM CONVERT_TZ(FROM_UNIXTIME($columnname), 'UTC', '$tz')
+                     HOUR FROM COALESCE(CONVERT_TZ(FROM_UNIXTIME($columnname), 'UTC', '$tz'), FROM_UNIXTIME($columnname))
                      ) = :$paramsvaluekey
                      AND $columnname IS NOT NULL";
             }
