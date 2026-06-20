@@ -439,6 +439,7 @@
     color: #5f6b76;
     padding-left: 6px;
     border: #5f6b76;
+    height: 24px;
 }
 
 .wunderbyteTableFilter .datepicker-input:hover {
