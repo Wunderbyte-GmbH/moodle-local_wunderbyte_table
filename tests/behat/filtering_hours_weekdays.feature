@@ -44,7 +44,7 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I change viewport size to "1600x3000"
     And I clean wbtable cache
 
-  @javascript
+  @javascript @accessibility
   Scenario: Filter users table in wb_table by weekdays
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -52,6 +52,8 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     ## Filter panel being hidden by default on this tab
     And I click on ".asidecollapse-demotable_4" "css_element"
     And I click on ".demotable_4 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     When I set the field "Friday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
     ##And I wait until the page is ready - does bot work in this case.
     And I wait "2" seconds
@@ -61,6 +63,8 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I should see "user2" in the "#demotable_4_r3" "css_element"
     And I should see "user7" in the "#demotable_4_r4" "css_element"
     And I should see "user8" in the "#demotable_4_r5" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I set the field "Friday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to ""
     And I wait until the page is ready
     And I set the field "Wednesday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
@@ -69,6 +73,8 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I should see "user5" in the "#demotable_4_r2" "css_element"
     And I should see "user6" in the "#demotable_4_r3" "css_element"
     And I should see "3 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I set the field "Wednesday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to ""
     And I wait until the page is ready
     And I set the field "Thursday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
