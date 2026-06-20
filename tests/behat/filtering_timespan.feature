@@ -33,7 +33,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I change viewport size to "1600x3000"
     And I clean wbtable cache
 
-  @javascript
+  @javascript @accessibility
   Scenario: Filter course table in wb_table by timespan for overlaping
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -41,16 +41,22 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     ## Filter panel being hidden by default on the Course tab
     And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I click on "[aria-controls=\"id_collapse_startdate\"]" "css_element"
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2022-05-13"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2022-05-17"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "flexoverlap"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     ## And I set the following fields to these values:
     ##  | date-startdate | ## 18 days ago ## |
     ##  | date-enddate | ## 12 days ago ## |
     ##  | Display records | overlap |
     And I wait "2" seconds
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I wait "2" seconds
     Then I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
@@ -58,9 +64,13 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-13"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-17"
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I wait "1" seconds
     Then I should see "Course 2" in the "#demotable_2_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.demotable_2" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
 
   @javascript
   Scenario: Filter course table in wb_table by timespan for within
@@ -87,7 +97,7 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     Then I should see "Course 2" in the "#demotable_2_r1" "css_element"
     And I should not see "Course 1" in the ".wunderbyteTableClass.demotable_2" "css_element"
 
-  @javascript
+  @javascript @accessibility
   Scenario: Filter course table in wb_table by timespan for before and after
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -100,10 +110,14 @@ Feature: Timespan filtering functionality of wunderbyte_table works as expected
     And I set the field "date-startdate" in the "#id_collapse_startdate" "css_element" to "2023-05-10"
     And I set the field "date-enddate" in the "#id_collapse_startdate" "css_element" to "2023-05-11"
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "before"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to "checked"
     And I wait "1" seconds
     Then I should see "Acceptance test site" in the "#demotable_2_r1" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I set the field "startdate" in the "#id_collapse_startdate" "css_element" to ""
     And I wait "1" seconds
     And I set the field "Display records" in the "#id_collapse_startdate" "css_element" to "after"
