@@ -84,7 +84,7 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I click on "1" "text" in the "ul.pagination" "css_element"
     And I should see "guest"
 
-  @javascript
+  @javascript @accessibility
   Scenario: WB_Table navigation: set per page items count
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -92,12 +92,16 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     Then I should see "24 of 24 records found" in the ".demotable_1 .wb-records-count-label" "css_element"
     And the field "selectrowsperpage-demotable_1" matches value "Show 10 rows"
     And "//*[contains(@class, 'demotable_1')]//nav[@aria-label='Page']" "xpath_element" should exist
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     And I set the field "selectrowsperpage-demotable_1" to "Show 30 rows"
     And I wait "1" seconds
     And "//*[contains(@class, 'demotable_1')]//nav[@aria-label='Page']" "xpath_element" should not exist
     And the field "selectrowsperpage-demotable_1" matches value "Show 30 rows"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
 
-  @javascript
+  @javascript @accessibility
   Scenario: WB_Table navigation: infinite scroll
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -111,6 +115,8 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I press the pagedown key
     And I wait "1" seconds
     And I should see "user19" in the "#demotable_4_r14" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     ## Call pagedown twice to ensure actual bottom of page will be reached.
     And I press the pagedown key
     And I press the pagedown key
@@ -118,8 +124,10 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r16']" "xpath_element" should not exist
     And I wait "1" seconds
     And I should see "user20" in the "#demotable_4_r16" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
 
-  @javascript
+  @javascript @accessibility
   Scenario: WB_Table navigation: switch view templates
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
@@ -132,7 +140,11 @@ Feature: Baisc functionality of wunderbyte_table works as expected
     And I set the field "wbtabletemplateswitcher" to "Cards view"
     And ".wunderbyte-table-grid" "css_element" should exist
     And "//table[@id='demotable_1']" "xpath_element" should not exist
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
     ## Reload page and verify Card view
     And I reload the page
     And ".wunderbyte-table-grid" "css_element" should exist
     And "//table[@id='demotable_1']" "xpath_element" should not exist
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
