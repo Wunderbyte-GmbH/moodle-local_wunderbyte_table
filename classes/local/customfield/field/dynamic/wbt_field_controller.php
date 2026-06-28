@@ -40,6 +40,19 @@ use context_system;
  */
 class wbt_field_controller extends field_controller implements wbt_field_controller_base {
     /**
+     * Request-level memo of dynamicsql resultsets, keyed by sha1 of the SQL.
+     *
+     * Without this, the (potentially expensive, admin-defined) dynamicsql was executed
+     * once per rendered row/cell when resolving customfield values, causing a massive
+     * N+1 on large tables. The SQL is static field configuration (no bound params, no
+     * per-user state), so a single execution per request serves every lookup.
+     * A null value marks a query that failed, so even broken SQL is not retried per row.
+     *
+     * @var array<string, array|null>
+     */
+    protected static array $resultsetcache = [];
+
+    /**
      * Get the actual string value of the customfield by index.
      *
      * @param string|array|int|null $key
@@ -52,14 +65,12 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         bool $formatstring = true,
         bool $keyisencoded = false
     ): string {
-        global $DB;
         if ($key === null) {
             return '';
         }
         $sql = $this->get_configdata_property('dynamicsql');
-        try {
-            $records = $DB->get_records_sql($sql);
-        } catch (\Throwable $th) {
+        $records = self::fetch_dynamic_records($sql);
+        if ($records === null) {
             if (is_array($key)) {
                 return implode(', ', $key);
             }
@@ -106,15 +117,34 @@ class wbt_field_controller extends field_controller implements wbt_field_control
      * @return array an array containing all key value pairs for the customfield
      */
     public function get_values_array(): array {
-        global $DB;
-
         $sql = $this->get_configdata_property('dynamicsql');
-        try {
-            $records = $DB->get_records_sql($sql);
-        } catch (\Throwable $th) {
+        $records = self::fetch_dynamic_records($sql);
+        if ($records === null) {
             return [];
         }
 
         return $records;
+    }
+
+    /**
+     * Fetch (and memoize for the duration of the request) the resultset of a dynamicsql.
+     *
+     * The same SQL is executed at most once per request, no matter how many rows or cells
+     * reference this customfield, eliminating the per-row N+1.
+     *
+     * @param string $sql the configured dynamicsql
+     * @return array|null records keyed by their first column, or null if the query failed
+     */
+    protected static function fetch_dynamic_records(string $sql): ?array {
+        global $DB;
+        $cachekey = sha1($sql);
+        if (!array_key_exists($cachekey, self::$resultsetcache)) {
+            try {
+                self::$resultsetcache[$cachekey] = $DB->get_records_sql($sql);
+            } catch (\Throwable $th) {
+                self::$resultsetcache[$cachekey] = null;
+            }
+        }
+        return self::$resultsetcache[$cachekey];
     }
 }
