@@ -53,6 +53,20 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         bool $keyisencoded = false
     ): string {
         if (!empty($key)) {
+            // A multiselect customfield resolves to an array of keys. Mirror the select and
+            // dynamicformat controllers and render each element joined by commas, instead of
+            // passing the array straight into format_string(), which would throw a TypeError.
+            if (is_array($key)) {
+                $returnvalues = [];
+                foreach ($key as $singlekey) {
+                    $singlevalue = $this->get_option_value_by_key($singlekey, $formatstring, $keyisencoded);
+                    if ($singlevalue !== '') {
+                        $returnvalues[] = $singlevalue;
+                    }
+                }
+                return implode(', ', $returnvalues);
+            }
+
             if ($keyisencoded) {
                 $returnvalue = base64_decode($key);
             } else {

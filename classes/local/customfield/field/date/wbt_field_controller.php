@@ -54,6 +54,18 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         if (empty($key) || $key == 0) {
             return '';
         }
+        // A multiselect customfield resolves to an array of keys. Render each element joined by
+        // commas instead of passing the array straight into userdate(), which expects an int.
+        if (is_array($key)) {
+            $returnvalues = [];
+            foreach ($key as $singlekey) {
+                $singlevalue = $this->get_option_value_by_key($singlekey, $formatstring, $keyisencoded);
+                if ($singlevalue !== '') {
+                    $returnvalues[] = $singlevalue;
+                }
+            }
+            return implode(', ', $returnvalues);
+        }
         $includetime = $this->get_configdata_property('includetime');
         if ($includetime == "1") {
             $format = get_string('strftimedatetime');
