@@ -77,9 +77,8 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         $mlangplaceholder = '@@MLANG_CLOSE@@';
         $dynamicsql = $this->get_configdata_property('dynamicsql') ?? '';
         $sql = str_replace('{mlang}', $mlangplaceholder, $dynamicsql);
-        try {
-            $records = $DB->get_records_sql($sql);
-        } catch (\Throwable $th) {
+        $records = self::fetch_dynamic_records($sql);
+        if ($records === null) {
             if (is_array($key)) {
                 return implode(', ', $key);
             }
