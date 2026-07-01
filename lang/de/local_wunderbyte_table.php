@@ -228,6 +228,7 @@ $string['timespan'] = 'Zeitspanne';
 $string['to'] = 'Bis';
 $string['toggle'] = 'Toggle-Filter';
 $string['togglefiltersinglevalueerror'] = 'Ein Toggle-Filter kann nur genau einen Wert haben';
+$string['treefilter'] = 'Baum Filter';
 $string['tuesday'] = 'Di';
 $string['turnoffcaching'] = 'Keine Verwendung von Caching <span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimentell</span>';
 $string['valuehastobeint'] = 'Wert muss eine Zahl sein';
