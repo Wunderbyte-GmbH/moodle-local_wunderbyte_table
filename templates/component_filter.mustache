@@ -225,6 +225,11 @@
                         </div>
                     </ul>
                 {{/hierarchy}}
+                {{#treehierarchy}}
+                    <ul class="wunderbyterFilterList treehierarchy pt-2 list-group-flush" data-moodletype="treelist">
+                        {{> local_wunderbyte_table/filter_treenode }}
+                    </ul>
+                {{/treehierarchy}}
                 {{#datepicker}}
                     {{#datepickers}}
                         <form class="datepickerform">
