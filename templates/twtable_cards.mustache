@@ -73,35 +73,36 @@
     </div>
 {{/norecords}}
 {{^norecords}}
-     {{#table}}
-     {{#infinitescroll}}
-          {{^displayelementsontop}}
-               <div class="notontop infinite">
-               {{> local_wunderbyte_table/component_actionbutton }}
-               </div>
-          {{/displayelementsontop}}
-     {{/infinitescroll}}
-     {{#displayelementsontop}}
-          <div class="ontop">
-          {{> local_wunderbyte_table/component_actionbutton }}
-          </div>
-          <br>
-          <div>
-               {{> local_wunderbyte_table/component_pagination }}
-               <div class="float-end">{{> local_wunderbyte_table/component_selectrows }}</div>
-          </div>
-     {{/displayelementsontop}}
-     <div class="wunderbyte-table-table">
-          {{> local_wunderbyte_table/component_countlabel }}
-          {{#table}}
-               <div class="wunderbyte-table-grid no-overflow rows-container">
-               {{#rows}}
+    {{#table}}
+        {{#infinitescroll}}
+            {{^displayelementsontop}}
+                <div class="notontop infinite">
+                {{> local_wunderbyte_table/component_actionbutton }}
+                </div>
+            {{/displayelementsontop}}
+        {{/infinitescroll}}
+        {{#displayelementsontop}}
+            <div class="ontop">
+            {{> local_wunderbyte_table/component_actionbutton }}
+            </div>
+            <br>
+            <div>
+                {{> local_wunderbyte_table/component_pagination }}
+                <div class="float-end">{{> local_wunderbyte_table/component_selectrows }}</div>
+            </div>
+        {{/displayelementsontop}}
+        <div class="wunderbyte-table-table">
+            {{> local_wunderbyte_table/component_countlabel }}
+            <div class="wunderbyte-table-grid no-overflow rows-container">
+                {{#rows}}
                     {{> local_wunderbyte_table/twtable_cards_row }}
-               {{/rows}}
-               </div>
-          {{/table}}
-     </div>
-     {{/table}}
+                {{/rows}}
+            </div>
+        </div>
+    {{/table}}
+    {{^table}}
+        {{> local_wunderbyte_table/component_countlabel }}
+    {{/table}}
 {{#js}}
     require(['local_wunderbyte_table/init'], function(init) {
     init.init('{{idstring}}', '{{encodedtable}}');
@@ -110,11 +111,13 @@
 {{/norecords}}
 
 {{^infinitescroll}}
-{{^displayelementsontop}}
-<div class="float-end notontop">{{> local_wunderbyte_table/component_selectrows }}</div>
-          {{> local_wunderbyte_table/component_pagination }}
-          {{> local_wunderbyte_table/component_actionbutton }}
-{{/displayelementsontop}}
+    {{^displayelementsontop}}
+        <div class="float-end notontop">
+            {{> local_wunderbyte_table/component_selectrows }}
+        </div>
+        {{> local_wunderbyte_table/component_pagination }}
+        {{> local_wunderbyte_table/component_actionbutton }}
+    {{/displayelementsontop}}
 {{/infinitescroll}}
 {{#errormessage}}
      <div class="alert alert-danger" role="alert">
