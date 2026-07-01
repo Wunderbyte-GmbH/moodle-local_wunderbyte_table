@@ -987,3 +987,8 @@
         opacity: 1;
     }
 }
+
+.wbtable-actionbuttons-container {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
