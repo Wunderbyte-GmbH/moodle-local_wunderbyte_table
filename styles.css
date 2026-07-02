@@ -598,7 +598,7 @@
    Deliberately no BS spacing utility (ps-* is BS5-only, pl-* BS4-only) and specific enough to win
    against the padding reset on .dropdowncontainer .wunderbyterFilterList above. */
 ul.wunderbyterFilterList.wbt-treechildren {
-    padding-inline-start: 1rem;
+    padding-inline-start: 0.5rem;
     list-style: none;
 }
 
