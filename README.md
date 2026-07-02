@@ -295,6 +295,14 @@ All characters different than 0-9 are ignored.
         $intrangefilter = new intrange('coursenumber', get_string('filterforcoursenumber', 'my_plugin'));
         $table->add_filter($intrangefilter);
 
+### Exactcolumn filter
+The exactcolumn filter renders a free text input in the filter panel. In contrast to the fulltext search, which uses wildcards (LIKE '%value%'), the typed value is compared with exact equality against the column ("WHERE columnname = 'value'"). The table reloads automatically (debounced) while the user is typing. The input value is converted to lowercase before comparison, so on case-sensitive databases the column values need to be stored in lowercase to match.
+
+    $exactcolumn = new exactcolumn('titleprefix', get_string('titleprefix', 'my_plugin'));
+    $table->add_filter($exactcolumn);
+
+The filter works on any column of the table, the column identifier passed to the constructor determines which column is filtered.
+
 ### Exploding strings for columns storing multiple values
 The filter function also supports columns with multiple values stored as string with a separator.
 
@@ -360,6 +368,27 @@ $newfilter->set_sql(
 ```
 
 As you know, `data` is the name of the column that stores the value of the `supervisor` custom field in the `user_info_data` table.
+
+Either `set_sql_for_fieldid` or `set_sql` must be called - applying the filter without one of them throws an exception. The subquery passed to `set_sql` must contain exactly one placeholder (like `:where`), it gets replaced with the generated condition when the filter is applied.
+
+#### Choosing the operator
+
+By default the customfieldfilter matches values with a case insensitive LIKE. Because a custom field can store multiple values as a separated list, the searched value is wrapped into the separator before comparison, so every single value of a record still has to match exactly. If your custom field always stores a single value, you can switch to the faster `=` operator:
+
+```php
+$newfilter->use_operator_equal();
+```
+
+To return to the default behaviour, call `use_operator_ilike()`.
+
+#### Providing options without counting
+
+By default the filter runs a query which counts the matching records for every value and only displays values that actually occur. If you want to skip these count queries and display a fixed set of options instead, pass your own options and disable the counting:
+
+```php
+$newfilter->add_options(['1' => 'first department', '2' => 'second department']);
+$newfilter->dont_count_keys();
+```
 
 ### Toggle filter
 

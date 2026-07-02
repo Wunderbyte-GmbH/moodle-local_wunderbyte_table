@@ -85,6 +85,7 @@ $string['filtercountmessage'] = '{$a->filtersum} filter(s) on: {$a->filtercolumn
 $string['filteremptynameerror'] = 'Name is empty';
 $string['filterenabledheader'] = 'General filter settings';
 $string['filterexistingkeyvaluepairs'] = 'Existing key value pairs';
+$string['filteridentifierconflict'] = 'Only one filter can be applied per column. There is already a filter for column "{$a}".';
 $string['filterinactive'] = 'Hide the entire filter';
 $string['filternopairsexist'] = 'No pairs exist';
 $string['filteronloadinactive'] = 'Collapse filters when table is loaded';

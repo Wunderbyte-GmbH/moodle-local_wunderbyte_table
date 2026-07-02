@@ -806,6 +806,114 @@ final class customfieldfilter_test extends advanced_testcase {
     }
 
     /**
+     * apply_filter() must throw if neither set_sql() nor set_sql_for_fieldid() was called.
+     *
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::apply_filter
+     */
+    public function test_apply_filter_throws_without_sql_and_fieldid(): void {
+        $this->resetAfterTest(true);
+
+        $table = new wunderbyte_table('missingsqltable');
+        $table->set_filter_sql('*', "", '1=1', '');
+
+        $customfieldfilter = new customfieldfilter('depcontact');
+        $table->add_filter($customfieldfilter);
+
+        $filter = '';
+        $this->expectException(\moodle_exception::class);
+        $customfieldfilter->apply_filter($filter, 'depcontact', ['12345'], $table);
+    }
+
+    /**
+     * set_sql() must reject SQL fragments which miss required structural parts.
+     *
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::set_sql
+     *
+     * @dataProvider invalid_sql_provider
+     *
+     * @param string $sql
+     * @param string $missingpart
+     * @return void
+     */
+    public function test_set_sql_rejects_invalid_sql(string $sql, string $missingpart): void {
+        $customfieldfilter = new customfieldfilter('depcontact');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($missingpart);
+        $customfieldfilter->set_sql($sql, 'cfd.value');
+    }
+
+    /**
+     * apply_filter() must throw if the custom SQL does not contain exactly one placeholder.
+     *
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::apply_filter
+     */
+    public function test_apply_filter_throws_with_multiple_placeholders(): void {
+        $this->resetAfterTest(true);
+
+        $table = new wunderbyte_table('placeholdertable');
+        $table->set_filter_sql('*', "", '1=1', '');
+
+        $customfieldfilter = new customfieldfilter('depcontact');
+        // Passes the pattern validation of set_sql() but holds two placeholders.
+        $customfieldfilter->set_sql('id IN (SELECT id FROM {course} WHERE :where AND :other)', 'cfd.value');
+        $table->add_filter($customfieldfilter);
+
+        $filter = '';
+        $this->expectException(\InvalidArgumentException::class);
+        $customfieldfilter->apply_filter($filter, 'depcontact', ['12345'], $table);
+    }
+
+    /**
+     * By default the searched value is wrapped into the separator, with a jsonattribute
+     * defined on the column a plain wildcard search on the raw value is used instead.
+     *
+     * @covers \local_wunderbyte_table\filters\types\customfieldfilter::apply_filter
+     */
+    public function test_apply_filter_jsonattribute_uses_plain_wildcard(): void {
+        $this->resetAfterTest(true);
+
+        $table = new wunderbyte_table('jsonattributetable');
+        $table->set_filter_sql('*', "", '1=1', '');
+
+        $customfieldfilter = new customfieldfilter('depcontact');
+        $customfieldfilter->set_sql('id IN (SELECT id FROM {course} WHERE :where)', 'cfd.value');
+        $table->add_filter($customfieldfilter);
+
+        // Default: the value is wrapped into the separator, so single values of a list match exactly.
+        $filter = '';
+        $customfieldfilter->apply_filter($filter, 'depcontact', ['12345'], $table);
+        $this->assertContains('%,12345,%', $table->sql->params);
+
+        // With a jsonattribute on the column, the raw value is searched with wildcards.
+        $table->subcolumns['datafields']['depcontact']['jsonattribute'] = 'name';
+        $filter = '';
+        $customfieldfilter->apply_filter($filter, 'depcontact', ['12345'], $table);
+        $this->assertContains('%12345%', $table->sql->params);
+    }
+
+    /**
+     * Data provider with SQL fragments which must be rejected by set_sql().
+     * @return array
+     */
+    public static function invalid_sql_provider(): array {
+        return [
+            'missing IN keyword' => [
+                'sql' => 'SELECT id FROM {course} WHERE :where',
+                'missingpart' => 'IN keyword',
+            ],
+            'missing curly braces around table' => [
+                'sql' => 'id IN (SELECT id FROM course WHERE :where)',
+                'missingpart' => 'curly braces',
+            ],
+            'missing WHERE keyword' => [
+                'sql' => 'id IN (SELECT id FROM {course})',
+                'missingpart' => 'WHERE keyword',
+            ],
+        ];
+    }
+
+    /**
      * Data provider which providers string.
      * @return array
      */
