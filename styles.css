@@ -594,6 +594,14 @@
     padding: 0;
 }
 
+/* Treefilter: indent each nested level so the hierarchy stays visible on Bootstrap 4 and 5 alike.
+   Deliberately no BS spacing utility (ps-* is BS5-only, pl-* BS4-only) and specific enough to win
+   against the padding reset on .dropdowncontainer .wunderbyterFilterList above. */
+ul.wunderbyterFilterList.wbt-treechildren {
+    padding-inline-start: 1rem;
+    list-style: none;
+}
+
 /* Berta related CSS ? */
 
 .wunderbyte_table_components {

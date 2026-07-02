@@ -70,6 +70,11 @@ export function initializeCheckboxes(selector, idstring, encodedtable) {
     handleHierarchyCategoryCheckbox(hierarchcheckboxes, filterElements, selector, idstring, encodedtable);
   }
 
+  const treecheckboxes = filterContainer.querySelectorAll('.wbt-treenode-checkbox');
+  if (treecheckboxes.length) {
+    handleTreenodeCheckboxes(treecheckboxes);
+  }
+
   filterContainer.dataset.initialized = true;
 }
 
@@ -854,4 +859,54 @@ function handleHierarchyCategoryCheckbox(parentCheckboxes, filterElements, selec
             triggerReload(idstring, encodedtable);
         });
     });
+}
+
+/**
+ * Attach the cascade behaviour to treefilter node checkboxes — binary, mirroring the hierarchical
+ * filter (handleHierarchyCategoryCheckbox / handleParentCheckbox), but recursive over any depth:
+ * checking a node copies its state onto its whole subtree, and every ancestor becomes checked
+ * exactly when all of its direct children are checked (no indeterminate state).
+ *
+ * Only the physical checked states are touched here. The clicked checkbox is a regular
+ * filterelement, so the generic change listener (toggleFilterelement) collects all states and
+ * reloads once afterwards — programmatic .checked changes fire no events, hence no reload storm.
+ *
+ * @param {NodeList} treecheckboxes all .wbt-treenode-checkbox inputs of one filter container
+ */
+function handleTreenodeCheckboxes(treecheckboxes) {
+    treecheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('click', function() {
+            const node = checkbox.closest('li.wbt-treenode');
+            if (!node) {
+                return;
+            }
+            // Downward: the whole subtree follows the clicked node.
+            node.querySelectorAll('ul.wbt-treechildren input.wbt-treenode-checkbox').forEach(child => {
+                if (child.checked !== checkbox.checked) {
+                    child.checked = checkbox.checked;
+                }
+            });
+            updateTreenodeAncestors(node);
+        });
+    });
+}
+
+/**
+ * Walks up from a tree node and applies the binary parent rule on every level: a parent checkbox
+ * is checked exactly when all of its direct children are checked.
+ *
+ * @param {HTMLElement} node the li.wbt-treenode the interaction happened on
+ */
+function updateTreenodeAncestors(node) {
+    let parent = node.parentElement ? node.parentElement.closest('li.wbt-treenode') : null;
+    while (parent) {
+        const parentcheckbox = parent.querySelector(':scope > input.wbt-treenode-checkbox');
+        const children = parent.querySelectorAll(
+            ':scope > ul.wbt-treechildren > li.wbt-treenode > input.wbt-treenode-checkbox');
+        if (!parentcheckbox || !children.length) {
+            return;
+        }
+        parentcheckbox.checked = Array.from(children).every(child => child.checked);
+        parent = parent.parentElement ? parent.parentElement.closest('li.wbt-treenode') : null;
+    }
 }
