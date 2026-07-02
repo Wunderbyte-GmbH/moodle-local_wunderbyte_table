@@ -862,10 +862,10 @@ function handleHierarchyCategoryCheckbox(parentCheckboxes, filterElements, selec
 }
 
 /**
- * Attach the cascade behaviour to treefilter node checkboxes — binary, mirroring the hierarchical
- * filter (handleHierarchyCategoryCheckbox / handleParentCheckbox), but recursive over any depth:
- * checking a node copies its state onto its whole subtree, and every ancestor becomes checked
- * exactly when all of its direct children are checked (no indeterminate state).
+ * Attach the cascade behaviour to treefilter node checkboxes — top-down ONLY: checking a node
+ * copies its state onto its whole subtree (like the hierarchical filter's category checkbox,
+ * but recursive over any depth). There is deliberately no bottom-up rule: clicking a child
+ * selects just that child and never touches its ancestors.
  *
  * Only the physical checked states are touched here. The clicked checkbox is a regular
  * filterelement, so the generic change listener (toggleFilterelement) collects all states and
@@ -886,27 +886,6 @@ function handleTreenodeCheckboxes(treecheckboxes) {
                     child.checked = checkbox.checked;
                 }
             });
-            updateTreenodeAncestors(node);
         });
     });
-}
-
-/**
- * Walks up from a tree node and applies the binary parent rule on every level: a parent checkbox
- * is checked exactly when all of its direct children are checked.
- *
- * @param {HTMLElement} node the li.wbt-treenode the interaction happened on
- */
-function updateTreenodeAncestors(node) {
-    let parent = node.parentElement ? node.parentElement.closest('li.wbt-treenode') : null;
-    while (parent) {
-        const parentcheckbox = parent.querySelector(':scope > input.wbt-treenode-checkbox');
-        const children = parent.querySelectorAll(
-            ':scope > ul.wbt-treechildren > li.wbt-treenode > input.wbt-treenode-checkbox');
-        if (!parentcheckbox || !children.length) {
-            return;
-        }
-        parentcheckbox.checked = Array.from(children).every(child => child.checked);
-        parent = parent.parentElement ? parent.parentElement.closest('li.wbt-treenode') : null;
-    }
 }
