@@ -292,3 +292,40 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     ## Validate accessibility of page
     And the page should meet accessibility standards
     And I clean wbtable cache
+
+  @javascript @accessibility
+  Scenario: WB_Table: Filter users table by a custom profile field using the customfieldfilter
+    Given the following "custom profile fields" exist:
+      | datatype | shortname  | name       |
+      | text     | supervisor | Supervisor |
+    And the following "users" exist:
+      | username | firstname  | lastname | profile_field_supervisor |
+      | super1   | Supervised | 1        | 11111                    |
+      | super2   | Supervised | 2        | 11111                    |
+      | super3   | Supervised | 3        | 11111                    |
+      | super4   | Supervised | 4        | 22222                    |
+      | super5   | Supervised | 5        | 22222                    |
+    And I log in as "admin"
+    When I visit "/local/wunderbyte_table/demo.php"
+    And I follow "Demo table 1"
+    And I click on "[aria-controls=\"id_collapse_supervisor\"]" "css_element"
+    And I should see "11111 (3)" in the "#id_collapse_supervisor" "css_element"
+    And I should see "22222 (2)" in the "#id_collapse_supervisor" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
+    And I set the field "11111" in the "#id_collapse_supervisor" "css_element" to "checked"
+    And I wait "1" seconds
+    And I should see "3 of 29 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I should see "super1" in the "#demotable_1_r1" "css_element"
+    And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r4']" "xpath_element" should not exist
+    ## Checking a second value extends the filter (OR condition).
+    And I set the field "22222" in the "#id_collapse_supervisor" "css_element" to "checked"
+    And I wait "1" seconds
+    And I should see "5 of 29 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    ## Validate accessibility of page
+    And the page should meet accessibility standards
+    And I set the field "11111" in the "#id_collapse_supervisor" "css_element" to ""
+    And I wait "1" seconds
+    And I should see "2 of 29 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
+    And I should see "super4" in the "#demotable_1_r1" "css_element"
+    And I clean wbtable cache

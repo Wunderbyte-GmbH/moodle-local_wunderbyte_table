@@ -196,27 +196,23 @@ class demo implements renderable, templatable {
 
         /*
          * The custom field filter is mainly created to filter objects that have any custom fields,
-         *and not for user custom information. However, here you can see an example of its usage.
+         * and not for user custom information. However, here you can see an example of its usage.
          * For custom profile fields, you need to define a subquery SQL by yourself.
-         * As we have no custom field defined by default, we commented the sample code.
+         * The supervisor column is selected as a separate field in the SELECT clause of the main
+         * query below. As long as no custom profile field with the shortname 'supervisor' exists,
+         * all its values are NULL and the filter is not displayed.
          * Refer to the Wunderbyte readme file for more details.
          */
-
-        // Sample custom profile field.
-        // $customfieldfilter1 = new customfieldfilter('supervisor', 'Supervisor');
-        // $customfieldfilter1->set_sql_for_fieldid(110);
-        // $table->add_filter($customfieldfilter1);
-
-
-        // $customfieldfilter2 = new customfieldfilter('supervisor', 'Supervisor');
-        // $customfieldfilter2->set_sql('id IN (
-        //                                 SELECT id uid.userid
-        //                                 FROM user_info_data uid
-        //                                 WHERE uid.fieldid = 110 AND :where)',
-        //                                 'uid.data'
-        //                             );
-        // $table->add_filter($customfieldfilter2);
-        // Attention: You also need to select supervisor as a separate field in the SELECT clause of the main query.
+        $customfieldfilter = new customfieldfilter('supervisor', 'Supervisor');
+        $customfieldfilter->set_sql(
+            "id IN (SELECT uid.userid
+                      FROM {user_info_data} uid
+                      JOIN {user_info_field} uif ON uid.fieldid = uif.id
+                     WHERE uif.shortname = 'supervisor'
+                       AND :where)",
+            'uid.data'
+        );
+        $table->add_filter($customfieldfilter);
 
         // Add action buttons to bottom of table. Demo of all defined types.
         // Define if it triggers a modal, if records need to be selected
@@ -400,7 +396,19 @@ class demo implements renderable, templatable {
         $table->sort_default_order = SORT_ASC; // Or SORT_DESC.
 
         // Work out the sql for the table.
-        $table->set_filter_sql('*', "(SELECT * FROM {user} ORDER BY id ASC LIMIT 112 ) as s1", '1=1', '');
+        // The supervisor subselect provides the value of the 'supervisor' custom profile field
+        // for the customfieldfilter. It stays NULL (and the filter stays hidden) as long as
+        // no profile field with this shortname exists.
+        $table->set_filter_sql(
+            '*',
+            "(SELECT u.*, (SELECT uid.data
+                             FROM {user_info_data} uid
+                             JOIN {user_info_field} uif ON uid.fieldid = uif.id
+                            WHERE uif.shortname = 'supervisor' AND uid.userid = u.id) AS supervisor
+                FROM {user} u ORDER BY u.id ASC LIMIT 112 ) as s1",
+            '1=1',
+            ''
+        );
 
         $table->cardsort = true;
 
