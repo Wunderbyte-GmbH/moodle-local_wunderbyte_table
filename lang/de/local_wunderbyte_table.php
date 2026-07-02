@@ -84,6 +84,7 @@ $string['filtercountmessage'] = ' {$a->filtersum} Filter auf: {$a->filtercolumns
 $string['filteremptynameerror'] = 'Name ist leer';
 $string['filterenabledheader'] = 'Allgemeine Filter-Einstellungen';
 $string['filterexistingkeyvaluepairs'] = 'Vorhandene "key-value"-Paare';
+$string['filteridentifierconflict'] = 'Pro Spalte kann nur ein Filter angewendet werden. Für die Spalte "{$a}" existiert bereits ein Filter.';
 $string['filterinactive'] = 'Verberge den Filter';
 $string['filternopairsexist'] = 'Keine "key-value"-Paare vorhanden';
 $string['filteronloadinactive'] = 'Filter standardmäßig zugeklappt';
