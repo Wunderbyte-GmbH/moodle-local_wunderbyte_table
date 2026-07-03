@@ -1,3 +1,12 @@
+## Version 3.2.4 (2026070300)
+* Improvement: Accessibility improvements for filters and more.
+* Improvement: Memorize dynamicsql resultset to fix per-row N+1 in dynamic customfields.
+* Improvement: str_replace so db doesn't trim mlang tags.
+* Improvement: Add wbtable-actionbuttons-container and adjust margins for better layout.
+* Bugfix: Fix bug in hourlist/weekdays filter.
+* Bugfix: Fix type error when multiselect customfield value reaches text controller.
+* Bugfix: Show countlabel of tables also when filters find no records.
+
 ## Version 3.2.3 (2026061800)
 * Improvement: Replace the alloptionshierarchicalfilter class with a reusable show_all_options() flag on the filter types (hierarchicalfilter, customfieldfilter and standardfilter). Default behaviour is unchanged.
 * Bugfix: Hierarchical filters used on a plain column (without set_sql_for_fieldid) are displayed again - their options are fetched from the column instead of the custom field data table.
