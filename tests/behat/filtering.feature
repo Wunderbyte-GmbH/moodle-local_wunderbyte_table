@@ -139,9 +139,10 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I should see "11 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    ## Hide filter - required for a new filter tool
-    ## Workaround for case when hidden "search" "input" intercepts focus - so we cannot press "Teachers" "button"
-    And I click on "//aside[contains(@class, 'wunderbyte_table_components')]" "xpath_element"
+    ## Close the open filter dropdown - required for a new filter tool.
+    ## A click on the aside is not safe here: its center point can land on the still-open
+    ## department dropdown and uncheck the filter (happens on Moodle 4.5 / Bootstrap 4).
+    And I press the escape key
     ## Validate accessibility of page
     And the page should meet accessibility standards
     And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"

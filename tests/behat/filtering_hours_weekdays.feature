@@ -99,8 +99,10 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I set the field "Course 5" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
     And I set the field "Course 6" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
     And I should see "6 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
-    ## Hide filter - required for a new filter tool
-    And I click on "//div[contains(@class, 'demotable_2')]//aside[contains(@class, 'wunderbyte_table_components')]" "xpath_element"
+    ## Close the open filter dropdown - required for a new filter tool.
+    ## A click on the aside is not safe here: its center point can land on the still-open
+    ## fullname dropdown and uncheck a filter (happens on Moodle 4.5 / Bootstrap 4).
+    And I press the escape key
     ## Use hourlist filrer now
     And I click on ".demotable_2 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
     ## Validate accessibility of page
