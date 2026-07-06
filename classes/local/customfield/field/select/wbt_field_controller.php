@@ -57,6 +57,10 @@ class wbt_field_controller extends field_controller implements wbt_field_control
         }
         $index = (int) $key;
         $optionsstring = $this->get_configdata_property('options');
+        // Browsers submit textarea line breaks as CRLF. Normalise to LF first, otherwise a trailing
+        // \r clings to every option (except the last) and breaks value comparisons such as booking
+        // image matching.
+        $optionsstring = str_replace("\r\n", "\n", (string) $optionsstring);
         $optionsarray = explode(PHP_EOL, $optionsstring);
         if (empty($optionsarray)) {
             return '';
@@ -82,6 +86,8 @@ class wbt_field_controller extends field_controller implements wbt_field_control
      */
     public function get_values_array(): array {
         $optionsstring = $this->get_configdata_property('options');
+        // See get_option_value_by_key(): normalise CRLF to LF so no stray \r survives.
+        $optionsstring = str_replace("\r\n", "\n", (string) $optionsstring);
         $optionsarray = explode(PHP_EOL, $optionsstring);
         if (empty($optionsarray)) {
             return [];
