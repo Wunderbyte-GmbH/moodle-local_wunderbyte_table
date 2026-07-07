@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table;
+use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 use local_wunderbyte_table\local\performance\performance;
 use local_wunderbyte_table\local\sortables\sortable_info;
 use mod_booking\singleton_service;
@@ -1127,34 +1128,35 @@ class wunderbyte_table extends table_sql {
      */
     private function setup_fulltextsearch() {
 
-        global $DB, $CFG;
+        global $DB;
 
         $searchcolumns = $this->fulltextsearchcolumns;
 
         if (!empty($searchcolumns) && count($searchcolumns)) {
-            foreach ($searchcolumns as $key => $value) {
-                // Check Moodle version to determine compatibility.
-                if ($CFG->version > 2022112800) {
-                    // Use sql_cast_to_char, available since Moodle 4.1.
-                    $valuestring = $DB->sql_cast_to_char($value);
-                } else {
-                    // Handle databases differently based on DB type.
-                    if ($DB->get_dbfamily() === 'mysql') {
-                        // For MySQL, use CAST as CHAR.
-                        $valuestring = "CAST(" . $value . " AS CHAR)";
-                    } else {
-                        // For other DB types, use CAST as VARCHAR.
-                        $valuestring = "CAST(" . $value . " AS VARCHAR)";
-                    }
-                }
+            $concatparts = [];
+            foreach ($searchcolumns as $value) {
+                $valuestring = $DB->sql_cast_to_char($value);
 
                 // Prepare the column string with COALESCE.
-                $searchcolumns[$key] = "COALESCE(" . $valuestring . ", ' ')";
+                $concatparts[] = "COALESCE(" . $valuestring . ", ' ')";
+
+                // If the column is a customfield whose wbt_field_controller resolves the stored
+                // values to display values (e.g. select labels or dynamicformat data), the resolved
+                // values are searchable as well. Columns without a matching customfield or with an
+                // identity resolution (e.g. text fields) return an empty mapping and are skipped.
+                $mapping = wbt_field_controller_info::get_resolved_value_mapping($value);
+                if (!empty($mapping)) {
+                    $whens = '';
+                    foreach ($mapping as $storedvalue => $resolvedvalue) {
+                        $storedparam = $this->set_params((string)$storedvalue);
+                        $resolvedparam = $this->set_params((string)$resolvedvalue);
+                        $whens .= "WHEN $valuestring = :$storedparam THEN :$resolvedparam ";
+                    }
+                    $concatparts[] = "COALESCE(CASE $whens ELSE NULL END, ' ')";
+                }
             }
 
-            $searchcolumns = array_values($searchcolumns);
-
-            return  $DB->sql_concat_join("' '", $searchcolumns) . " as wbfulltextsearch ";
+            return  $DB->sql_concat_join("' '", $concatparts) . " as wbfulltextsearch ";
         }
         return '';
     }
