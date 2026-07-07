@@ -54,7 +54,9 @@ final class treefilter_test extends advanced_testcase {
         treefilter::add_to_categoryobject($categoryobject, $filtersettings, 'entityid', [4 => 2, 5 => 1]);
 
         $this->assertArrayHasKey('treehierarchy', $categoryobject);
-        $tree = $categoryobject['treehierarchy'];
+        // The top-level context is the outermost list itself; only it carries istoplist=true.
+        $this->assertTrue($categoryobject['treehierarchy']['istoplist']);
+        $tree = $categoryobject['treehierarchy']['children'];
 
         // One root: Root, with subtree total 3 and two children (Building, BuildingB).
         $this->assertCount(1, $tree);
@@ -63,6 +65,7 @@ final class treefilter_test extends advanced_testcase {
         $this->assertSame(1, $root['value']);
         $this->assertSame(3, $root['count']);
         $this->assertSame('entityid', $root['category']);
+        $this->assertFalse($root['istoplist']);
         $this->assertTrue($root['haschildren']);
         $this->assertCount(2, $root['children']);
 
