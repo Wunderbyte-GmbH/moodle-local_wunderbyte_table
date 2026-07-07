@@ -39,7 +39,6 @@ use stdClass;
  * filter settings), so this shared plugin stays free of any dependency on the consuming plugin.
  */
 class treefilter extends hierarchicalfilter {
-
     /**
      * Sets the provider class that supplies the tree data and the SQL condition for this filter.
      *

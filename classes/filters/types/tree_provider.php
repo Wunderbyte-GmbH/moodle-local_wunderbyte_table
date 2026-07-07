@@ -36,7 +36,6 @@ use local_wunderbyte_table\wunderbyte_table;
  * reconstructable from that string alone — do not rely on instance state surviving a request.
  */
 interface tree_provider {
-
     /**
      * The values present in the current result set, as a map of node id => number of rows on that node.
      *
@@ -57,7 +56,7 @@ interface tree_provider {
      * connect them), each as an object with: id (int), name (string), count (int, rows exactly on this
      * node), total (int, rows in this node's whole subtree) and children (array of the same shape).
      *
-     * @param array<int,int> $presentcounts node id => count, as returned by {@see self::get_present_counts()}
+     * @param array $presentcounts node id => count, as returned by {@see self::get_present_counts()}
      * @return array<int,object> ordered root nodes (recursive)
      */
     public static function build_tree(array $presentcounts): array;
