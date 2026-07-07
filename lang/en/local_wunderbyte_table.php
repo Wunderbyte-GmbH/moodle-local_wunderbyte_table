@@ -230,6 +230,8 @@ $string['themennachkategorie'] = 'Topics by Category';
 $string['thursday'] = 'Thu';
 $string['timespan'] = 'Timespan';
 $string['to'] = 'To';
+$string['toggle'] = 'Toggle filter';
+$string['togglefiltersinglevalueerror'] = 'A toggle filter can only have one single value';
 $string['tuesday'] = 'Tue';
 $string['turnoffcaching'] = 'Turn off caching <span class="badge bg-danger text-light"><i class="fa fa-flask" aria-hidden="true"></i> Experimental</span>';
 $string['valuehastobeint'] = "Value has to be a number";

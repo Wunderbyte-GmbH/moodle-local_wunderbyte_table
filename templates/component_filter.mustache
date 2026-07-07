@@ -133,6 +133,22 @@
                 ]
             }
             ]
+        },
+        {
+            "collapsed": "collapsed",
+            "uniqueid": "24680",
+            "idstring": "kjhasdkjhaskdjh",
+            "expanded": false,
+            "name": "Category3",
+            "columnname": "tablecolumn3",
+            "default": false,
+            "datepicker": false,
+            "toggle": {
+                "value": "1",
+                "label": "Only bookable",
+                "columnname": "tablecolumn3",
+                "checked": "checked"
+            }
         }
         ]
     }
@@ -144,6 +160,15 @@
     <div class="wunderbyteTableFilter row" tabindex="-1">
     {{#categories}}
     <div class="col dropdowncontainer dd wbtfilter_{{columnname}}">
+    {{#toggle}}
+    <div class="wunderbyteTogglefilter form-check form-switch mt-2">
+        <input class="filterelement form-check-input" type="checkbox" role="switch" value="{{value}}" id="toggle{{columnname}}{{idstring}}" {{checked}} name="{{columnname}}" data-action="csshide" data-key="{{label}}" data-targetvalue="{{value}}">
+        <label class="form-check-label" for="toggle{{columnname}}{{idstring}}">
+            <span class="filterkeylabel">{{label}}</span>
+        </label>
+    </div>
+    {{/toggle}}
+    {{^toggle}}
     <div class="dropdown">
     <button
         {{#expanded}}
@@ -261,6 +286,7 @@
     <a class="dropdown-item" role="button">Something else here</a> }}
     </div>
 </div>
+    {{/toggle}}
 </div>
     {{/categories}}
     </div>

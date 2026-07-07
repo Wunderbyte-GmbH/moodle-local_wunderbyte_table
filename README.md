@@ -361,6 +361,53 @@ $newfilter->set_sql(
 
 As you know, `data` is the name of the column that stores the value of the `supervisor` custom field in the `user_info_data` table.
 
+### Toggle filter
+
+The **Toggle filter** is an extension of the customfield filter which filters on exactly **one** single value. It renders as a single on/off switch directly in the filter area (instead of a dropdown with a list of checkboxes):
+
+- Switch **on**: the records are filtered on the defined toggle value.
+- Switch **off**: no filtering is applied for this column at all.
+
+You instantiate it like the customfield filter and define the value to filter on (and the label displayed next to the switch) with `set_toggle_value`. If you don't, the toggle value defaults to `'1'` and the label to the localized filter name.
+
+```php
+$toggle = new toggle('mycolumn', get_string('mylabel', 'my_plugin'));
+$toggle->set_toggle_value('1', get_string('switchlabel', 'my_plugin'));
+$table->add_filter($toggle);
+```
+
+Since the toggle filter extends the customfield filter, the SQL configuration works exactly the same way: either pass the custom field ID via `set_sql_for_fieldid($customfieldid)`, or provide your own subquery via `set_sql($sql, $columnname)` following the same rules as for the customfield filter (keywords `SELECT`, `FROM` and `WHERE`, table names enclosed in `{}` and exactly one `:where` placeholder). Without any of the two, the toggle filters directly on the table column using exact match.
+
+In addition, the toggle filter can apply a condition on a **second column**, which is combined with the toggle value condition via `AND` when the switch is on:
+
+```php
+$toggle->set_second_column($columnname, $value, $operator);
+```
+
+The `$operator` defaults to `=`; allowed operators are `=`, `<`, `<=`, `>`, `>=` and `!=`.
+
+For example, to show only records which have the value `1` in a calculated `bookable` column AND start within the next four weeks:
+
+```php
+$toggle = new toggle('bookable', get_string('bookablenextweeks', 'my_plugin'));
+$toggle->set_toggle_value('1');
+$toggle->set_sql(
+    'id IN (
+            SELECT id FROM (
+                SELECT c.id, c.startdate,
+                CASE WHEN ... THEN \'1\' ELSE \'0\' END AS bookable
+                FROM {course} c
+            ) bookabletbl
+            WHERE :where
+        )',
+    'bookable'
+);
+$toggle->set_second_column('startdate', strtotime('today + 4 weeks'), '<=');
+$table->add_filter($toggle);
+```
+
+Note: the derived table must select every column used in the condition (in this example both `bookable` and `startdate`). If the filter depends on the current time (like the dynamic timestamp above), call `$toggle->bypass_cache();` so the filter is not served from the cache.
+
 ## Sorting
 
 If the output template you want to use doesn't support clickable headers to sort (eg because you use cards), you might want to use the sort select. Just add

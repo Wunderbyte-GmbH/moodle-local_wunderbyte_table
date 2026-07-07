@@ -394,6 +394,38 @@
     z-index: 200000;
 }
 
+/* The toggle filter renders as a Bootstrap 5 switch ("form-check form-switch").
+   The rules above hide the native checkbox input and draw a custom checkbox via
+   the label pseudo elements instead. For the switch, we restore the native input
+   and remove the custom drawn checkbox, so the Bootstrap switch styling applies.
+   The switch is sized 3em x 1.5em (48px x 24px at default font size), so the
+   control meets the WCAG 2.2 minimum target size of 24 CSS pixels (SC 2.5.8). */
+.wunderbyteTableFilter .form-check.form-switch {
+    padding-left: 3.5em;
+}
+
+.wunderbyte_table_container .wunderbyteTableFilter .form-switch input[type="checkbox"].form-check-input {
+    position: static;
+    z-index: auto;
+    width: 3em;
+    height: 1.5em;
+    min-width: 3em;
+    min-height: 1.5em;
+    opacity: 1;
+    margin-top: 0;
+    margin-left: -3.5em;
+}
+
+.wunderbyteTableFilter .form-switch .form-check-label {
+    /* Vertically center the label text next to the 1.5em tall switch. */
+    line-height: 1.5em;
+}
+
+.wunderbyteTableFilter .form-switch .form-check-label::before,
+.wunderbyteTableFilter .form-switch .form-check-label::after {
+    content: none;
+}
+
 .inactivefilter .wunderbyte_table_container {
     grid-template-columns: 0fr 2fr;
     gap: 0;
