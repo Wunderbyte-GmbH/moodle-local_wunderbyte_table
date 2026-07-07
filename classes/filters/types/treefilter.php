@@ -114,7 +114,10 @@ class treefilter extends hierarchicalfilter {
         }
 
         $identifierseen = [];
-        $categoryobject['treehierarchy'] = self::build_mustache_nodes($nodes, $fckey, $identifierseen);
+        $categoryobject['treehierarchy'] = [
+            'istoplist' => true,
+            'children' => self::build_mustache_nodes($nodes, $fckey, $identifierseen),
+        ];
     }
 
     /**
@@ -147,6 +150,9 @@ class treefilter extends hierarchicalfilter {
                 'identifier' => $identifier,
                 'category' => $fckey,
                 'haschildren' => !empty($children),
+                // Shadow the top-level flag: mustache resolves missing keys up the context stack, so
+                // without this every nested list would inherit istoplist=true from the outermost context.
+                'istoplist' => false,
                 'children' => $children,
             ];
         }
