@@ -30,7 +30,6 @@ use stdClass;
  * @covers     \local_wunderbyte_table\filters\types\treefilter
  */
 final class treefilter_test extends advanced_testcase {
-
     /**
      * Loads the stub provider fixture.
      *
