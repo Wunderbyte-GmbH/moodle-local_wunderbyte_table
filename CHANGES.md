@@ -1,5 +1,7 @@
+## Version 3.2.5 (2026071300)
 * New feature: The fulltext search now also searches the display values resolved by the wbt_field_controllers (e.g. select labels or dynamicformat data) when a customfield is used as fulltext search column, not only the stored keys. New API wbt_field_controller_info::get_resolved_value_mapping and return_sql_for_resolved_value.
 * Bugfix: PHP_EOL only exploding \n => now also works with \r\n.
+* Bugfix: Supersede stale in-flight table loads instead of dropping new ones, so a table refresh requested right after a mutation can no longer be overwritten by a stale pre-mutation response.
 
 ## Version 3.2.4 (2026070300)
 * Improvement: Accessibility improvements for filters and more.
