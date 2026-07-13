@@ -45,6 +45,10 @@ export var queries = {};
 var scrollpages = {};
 var tablejss = {};
 var scrollingelement = {};
+// Monotonic request counter per table, bumped by every full (re)load. Responses carry the
+// counter value from when they were issued; a response older than the counter is discarded,
+// so a stale in-flight reload can never overwrite the result of a newer one.
+var requestcounters = {};
 
 var moreThanOneTable = false;
 export const SELECTORS = {
@@ -376,9 +380,23 @@ export const callLoadData = (
     replacecomponentscontainer = false,
     scrolltotop = false) => {
 
-    if (loadings[idstring] && !replacerow) {
+    // An infinite-scroll append must not fire while another load is running (the scroll
+    // listener fires in bursts), but a full reload supersedes an in-flight request instead
+    // of being dropped: otherwise the stale in-flight response would render last and a
+    // caller-requested refresh (e.g. after booking) would silently never happen.
+    const isappend = page !== null && page > 0 && infinitescrollEnabled(idstring) && !replacerow;
+    if (loadings[idstring] && isappend) {
         return;
     }
+    // Full reloads bump the counter and thereby invalidate every response still in flight.
+    // Row replacements and appends only record the current value: they must not cancel a
+    // running full reload, but their own response is discarded if a full reload started later.
+    if (!replacerow && !isappend) {
+        requestcounters[idstring] = (requestcounters[idstring] ?? 0) + 1;
+    } else if (requestcounters[idstring] === undefined) {
+        requestcounters[idstring] = 0;
+    }
+    const requestid = requestcounters[idstring];
     // We reset scrollpage with 0 when we come from the filter.
     if (page !== null) {
 
@@ -471,6 +489,11 @@ export const callLoadData = (
             'searchtext': searchtext
         },
         done: async function(res) {
+            if (requestcounters[idstring] !== requestid) {
+                // A newer full reload was issued for this table while this request was in
+                // flight. Its response owns the table now, so this stale one must not render.
+                return;
+            }
             // Hide the call spinner.
             let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
             if (callspinner) {
@@ -696,6 +719,13 @@ export const callLoadData = (
             const y = await promises[1];
         },
         fail: function(err) {
+
+            if (requestcounters[idstring] !== requestid) {
+                // Superseded by a newer full reload — don't retry or render an error state.
+                return;
+            }
+            // The request is over, a retry (below) has to pass the loadings guard again.
+            loadings[idstring] = false;
 
             // If we have an error, resetting the table might be enough. we do that.
             // To avoid a loop, we only do this in special cases.
