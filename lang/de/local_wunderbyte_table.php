@@ -177,6 +177,7 @@ $string['reload'] = 'Tabelle neu laden';
 $string['rowsperpage'] = 'Zeilen pro Seite';
 $string['saturday'] = 'Sa';
 $string['search'] = 'Suchen';
+$string['searchcolumnsinfo'] = 'Sie können in den folgenden Spalten suchen:';
 $string['searchcountmessage'] = 'Suche für "{$a}"';
 $string['searchtitleprefix'] = 'Nach Titelprefix suchen';
 $string['selectedtimespan'] = 'gewählter Zeitspanne';

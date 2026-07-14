@@ -180,6 +180,7 @@ $string['reload'] = "Reload table";
 $string['rowsperpage'] = 'Rows per page';
 $string['saturday'] = 'Sat';
 $string['search'] = 'Search';
+$string['searchcolumnsinfo'] = 'You can search in the following columns:';
 $string['searchcountmessage'] = 'Search for "{$a}"';
 $string['searchtitleprefix'] = 'Search titleprefix';
 $string['selectedtimespan'] = 'selected timespan';

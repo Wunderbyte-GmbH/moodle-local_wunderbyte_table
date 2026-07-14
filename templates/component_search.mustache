@@ -39,5 +39,19 @@
     <div class="wunderbyteTableSearch text-end align-bottom" style="display:inline-flex;">
         <i class="{{searchiconclasses}} text-primary" aria-hidden="true"></i>
         <input class="search form-control" name="search-{{uniqueid}}" placeholder="{{#str}} search, local_wunderbyte_table {{/str}}" value="{{searchtext}}">
+        {{#showsearchinfo}}
+            <a class="btn btn-link p-0 ms-1 align-self-center wunderbyteTableSearchInfo" role="button" tabindex="0"
+                data-container="body" data-toggle="popover"
+                data-placement="{{#ltr}}right{{/ltr}}{{^ltr}}left{{/ltr}}" data-html="true"
+                data-content="{{#str}} searchcolumnsinfo, local_wunderbyte_table {{/str}}<ul class='mb-0 mt-1 ps-3 text-start'>{{#searchcolumns}}<li>{{label}}</li>{{/searchcolumns}}</ul>"
+                data-trigger="focus"
+                data-bs-container="body" data-bs-toggle="popover"
+                data-bs-placement="{{#ltr}}right{{/ltr}}{{^ltr}}left{{/ltr}}" data-bs-html="true"
+                data-bs-content="{{#str}} searchcolumnsinfo, local_wunderbyte_table {{/str}}<ul class='mb-0 mt-1 ps-3 text-start'>{{#searchcolumns}}<li>{{label}}</li>{{/searchcolumns}}</ul>"
+                data-bs-trigger="focus"
+                aria-label="{{#str}} searchcolumnsinfo, local_wunderbyte_table {{/str}}">
+                <i class="fa fa-info-circle text-primary" aria-hidden="true"></i>
+            </a>
+        {{/showsearchinfo}}
     </div>
 {{/search}}
