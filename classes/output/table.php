@@ -743,6 +743,21 @@ class table implements renderable, templatable {
                 // For older versions, use Fontawesome 4.
                 $data['searchiconclasses'] = 'fa fa-search fa-xl mt-2';
             }
+
+            // Build the list of searchable columns for the info popover next to the search box.
+            $searchcolumns = [];
+            foreach ($this->wbtable->fulltextsearchcolumns as $searchcolumn) {
+                $headerindex = $this->wbtable->columns[$searchcolumn] ?? null;
+                $searchcolumns[] = [
+                    'label' => ($headerindex !== null && isset($this->wbtable->headers[$headerindex]))
+                        ? $this->wbtable->headers[$headerindex]
+                        : $searchcolumn,
+                ];
+            }
+            if (!empty($searchcolumns)) {
+                $data['searchcolumns'] = $searchcolumns;
+                $data['showsearchinfo'] = true;
+            }
         }
 
         // We need to to the same for switchtemplates (template switcher).
