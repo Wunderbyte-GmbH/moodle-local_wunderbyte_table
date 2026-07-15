@@ -1966,7 +1966,14 @@ class wunderbyte_table extends table_sql {
             $this->tablecachehash = md5($this->idstring . $this->requirecapability ?? '' . $this->requirelogin ?? '');
 
             // We just fetch the pagesize, no need to get all the table here.
-            if (($pagesize = $cache->get($this->tablecachehash . '_pagesize')) && !$newcache) {
+            // But only if the table itself is still cached - otherwise (e.g. after a partial
+            // cache loss) the table would never be cached again and every webservice call
+            // using the hash (like load_data for the action buttons) would fail.
+            if (
+                ($pagesize = $cache->get($this->tablecachehash . '_pagesize'))
+                && !$newcache
+                && $cache->get($this->tablecachehash) instanceof self
+            ) {
                 $this->pagesize = $pagesize;
             } else {
                 // Make sure that we don't use old filter params.

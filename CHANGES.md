@@ -1,3 +1,5 @@
+* Bugfix: return_encoded_table only skipped caching the table object if the pagesize key was still cached - after a partial cache loss the table was never cached again and every webservice call using the table hash (e.g. load_data after action buttons like presence/notes in mod_booking report2) failed permanently with "Expected instance of wunderbyte_table, got boolean". The table object is now re-cached whenever it is missing.
+
 ## Version 3.2.6 (2026071500)
 * New feature: New multilevel treefilter with indented levels (Bootstrap 4 and 5), top-down cascading checkboxes and valid HTML list rendering.
 * New feature: Add a new toggle filter for customfields.
