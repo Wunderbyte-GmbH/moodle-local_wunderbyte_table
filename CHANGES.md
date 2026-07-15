@@ -1,3 +1,9 @@
+## Version 3.2.6 (2026071500)
+* New feature: New multilevel treefilter with indented levels (Bootstrap 4 and 5), top-down cascading checkboxes and valid HTML list rendering.
+* New feature: Add a new toggle filter for customfields.
+* Test: Extend info and tests about exactcolumn- and customfieldfilter.
+* Test: Experimental behat scenario for filter.
+
 ## Version 3.2.5 (2026071300)
 * New feature: The fulltext search now also searches the display values resolved by the wbt_field_controllers (e.g. select labels or dynamicformat data) when a customfield is used as fulltext search column, not only the stored keys. New API wbt_field_controller_info::get_resolved_value_mapping and return_sql_for_resolved_value.
 * Bugfix: PHP_EOL only exploding \n => now also works with \r\n.
