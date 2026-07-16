@@ -467,9 +467,8 @@ class wunderbyte_table extends table_sql {
      * @param string $uniqueid Has to be really unique eg. by adding the cmid, so it's unique over all instances of one plugin!
      * @param int $foruserid Optional argument. We use this to store the userid on the table. Since the
      *        table instance is cached, we can also retrieve it from the cached instance identified by the
-     *        idstring. When you pass $foruserid, this prevents the idstring from being recreated based
-     *        on the query, ensuring we do not receive an incorrect instance. This also has no effect on
-     *        caching of the same query.
+     *        idstring. The foruserid becomes part of the idstring (see recreateidstring), so tables
+     *        rendered for different users never share a cache entry, even when their sql is identical.
      */
     public function __construct($uniqueid, int $foruserid = 0) {
 
@@ -1954,9 +1953,12 @@ class wunderbyte_table extends table_sql {
         // We don't want errormessage in the encoded table.
         $this->errormessage = '';
 
-        if ($this->foruserid === 0) {
-            $this->recreateidstring();
-        }
+        // The idstring must always be derived from the current sql (plus foruserid, see
+        // recreateidstring). If it were based on the uniqueid only, several tables sharing
+        // a uniqueid (e.g. multiple shortcode tables on one page) would collide on a single
+        // APPLICATION cache slot and ajax reloads would serve another table's - or an
+        // outdated - sql.
+        $this->recreateidstring();
 
         if (empty($this->tablecachehash) || $newcache) {
             $cache = cache::make('local_wunderbyte_table', 'encodedtables');
@@ -2324,8 +2326,9 @@ class wunderbyte_table extends table_sql {
         // This creates a hash from the sql settings.
         $cachekey = $this->create_cachekey(true);
 
-        // We add the contextid.
-        $idstring = md5($cachekey . $this->context->id ?? 1);
+        // We add the contextid and the foruserid. The foruserid keeps tables rendered
+        // for another user apart even when the sql itself is not user-specific.
+        $idstring = md5($cachekey . ($this->context->id ?? 1) . $this->foruserid);
 
         $this->idstring = $idstring;
     }
