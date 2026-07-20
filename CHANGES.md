@@ -1,4 +1,7 @@
+## Version 3.2.7 (2026072000)
+* Improvement: Accessibility and readability of font.
 * Bugfix: return_encoded_table only skipped caching the table object if the pagesize key was still cached - after a partial cache loss the table was never cached again and every webservice call using the table hash (e.g. load_data after action buttons like presence/notes in mod_booking report2) failed permanently with "Expected instance of wunderbyte_table, got boolean". The table object is now re-cached whenever it is missing.
+* Bugfix: The foruserid is now part of the idstring (and the idstring is always recreated from the sql), so tables rendered for different users - e.g. by the cashier - never share a cache entry, even when their sql is identical and the caller does not include the userid in the uniqueid. Note: this changes all idstrings once, so table settings saved in the db (keyed by the table hash) have to be saved again.
 
 ## Version 3.2.6 (2026071500)
 * New feature: New multilevel treefilter with indented levels (Bootstrap 4 and 5), top-down cascading checkboxes and valid HTML list rendering.
