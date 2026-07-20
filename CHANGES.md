@@ -1,3 +1,5 @@
+* Bugfix: The bundled PhpWord wrote inline line breaks (e.g. from <br> in HTML) as a bare <w:br/> directly inside the paragraph - schema-invalid OOXML that Microsoft Word silently drops (dates in the mod_booking sign-in sheet stuck together on one line). The break is now wrapped in a run (<w:r><w:br/></w:r>), as current upstream PHPWord does.
+
 ## Version 3.2.7 (2026072000)
 * Improvement: Accessibility and readability of font.
 * Bugfix: return_encoded_table only skipped caching the table object if the pagesize key was still cached - after a partial cache loss the table was never cached again and every webservice call using the table hash (e.g. load_data after action buttons like presence/notes in mod_booking report2) failed permanently with "Expected instance of wunderbyte_table, got boolean". The table object is now re-cached whenever it is missing.

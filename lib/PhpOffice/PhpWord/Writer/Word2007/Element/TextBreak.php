@@ -47,7 +47,11 @@ class TextBreak extends Text
 
             $this->endElementP(); // w:p
         } else {
+            // A w:br is only valid run content: without the wrapping w:r,
+            // Word silently drops the line break (schema-invalid position).
+            $xmlWriter->startElement('w:r');
             $xmlWriter->writeElement('w:br');
+            $xmlWriter->endElement(); // w:r
         }
     }
 }
