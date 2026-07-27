@@ -52,9 +52,9 @@ Feature: As admin I want to ensure that customization of the wunderbyte_table se
     And I set the field "Apply filter on download" in the ".modal-body" "css_element" to "checked"
     And I press "Save changes"
     And I wait until the page is ready
-    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
-    And I should see "admin" in the "#id_collapse_username" "css_element"
-    And I set the field "teacher1" in the "#id_collapse_username" "css_element" to "checked"
+    And I click on "[aria-controls^=\"wbtfiltermenu_username\"]" "css_element"
+    And I should see "admin" in the "[id^=\"id_collapse_username\"]" "css_element"
+    And I set the field "teacher1" in the "[id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "teacher1" in the "#demotable_1_r1" "css_element"
     And I should see "1 of 24 records found" in the ".wb-records-count-label" "css_element"
@@ -68,9 +68,9 @@ Feature: As admin I want to ensure that customization of the wunderbyte_table se
     And I set the field "Apply filter on download" in the ".modal-body" "css_element" to ""
     And I press "Save changes"
     And I wait until the page is ready
-    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
-    And I should see "admin" in the "#id_collapse_username" "css_element"
-    And I set the field "teacher1" in the "#id_collapse_username" "css_element" to "checked"
+    And I click on "[aria-controls^=\"wbtfiltermenu_username\"]" "css_element"
+    And I should see "admin" in the "[id^=\"id_collapse_username\"]" "css_element"
+    And I set the field "teacher1" in the "[id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "teacher1" in the "#demotable_1_r1" "css_element"
     And I should see "1 of 24 records found" in the ".wb-records-count-label" "css_element"

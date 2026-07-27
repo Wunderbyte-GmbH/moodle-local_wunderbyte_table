@@ -129,6 +129,8 @@ class intrange extends base {
             // Prepare the array for output.
             $intrangeobject = [
                 'label' => $labelkey ?? '',
+                // Used for the html ids, the label itself is free text, see sanitize_idfragment.
+                'labelid' => self::sanitize_idfragment((string) ($labelkey ?? '')),
                 'column' => $fckey,
                 'startvalue' => $intrangearray['intrange'][$labelkey]['defaultvaluestart'] ?? '',
                 'endvalue' => $intrangearray['intrange'][$labelkey]['columntimeend'] ?? '',
@@ -139,6 +141,7 @@ class intrange extends base {
         if (empty($intrangearray['intrange'])) {
             $categoryobject['intrange']['intranges'][] = [
                 'label' => '',
+                'labelid' => self::sanitize_idfragment(''),
                 'column' => $fckey,
                 'startvalue' => '',
                 'endvalue' => '',

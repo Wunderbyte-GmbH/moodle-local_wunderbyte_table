@@ -140,29 +140,39 @@ export const init = (idstring, encodedtable) => {
  * @param {string} idstring
  */
 const initHandleDropdown = (idstring) => {
-    const nocheckbox = document.querySelectorAll('.wunderbyte_table_container_' + idstring + ' .hierarchy > button');
-    const withcheckbox = document.querySelectorAll('.wunderbyte_table_container_' + idstring + ' .hierarchy > span > button');
-    if (nocheckbox) {
-        nocheckbox.forEach(element => {
-            element.addEventListener('click', function(event) {
-                event.stopPropagation();
-                const sibling = element.nextElementSibling;
-                sibling.classList.toggle("show");
-                event.preventDefault();
-            });
+    const buttons = document.querySelectorAll('.wunderbyte_table_container_' + idstring + ' .hierarchy .hierarchybutton');
+
+    buttons.forEach(element => {
+
+        if (element.dataset.collapseinitialized) {
+            return;
+        }
+        element.dataset.collapseinitialized = true;
+
+        // The panel is addressed via aria-controls, so the markup around the button can change
+        // without breaking the toggle. The two older variants (button with and without a checkbox
+        // next to it) are kept as a fallback.
+        const controls = element.getAttribute('aria-controls');
+        const panel = controls
+            ? document.getElementById(controls)
+            : (element.parentElement.classList.contains('d-flex')
+                ? element.parentElement.nextElementSibling
+                : element.nextElementSibling);
+
+        if (!panel) {
+            return;
+        }
+
+        element.setAttribute('aria-expanded', panel.classList.contains('show') ? 'true' : 'false');
+
+        element.addEventListener('click', function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            const expanded = panel.classList.toggle("show");
+            // Without this a screen reader never learns whether the category is open or closed.
+            element.setAttribute('aria-expanded', expanded ? 'true' : 'false');
         });
-    }
-     if (withcheckbox) {
-        withcheckbox.forEach(element => {
-            element.addEventListener('click', function(event) {
-                event.stopPropagation();
-                const parent = element.parentElement;
-                const sibling = parent.nextElementSibling;
-                sibling.classList.toggle("show");
-                event.preventDefault();
-            });
-        });
-    }
+    });
 };
 
 /**
@@ -931,6 +941,9 @@ function initializeComponents(idstring, encodedtable) {
 
     initializeCheckboxes(selector, idstring, encodedtable);
     initializeFilterKeyboard(idstring);
+    // The collapsible categories of the hierarchical filter are only wired up here, so they also
+    // work after a lazy load (Bootstrap cannot open them on its own, there is no data-target).
+    initHandleDropdown(idstring);
     initializeFilterStatus(selector, idstring);
     initializeSearchInputListener(selector, idstring, encodedtable);
     initializeSearch(selector, idstring, encodedtable);

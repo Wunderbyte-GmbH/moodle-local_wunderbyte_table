@@ -171,6 +171,8 @@ abstract class datepickerbase extends base {
 
                 $datepickerobject = [
                     'label' => $labelkey,
+                    // Used for the html ids, the label itself is free text, see sanitize_idfragment.
+                    'labelid' => self::sanitize_idfragment((string) $labelkey),
                     'operator' => $datepickerarray['datepicker'][$labelkey]['operator'],
                     'timestamp' => $defaulttimestamp,
                     'datereadable' => $defaulttimestamp === 'now' ? 'now' : date('Y-m-d', $defaulttimestamp),
@@ -189,6 +191,8 @@ abstract class datepickerbase extends base {
 
                 $datepickerobject = [
                     'label' => $labelkey,
+                    // Used for the html ids, the label itself is free text, see sanitize_idfragment.
+                    'labelid' => self::sanitize_idfragment((string) $labelkey),
                     'startcolumn' => $datepickerarray['datepicker'][$labelkey]['columntimestart'],
                     'starttimestamp' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],
                     'startdatereadable' => $datepickerarray['datepicker'][$labelkey]['defaultvaluestart'],

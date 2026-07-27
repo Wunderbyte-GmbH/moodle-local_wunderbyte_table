@@ -38,6 +38,8 @@ const SELECTORS = {
     DROPDOWN: '.wunderbyteTableFilter .dropdowncontainer .dropdown',
     BUTTON: '.dropdownMenuButton',
     MENU: '.dropdown-menu',
+    FORMS: '.wunderbyteTableFilter .datepickerform, .wunderbyteTableFilter .intrangeform',
+    TOGGLESWITCH: '.wunderbyteTogglefilter input[type="checkbox"]',
     ITEMS: 'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]),'
         + ' button:not([disabled]), a[href]',
 };
@@ -105,6 +107,70 @@ export function initializeFilterKeyboard(idstring) {
         });
 
         dropdown.dataset.keyboardinitialized = true;
+    });
+
+    initializeFilterForms(container);
+    initializeToggleSwitches(container);
+}
+
+/**
+ * The datepicker and the intrange filter wrap their fields in a <form> without an action. Pressing
+ * ENTER in one of those fields submitted that form, which reloaded the whole page and threw away
+ * every filter the user had set. The submit is stopped and turned into what the user expects
+ * instead: apply the value that was just typed in.
+ *
+ * @param {HTMLElement} container
+ */
+function initializeFilterForms(container) {
+
+    container.querySelectorAll(SELECTORS.FORMS).forEach(form => {
+
+        if (form.dataset.keyboardinitialized) {
+            return;
+        }
+        form.dataset.keyboardinitialized = true;
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+        });
+
+        form.addEventListener('keydown', e => {
+            if (e.key !== 'Enter' || !e.target.matches('input')) {
+                return;
+            }
+            if (e.target.type === 'checkbox') {
+                // Handled as a filter option by handleMenuKeydown.
+                return;
+            }
+            e.preventDefault();
+            // Same event the field fires when it is left with the mouse, so filter.js picks the
+            // value up through its regular change listener.
+            e.target.dispatchEvent(new Event('change', {bubbles: true}));
+        });
+    });
+}
+
+/**
+ * The toggle filter is a switch outside of any dropdown. It is reachable by TAB and SPACE toggles
+ * it natively, ENTER does not - which is what users try first, so it is added here.
+ *
+ * @param {HTMLElement} container
+ */
+function initializeToggleSwitches(container) {
+
+    container.querySelectorAll(SELECTORS.TOGGLESWITCH).forEach(switchelement => {
+
+        if (switchelement.dataset.keyboardinitialized) {
+            return;
+        }
+        switchelement.dataset.keyboardinitialized = true;
+
+        switchelement.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                toggleCheckbox(switchelement);
+            }
+        });
     });
 }
 

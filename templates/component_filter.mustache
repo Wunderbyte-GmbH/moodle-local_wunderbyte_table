@@ -204,19 +204,24 @@
                 {{/default}}
                 {{#hierarchy}}
                     <ul class="wunderbyterFilterList hierarchy pt-2" data-moodletype="hierarchylist">
+                        {{! The category and its options are one list item: a <span> or a <div> as a
+                            direct child of <ul> is invalid and destroys the list semantics. }}
+                        <li class="wbt-hierarchy-category">
                         <span class="d-flex">
                         <input class="hierarchycategory-checkbox ms-1" type="checkbox"
                                 value="{{value}}"
                                 id="{{index}}{{columnname}}{{idstring}}"
                                 {{checked}} name="{{id}}"
                                 data-key="{{label}}"
-                                data-targetvalue="{{columnname}}">
-                        <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton" data-ident="{{columnname}}" data-toggle="collapse" data-bs-toggle="collapse" role="button">
+                                data-targetvalue="{{columnname}}"
+                                aria-label="{{#str}} selectallfromcategory, local_wunderbyte_table, {{label}} {{/str}}">
+                        <button class="btn btn-nolabel dropdown-item dropdown-toggle hierarchybutton" type="button" data-ident="{{columnname}}" data-toggle="collapse" data-bs-toggle="collapse" aria-expanded="false" aria-controls="{{id}}{{columnname}}{{idstring}}">
                             <span class="filtercategorykeylabel">{{label}}</span>
                         </button>
                         </span>
-                        <div class="collapse" id="{{id}}">
+                        <div class="collapse" id="{{id}}{{columnname}}{{idstring}}">
                             <div class="card card-body">
+                                <ul class="wunderbyterFilterList wbt-hierarchy-values" aria-label="{{label}}">
                                 {{#values}}
                                     <li class="form-check">
                                             <input class="filterelement form-check-input hierarchychild-checkbox" type="checkbox" value="{{value}}" id="{{identifier}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">
@@ -225,8 +230,10 @@
                                             </label>
                                     </li>
                                 {{/values}}
+                                </ul>
                             </div>
                         </div>
+                        </li>
                     </ul>
                 {{/hierarchy}}
                 {{#treehierarchy}}
@@ -236,27 +243,27 @@
                     {{#datepickers}}
                         <form class="datepickerform">
                             {{#timestamp}}
-                                <input class="filterelement form-check-input" type="checkbox" id="{{label}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-dateelement = "dateelement" data-filtername="{{label}}" data-operator="{{operator}}" data-columnname="{{columnname}}">
-                                <label class="filterelement form-check-label" for="{{label}}{{columnname}}{{idstring}}">{{checkboxlabel}}</label>
+                                <input class="filterelement form-check-input" type="checkbox" id="{{labelid}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-operator="{{operator}}" data-columnname="{{columnname}}">
+                                <label class="filterelement form-check-label" for="{{labelid}}{{columnname}}{{idstring}}">{{checkboxlabel}}</label>
                                 <div class="datepicker-label">{{label}}</div>
-                                <input class="filterelement datepicker-input" type="date" id="{{label}}{{columnname}}{{idstring}}datefilter_date" value="{{datereadable}}" data-timestamp="{{timestamp}}" name="{{columnname}}_single-date" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}" aria-label="{{#str}}date{{/str}}">
-                                <input class="filterelement datepicker-input" type="time" id="{{label}}{{columnname}}{{idstring}}datefilter_time" name="{{columnname}}_single-time" value="{{timereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}" aria-label="{{#str}}time{{/str}}">
+                                <input class="filterelement datepicker-input" type="date" id="{{labelid}}{{columnname}}{{idstring}}datefilter_date" value="{{datereadable}}" data-timestamp="{{timestamp}}" name="{{columnname}}_single-date" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" aria-label="{{label}} {{#str}}date{{/str}}">
+                                <input class="filterelement datepicker-input" type="time" id="{{labelid}}{{columnname}}{{idstring}}datefilter_time" name="{{columnname}}_single-time" value="{{timereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" aria-label="{{label}} {{#str}}time{{/str}}">
                             {{/timestamp}}
                             {{#startcolumn}}
 
-                                <input class="filterelement form-check-input" type="checkbox" id="{{label}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}" data-operator="{{operator}}" data-timespan="true">
-                                <label class="filterelement form-check-label" for="{{label}}{{columnname}}{{idstring}}">{{checkboxlabel}}</label>
+                                <input class="filterelement form-check-input" type="checkbox" id="{{labelid}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="datecheckbox" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" data-operator="{{operator}}" data-timespan="true">
+                                <label class="filterelement form-check-label" for="{{labelid}}{{columnname}}{{idstring}}">{{checkboxlabel}}</label>
                                 <div class="filtertimespan">
-                                    <div class="datepicker-label">{{#str}} startvalue, local_wunderbyte_table {{/str}}</div>
-                                    <input class="filterelement datepicker-input" type="date" id="startdate_date_{{startcolumn}}{{label}}{{columnname}}{{idstring}}" value="{{startdatereadable}}" data-timestamp="{{starttimestamp}}" name="date-{{startcolumn}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}" data-applytocolumn="{{startcolumn}}" aria-label="{{#str}}date{{/str}}">
-                                    <input class="filterelement datepicker-input" type="time" id="startdate_time_{{startcolumn}}{{label}}{{columnname}}{{idstring}}" name="time-{{startcolumn}}" value="{{starttimereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}" data-applytocolumn="{{startcolumn}}" aria-label="{{#str}}time{{/str}}">
-                                    <div class="datepicker-label">{{#str}} endvalue, local_wunderbyte_table {{/str}}</div>
-                                    <input class="filterelement datepicker-input" type="date" id="enddate_date_{{endcolumn}}{{label}}{{columnname}}{{idstring}}" value="{{enddatereadable}}" data-timestamp="{{endtimestamp}}" name="date-{{endcolumn}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}" data-applytocolumn="{{endcolumn}}" aria-label="{{#str}}date{{/str}}">
-                                    <input class="filterelement datepicker-input" type="time" id="enddate_time_{{endcolumn}}{{label}}{{columnname}}{{idstring}}" name="time-{{endcolumn}}" value="{{endtimereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}" data-applytocolumn="{{endcolumn}}" aria-label="{{#str}}time{{/str}}">
+                                    <div class="datepicker-label" id="startlabel_{{labelid}}{{columnname}}{{idstring}}">{{#str}} startvalue, local_wunderbyte_table {{/str}}</div>
+                                    <input class="filterelement datepicker-input" type="date" id="startdate_date_{{startcolumn}}{{labelid}}{{columnname}}{{idstring}}" value="{{startdatereadable}}" data-timestamp="{{starttimestamp}}" name="date-{{startcolumn}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" data-applytocolumn="{{startcolumn}}" aria-label="{{#str}} startvalue, local_wunderbyte_table {{/str}} {{#str}}date{{/str}}">
+                                    <input class="filterelement datepicker-input" type="time" id="startdate_time_{{startcolumn}}{{labelid}}{{columnname}}{{idstring}}" name="time-{{startcolumn}}" value="{{starttimereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" data-applytocolumn="{{startcolumn}}" aria-label="{{#str}} startvalue, local_wunderbyte_table {{/str}} {{#str}}time{{/str}}">
+                                    <div class="datepicker-label" id="endlabel_{{labelid}}{{columnname}}{{idstring}}">{{#str}} endvalue, local_wunderbyte_table {{/str}}</div>
+                                    <input class="filterelement datepicker-input" type="date" id="enddate_date_{{endcolumn}}{{labelid}}{{columnname}}{{idstring}}" value="{{enddatereadable}}" data-timestamp="{{endtimestamp}}" name="date-{{endcolumn}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" data-applytocolumn="{{endcolumn}}" aria-label="{{#str}} endvalue, local_wunderbyte_table {{/str}} {{#str}}date{{/str}}">
+                                    <input class="filterelement datepicker-input" type="time" id="enddate_time_{{endcolumn}}{{labelid}}{{columnname}}{{idstring}}" name="time-{{endcolumn}}" value="{{endtimereadable}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" data-applytocolumn="{{endcolumn}}" aria-label="{{#str}} endvalue, local_wunderbyte_table {{/str}} {{#str}}time{{/str}}">
                                 </div>
                                 <div>
-                                    <label for="filteroperationselect_{{label}}{{columnname}}{{idstring}}" class="datepicker-label">{{#str}} displayrecords, local_wunderbyte_table {{/str}}</label>
-                                    <select class="form-control filterelement" id="filteroperationselect_{{label}}{{columnname}}{{idstring}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
+                                    <label for="filteroperationselect_{{labelid}}{{columnname}}{{idstring}}" class="datepicker-label">{{#str}} displayrecords, local_wunderbyte_table {{/str}}</label>
+                                    <select class="form-control filterelement" id="filteroperationselect_{{labelid}}{{columnname}}{{idstring}}" name="{{columnname}}" data-dateelement = "dateelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}">
                                         {{#possibleoperations}}
                                             <option value="{{operator}}">{{label}}</option>
                                         {{/possibleoperations}}
@@ -271,19 +278,19 @@
                 {{#intrange}}
                     {{#intranges}}
                         <form class="intrangeform">
-                                <input class="filterelement form-check-input" type="checkbox" id="{{label}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="intrange" data-intrangeelement = "intrangeelement-checkbox" data-filtername="{{label}}" data-columnname="{{columnname}}">
-                                <label class="filterelement form-check-label" for="{{label}}{{columnname}}{{idstring}}">{{#str}} apply_filter, local_wunderbyte_table {{/str}}</label>
-                                <label class="filterelement intrange-label" for="{{label}}{{columnname}}{{idstring}}intrangefilter_intrange-start">{{#str}} from, local_wunderbyte_table {{/str}}</label>
-                                <input class="filterelement filterelement intrange-input" id="{{label}}{{columnname}}{{idstring}}intrangefilter_intrange-start" value="{{startvalue}}" name="intrange-start-{{columnname}}" data-intrangeelement = "intrangeelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
-                                <label class="filterelement intrange-label" for="{{label}}{{columnname}}{{idstring}}intrangefilter_intrange-end">{{#str}} to, local_wunderbyte_table {{/str}}</label>
-                                <input class="filterelement intrange-input" id="{{label}}{{columnname}}{{idstring}}intrangefilter_intrange-end" value="{{endvalue}}" name="intrange-end-{{columnname}}" data-intrangeelement = "intrangeelement" data-filtername="{{label}}" data-columnname="{{columnname}}">
-                                <div class="filterelement alert alert-warning intrange" id="{{label}}{{columnname}}{{idstring}}intrangefilter_alert" hidden>{{#str}} alertentriessanitized, local_wunderbyte_table {{/str}}</div>
+                                <input class="filterelement form-check-input" type="checkbox" id="{{labelid}}{{columnname}}{{idstring}}" {{checked}} data-action="csshide" name="{{columnname}}" value="intrange" data-intrangeelement = "intrangeelement-checkbox" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}">
+                                <label class="filterelement form-check-label" for="{{labelid}}{{columnname}}{{idstring}}">{{#str}} apply_filter, local_wunderbyte_table {{/str}}</label>
+                                <label class="filterelement intrange-label" for="{{labelid}}{{columnname}}{{idstring}}intrangefilter_intrange-start">{{#str}} from, local_wunderbyte_table {{/str}}</label>
+                                <input class="filterelement filterelement intrange-input" type="text" inputmode="numeric" id="{{labelid}}{{columnname}}{{idstring}}intrangefilter_intrange-start" value="{{startvalue}}" name="intrange-start-{{columnname}}" data-intrangeelement = "intrangeelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" aria-describedby="{{labelid}}{{columnname}}{{idstring}}intrangefilter_alert">
+                                <label class="filterelement intrange-label" for="{{labelid}}{{columnname}}{{idstring}}intrangefilter_intrange-end">{{#str}} to, local_wunderbyte_table {{/str}}</label>
+                                <input class="filterelement intrange-input" type="text" inputmode="numeric" id="{{labelid}}{{columnname}}{{idstring}}intrangefilter_intrange-end" value="{{endvalue}}" name="intrange-end-{{columnname}}" data-intrangeelement = "intrangeelement" data-filtername="{{label}}" data-filterid="{{labelid}}" data-columnname="{{columnname}}" aria-describedby="{{labelid}}{{columnname}}{{idstring}}intrangefilter_alert">
+                                <div class="filterelement alert alert-warning intrange" role="alert" id="{{labelid}}{{columnname}}{{idstring}}intrangefilter_alert" hidden>{{#str}} alertentriessanitized, local_wunderbyte_table {{/str}}</div>
                         </form>
                     {{/intranges}}
                 {{/intrange}}
                 {{#exactcolumn}}
                     <div class="prefix-filter">
-                        <label for="prefix-search">{{localizedname}}</label>
+                        <label for="prefixsearch{{idstring}}">{{localizedname}}</label>
                         <input type="text" id="prefixsearch{{idstring}}" name="prefixsearch" value="{{searchvalue}}" placeholder="{{#str}} searchtitleprefix, local_wunderbyte_table {{/str}}"/>
                     </div>
                 {{/exactcolumn}}

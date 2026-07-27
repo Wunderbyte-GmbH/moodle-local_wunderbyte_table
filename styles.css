@@ -253,7 +253,7 @@
 }
 
 .wunderbyteTableFilter .form-check-label {
-    color: black;
+    color: inherit;
     font-size: 1rem;
     padding-left: 6px;
     position: relative;
@@ -570,7 +570,7 @@
     text-align: start;
     height: auto;
     white-space: normal;
-    border: 1px solid #d3d3d3bd;
+    border: 1px solid #6c757d;
 }
 
 .wunderbyte_table_container .wunderbyteTableFilter .dropdownMenuButton::after {
@@ -675,16 +675,13 @@ ul.wunderbyterFilterList.wbt-treechildren {
 }
 
 .wunderbyteTableFilter .dropdown-item .form-check-label {
-    color: black;
+    color: inherit;
     white-space: normal;
     word-break: break-all;
 }
 
-
-.wunderbyteTableFilter .dropdown-item:hover .form-check-label,
-.wunderbyteTableFilter .dropdown-item:focus .form-check-label {
-    color: #fff;
-}
+/* The hover/focus colours of an option live in the accessibility section at the end of this file,
+   where background and text colour are set as one pair. */
 
 @media screen and (max-width: 991px) {
     .wunderbyte_table_filter_on .wunderbyte_table_container {
@@ -1077,24 +1074,81 @@ ul.wunderbyterFilterList.wbt-treechildren {
     border-color: #6c757d;
 }
 
-/* Hovering an option turns the label white, which only works as long as the theme paints a
-   dark background on .dropdown-item:hover. In Boost (and everything derived from it without
-   an own dropdown colour) the hover background is #f8f9fa, so the label became white on
-   near-white. Inheriting the colour the theme has chosen for the item itself is correct with
-   every theme. */
+/* Highlight of a filter option while it is hovered or holds the keyboard focus.
+   Background AND text colour are always set together here, and specific enough to win over the
+   theme: a plugin stylesheet is aggregated before the theme's own sheets, so ".dropdown-item:hover"
+   of a theme (Bootstrap 4, Boost, or raw SCSS entered in a theme setting) would otherwise paint one
+   half of the pair and leave the other half from somewhere else. That is how white text on a light
+   grey background came about, and relying on themes to always pair their colours accessibly is not
+   something this component can verify. #1d2125 on #e9ecef is 14.4:1. */
+.wunderbyte_table_container .wunderbyteTableFilter .wunderbyterFilterList .dropdown-item:hover,
+.wunderbyte_table_container .wunderbyteTableFilter .wunderbyterFilterList .dropdown-item:focus,
+.wunderbyte_table_container .wunderbyteTableFilter .wunderbyterFilterList .dropdown-item:focus-within,
+.wunderbyte_table_container .wunderbyteTableFilter .wunderbyterFilterList .dropdown-item.active {
+    background-color: #e9ecef;
+    color: #1d2125;
+}
+
+/* Everything inside the option follows that text colour, so nothing keeps an old colour behind. */
 .wunderbyteTableFilter .dropdown-item:hover .form-check-label,
 .wunderbyteTableFilter .dropdown-item:focus .form-check-label,
-.wunderbyteTableFilter .dropdown-item:focus-within .form-check-label {
+.wunderbyteTableFilter .dropdown-item:focus-within .form-check-label,
+.wunderbyteTableFilter .dropdown-item:hover .filterkeylabel,
+.wunderbyteTableFilter .dropdown-item:focus .filterkeylabel,
+.wunderbyteTableFilter .dropdown-item:focus-within .filterkeylabel,
+.wunderbyteTableFilter .dropdown-item:hover .filtercountlabel,
+.wunderbyteTableFilter .dropdown-item:focus .filtercountlabel,
+.wunderbyteTableFilter .dropdown-item:focus-within .filtercountlabel,
+.wunderbyteTableFilter .dropdown-item:hover .filtercategorykeylabel,
+.wunderbyteTableFilter .dropdown-item:focus .filtercategorykeylabel,
+.wunderbyteTableFilter .dropdown-item:focus-within .filtercategorykeylabel {
     color: inherit;
 }
 
-/* Keyboard focus inside an option must be as visible as hovering it with the mouse. */
-.wunderbyteTableFilter .dropdown-item:focus-within {
-    background-color: rgba(0, 0, 0, 0.075);
+/* The drawn checkbox as well: its fixed grey border and dark blue tick are only guaranteed to work
+   on the white resting background, so on the highlight they follow the text colour and keep their
+   3:1 boundary (SC 1.4.11). */
+.wunderbyteTableFilter .dropdown-item:hover .form-check-label::before,
+.wunderbyteTableFilter .dropdown-item:focus .form-check-label::before,
+.wunderbyteTableFilter .dropdown-item:focus-within .form-check-label::before {
+    border-color: currentColor;
+}
+
+.wunderbyteTableFilter .dropdown-item:hover :checked ~ .form-check-label::after,
+.wunderbyteTableFilter .dropdown-item:focus :checked ~ .form-check-label::after,
+.wunderbyteTableFilter .dropdown-item:focus-within :checked ~ .form-check-label::after {
+    background-color: currentColor;
 }
 
 /* Target size (SC 2.5.8): the option row has to stay grabbable, the invisible checkbox is the
    control that receives the click. */
 .wunderbyte_table_container .wunderbyteTableFilter .wunderbyterFilterList .form-check-input {
     height: 1.5rem;
+}
+
+/* The category row of the hierarchical filter is a list item now (a <span> as a direct child of
+   <ul> was invalid markup). It must not inherit the indentation of an option row. */
+.wunderbyteTableFilter li.wbt-hierarchy-category {
+    padding-left: 0;
+    list-style: none;
+}
+
+/* The options of a category are a nested list now, so they keep list semantics. The list itself
+   must not add another indentation on top of the one the option rows already have. */
+.wunderbyteTableFilter .wbt-hierarchy-values {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+/* Toggle filter: give the switch a colour with enough contrast in both states and a focus ring of
+   its own (the native control is used here, not the drawn substitute checkbox). */
+.wunderbyte_table_container .wunderbyteTableFilter .form-switch input[type="checkbox"].form-check-input {
+    accent-color: #0f3f7a;
+    border: 1px solid #6c757d;
+}
+
+.wunderbyte_table_container .wunderbyteTableFilter .form-switch input[type="checkbox"].form-check-input:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
 }

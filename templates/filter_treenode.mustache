@@ -55,7 +55,10 @@
         ]
     }
 }}
-<ul class="wunderbyterFilterList {{#istoplist}}treehierarchy pt-2 list-group-flush{{/istoplist}}{{^istoplist}}wbt-treechildren{{/istoplist}}"{{#istoplist}} data-moodletype="treelist"{{/istoplist}}>
+{{! On a nested list "key" still resolves to the node this list belongs to, so the sublist can name
+    its parent. Together with the native nesting of the lists a screen reader announces both the
+    level and what the level belongs to. }}
+<ul class="wunderbyterFilterList {{#istoplist}}treehierarchy pt-2 list-group-flush{{/istoplist}}{{^istoplist}}wbt-treechildren{{/istoplist}}"{{#istoplist}} data-moodletype="treelist"{{/istoplist}}{{^istoplist}} aria-label="{{#str}} subitemsof, local_wunderbyte_table, {{key}} {{/str}}"{{/istoplist}}>
     {{#children}}
         <li class="form-check wbt-treenode">
             <input class="filterelement form-check-input wbt-treenode-checkbox" type="checkbox" value="{{value}}" id="{{identifier}}{{columnname}}{{idstring}}" {{checked}} name="{{category}}" data-action="csshide" data-key="{{key}}" data-targetvalue="{{value}}">

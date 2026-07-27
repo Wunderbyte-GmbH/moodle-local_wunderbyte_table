@@ -51,10 +51,10 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I follow "Demo table 4"
     ## Filter panel being hidden by default on this tab
     And I click on ".asidecollapse-demotable_4" "css_element"
-    And I click on ".demotable_4 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
+    And I click on ".demotable_4 [aria-controls^=\"wbtfiltermenu_timecreated\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    When I set the field "Friday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
+    When I set the field "Friday" in the ".demotable_4 [id^=\"id_collapse_timecreated\"]" "css_element" to "checked"
     ##And I wait until the page is ready - does bot work in this case.
     And I wait "2" seconds
     Then I should see "5 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
@@ -65,9 +65,9 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I should see "user8" in the "#demotable_4_r5" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "Friday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to ""
+    And I set the field "Friday" in the ".demotable_4 [id^=\"id_collapse_timecreated\"]" "css_element" to ""
     And I wait until the page is ready
-    And I set the field "Wednesday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
+    And I set the field "Wednesday" in the ".demotable_4 [id^=\"id_collapse_timecreated\"]" "css_element" to "checked"
     And I wait until the page is ready
     And I should see "user10" in the "#demotable_4_r1" "css_element"
     And I should see "user5" in the "#demotable_4_r2" "css_element"
@@ -75,9 +75,9 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And I should see "3 of 15 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "Wednesday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to ""
+    And I set the field "Wednesday" in the ".demotable_4 [id^=\"id_collapse_timecreated\"]" "css_element" to ""
     And I wait until the page is ready
-    And I set the field "Thursday" in the ".demotable_4 #id_collapse_timecreated" "css_element" to "checked"
+    And I set the field "Thursday" in the ".demotable_4 [id^=\"id_collapse_timecreated\"]" "css_element" to "checked"
     And I wait until the page is ready
     And I should see "admin" in the "#demotable_4_r1" "css_element"
     And I should see "guest" in the "#demotable_4_r2" "css_element"
@@ -91,23 +91,23 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     ## Filter panel being hidden by default on this tab
     And I click on ".asidecollapse-demotable_2" "css_element"
     ## We have to hide site's row 1st - - because we do not know "timecreate" for site!
-    And I click on ".demotable_2 [aria-controls=\"id_collapse_fullname\"]" "css_element"
-    And I set the field "Course 1" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I set the field "Course 2" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I set the field "Course 3" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I set the field "Course 4" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I set the field "Course 5" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
-    And I set the field "Course 6" in the ".demotable_2 #id_collapse_fullname" "css_element" to "checked"
+    And I click on ".demotable_2 [aria-controls^=\"wbtfiltermenu_fullname\"]" "css_element"
+    And I set the field "Course 1" in the ".demotable_2 [id^=\"id_collapse_fullname\"]" "css_element" to "checked"
+    And I set the field "Course 2" in the ".demotable_2 [id^=\"id_collapse_fullname\"]" "css_element" to "checked"
+    And I set the field "Course 3" in the ".demotable_2 [id^=\"id_collapse_fullname\"]" "css_element" to "checked"
+    And I set the field "Course 4" in the ".demotable_2 [id^=\"id_collapse_fullname\"]" "css_element" to "checked"
+    And I set the field "Course 5" in the ".demotable_2 [id^=\"id_collapse_fullname\"]" "css_element" to "checked"
+    And I set the field "Course 6" in the ".demotable_2 [id^=\"id_collapse_fullname\"]" "css_element" to "checked"
     And I should see "6 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Close the open filter dropdown - required for a new filter tool.
     ## A click on the aside is not safe here: its center point can land on the still-open
     ## fullname dropdown and uncheck a filter (happens on Moodle 4.5 / Bootstrap 4).
     And I press the escape key
     ## Use hourlist filrer now
-    And I click on ".demotable_2 [aria-controls=\"id_collapse_timecreated\"]" "css_element"
+    And I click on ".demotable_2 [aria-controls^=\"wbtfiltermenu_timecreated\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    When I set the field "04:00 - 05:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
+    When I set the field "04:00 - 05:00" in the ".demotable_2 [id^=\"id_collapse_timecreated\"]" "css_element" to "checked"
     And I wait "2" seconds
     Then I should see "2 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "Course 1" in the "#demotable_2_r1" "css_element"
@@ -115,15 +115,15 @@ Feature: Hours and weekdays filtering functionality of wunderbyte_table works as
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r3']" "xpath_element" should not exist
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "04:00 - 05:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to ""
-    And I set the field "11:00 - 12:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
+    And I set the field "04:00 - 05:00" in the ".demotable_2 [id^=\"id_collapse_timecreated\"]" "css_element" to ""
+    And I set the field "11:00 - 12:00" in the ".demotable_2 [id^=\"id_collapse_timecreated\"]" "css_element" to "checked"
     ## Validate accessibility of page
     And the page should meet accessibility standards
     And I should see "Course 5" in the "#demotable_2_r1" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
     And I should see "1 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
-    And I set the field "11:00 - 12:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to ""
-    And I set the field "23:00 - 24:00" in the ".demotable_2 #id_collapse_timecreated" "css_element" to "checked"
+    And I set the field "11:00 - 12:00" in the ".demotable_2 [id^=\"id_collapse_timecreated\"]" "css_element" to ""
+    And I set the field "23:00 - 24:00" in the ".demotable_2 [id^=\"id_collapse_timecreated\"]" "css_element" to "checked"
     And I should see "Course 6" in the "#demotable_2_r1" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
     And I should see "1 of 7 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"

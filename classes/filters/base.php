@@ -442,6 +442,29 @@ abstract class base {
     }
 
     /**
+     * Turns a free text filter name into a fragment that is safe to use in an HTML id.
+     *
+     * Filter names are entered by the user and may contain spaces, quotes or umlauts. Used verbatim
+     * in an id they produce ids that cannot be addressed by the querySelector calls in filter.js
+     * and they make the label/input association unreliable, which breaks the filter for screen
+     * reader and keyboard users alike.
+     *
+     * @param string $label
+     * @return string
+     */
+    public static function sanitize_idfragment(string $label): string {
+
+        $idfragment = preg_replace('/[^a-zA-Z0-9\-_]/', '_', $label);
+
+        // An id has to start with a letter and must not be empty.
+        if ($idfragment === '' || !preg_match('/^[a-zA-Z]/', $idfragment)) {
+            $idfragment = 'f' . $idfragment;
+        }
+
+        return $idfragment;
+    }
+
+    /**
      * Definition after data callback
      * @return string
      * @throws coding_exception

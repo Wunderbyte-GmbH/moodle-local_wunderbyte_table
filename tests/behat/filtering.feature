@@ -75,28 +75,28 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
     And I should see "guest" in the "#demotable_1_r2" "css_element"
-    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
+    And I click on "[aria-controls^=\"wbtfiltermenu_username\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I should see "admin" in the "#id_collapse_username" "css_element"
-    And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
+    And I should see "admin" in the "[id^=\"id_collapse_username\"]" "css_element"
+    And I set the field "admin" in the "[id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "guest" in the "#id_collapse_username" "css_element" to "checked"
+    And I set the field "guest" in the "[id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "guest" in the "#demotable_1_r2" "css_element"
     ## And "//*[contains(@id, 'Users')]//tr[@id, 'Users_r3']" "xpath_element" should not exist
     And I should see "2 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "admin" in the "#id_collapse_username" "css_element" to ""
+    And I set the field "admin" in the "[id^=\"id_collapse_username\"]" "css_element" to ""
     And I wait "1" seconds
     And I should see "guest" in the "#demotable_1_r1" "css_element"
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
-    And I set the field "guest" in the "#id_collapse_username" "css_element" to ""
+    And I set the field "guest" in the "[id^=\"id_collapse_username\"]" "css_element" to ""
     And I wait "1" seconds
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I clean wbtable cache
@@ -106,12 +106,12 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
+    And I click on "[aria-controls^=\"wbtfiltermenu_username\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "admin" in the "#id_collapse_username" "css_element" to "checked"
+    And I set the field "admin" in the "[id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait "1" seconds
-    And I set the field "user15" in the "#id_collapse_username" "css_element" to "checked"
+    And I set the field "user15" in the "[id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And I should see "user15" in the "#demotable_1_r2" "css_element"
@@ -129,12 +129,12 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    And I click on "[aria-controls=\"id_collapse_department\"]" "css_element"
-    And I should see "first department (11)" in the "#id_collapse_department" "css_element"
-    And I should see "3 (2)" in the "#id_collapse_department" "css_element"
+    And I click on "[aria-controls^=\"wbtfiltermenu_department\"]" "css_element"
+    And I should see "first department (11)" in the "[id^=\"id_collapse_department\"]" "css_element"
+    And I should see "3 (2)" in the "[id^=\"id_collapse_department\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "first department" in the "#id_collapse_department" "css_element" to "checked"
+    And I set the field "first department" in the "[id^=\"id_collapse_department\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "11 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Validate accessibility of page
@@ -145,8 +145,8 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I press the escape key
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
-    And I set the field "user1" in the "#id_collapse_username" "css_element" to "checked"
+    And I click on "[aria-controls^=\"wbtfiltermenu_username\"]" "css_element"
+    And I set the field "user1" in the "[id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "user1" in the "#demotable_1_r1" "css_element"
     And I should see "1 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
@@ -164,29 +164,29 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     Given I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    And I click on "[aria-controls=\"id_collapse_username\"]" "css_element"
+    And I click on "[aria-controls^=\"wbtfiltermenu_username\"]" "css_element"
     Then "//input[@name='filtersearch-username']" "xpath_element" should exist
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "filtersearch-username" in the "#id_collapse_username" "css_element" to "user15"
-    And I should not see "user14" in the "#id_collapse_username" "css_element"
-    And I should see "user15" in the "#id_collapse_username" "css_element"
-    And I should not see "user16" in the "#id_collapse_username" "css_element"
+    And I set the field "filtersearch-username" in the "[id^=\"id_collapse_username\"]" "css_element" to "user15"
+    And I should not see "user14" in the "[id^=\"id_collapse_username\"]" "css_element"
+    And I should see "user15" in the "[id^=\"id_collapse_username\"]" "css_element"
+    And I should not see "user16" in the "[id^=\"id_collapse_username\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "user15" in the "#id_collapse_username" "css_element" to "checked"
+    And I set the field "user15" in the "[id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "user15" in the "#demotable_1_r1" "css_element"
     And I should see "1 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
     ## Remove filter and search
-    And I set the field "user15" in the "#id_collapse_username" "css_element" to ""
-    And I set the field "filtersearch-username" in the "#id_collapse_username" "css_element" to ""
+    And I set the field "user15" in the "[id^=\"id_collapse_username\"]" "css_element" to ""
+    And I set the field "filtersearch-username" in the "[id^=\"id_collapse_username\"]" "css_element" to ""
     And I wait "1" seconds
-    And I should see "user14" in the "#id_collapse_username" "css_element"
-    And I should see "user15" in the "#id_collapse_username" "css_element"
-    And I should see "user16" in the "#id_collapse_username" "css_element"
+    And I should see "user14" in the "[id^=\"id_collapse_username\"]" "css_element"
+    And I should see "user15" in the "[id^=\"id_collapse_username\"]" "css_element"
+    And I should see "user16" in the "[id^=\"id_collapse_username\"]" "css_element"
     And I should see "24 of 24 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I clean wbtable cache
 
@@ -209,9 +209,9 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     ## Validate accessibility of page
     And the page should meet accessibility standards
     And I should see "Teacher" in the "#demotable_4_r3" "css_element"
-    And I click on ".tab-pane.active [aria-controls=\"id_collapse_firstname\"]" "css_element"
-    And I should see "Teacher" in the ".tab-pane.active #id_collapse_firstname" "css_element"
-    And I set the field "Teacher" in the ".tab-pane.active #id_collapse_firstname" "css_element" to "checked"
+    And I click on ".tab-pane.active [aria-controls^=\"wbtfiltermenu_firstname\"]" "css_element"
+    And I should see "Teacher" in the ".tab-pane.active [id^=\"id_collapse_firstname\"]" "css_element"
+    And I set the field "Teacher" in the ".tab-pane.active [id^=\"id_collapse_firstname\"]" "css_element" to "checked"
     And I wait until the page is ready
     And I should see "Teacher" in the "#demotable_4_r1" "css_element"
     And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r2']" "xpath_element" should not exist
@@ -221,11 +221,11 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     ## Filter panel being hidden by default on the Users tab
     And I follow "Demo table 1"
     And I should see "guest" in the "#demotable_1_r2" "css_element"
-    And I click on ".tab-pane.active [aria-controls=\"id_collapse_username\"]" "css_element"
+    And I click on ".tab-pane.active [aria-controls^=\"wbtfiltermenu_username\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I should see "admin" in the ".tab-pane.active #id_collapse_username" "css_element"
-    And I set the field "admin" in the ".tab-pane.active #id_collapse_username" "css_element" to "checked"
+    And I should see "admin" in the ".tab-pane.active [id^=\"id_collapse_username\"]" "css_element"
+    And I set the field "admin" in the ".tab-pane.active [id^=\"id_collapse_username\"]" "css_element" to "checked"
     And I wait until the page is ready
     And I should see "admin" in the "#demotable_1_r1" "css_element"
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r2']" "xpath_element" should not exist
@@ -236,11 +236,11 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I follow "Demo table 2"
     And I click on ".asidecollapse-demotable_2" "css_element"
     And I should see "Course 1" in the "#demotable_2_r2" "css_element"
-    And I click on ".tab-pane.active [aria-controls=\"id_collapse_fullname\"]" "css_element"
-    And I should see "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element"
+    And I click on ".tab-pane.active [aria-controls^=\"wbtfiltermenu_fullname\"]" "css_element"
+    And I should see "Course 1" in the ".tab-pane.active [id^=\"id_collapse_fullname\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "Course 1" in the ".tab-pane.active #id_collapse_fullname" "css_element" to "checked"
+    And I set the field "Course 1" in the ".tab-pane.active [id^=\"id_collapse_fullname\"]" "css_element" to "checked"
     And I wait until the page is ready
     And I should see "Course 1" in the "#demotable_2_r1" "css_element"
     And "//*[contains(@id, 'demotable_2')]//tr[@id, 'demotable_2_r2']" "xpath_element" should not exist
@@ -249,9 +249,9 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     ## Filter Table 3 - Course Modules
     And I follow "Demo table 3"
     And I should see "PAGE1" in the "#demotable_3_r1" "css_element"
-    And I click on ".tab-pane.active [aria-controls=\"id_collapse_idnumber\"]" "css_element"
-    And I should see "URL1 (1)" in the ".tab-pane.active #id_collapse_idnumber" "css_element"
-    And I set the field "URL1 (1)" in the ".tab-pane.active #id_collapse_idnumber" "css_element" to "checked"
+    And I click on ".tab-pane.active [aria-controls^=\"wbtfiltermenu_idnumber\"]" "css_element"
+    And I should see "URL1 (1)" in the ".tab-pane.active [id^=\"id_collapse_idnumber\"]" "css_element"
+    And I set the field "URL1 (1)" in the ".tab-pane.active [id^=\"id_collapse_idnumber\"]" "css_element" to "checked"
     And I wait until the page is ready
     And I should see "URL1" in the "#demotable_3_r1" "css_element"
     And "//*[contains(@id, 'demotable_3')]//tr[@id, 'demotable_3_r2']" "xpath_element" should not exist
@@ -268,11 +268,11 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I follow "Demo table 4"
     And I click on ".asidecollapse-demotable_4" "css_element"
     And I should see "Teacher" in the "#demotable_4_r3" "css_element"
-    And I click on ".tab-pane.active [aria-controls=\"id_collapse_username\"]" "css_element"
+    And I click on ".tab-pane.active [aria-controls^=\"wbtfiltermenu_username\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    ##And I set the field "From" in the "#id_collapse_username" "css_element" to "1"
-    ##And I set the field "To" in the "#id_collapse_username" "css_element" to "3"
+    ##And I set the field "From" in the "[id^=\"id_collapse_username\"]" "css_element" to "1"
+    ##And I set the field "To" in the "[id^=\"id_collapse_username\"]" "css_element" to "3"
     ##And I set the field "username" in the ".intrangeform input[data-intrangeelement=\"intrangeelement-checkbox\"]" "css_element" to "checked"
     And I set the field with xpath "//input[contains(@id, 'intrangefilter_intrange-start')]" to "1"
     And I set the field with xpath "//input[contains(@id, 'intrangefilter_intrange-end')]" to "3"
@@ -284,7 +284,7 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And "//*[contains(@id, 'demotable_4')]//tr[@id, 'demotable_4_r5']" "xpath_element" should not exist
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    ## And I set the field "To" in the "#id_collapse_username" "css_element" to "2"
+    ## And I set the field "To" in the "[id^=\"id_collapse_username\"]" "css_element" to "2"
     And I set the field with xpath "//input[contains(@id, 'intrangefilter_intrange-end')]" to "2"
     And I wait until the page is ready
     And I should see "user2" in the "#demotable_4_r3" "css_element"
@@ -308,23 +308,23 @@ Feature: Filtering functionality of wunderbyte_table works as expected
     And I log in as "admin"
     When I visit "/local/wunderbyte_table/demo.php"
     And I follow "Demo table 1"
-    And I click on "[aria-controls=\"id_collapse_supervisor\"]" "css_element"
-    And I should see "11111 (3)" in the "#id_collapse_supervisor" "css_element"
-    And I should see "22222 (2)" in the "#id_collapse_supervisor" "css_element"
+    And I click on "[aria-controls^=\"wbtfiltermenu_supervisor\"]" "css_element"
+    And I should see "11111 (3)" in the "[id^=\"id_collapse_supervisor\"]" "css_element"
+    And I should see "22222 (2)" in the "[id^=\"id_collapse_supervisor\"]" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "11111" in the "#id_collapse_supervisor" "css_element" to "checked"
+    And I set the field "11111" in the "[id^=\"id_collapse_supervisor\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "3 of 29 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "super1" in the "#demotable_1_r1" "css_element"
     And "//*[contains(@id, 'demotable_1')]//tr[@id, 'demotable_1_r4']" "xpath_element" should not exist
     ## Checking a second value extends the filter (OR condition).
-    And I set the field "22222" in the "#id_collapse_supervisor" "css_element" to "checked"
+    And I set the field "22222" in the "[id^=\"id_collapse_supervisor\"]" "css_element" to "checked"
     And I wait "1" seconds
     And I should see "5 of 29 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     ## Validate accessibility of page
     And the page should meet accessibility standards
-    And I set the field "11111" in the "#id_collapse_supervisor" "css_element" to ""
+    And I set the field "11111" in the "[id^=\"id_collapse_supervisor\"]" "css_element" to ""
     And I wait "1" seconds
     And I should see "2 of 29 records found" in the ".tab-pane.active .wb-records-count-label" "css_element"
     And I should see "super4" in the "#demotable_1_r1" "css_element"

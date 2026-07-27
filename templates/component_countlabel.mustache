@@ -35,7 +35,8 @@
         {{countlabelstring}}
         {{#filtercount}}
             {{filtercount}}
-            <a class="reset-filter-button" role="button">{{#str}} showallrecords, local_wunderbyte_table{{/str}}</a>
+            {{! A real button, not an <a> without href: the latter is not reachable by keyboard at all. }}
+            <button type="button" class="btn btn-link p-0 align-baseline reset-filter-button">{{#str}} showallrecords, local_wunderbyte_table{{/str}}</button>
         {{/filtercount}}
     </div>
 {{/countlabel}}

@@ -108,10 +108,21 @@ export function initializeFilterSearch(containerselector) {
                         listelement.setAttribute('hidden', '');
                         // For hierarchy filter. Only do once for current parent.
                     }
+                    // In the hierarchical filter the options live inside a collapsible category,
+                    // which has to be opened for a match. closest() finds it regardless of how
+                    // many elements sit between the option and the collapse.
+                    const collapsible = listelement.closest('.collapse') ?? listelement.parentNode.parentNode;
                     if (match === true) {
-                        listelement.parentNode.parentNode.classList.add('show');
+                        collapsible.classList.add('show');
                     } else {
-                        listelement.parentNode.parentNode.classList.remove('show');
+                        collapsible.classList.remove('show');
+                    }
+                    // Keep the state of the category button in sync with what the search opened.
+                    if (collapsible.id) {
+                        const controller = document.querySelector('[aria-controls="' + collapsible.id + '"]');
+                        if (controller) {
+                            controller.setAttribute('aria-expanded', match === true ? 'true' : 'false');
+                        }
                     }
                 });
                 return;

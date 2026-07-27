@@ -143,9 +143,6 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
   }
   let button = container.querySelector(".reset-filter-button");
 
-  // eslint-disable-next-line no-console
-  console.log(button);
-
   if (!button) {
     return;
   }
@@ -291,7 +288,10 @@ export function getDates(e, selector, idstring) {
   let name = e.target.dataset.columnname;
   let filtercontainer = e.target.closest(".datepickerform");
   let filtername = e.target.dataset.filtername;
-  let filtercheckbox = filtercontainer.querySelector('input[type="checkbox"][id^="' + filtername + '"][name="' + name + '"]');
+  // The filter name is free text and may contain spaces or quotes, which would break this
+  // selector. The ids are built from the sanitized variant, which is carried in data-filterid.
+  let filterid = e.target.dataset.filterid ?? filtername;
+  let filtercheckbox = filtercontainer.querySelector('input[type="checkbox"][id^="' + filterid + '"][name="' + name + '"]');
 
   let dates = {};
   if (filtercheckbox.dataset.timespan === "true") {
