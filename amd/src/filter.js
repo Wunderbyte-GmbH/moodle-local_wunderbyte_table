@@ -25,9 +25,14 @@ import {getSortSelection} from 'local_wunderbyte_table/sort';
 import {callLoadData, SELECTORS} from 'local_wunderbyte_table/init';
 import Templates from 'core/templates';
 import {debounce} from 'core/utils';
+import {get_string as getString} from 'core/str';
 
 // These variables are specific to the filter.
 var checked = {};
+
+// Only a reload the user triggered via the filter is announced in the live region, the initial
+// load and reloads from elsewhere (pagination, sorting, cron reloads) stay silent.
+var announcefilterchange = {};
 
 /**
  * Initialize Checkboxes.
@@ -182,6 +187,14 @@ export function initializeResetFilterButton(selector, idstring, encodedtable) {
  */
 export function toggleFilterelement(e, selector, idstring, encodedtable) {
 
+  // A checkbox reports every state change via its change event. Toggling it with the keyboard
+  // (SPACE natively, ENTER via filterkeyboard.js) fires a keyup on top of that, which would run
+  // the whole reload a second time. The keyup listener is only needed for the text based filter
+  // elements, where every keystroke has to be picked up.
+  if (e.type === 'keyup' && e.target.type === 'checkbox') {
+    return;
+  }
+
   e.stopPropagation();
   e.preventDefault();
 
@@ -240,6 +253,9 @@ function handleParentCheckbox(checkbox) {
  *
  */
 function triggerReload(idstring, encodedtable) {
+      // The result of this reload is announced to screen readers, see initializeFilterStatus.
+    announcefilterchange[idstring] = true;
+
       // Reload the filtered elements via ajax.
     const filterobjects = getFilterObjects(idstring);
     const searchstring = getSearchInput(idstring);
@@ -768,6 +784,58 @@ export const renderFilter = (filterjson, idstring, encodedtable) => {
 };
 
 /**
+ * Announce the number of records a filter change produced (WCAG 2.1 SC 4.1.3 Status Messages).
+ *
+ * The table is replaced completely on every reload, so a live region inside it would be a new node
+ * each time and never announced. Instead the filter template holds a permanent live region and the
+ * count label of the freshly rendered table is copied into it once the reload has finished.
+ *
+ * @param {string} selector
+ * @param {string} idstring
+ */
+export function initializeFilterStatus(selector, idstring) {
+
+  const container = document.querySelector(selector);
+  if (!container) {
+    return;
+  }
+
+  const table = container.querySelector('#a' + idstring);
+  if (!table || table.dataset.statusobserved) {
+    return;
+  }
+
+  const observer = new MutationObserver(debounce(() => {
+
+    if (!announcefilterchange[idstring]) {
+      return;
+    }
+    announcefilterchange[idstring] = false;
+
+    const status = container.querySelector('.wbt-filter-status');
+    const countlabel = container.querySelector('.wb-records-count-label');
+    if (!status || !countlabel) {
+      return;
+    }
+
+    // The "show all records" link inside the label is a control, not part of the message.
+    const message = Array.from(countlabel.childNodes)
+      .filter(node => !(node.nodeType === Node.ELEMENT_NODE && node.classList.contains('reset-filter-button')))
+      .map(node => node.textContent)
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (message.length) {
+      status.textContent = message;
+    }
+  }, 500));
+
+  observer.observe(table, {childList: true, subtree: true});
+  table.dataset.statusobserved = true;
+}
+
+/**
  * Update Filter counter.
  *
  * @param {*} name
@@ -810,6 +878,24 @@ function updateFilterCounter(name, selector, idstring) {
       labelElement.classList.add('hidden');
     }
     labelElement.textContent = counter;
+  }
+
+  // The badge itself is aria-hidden, a bare number would be meaningless when read out. The screen
+  // reader gets the same information as a full sentence in the button's accessible name instead.
+  const srElement = wbTable.querySelector('[data-ident=' + name + '] span.filtercountersr');
+
+  if (srElement) {
+    if (counter > 0) {
+      getString('filteractivecount', 'local_wunderbyte_table', counter).then(text => {
+        srElement.textContent = text;
+        return true;
+      }).catch(e => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      });
+    } else {
+      srElement.textContent = '';
+    }
   }
 
   const totalfiltercounter = checked[idstring] ? Object.keys(checked[idstring]).length : 0;

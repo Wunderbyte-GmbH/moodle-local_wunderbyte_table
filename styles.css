@@ -1032,3 +1032,69 @@ ul.wunderbyterFilterList.wbt-treechildren {
     margin-top: 15px;
     margin-bottom: 10px;
 }
+
+/* ---------------------------------------------------------------------------
+   Accessibility of the filters (WCAG 2.1 AA).
+   --------------------------------------------------------------------------- */
+
+/* Text that only exists for screen readers. Defined here instead of relying on the
+   theme, because "sr-only" (Bootstrap 4) and "visually-hidden" (Bootstrap 5) are not
+   available in every Moodle/theme combination this plugin runs in. */
+.wbt-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* The rule ".wunderbyteTableFilter button" above removes outline and box-shadow from every
+   button of the filter, which leaves keyboard users without any focus indicator
+   (SC 2.4.7 Focus Visible). Give it back for keyboard focus only, so the mouse behaviour
+   stays unchanged. */
+.wunderbyte_table_container .wunderbyteTableFilter button:focus-visible,
+.wunderbyte_table_container .wunderbyteTableFilter .dropdownMenuButton:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* The native checkbox of a filter option is drawn with opacity 0 and replaced by the two
+   pseudo elements of its label, so its own focus ring is invisible as well. The ring is
+   drawn on the substitute checkbox instead. */
+.wunderbyteTableFilter .form-check-input:focus-visible ~ .form-check-label::before {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* Border of the substitute checkbox: #e7e7ec on white is a contrast of 1.1:1, far below the
+   3:1 that SC 1.4.11 (Non-text Contrast) requires for the boundary of a form control.
+   #6c757d reaches 4.7:1 on white. */
+.wunderbyteTableFilter .form-check-label::before {
+    border-color: #6c757d;
+}
+
+/* Hovering an option turns the label white, which only works as long as the theme paints a
+   dark background on .dropdown-item:hover. In Boost (and everything derived from it without
+   an own dropdown colour) the hover background is #f8f9fa, so the label became white on
+   near-white. Inheriting the colour the theme has chosen for the item itself is correct with
+   every theme. */
+.wunderbyteTableFilter .dropdown-item:hover .form-check-label,
+.wunderbyteTableFilter .dropdown-item:focus .form-check-label,
+.wunderbyteTableFilter .dropdown-item:focus-within .form-check-label {
+    color: inherit;
+}
+
+/* Keyboard focus inside an option must be as visible as hovering it with the mouse. */
+.wunderbyteTableFilter .dropdown-item:focus-within {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+/* Target size (SC 2.5.8): the option row has to stay grabbable, the invisible checkbox is the
+   control that receives the click. */
+.wunderbyte_table_container .wunderbyteTableFilter .wunderbyterFilterList .form-check-input {
+    height: 1.5rem;
+}

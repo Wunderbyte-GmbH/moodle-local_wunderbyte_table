@@ -158,6 +158,10 @@
 
 {{#filter}}
     <div class="wunderbyteTableFilter row" tabindex="-1">
+    {{! Persistent live region: the table itself is replaced on every reload, so a status message
+        placed inside it would never be announced. This node survives the reloads and is filled
+        with the record count by filter.js whenever the user changes a filter. }}
+    <div class="wbt-filter-status wbt-sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
     {{#categories}}
     <div class="col dropdowncontainer dd wbtfilter_{{columnname}}">
     {{#toggle}}
@@ -177,15 +181,15 @@
         {{^expanded}}
             aria-expanded="false"
         {{/expanded}}
-    aria-controls="id_collapse_{{columnname}}" class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{columnname}}" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true">
-        {{name}} <span class="filtercounter badge bg-light text-dark {{^filtercounter}}hidden{{/filtercounter}}">{{filtercounter}}</span>
+    id="wbtfilterbutton_{{columnname}}{{idstring}}" aria-controls="wbtfiltermenu_{{columnname}}{{idstring}}" class="btn dropdown-toggle dropdownMenuButton" type="button" data-ident="{{columnname}}" data-toggle="dropdown" data-bs-toggle="dropdown">
+        {{name}} <span class="filtercounter badge bg-light text-dark {{^filtercounter}}hidden{{/filtercounter}}" aria-hidden="true">{{filtercounter}}</span><span class="filtercountersr wbt-sr-only">{{#filtercounter}}{{#str}} filteractivecount, local_wunderbyte_table, {{filtercounter}} {{/str}}{{/filtercounter}}</span>
     </button>
-    <div class="dropdown-menu">
-       <div class="mt-2 ms-2 me-2 {{show}}" id="id_collapse_{{columnname}}">
-           <label class="ps-4 labelsearch">
+    <div class="dropdown-menu" id="wbtfiltermenu_{{columnname}}{{idstring}}" role="group" aria-labelledby="wbtfilterbutton_{{columnname}}{{idstring}}">
+       <div class="mt-2 ms-2 me-2 {{show}}" id="id_collapse_{{columnname}}{{idstring}}">
+           <label class="ps-4 labelsearch" for="filtersearch_{{columnname}}{{idstring}}">
                 <span class="small">{{ name }}</span>
             </label>
-            <input class="search form-control mb-2 filtersearch" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" hidden>
+            <input class="search form-control mb-2 filtersearch" id="filtersearch_{{columnname}}{{idstring}}" name="filtersearch-{{columnname}}" placeholder="{{#str}}search, core{{/str}}" aria-label="{{#str}} filtersearchlabel, local_wunderbyte_table, {{name}} {{/str}}" autocomplete="off" hidden>
                 {{#default}}
                     <ul class="wunderbyterFilterList pt-2 list-group-flush">
                         {{#values}}
