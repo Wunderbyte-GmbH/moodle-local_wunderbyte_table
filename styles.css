@@ -231,10 +231,12 @@
     padding-left: 16px;
 }
 
+/* Show all filters without scrollbar: no max-height (was 20.5rem), and therefore no
+   "overflow-y: auto" either. A scroll container would clip an expanded sub-filter that is
+   taller or wider than the list -- note that "overflow-y: auto" also makes "overflow-x"
+   compute to "auto", so it clipped in both directions. */
 .wunderbyteTableFilter ul {
-    overflow-y: auto;
-    /* Show all filters without scrollbar. */
-    /* max-height: 20.5rem; */
+    overflow: visible;
 }
 
 .wunderbyteTableFilter .collapse-accordion-toggle[aria-expanded=true] span svg:not(:first-child) {
@@ -331,10 +333,12 @@
     font-size: large;
 }
 
+/* Show all filters without scrollbar: no max-height (was 20.5rem), and therefore no
+   "overflow-y: auto" either. A scroll container would clip an expanded sub-filter that is
+   taller or wider than the list -- note that "overflow-y: auto" also makes "overflow-x"
+   compute to "auto", so it clipped in both directions. */
 .wunderbyteTableFilter ul {
-    overflow-y: auto;
-    /* Show all filters without scrollbar. */
-    /* max-height: 20.5rem; */
+    overflow: visible;
 }
 
 .wunderbyteTableFilter .collapse-accordion-toggle[aria-expanded=true] span svg:not(:first-child) {
@@ -1151,4 +1155,29 @@ ul.wunderbyterFilterList.wbt-treechildren {
 .wunderbyte_table_container .wunderbyteTableFilter .form-switch input[type="checkbox"].form-check-input:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Overflow of the expanded filters.
+
+   An expanded filter (time filter, hierarchy, datepicker) is regularly bigger than the
+   filter column it sits in. Its menu is positioned absolutely and therefore has to be
+   allowed to leave its container, otherwise it is cut off.
+
+   Moodle wraps the output in ".no-overflow", which core sets to "overflow: auto" -- that
+   is the clipping container. Core solves this the same way for the participants table
+   (#participantsform .no-overflow), mod_booking does it for its view page. Scoped via
+   :has() so only wrappers actually containing a wunderbyte table are affected.
+   --------------------------------------------------------------------------- */
+.no-overflow:has(.wunderbyte_table_container) {
+    overflow: visible;
+}
+
+.wunderbyte_table_container,
+.wunderbyte_table_container aside,
+.wunderbyte_table_container .wunderbyteTableFilter,
+.wunderbyte_table_container .dropdowncontainer,
+.wunderbyte_table_container .wunderbyteTableFilter .dropdown,
+.wunderbyte_table_container .wunderbyteTableFilter .dropdown-menu {
+    overflow: visible;
 }
