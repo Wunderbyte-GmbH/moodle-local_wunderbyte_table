@@ -1,3 +1,7 @@
+## Version 3.2.9 (2026073000)
+* Improvement: Accessibility improvements of wunderbyte table filters.
+* Bugfix: Fix overflow bug of filters.
+
 ## Version 3.2.8 (2026072400)
 * Bugfix: The bundled PhpWord wrote inline line breaks (e.g. from <br> in HTML) as a bare <w:br/> directly inside the paragraph - schema-invalid OOXML that Microsoft Word silently drops (dates in the mod_booking sign-in sheet stuck together on one line). The break is now wrapped in a run (<w:r><w:br/></w:r>), as current upstream PHPWord does.
 
