@@ -6,8 +6,6 @@ jobs:
   ci:
     uses: Wunderbyte-GmbH/catalyst-moodle-workflows/.github/workflows/ci.yml@main
     with:
-      min_php: '7.4'
-
       mustache_ignore_names: 'twtable_list_row.mustache,twtable_cards_row.mustache,component_toggle.mustache'
 
       workarounds: |
