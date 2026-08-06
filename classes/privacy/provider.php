@@ -59,7 +59,7 @@ class provider implements core_userlist_provider, core_user_data_provider, metad
                         'userid' => 'privacy:metadata:local_wunderbyte_table:userid',
                         'page' => 'privacy:metadata:local_wunderbyte_table:page',
                         'jsonstring' => 'privacy:metadata:local_wunderbyte_table:jsonstring',
-                        'sql' => 'privacy:metadata:local_wunderbyte_table:sql',
+                        'sqlquery' => 'privacy:metadata:local_wunderbyte_table:sqlquery',
                         'usermodified' => 'privacy:metadata:local_wunderbyte_table:usermodified',
                         'timecreated' => 'privacy:metadata:local_wunderbyte_table:timecreated',
                         'timemodified' => 'privacy:metadata:local_wunderbyte_table:timemodified',

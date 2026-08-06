@@ -13,7 +13,7 @@
                 <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="page" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="jsonstring" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-                <FIELD NAME="sql" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="sqlquery" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The sql the cache key hash is built from."/>
                 <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
                 <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
                 <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -23,7 +23,7 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
             </KEYS>
             <INDEXES>
-                <INDEX NAME="hash-userid" UNIQUE="false" FIELDS="hash, userid"/>
+                <INDEX NAME="hash" UNIQUE="true" FIELDS="hash"/>
             </INDEXES>
         </TABLE>
     </TABLES>

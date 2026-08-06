@@ -108,6 +108,52 @@ function xmldb_local_wunderbyte_table_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024042600, 'local', 'wunderbyte_table');
     }
 
+    if ($oldversion < 2026073001) {
+        // The logfiltercaches debug log deduplicates on the hash now: merge the
+        // counts of duplicate rows into the oldest row per hash, then replace
+        // the useless hash-userid index with a unique hash index. The sql column
+        // is renamed to sqlquery: SQL is a reserved word on MariaDB and the DML
+        // layer does not quote column names in inserts, so the column could
+        // never be written.
+        $table = new xmldb_table('local_wunderbyte_table');
+
+        $sqlfield = new xmldb_field('sql', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        if ($dbman->field_exists($table, $sqlfield)) {
+            $dbman->rename_field($table, $sqlfield, 'sqlquery');
+        }
+
+        $duplicatehashes = $DB->get_records_sql(
+            "SELECT hash
+               FROM {local_wunderbyte_table}
+              WHERE hash IS NOT NULL
+           GROUP BY hash
+             HAVING COUNT(*) > 1"
+        );
+        foreach ($duplicatehashes as $duplicate) {
+            $rows = $DB->get_records('local_wunderbyte_table', ['hash' => $duplicate->hash], 'id ASC');
+            $keep = array_shift($rows);
+            $totalcount = (int) $keep->count;
+            foreach ($rows as $row) {
+                $totalcount += (int) $row->count;
+                $DB->delete_records('local_wunderbyte_table', ['id' => $row->id]);
+            }
+            $keep->count = $totalcount;
+            $keep->timemodified = time();
+            $DB->update_record('local_wunderbyte_table', $keep);
+        }
+
+        $oldindex = new xmldb_index('hash-userid', XMLDB_INDEX_NOTUNIQUE, ['hash', 'userid']);
+        if ($dbman->index_exists($table, $oldindex)) {
+            $dbman->drop_index($table, $oldindex);
+        }
+        $newindex = new xmldb_index('hash', XMLDB_INDEX_UNIQUE, ['hash']);
+        if (!$dbman->index_exists($table, $newindex)) {
+            $dbman->add_index($table, $newindex);
+        }
+
+        upgrade_plugin_savepoint(true, 2026073001, 'local', 'wunderbyte_table');
+    }
+
     // For further information please read {@link https://docs.moodle.org/dev/Upgrade_API}.
     //
     // You will also have to create the db/install.xml file by using the XMLDB Editor.

@@ -1323,19 +1323,7 @@ class wunderbyte_table extends table_sql {
                 get_config('local_wunderbyte_table', 'logfiltercaches')
                 && (count($this->rawdata) > 0)
             ) {
-                if (
-                    $record = $DB->get_record(
-                        'local_wunderbyte_table',
-                        ['hash' => $cachekey],
-                        'id, count'
-                    )
-                ) {
-                    $count = $record->count + 1;
-                    unset($record->count);
-                    $record->count = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
-                    $record->timemodified = time();
-                    $DB->update_record('local_wunderbyte_table', $record);
-                }
+                $this->log_cachekey_hit($cachekey);
             }
         } else {
             // If not, we query as usual.
@@ -1363,43 +1351,7 @@ class wunderbyte_table extends table_sql {
                 if (count($this->rawdata) > 0) {
                     $cache->set($cachekey, $this->rawdata);
                     if (get_config('local_wunderbyte_table', 'logfiltercaches')) {
-                        $sql = $this->get_sql_for_cachekey();
-
-                        // For testing, we save the filter settings at this point.
-                        $url = $PAGE->url->out();
-                        $now = time();
-                        $data = (object)[
-                            'hash' => $cachekey,
-                            'tablehash' => $this->tablecachehash,
-                            'idstring' => $this->idstring,
-                            'userid' => 0,
-                            'page' => (string) $this->context->id,
-                            'jsonstring' => json_encode($this->sql),
-                            '\'sql\'' => $sql, // SQL is a reserved keyword in MariaDB, so use quotes.
-                            'usermodified' => (int) $USER->id,
-                            'timecreated' => $now,
-                            'timemodified' => $now,
-                            'count' => 1, // COUNT is a reserved keyword in MariaDB, so use quotes.
-                        ];
-                        if (
-                            $record = $DB->get_record(
-                                'local_wunderbyte_table',
-                                [
-                                    'hash' => $cachekey,
-                                    'page' => $this->context->id,
-                                ],
-                                'id, count'
-                            )
-                        ) { // COUNT is a reserved keyword in MariaDB, so use quotes.
-                            $count = $record->count + 1;
-                            unset($record->count);
-                            $record->count = $count; // COUNT is a reserved keyword in MariaDB, so use quotes.
-                            $record->timemodified = time();
-                            $DB->update_record('local_wunderbyte_table', $record);
-                            $dontinsert = true;
-                        } else {
-                            $DB->insert_record('local_wunderbyte_table', $data);
-                        }
+                        $this->log_cachekey_insert($cachekey);
                     }
                 }
             }
@@ -1408,6 +1360,67 @@ class wunderbyte_table extends table_sql {
                 $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
                 $this->set_pagination_to_cache($cachekey);
             }
+        }
+    }
+
+    /**
+     * Debug logging (logfiltercaches): count a cache hit for the given key with
+     * a single atomic increment, so parallel requests cannot lose counts.
+     *
+     * @param string $cachekey
+     * @return void
+     */
+    private function log_cachekey_hit(string $cachekey): void {
+        global $DB;
+
+        $DB->execute(
+            "UPDATE {local_wunderbyte_table}
+                SET count = count + 1,
+                    timemodified = :timemodified
+              WHERE hash = :hash",
+            [
+                'timemodified' => time(),
+                'hash' => $cachekey,
+            ]
+        );
+    }
+
+    /**
+     * Debug logging (logfiltercaches): record a cache miss for the given key.
+     * Inserts the log row - including the actual SQL, that is the purpose of the
+     * feature - or counts up when the key is already known. A parallel insert of
+     * the same hash is caught through the unique index and counted as a hit.
+     *
+     * @param string $cachekey
+     * @return void
+     */
+    private function log_cachekey_insert(string $cachekey): void {
+        global $DB, $PAGE, $USER;
+
+        if ($DB->record_exists('local_wunderbyte_table', ['hash' => $cachekey])) {
+            $this->log_cachekey_hit($cachekey);
+            return;
+        }
+
+        $now = time();
+        $data = (object) [
+            'hash' => $cachekey,
+            'tablehash' => $this->tablecachehash,
+            'idstring' => $this->idstring,
+            'userid' => 0,
+            'page' => $PAGE->has_set_url() ? substr($PAGE->url->out(false), 0, 255) : '',
+            'jsonstring' => json_encode($this->sql),
+            'sqlquery' => $this->get_sql_for_cachekey(),
+            'usermodified' => (int) $USER->id,
+            'timecreated' => $now,
+            'timemodified' => $now,
+            'count' => 1,
+        ];
+        try {
+            $DB->insert_record('local_wunderbyte_table', $data);
+        } catch (\dml_exception $e) {
+            // A parallel request logged the same hash first (unique index).
+            $this->log_cachekey_hit($cachekey);
         }
     }
 
