@@ -124,6 +124,28 @@ export function wbTableRowReload(element) {
 }
 
 /**
+ * Decide whether an expired table cache (errorcode tablecacheexpired) may trigger
+ * an automatic page reload. Allows at most one reload per minute (tracked in
+ * sessionStorage), so a cache store that loses entries immediately again cannot
+ * cause a reload loop.
+ * @returns {bool} true if the page may be reloaded now
+ */
+export function expiredReloadAllowed() {
+    const guardkey = 'wbtable_expiredreload';
+    try {
+        const lastreload = parseInt(sessionStorage.getItem(guardkey) ?? '0', 10);
+        if (Date.now() - lastreload < 60000) {
+            return false;
+        }
+        sessionStorage.setItem(guardkey, String(Date.now()));
+        return true;
+    } catch (e) {
+        // No sessionStorage (e.g. blocked by the browser): reloading could loop, so don't.
+        return false;
+    }
+}
+
+/**
  * Reload all other tables on the same page.
  *
  * @param {null|bool} scrollToTabletop

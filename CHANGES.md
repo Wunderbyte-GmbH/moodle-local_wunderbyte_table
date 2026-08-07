@@ -1,3 +1,5 @@
+* Bugfix: When the encodedtables cache was purged while a page was open (e.g. mod_booking's midnight purge of the day-bucketed table caches, an instance edit or an admin cache purge), the next table interaction failed with the coding error "Expected instance of wunderbyte_table, got boolean" printed below the table. The webservices now throw a proper moodle_exception (errorcode tablecacheexpired) and the JS reacts with a one-off automatic page reload (loop-guarded via sessionStorage), which re-renders and re-caches the table - users no longer see an error at all. Also covers action buttons and the download endpoint.
+
 ## Version 3.3.0 (2026081000)
 * Improvement: Add support for Moodle 5.2.
 * Improvement: Better checkbox layout.

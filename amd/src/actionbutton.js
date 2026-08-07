@@ -22,7 +22,7 @@ import ModalSaveCancel from 'core/modal_save_cancel';
 import ModalEvents from 'core/modal_events';
 import Ajax from 'core/ajax';
 import {showNotification} from 'local_wunderbyte_table/notifications';
-import {reloadAllTables} from 'local_wunderbyte_table/reload';
+import {reloadAllTables, expiredReloadAllowed} from 'local_wunderbyte_table/reload';
 import {
   get_strings as getStrings,
   get_string as getString
@@ -273,6 +273,17 @@ export function transmitAction(id, methodname, datastring, idstring, encodedtabl
       let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
       if (callspinner) {
         callspinner.classList.add('hidden');
+      }
+
+      // The cached table object behind the embedded hash was purged on the server.
+      // Only a page render re-caches it, so reload once (guarded against loops).
+      if (ex.errorcode === 'tablecacheexpired' && expiredReloadAllowed()) {
+        window.location.reload();
+        return;
+      }
+      if (ex.errorcode === 'tablecacheexpired') {
+        showNotification(ex.message, "danger");
+        return;
       }
 
       showNotification("row " + id + " was not treated", "danger");

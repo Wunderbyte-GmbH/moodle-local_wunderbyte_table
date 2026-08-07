@@ -113,7 +113,10 @@ class load_data extends external_api {
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
         if (!($table instanceof wunderbyte_table)) {
-            throw new \coding_exception('Expected instance of wunderbyte_table, got ' . gettype($table));
+            // The encodedtables cache was purged (scheduled purge, instance edit, admin purge...)
+            // after the page embedding this hash was rendered. The JS reacts to this errorcode
+            // with a one-off page reload, which re-renders and re-caches the table.
+            throw new \moodle_exception('tablecacheexpired', 'local_wunderbyte_table');
         }
 
         // Normally, this webservice is only allowed for logged in users with some capabilites.

@@ -223,6 +223,7 @@ $string['table3name'] = 'Demo table 3';
 $string['table4name'] = 'Demo table 4';
 $string['table_viewed'] = 'Table viewed';
 $string['table_viewed_desc'] = 'The user viewed the table "{$a}"';
+$string['tablecacheexpired'] = 'The cached table data has expired. Please reload the page.';
 $string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheckbox" aria-label="Select all rows">';
 $string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sorting"></i>';
 $string['tableheight'] = 'Table height';
