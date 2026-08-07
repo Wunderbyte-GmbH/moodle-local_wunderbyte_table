@@ -43,6 +43,8 @@
 .wunderbyte_table_container input[type="checkbox"].tableheadercheckbox {
     min-width: 24px;
     min-height: 24px;
+    margin-right: 0.5rem;
+    margin-top: 0;
 }
 
 .wunderbyte_table_container .icons-collapse-expand {
