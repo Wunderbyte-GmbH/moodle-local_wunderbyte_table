@@ -36,6 +36,11 @@ $encodedtable = optional_param('encodedtable', '', PARAM_RAW);
 
 $table = wunderbyte_table::instantiate_from_tablecache_hash($encodedtable);
 
+if (!($table instanceof wunderbyte_table)) {
+    // The encodedtables cache was purged after the page linking here was rendered.
+    throw new moodle_exception('tablecacheexpired', 'local_wunderbyte_table');
+}
+
 $context = $table->get_context();
 
 $PAGE->set_context($context);

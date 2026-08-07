@@ -93,6 +93,11 @@ class execute_action extends external_api {
 
         $table = wunderbyte_table::instantiate_from_tablecache_hash($params['encodedtable']);
 
+        if (!($table instanceof wunderbyte_table)) {
+            // The encodedtables cache was purged after the page embedding this hash was rendered.
+            throw new \moodle_exception('tablecacheexpired', 'local_wunderbyte_table');
+        }
+
         $context = context_system::instance();
 
         // Normally, this webservice is only allowed for logged in users with some capabilites.

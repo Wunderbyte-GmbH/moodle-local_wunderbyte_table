@@ -31,7 +31,7 @@ import {
 import {initializeFilterKeyboard} from 'local_wunderbyte_table/filterkeyboard';
 import {initializeSearch, getSearchInput} from 'local_wunderbyte_table/search';
 import {initializeSort, getSortSelection} from 'local_wunderbyte_table/sort';
-import {initializeReload, reloadAllTables} from 'local_wunderbyte_table/reload';
+import {initializeReload, reloadAllTables, expiredReloadAllowed} from 'local_wunderbyte_table/reload';
 import {initializeActionButton} from 'local_wunderbyte_table/actionbutton';
 import {initializeEditTableButton} from 'local_wunderbyte_table/edittable';
 import {initializeReordering} from 'local_wunderbyte_table/reordering';
@@ -743,9 +743,18 @@ export const callLoadData = (
             // The request is over, a retry (below) has to pass the loadings guard again.
             loadings[idstring] = false;
 
+            // The cached table object behind the embedded hash was purged on the server
+            // (scheduled purge, instance edit, admin cache purge). Retrying with the same
+            // hash cannot succeed — only a page render re-caches the table. Reload once;
+            // the sessionStorage guard keeps a broken cache store from causing a loop.
+            if (err.errorcode === 'tablecacheexpired' && expiredReloadAllowed()) {
+                window.location.reload();
+                return;
+            }
+
             // If we have an error, resetting the table might be enough. we do that.
             // To avoid a loop, we only do this in special cases.
-            if ((treset != 1)) {
+            if (treset != 1 && err.errorcode !== 'tablecacheexpired') {
                 callLoadData(idstring, encodedtable, page, null, null, null, null, 1);
             } else {
                 let node = document.createElement('DIV');

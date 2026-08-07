@@ -219,6 +219,7 @@ $string['table3name'] = 'Demo Tabelle 3';
 $string['table4name'] = 'Demo Tabelle 4';
 $string['table_viewed'] = 'Tabelle angesehen';
 $string['table_viewed_desc'] = 'Die NutzerIn hat folgende Tabelle angesehen: "{$a}"';
+$string['tablecacheexpired'] = 'Die zwischengespeicherten Tabellendaten sind abgelaufen. Bitte laden Sie die Seite neu.';
 $string['tableheadercheckbox'] = '<input type="checkbox" class="tableheadercheckbox" aria-label="Alle Zeilen auswählen">';
 $string['tableheadersortableitem'] = '<i class="fa fa-arrows" aria-label="Sortieren"></i>';
 $string['tableheight'] = 'Tabellen-Höhe';
