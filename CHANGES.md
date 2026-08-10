@@ -1,4 +1,6 @@
-## Version 3.2.9 (2026073001)
+## Version 3.3.0 (2026081000)
+* Improvement: Add support for Moodle 5.2.
+* Improvement: Better checkbox layout.
 * Bugfix: Repair the logfiltercaches debug logging (sql column written, no duplicate rows, atomic counters).
 
 ## Version 3.2.9 (2026073000)
