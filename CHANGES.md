@@ -1,3 +1,6 @@
+## Version 3.2.9 (2026073001)
+* Bugfix: Repair the logfiltercaches debug logging (sql column written, no duplicate rows, atomic counters).
+
 ## Version 3.2.9 (2026073000)
 * Improvement: Accessibility improvements of wunderbyte table filters.
 * Bugfix: Fix overflow bug of filters.
