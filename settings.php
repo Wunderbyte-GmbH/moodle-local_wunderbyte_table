@@ -87,4 +87,15 @@ if ($hassiteconfig) {
             1
         )
     );
+
+    // PDF/A-2b for the template based PDFs of the Wunderbyte plugins (mod_booking, local_shopping_cart):
+    // opt-in, plain TCPDF output as before otherwise. Read via pdfa_pdf::enabled().
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'local_wunderbyte_table/pdfaenabled',
+            get_string('pdfaenabled', 'local_wunderbyte_table'),
+            get_string('pdfaenabled_desc', 'local_wunderbyte_table'),
+            0
+        )
+    );
 }

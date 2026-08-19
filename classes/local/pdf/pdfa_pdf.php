@@ -40,6 +40,18 @@ class pdfa_pdf extends \pdf {
     public const PDFA_PART = 2;
 
     /**
+     * Whether the site wants its template based PDFs as PDF/A-2b (setting local_wunderbyte_table/pdfaenabled).
+     *
+     * The plugins check this before they switch a document to PDF/A; when the setting is off
+     * they generate their PDFs exactly as before.
+     *
+     * @return bool
+     */
+    public static function enabled(): bool {
+        return !empty(get_config('local_wunderbyte_table', 'pdfaenabled'));
+    }
+
+    /**
      * Class constructor - same signature as Moodle's pdf class.
      *
      * @param string $orientation page orientation (P or L)

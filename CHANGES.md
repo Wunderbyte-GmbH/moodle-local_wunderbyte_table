@@ -1,3 +1,8 @@
+## Version 3.3.2 (2026081800)
+* New feature: New setting "Create PDF/A-2b compliant PDFs" (local_wunderbyte_table/pdfaenabled, off by default) - the single switch for the template based PDFs of mod_booking and local_shopping_cart; read via `pdfa_pdf::enabled()`.
+* New feature: PDF/A-2b capable TCPDF wrapper `local_wunderbyte_table\local\pdf\pdfa_pdf` for template based PDFs (used by mod_booking and local_shopping_cart): core fonts are mapped to the embeddable GNU FreeFonts, font subsetting and stream compression are kept enabled, CMYK JPEGs are converted to RGB. Images referenced by URL are downloaded once per document with Moodle's curl (proxy and cURL security settings apply); an image that cannot be loaded is skipped instead of aborting the document.
+* Improvement: PDF/A support is now available as trait `local_wunderbyte_table\local\pdf\pdfa_trait` (inert until enable_pdfa() is called, so existing TCPDF based classes keep their output byte-for-byte unless a plugin switches PDF/A on); `pdfa_pdf` uses the trait and stays the always-on variant.
+
 ## Version 3.3.1 (2026081700)
 * Bugfix: When the encodedtables cache was purged while a page was open (e.g. mod_booking's midnight purge of the day-bucketed table caches, an instance edit or an admin cache purge), the next table interaction failed with the coding error "Expected instance of wunderbyte_table, got boolean" printed below the table. The webservices now throw a proper moodle_exception (errorcode tablecacheexpired) and the JS reacts with a one-off automatic page reload (loop-guarded via sessionStorage), which re-renders and re-caches the table - users no longer see an error at all. Also covers action buttons and the download endpoint.
 
