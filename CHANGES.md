@@ -1,5 +1,7 @@
+## Version 3.3.2 (2026081801)
 * Improvement: The filter build resolves the customfield field controller of a column once per column instead of once per filter VALUE - for filter columns without a matching customfield (e.g. a teachers filter with a json sort attribute) every single value fired its own DB lookup, 224 identical queries for 224 values during one cold filter build. (Wunderbyte-GmbH/Wunderbyte-GmbH#2211)
 * Improvement: Resolving the customfield field controllers of one component/area scope (e.g. all booking customfield columns and filters of a table) now costs one single bulk query per request instead of two queries per shortname - the per-shortname lookup no longer re-reads the row it already holds by id, and the first scoped lookup loads all fields of the scope at once. (Wunderbyte-GmbH/Wunderbyte-GmbH#2210)
+* Bugfix: Guard against tables without filter settings (null categories) when reducing filters for specific columns.
 
 ## Version 3.3.2 (2026081800)
 * New feature: New setting "Create PDF/A-2b compliant PDFs" (local_wunderbyte_table/pdfaenabled, off by default) - the single switch for the template based PDFs of mod_booking and local_shopping_cart; read via `pdfa_pdf::enabled()`.
