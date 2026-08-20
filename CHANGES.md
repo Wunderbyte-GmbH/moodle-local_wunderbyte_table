@@ -1,3 +1,5 @@
+* Improvement: Resolving the customfield field controllers of one component/area scope (e.g. all booking customfield columns and filters of a table) now costs one single bulk query per request instead of two queries per shortname - the per-shortname lookup no longer re-reads the row it already holds by id, and the first scoped lookup loads all fields of the scope at once. (Wunderbyte-GmbH/Wunderbyte-GmbH#2210)
+
 ## Version 3.3.2 (2026081800)
 * New feature: New setting "Create PDF/A-2b compliant PDFs" (local_wunderbyte_table/pdfaenabled, off by default) - the single switch for the template based PDFs of mod_booking and local_shopping_cart; read via `pdfa_pdf::enabled()`.
 * New feature: PDF/A-2b capable TCPDF wrapper `local_wunderbyte_table\local\pdf\pdfa_pdf` for template based PDFs (used by mod_booking and local_shopping_cart): core fonts are mapped to the embeddable GNU FreeFonts, font subsetting and stream compression are kept enabled, CMYK JPEGs are converted to RGB. Images referenced by URL are downloaded once per document with Moodle's curl (proxy and cURL security settings apply); an image that cannot be loaded is skipped instead of aborting the document.

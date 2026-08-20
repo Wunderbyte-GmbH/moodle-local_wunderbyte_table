@@ -19,6 +19,7 @@ namespace local_wunderbyte_table;
 use advanced_testcase;
 use local_wunderbyte_table\local\customfield\field\text\wbt_field_controller as text_controller;
 use local_wunderbyte_table\local\customfield\field\textarea\wbt_field_controller as textarea_controller;
+use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 
 /**
  * Tests for the customfield field controllers.
@@ -72,5 +73,52 @@ final class customfield_field_controller_test extends advanced_testcase {
         $this->assertStringContainsString(', ', $rendered);
 
         $this->assertSame('', $controller->get_option_value_by_key([]));
+    }
+
+    /**
+     * Resolving several customfields of one component/area scope must cost one single
+     * bulk query, not two queries per shortname (issue #2210: one lookup per shortname
+     * plus a by-id re-read of the row the lookup already returned - per request, on
+     * every page using customfield columns).
+     *
+     * @return void
+     */
+    public function test_scoped_lookup_batches_the_whole_scope(): void {
+        global $DB;
+        $this->resetAfterTest();
+        $this->setAdminUser();
+
+        // The memo is request-static; isolate from other tests in this process.
+        wbt_field_controller_info::purge_static_caches();
+
+        $gen = $this->getDataGenerator();
+        $category = $gen->create_custom_field_category([
+            'component' => 'mod_booking',
+            'area' => 'booking',
+            'name' => 'WBT perf category',
+        ]);
+        $shortnames = [];
+        for ($i = 0; $i < 5; $i++) {
+            $gen->create_custom_field([
+                'categoryid' => $category->get('id'),
+                'type' => 'text',
+                'shortname' => "wbtperf{$i}",
+                'name' => "WBT perf {$i}",
+            ]);
+            $shortnames[] = "wbtperf{$i}";
+        }
+
+        $before = $DB->perf_get_reads();
+        foreach ($shortnames as $shortname) {
+            $controller = wbt_field_controller_info::get_instance_by_shortname($shortname, 'mod_booking', 'booking');
+            $this->assertSame($shortname, $controller->get('shortname'));
+        }
+        $delta = $DB->perf_get_reads() - $before;
+        $this->assertLessThanOrEqual(
+            1,
+            $delta,
+            "Resolving 5 scoped customfields issued {$delta} DB reads; "
+                . "one bulk query must serve the whole scope (issue #2210)."
+        );
     }
 }

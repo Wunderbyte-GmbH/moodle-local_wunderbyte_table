@@ -45,6 +45,12 @@ class wbt_field_controller_info {
     private static $instances = [];
 
     /**
+     * Fully scoped (component + area) lookups that have already been bulk-loaded.
+     * @var array
+     */
+    private static $loadedscopes = [];
+
+    /**
      * @var string
      */
     public const WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND = 'wbtable_customfield_value_notfound';
@@ -57,11 +63,14 @@ class wbt_field_controller_info {
      */
     public static function create(stdClass $record) {
         $class = "\\local_wunderbyte_table\\local\\customfield\\field\\{$record->type}\\wbt_field_controller";
+        // Construct from the record only (id = 0): passing the id as first parameter
+        // makes the underlying persistent re-read the row from the DB although we
+        // already hold it - one extra query per field per request (issue #2210).
         if (class_exists($class)) {
-            return new $class($record->id, $record);
+            return new $class(0, $record);
         }
         // By default, we return the text controller.
-        return new wbt_field_controller($record->id, $record);
+        return new wbt_field_controller(0, $record);
     }
 
     /**
@@ -117,6 +126,17 @@ class wbt_field_controller_info {
     }
 
     /**
+     * Purge the request-static caches (instances + loaded scopes).
+     * Needed between unit tests; harmless anywhere else.
+     *
+     * @return void
+     */
+    public static function purge_static_caches(): void {
+        self::$instances = [];
+        self::$loadedscopes = [];
+    }
+
+    /**
      * Get the field controller from the singleton $instances.
      *
      * @param string $shortname shortname of field controller customfield
@@ -136,37 +156,83 @@ class wbt_field_controller_info {
 
         if (!empty(self::$instances[$key])) {
             return self::$instances[$key];
-        } else {
-            global $DB;
+        }
 
-            $where = 'cf.shortname = :shortname';
-            $params = ['shortname' => $shortname];
-
-            if (!empty($component)) {
-                $params['cfcomponent'] = $component;
-                $where .= ' AND cc.component = :cfcomponent';
+        // Fully scoped lookups (the common case: every customfield column/filter of a
+        // table resolves with the same component + area) are served with ONE bulk query
+        // for the whole scope instead of one query per shortname per request (issue #2210).
+        if (!empty($component) && !empty($area)) {
+            $scopekey = "$component-$area";
+            if (empty(self::$loadedscopes[$scopekey])) {
+                self::$loadedscopes[$scopekey] = true;
+                self::instantiate_all_of_scope($component, $area);
             }
-            if (!empty($area)) {
-                $params['cfarea'] = $area;
-                $where .= ' AND cc.area = :cfarea';
+            if (!empty(self::$instances[$key])) {
+                return self::$instances[$key];
             }
+            // Not part of the scope when it was loaded: fall through to the single
+            // query below, so fields created later (e.g. within a test run) are
+            // still found - exactly the behaviour of the unbatched code path.
+        }
 
-            // Order by cf.id DESC and take the first record (newest) when not fully scoped.
-            $sql = "SELECT cf.shortname AS filtercolumn, cf.*
-                      FROM {customfield_field} cf
-                      JOIN {customfield_category} cc ON cf.categoryid = cc.id
-                     WHERE $where
-                  ORDER BY cf.id DESC";
+        global $DB;
 
-            if ($record = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE)) {
-                if ($instance = self::create($record)) {
-                    self::$instances[$key] = $instance;
-                    return $instance;
-                }
+        $where = 'cf.shortname = :shortname';
+        $params = ['shortname' => $shortname];
+
+        if (!empty($component)) {
+            $params['cfcomponent'] = $component;
+            $where .= ' AND cc.component = :cfcomponent';
+        }
+        if (!empty($area)) {
+            $params['cfarea'] = $area;
+            $where .= ' AND cc.area = :cfarea';
+        }
+
+        // Order by cf.id DESC and take the first record (newest) when not fully scoped.
+        $sql = "SELECT cf.shortname AS filtercolumn, cf.*
+                  FROM {customfield_field} cf
+                  JOIN {customfield_category} cc ON cf.categoryid = cc.id
+                 WHERE $where
+              ORDER BY cf.id DESC";
+
+        if ($record = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE)) {
+            if ($instance = self::create($record)) {
+                self::$instances[$key] = $instance;
+                return $instance;
             }
         }
         // Fallback: By default, we return the text controller.
         return new wbt_field_controller();
+    }
+
+    /**
+     * Bulk-load and memoize the field controllers of ALL customfields of one
+     * component + area scope with a single query.
+     *
+     * @param string $component component to load (e.g. 'mod_booking')
+     * @param string $area area to load (e.g. 'booking')
+     * @return void
+     */
+    private static function instantiate_all_of_scope(string $component, string $area): void {
+        global $DB;
+
+        // Order by cf.id DESC so the newest field per shortname wins (first-wins below).
+        $sql = "SELECT cf.id, cf.*
+                  FROM {customfield_field} cf
+                  JOIN {customfield_category} cc ON cf.categoryid = cc.id
+                 WHERE cc.component = :cfcomponent AND cc.area = :cfarea
+              ORDER BY cf.id DESC";
+        $records = $DB->get_records_sql($sql, ['cfcomponent' => $component, 'cfarea' => $area]);
+
+        foreach ($records as $record) {
+            $key = "$component-$area-{$record->shortname}";
+            if (!isset(self::$instances[$key])) {
+                if ($instance = self::create($record)) {
+                    self::$instances[$key] = $instance;
+                }
+            }
+        }
     }
 
     /**
