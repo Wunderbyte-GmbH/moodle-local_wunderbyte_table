@@ -308,6 +308,16 @@ class wunderbyte_table extends table_sql {
     public $sortablecolumns = [];
 
     /**
+     * Column appended as last ORDER BY key so that rows with equal sort values always come back in the same
+     * order (needed for stable pagination / infinite scroll and for row positions in tests).
+     * Wunderbyte table rows always expose an "id" column (it is used for row actions and checkboxes).
+     * Set to an empty string to disable for a table whose sql has no "id" column.
+     *
+     * @var string
+     */
+    public $sorttiebreaker = 'id';
+
+    /**
      * Filtersortorder columns.
      *
      * @var array
@@ -2240,6 +2250,39 @@ class wunderbyte_table extends table_sql {
         $cachekey = crc32($sql) . '_sqlquery';
 
         return $cachekey;
+    }
+
+    /**
+     * Get the SQL sort clause, with a deterministic tiebreaker.
+     *
+     * SQL does not define the order of rows that compare equal on the ORDER BY columns, so without a tiebreaker
+     * the same query can return such rows in a different order from one execution to the next (depending on the
+     * physical row order and the execution plan). This breaks pagination and infinite scroll (rows can be shown
+     * twice or skipped) and makes row positions unpredictable. We therefore append the tiebreaker column (by default
+     * "id") to the sort, unless it is already part of it. As both the actual query and the cachekey use this method,
+     * cached results are always consistent with it.
+     *
+     * @return string SQL fragment that can be used in an ORDER BY clause.
+     */
+    public function get_sql_sort() {
+        $sort = parent::get_sql_sort();
+
+        if (empty($this->sorttiebreaker)) {
+            return $sort;
+        }
+
+        // Without any sort, the order of the rows would be completely undefined.
+        if (empty($sort)) {
+            return $this->sorttiebreaker . ' ASC';
+        }
+
+        // Do not add the tiebreaker if the sort already contains it (eg "id ASC" or "s1.id DESC").
+        $pattern = '/(^|[\s,.(])' . preg_quote($this->sorttiebreaker, '/') . '(\s|,|\)|$)/i';
+        if (preg_match($pattern, $sort)) {
+            return $sort;
+        }
+
+        return $sort . ', ' . $this->sorttiebreaker . ' ASC';
     }
 
     /**
