@@ -322,6 +322,16 @@ abstract class base {
             $values = array_combine(array_keys($values), array_keys($values));
         }
 
+        // Resolve the field controller ONCE per column - it only depends on the column
+        // name. Resolving it inside the value loop cost one DB lookup per filter value
+        // for columns that are no customfield at all, e.g. 224 identical queries for a
+        // teachers filter with 224 values (issue #2211).
+        $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname(
+            $fckey,
+            $filtersettings['_customfieldcomponent'] ?? '',
+            $filtersettings['_customfieldarea'] ?? ''
+        );
+
         $identifierarray = [];
         foreach ($values as $valuekey => $valuevalue) {
             if (
@@ -343,11 +353,6 @@ abstract class base {
 
             if (isset($sortedarray[$valuekey]) && $sortedarray[$valuekey] === true) {
                 // For custom fields, we get the actual string value from field controller.
-                $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname(
-                    $fckey,
-                    $filtersettings['_customfieldcomponent'] ?? '',
-                    $filtersettings['_customfieldarea'] ?? ''
-                );
                 if (!empty($fieldcontroller)) {
                     $cfstringvalueforvaluekey = $fieldcontroller->get_option_value_by_key($valuekey);
                     if ($cfstringvalueforvaluekey == wbt_field_controller_info::WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND) {

@@ -175,16 +175,20 @@ class hierarchicalfilter extends customfieldfilter {
         } else {
             $values = array_combine(array_keys($values), array_keys($values));
         }
+        // Resolve the field controller ONCE per column - it only depends on the column
+        // name, and resolving it per value costs one DB lookup per filter value for
+        // columns without a matching customfield (issue #2211).
+        $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname(
+            $fckey,
+            $filtersettings['_customfieldcomponent'] ?? '',
+            $filtersettings['_customfieldarea'] ?? ''
+        );
+
         $index = 1;
         foreach ($values as $subcategorykey => $subcategoryarray) {
             $categorycount = 0;
             foreach ($subcategoryarray as $valuekey => $valuevalue) {
                 // For custom fields, we get the actual string value from field controller.
-                $fieldcontroller = wbt_field_controller_info::get_instance_by_shortname(
-                    $fckey,
-                    $filtersettings['_customfieldcomponent'] ?? '',
-                    $filtersettings['_customfieldarea'] ?? ''
-                );
                 if (!empty($fieldcontroller)) {
                     $cfstringvalueforvaluekey = $fieldcontroller->get_option_value_by_key($valuekey);
                     if ($cfstringvalueforvaluekey == wbt_field_controller_info::WBTABLE_CUSTOMFIELD_VALUE_NOTFOUND) {
