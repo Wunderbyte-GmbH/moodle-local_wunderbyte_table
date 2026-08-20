@@ -1152,6 +1152,10 @@ class table implements renderable, templatable {
      *
      */
     public function filter_filter($onlyfilterforcolumns = []) {
+        // Tables without filter settings have no categories, so there is nothing to reduce.
+        if (empty($this->categories['categories'])) {
+            return;
+        }
         if (!empty($onlyfilterforcolumns)) {
             $lefthierarchy = [];
             $righthierarchy = [];
