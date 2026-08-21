@@ -2271,9 +2271,15 @@ class wunderbyte_table extends table_sql {
             return $sort;
         }
 
+        $tiebreaker = $this->get_sql_tiebreaker_expression($this->sorttiebreaker);
+        if ($tiebreaker === null) {
+            // The select list does not expose the column, so it cannot be used in ORDER BY.
+            return $sort;
+        }
+
         // Without any sort, the order of the rows would be completely undefined.
         if (empty($sort)) {
-            return $this->sorttiebreaker . ' ASC';
+            return $tiebreaker . ' ASC';
         }
 
         // Do not add the tiebreaker if the sort already contains it (eg "id ASC" or "s1.id DESC").
@@ -2282,7 +2288,54 @@ class wunderbyte_table extends table_sql {
             return $sort;
         }
 
-        return $sort . ', ' . $this->sorttiebreaker . ' ASC';
+        return $sort . ', ' . $tiebreaker . ' ASC';
+    }
+
+    /**
+     * Returns the expression to use in ORDER BY for the tiebreaker column, or null if the select list of this
+     * table does not expose that column.
+     *
+     * Many tables build their sql from a derived table without any "id" column (e.g. "s.optiondateid, s.text").
+     * Appending "ORDER BY id" to such a query throws a dml_read_exception and the table is not rendered at all.
+     * Other tables select several "id" columns (e.g. "u.id, bo.id AS id"), where a bare "ORDER BY id" is
+     * ambiguous. We therefore inspect the select list and return the qualified source of the matching column
+     * ("bo.id"), which is valid in ORDER BY and unambiguous. With "*" the bare column name is returned.
+     *
+     * @param string $column
+     * @return string|null
+     */
+    protected function get_sql_tiebreaker_expression(string $column): ?string {
+        $fields = trim((string)($this->sql->fields ?? ''));
+        if ($fields === '') {
+            return $column;
+        }
+        $quoted = preg_quote($column, '/');
+        $matches = [];
+        foreach (explode(',', $fields) as $expression) {
+            $expression = trim(preg_replace('/^DISTINCT\s+/i', '', trim($expression)));
+            // Plain column: "id" or "bo.id".
+            if (preg_match('/^(?:\w+\.)?' . $quoted . '$/i', $expression)) {
+                $matches[] = $expression;
+                continue;
+            }
+            // Aliased column "bo.id AS id" / "bo.id id": the output column is the alias, its source is unambiguous.
+            if (preg_match('/^(\w+(?:\.\w+)?)\s+(?:AS\s+)?' . $quoted . '$/i', $expression, $m)) {
+                $matches[] = $m[1];
+                continue;
+            }
+            // Aliased expression like "COALESCE(a, b) AS id" (possibly cut at a comma): use the alias.
+            if (preg_match('/\sAS\s+' . $quoted . '$/i', $expression)) {
+                $matches[] = $column;
+            }
+        }
+        if (empty($matches)) {
+            // A wildcard ("*" or "bo.*") exposes all columns of (at least) one table; use the bare column name.
+            return preg_match('/(^|[\s,.])\*($|[\s,])/', $fields) ? $column : null;
+        }
+        // With exactly one candidate (or several identical ones) its qualified source is always safe.
+        // With different candidates, a bare name would be ambiguous: take the first one, which is by
+        // convention the main table of the query.
+        return $matches[0];
     }
 
     /**
