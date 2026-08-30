@@ -1296,7 +1296,7 @@ class wunderbyte_table extends table_sql {
      * @return void
      *
      */
-    private function query_db_cached_filtered(int $pagesize, bool $useinitialsbar, string $totalcountsql) {
+    protected function query_db_cached_filtered(int $pagesize, bool $useinitialsbar, string $totalcountsql) {
         global $DB, $USER, $CFG, $PAGE;
         // Now we proceed to the actual sql query.
         $filter = $this->sql->filter ?? '';
