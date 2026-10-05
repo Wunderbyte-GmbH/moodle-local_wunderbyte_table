@@ -55,6 +55,8 @@ var scrollingelement = {};
 // counter value from when they were issued; a response older than the counter is discarded,
 // so a stale in-flight reload can never overwrite the result of a newer one.
 var requestcounters = {};
+// Per table: the load to re-run once an open modal inside the table is closed (see callLoadData).
+var deferredloads = {};
 
 var moreThanOneTable = false;
 export const SELECTORS = {
@@ -543,6 +545,24 @@ export const callLoadData = (
             let container = document.querySelector(".wunderbyte_table_container_" + idstring);
 
             if (!container) {
+                return;
+            }
+            // reloadAllTables() only skips a table with an open modal at the moment the reload is
+            // REQUESTED - a modal opened while this request was in flight (e.g. a booking prepage
+            // modal) would be ripped out of the DOM by the re-render below, leaving Bootstrap's
+            // backdrop behind (grey, unclickable page). Re-run this load once the modal is closed.
+            const openmodal = container.querySelector('.modal.show');
+            if (openmodal) {
+                loadings[idstring] = false;
+                if (!deferredloads[idstring]) {
+                    openmodal.addEventListener('hidden.bs.modal', () => {
+                        const rerun = deferredloads[idstring];
+                        delete deferredloads[idstring];
+                        rerun();
+                    }, {once: true});
+                }
+                deferredloads[idstring] = () => callLoadData(idstring, encodedtable, page, tsort, thide, tshow,
+                    tdir, treset, filterobjects, searchtext, replacerow, replacecomponentscontainer, scrolltotop);
                 return;
             }
 
