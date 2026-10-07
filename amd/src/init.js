@@ -380,6 +380,7 @@ export const isHidden = (el) => {
  * @param {null|bool} replacerow
  * @param {null|bool} replacecomponentscontainer
  * @param {bool} scrolltotop
+ * @param {bool} purgecache Asks the server to purge the cache of the table (reload button).
  */
 export const callLoadData = (
     idstring,
@@ -394,7 +395,8 @@ export const callLoadData = (
     searchtext = null,
     replacerow = false,
     replacecomponentscontainer = false,
-    scrolltotop = false) => {
+    scrolltotop = false,
+    purgecache = false) => {
 
     // An infinite-scroll append must not fire while another load is running (the scroll
     // listener fires in bursts), but a full reload supersedes an in-flight request instead
@@ -502,7 +504,8 @@ export const callLoadData = (
             'tdir': tdir,
             'treset': treset,
             'wbtfilter': filterobjects,
-            'searchtext': searchtext
+            'searchtext': searchtext,
+            'purgecache': purgecache ? 1 : 0
         },
         done: async function(res) {
             if (requestcounters[idstring] !== requestid) {

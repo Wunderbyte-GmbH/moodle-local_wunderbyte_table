@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace local_wunderbyte_table\external;
 
 use cache;
+use cache_helper;
 use Exception;
 use external_api;
 use external_function_parameters;
@@ -66,6 +67,7 @@ class load_data extends external_api {
             'treset'  => new external_value(PARAM_INT, 'reset value', VALUE_REQUIRED),
             'wbtfilter'  => new external_value(PARAM_RAW, 'reset value', VALUE_REQUIRED),
             'searchtext'  => new external_value(PARAM_TEXT, 'reset value', VALUE_REQUIRED),
+            'purgecache'  => new external_value(PARAM_INT, 'purge cache (reload button)', VALUE_DEFAULT, 0),
         ]);
     }
 
@@ -80,6 +82,7 @@ class load_data extends external_api {
      * @param integer $treset
      * @param string $filterobjects
      * @param string $searchtext
+     * @param int $purgecache
      * @return array
      */
     public static function execute(
@@ -91,7 +94,8 @@ class load_data extends external_api {
         $tdir = null,
         $treset = null,
         $filterobjects = null,
-        $searchtext = null
+        $searchtext = null,
+        $purgecache = 0
     ) {
 
         global $PAGE;
@@ -106,6 +110,7 @@ class load_data extends external_api {
                 'treset' => $treset,
                 'wbtfilter' => $filterobjects,
                 'searchtext' => $searchtext ?? "",
+                'purgecache' => $purgecache,
         ];
 
         $params = self::validate_parameters(self::execute_parameters(), $params);
@@ -139,6 +144,11 @@ class load_data extends external_api {
             // We allow for this webservice to be executed without login, if specifically set so.
             // Therefore, we need to use Page->set_context().
             $PAGE->set_context($context);
+        }
+
+        // The reload button asks for fresh data. Only tables which opted in purge their raw data cache.
+        if (!empty($params['purgecache']) && $table->reloadpurgescache && $table->cachecomponent && $table->rawcachename) {
+            cache_helper::purge_by_definition($table->cachecomponent, $table->rawcachename);
         }
 
         // If the table was cached with filter or searchtext, we need to recache it.
