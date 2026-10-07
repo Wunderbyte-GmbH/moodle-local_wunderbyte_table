@@ -182,6 +182,14 @@ class wunderbyte_table extends table_sql {
     public $showreloadbutton = false;
 
     /**
+     * If true, the reload button purges the raw data cache of this table (see define_cache), so it shows fresh data.
+     * Purging drops the cached data for all users and filters, so only use it for tables whose data...
+     * ... changes without invalidating the cache and which are not loaded by many users at once.
+     * @var bool
+     */
+    public $reloadpurgescache = false;
+
+    /**
      *
      * @var string Set height of table.
      */

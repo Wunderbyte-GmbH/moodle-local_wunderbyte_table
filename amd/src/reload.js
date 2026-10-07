@@ -43,7 +43,8 @@ export function initializeReload(selector, idstring, encodedtable) {
 
     button.addEventListener('click', () => {
 
-        wbTableReload(idstringplusa, encodedtable);
+        // Only the reload button asks to purge the cache, the server does it if the table opted in.
+        wbTableReload(idstringplusa, encodedtable, 0, true);
     });
 }
 
@@ -53,8 +54,9 @@ export function initializeReload(selector, idstring, encodedtable) {
  * @param {*} idstringplusa
  * @param {*} encodedtable
  * @param {number} rowid
+ * @param {bool} purgecache
  */
-export function wbTableReload(idstringplusa, encodedtable, rowid = 0) {
+export function wbTableReload(idstringplusa, encodedtable, rowid = 0, purgecache = false) {
 
     // We need to trim the first character. We use the a to make sure no number is in first place due to random generation.
     const idstring = idstringplusa.substring(1);
@@ -89,7 +91,10 @@ export function wbTableReload(idstringplusa, encodedtable, rowid = 0) {
         null,
         filterobjects,
         searchstring,
-        replacerow);
+        replacerow,
+        false,
+        false,
+        purgecache);
 }
 
 /**
