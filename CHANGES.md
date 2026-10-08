@@ -1,3 +1,8 @@
+## Version 3.3.3 (2026090100)
+* Bugfix: The deterministic sort tiebreaker broke tables whose select list exposes no "id" column (dml_read_exception, the table was not rendered at all) or several "id" columns (ambiguous ORDER BY). The tiebreaker is now derived from the select list as a qualified column and skipped entirely when the column is not exposed. (#155)
+* Bugfix: The refactor of the group-by handling caused ordering issues. (#155)
+* Test: The scoped customfield lookup test uses the core_course/course scope instead of mod_booking/booking - the lookup under test is component-agnostic, and the fixture generator needs an installed customfield handler, which mod_booking cannot provide on a standalone CI run. (Wunderbyte-GmbH/Wunderbyte-GmbH#2210)
+
 ## Version 3.3.2 (2026081801)
 * Improvement: The filter build resolves the customfield field controller of a column once per column instead of once per filter VALUE - for filter columns without a matching customfield (e.g. a teachers filter with a json sort attribute) every single value fired its own DB lookup, 224 identical queries for 224 values during one cold filter build. (Wunderbyte-GmbH/Wunderbyte-GmbH#2211)
 * Improvement: Resolving the customfield field controllers of one component/area scope (e.g. all booking customfield columns and filters of a table) now costs one single bulk query per request instead of two queries per shortname - the per-shortname lookup no longer re-reads the row it already holds by id, and the first scoped lookup loads all fields of the scope at once. (Wunderbyte-GmbH/Wunderbyte-GmbH#2210)
