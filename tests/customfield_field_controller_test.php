@@ -91,10 +91,14 @@ final class customfield_field_controller_test extends advanced_testcase {
         // The memo is request-static; isolate from other tests in this process.
         wbt_field_controller_info::purge_static_caches();
 
+        // The scoped lookup is component-agnostic (it only queries the customfield
+        // tables by component/area), so the test uses the core_course/course scope:
+        // its customfield handler ships with core, while e.g. mod_booking is not
+        // installed on a standalone CI run and would break the fixture generator.
         $gen = $this->getDataGenerator();
         $category = $gen->create_custom_field_category([
-            'component' => 'mod_booking',
-            'area' => 'booking',
+            'component' => 'core_course',
+            'area' => 'course',
             'name' => 'WBT perf category',
         ]);
         $shortnames = [];
@@ -110,7 +114,7 @@ final class customfield_field_controller_test extends advanced_testcase {
 
         $before = $DB->perf_get_reads();
         foreach ($shortnames as $shortname) {
-            $controller = wbt_field_controller_info::get_instance_by_shortname($shortname, 'mod_booking', 'booking');
+            $controller = wbt_field_controller_info::get_instance_by_shortname($shortname, 'core_course', 'course');
             $this->assertSame($shortname, $controller->get('shortname'));
         }
         $delta = $DB->perf_get_reads() - $before;
