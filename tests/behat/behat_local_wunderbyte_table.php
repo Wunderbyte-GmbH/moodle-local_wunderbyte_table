@@ -46,4 +46,28 @@ class behat_local_wunderbyte_table extends behat_base {
         $DB->execute($sql);
         $_POST = [];
     }
+
+    /**
+     * Fire one of core/sortable_list's (jQuery) events on the first row of a sortable wunderbyte table.
+     *
+     * Real mouse dragging is too flaky in behat, so the events are triggered the same way
+     * core/sortable_list triggers them. The event name is taken from SortableList.EVENTS,
+     * so a wrong constant name in the plugin's js is caught here.
+     *
+     * @Given /^I trigger the sortable list event "(?P<event_string>DRAGSTART|DRAG|DROP|DRAGEND)" on the first row of the wunderbyte table$/
+     * @param string $event Key of SortableList.EVENTS.
+     * @return void
+     */
+    public function i_trigger_sortable_list_event(string $event) {
+        $script = "
+            M.util.js_pending('wbsortablelistevent');
+            require(['core/sortable_list', 'jquery'], function(SortableList, jQuery) {
+                var row = jQuery('.rows-container > *').first();
+                row.trigger(SortableList.EVENTS.{$event}, {positionChanged: false});
+                M.util.js_complete('wbsortablelistevent');
+            });
+        ";
+        $this->getSession()->executeScript($script);
+        $this->wait_for_pending_js();
+    }
 }
