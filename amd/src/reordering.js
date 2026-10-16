@@ -68,7 +68,7 @@ const initSortableLists = (listRoot, identifier, idstring, encodedtable) => {
         event.currentTarget.classList.add('wb-table-sortable-drag');
     });
 
-    jQuery(identifier + ' > *').on(SortableList.EVENTS.DAGEND, (event) => {
+    jQuery(identifier + ' > *').on(SortableList.EVENTS.DRAGEND, (event) => {
         // eslint-disable-next-line no-console
         console.log('dragend', event.currentTarget);
         listRoot.querySelectorAll('tr').forEach(item => item.classList.remove('wb-table-sortable-drag'));
