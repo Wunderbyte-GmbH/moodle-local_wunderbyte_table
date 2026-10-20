@@ -27,10 +27,10 @@ declare(strict_types=1);
 
 namespace local_wunderbyte_table\external;
 
-use external_api;
-use external_function_parameters;
-use external_value;
-use external_single_structure;
+use core_external\external_api;
+use core_external\external_function_parameters;
+use core_external\external_value;
+use core_external\external_single_structure;
 use local_wunderbyte_table\filters\filter_manager;
 
 defined('MOODLE_INTERNAL') || die();
