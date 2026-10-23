@@ -7,11 +7,4 @@
         <license>LGPL</license>
         <licenseversion>3</licenseversion>
     </library>
-    <library>
-        <location>lib/jquery</location>
-        <name>jquery</name>
-        <version>1.4.3</version>
-        <license>MIT</license>
-        <licenseversion></licenseversion>
-    </library>
 </libraries>
