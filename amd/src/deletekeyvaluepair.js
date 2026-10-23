@@ -13,38 +13,40 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
- * @package    local_shopping_cart
+/**
+ * Removal of key/value pair groups in the edit table form.
+ *
+ * @module     local_wunderbyte_table/deletekeyvaluepair
  * @copyright  Wunderbyte GmbH <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery'], function() {
-    return {
-        init: function() {
-            document.body.addEventListener("click", function(event) {
-                var wrapper = event.target.closest(".remove-key-value");
-                if (!wrapper) {
-                    return;
-                }
-                var button = wrapper.querySelector("button");
-                if (!button) {
-                    return;
-                }
-                var groupName = button.dataset.groupid;
-                var group = document.querySelector('[data-groupname="' + groupName + '"]');
-
-                if (group) {
-                    group.remove();
-                } else {
-                    group = document.getElementById(groupName);
-                    if (group) {
-                        group.remove();
-                    }
-                    // eslint-disable-next-line no-console
-                    console.warn("Group not found:", groupName);
-                }
-            });
+/**
+ * Register the click handler that removes a key/value group.
+ * @returns {void}
+ */
+export function init() {
+    document.body.addEventListener("click", function(event) {
+        const wrapper = event.target.closest(".remove-key-value");
+        if (!wrapper) {
+            return;
         }
-    };
-});
+        const button = wrapper.querySelector("button");
+        if (!button) {
+            return;
+        }
+        const groupName = button.dataset.groupid;
+        let group = document.querySelector('[data-groupname="' + groupName + '"]');
+
+        if (group) {
+            group.remove();
+        } else {
+            group = document.getElementById(groupName);
+            if (group) {
+                group.remove();
+            }
+            // eslint-disable-next-line no-console
+            console.warn("Group not found:", groupName);
+        }
+    });
+}
