@@ -1,3 +1,8 @@
+* Bugfix: The automatic page reload after a purged table cache (errorcode tablecacheexpired) no longer fires while a Bootstrap modal or an open collapsible inside a table container is shown - it waits until the overlay is closed. Before, a table reload failing behind an open overlay reloaded the whole page at once, which tore down e.g. the pre booking pages of mod_booking right after they opened (the backdrop went dark and the list came back). (Wunderbyte-GmbH/moodle-mod_booking#1656)
+
+## Version 3.3.4 (2026102200)
+* Improvement: Moodle 5.3 compatibility - use core_external\* classes instead of the deprecated global external_* classes (MDL-81225).
+
 ## Version 3.3.3 (2026090100)
 * Bugfix: The deterministic sort tiebreaker broke tables whose select list exposes no "id" column (dml_read_exception, the table was not rendered at all) or several "id" columns (ambiguous ORDER BY). The tiebreaker is now derived from the select list as a qualified column and skipped entirely when the column is not exposed. (#155)
 * Bugfix: The refactor of the group-by handling caused ordering issues. (#155)

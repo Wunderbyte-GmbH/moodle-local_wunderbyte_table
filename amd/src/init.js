@@ -751,8 +751,16 @@ export const callLoadData = (
             // hash cannot succeed — only a page render re-caches the table. Reload once;
             // the sessionStorage guard keeps a broken cache store from causing a loop.
             if (err.errorcode === 'tablecacheexpired' && expiredReloadAllowed()) {
-                window.location.reload();
-                return;
+                if (!hasOpenOverlay()) {
+                    window.location.reload();
+                    return;
+                }
+                // The user is in the middle of something in a modal or an open collapsible (e.g.
+                // the pre booking pages of mod_booking, which open from a row of this table). A
+                // reload now would tear that down - all the user sees is the backdrop going dark
+                // and the list coming back. Reload as soon as the overlay is closed and show the
+                // error in the table meanwhile (below).
+                reloadOnceOverlaysAreClosed();
             }
 
             // If we have an error, resetting the table might be enough. we do that.
@@ -760,12 +768,18 @@ export const callLoadData = (
             if (treset != 1 && err.errorcode !== 'tablecacheexpired') {
                 callLoadData(idstring, encodedtable, page, null, null, null, null, 1);
             } else {
-                let node = document.createElement('DIV');
-                let textnode = document.createTextNode(err.message);
-                node.appendChild(textnode);
-                table.appendChild(node);
-                spinner.classList.add('hidden');
-                table.classList.remove('hidden');
+                // The spinner (and with an unusual template even the table node) can be missing
+                // from the markup; the error message must not raise a second error then.
+                if (table) {
+                    let node = document.createElement('DIV');
+                    let textnode = document.createTextNode(err.message);
+                    node.appendChild(textnode);
+                    table.appendChild(node);
+                    table.classList.remove('hidden');
+                }
+                if (spinner) {
+                    spinner.classList.add('hidden');
+                }
 
                 // Hide the call spinner.
                 let callspinner = document.querySelector(".wunderbyte_table_container_" + idstring + " .wb-table-call-spinner");
@@ -867,6 +881,39 @@ function scrollListener(element, idstring, encodedtable) {
                 null);
         }
     }
+}
+
+/**
+ * Whether an overlay the user may be interacting with is open: a shown Bootstrap modal anywhere on
+ * the page, or an open collapsible inside a table container (inline pre booking pages of
+ * mod_booking live there). Mirrors the guards of reloadAllTables.
+ * @returns {boolean}
+ */
+function hasOpenOverlay() {
+    const openmodal = document.querySelector('.modal.show');
+    if (openmodal && !returnHiddenElement(openmodal)) {
+        return true;
+    }
+    const opencollapses = document.querySelectorAll('[class*="wunderbyte_table_container_"] .collapse.show');
+    return [...opencollapses].some(el => !returnHiddenElement(el));
+}
+
+/**
+ * Reload the page once no modal and no open collapsible is left. Bootstrap's hidden events bubble
+ * up to the document, so one pair of listeners covers every overlay on the page.
+ * @returns {void}
+ */
+function reloadOnceOverlaysAreClosed() {
+    const reloadWhenClosed = () => {
+        if (hasOpenOverlay()) {
+            return;
+        }
+        document.removeEventListener('hidden.bs.modal', reloadWhenClosed);
+        document.removeEventListener('hidden.bs.collapse', reloadWhenClosed);
+        window.location.reload();
+    };
+    document.addEventListener('hidden.bs.modal', reloadWhenClosed);
+    document.addEventListener('hidden.bs.collapse', reloadWhenClosed);
 }
 
 /**
