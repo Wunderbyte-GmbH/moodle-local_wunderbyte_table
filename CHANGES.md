@@ -1,4 +1,7 @@
+## Version 3.3.5 (2026110200)
 * Bugfix: The automatic page reload after a purged table cache (errorcode tablecacheexpired) no longer fires while a Bootstrap modal or an open collapsible inside a table container is shown - it waits until the overlay is closed. Before, a table reload failing behind an open overlay reloaded the whole page at once, which tore down e.g. the pre booking pages of mod_booking right after they opened (the backdrop went dark and the list came back). (Wunderbyte-GmbH/moodle-mod_booking#1656)
+* Bugfix: Reduced jQuery dependencies.
+* Bugfix: Fix broken modals, wait until open modal is closed to reload content.
 
 ## Version 3.3.4 (2026102200)
 * Improvement: Moodle 5.3 compatibility - use core_external\* classes instead of the deprecated global external_* classes (MDL-81225).
