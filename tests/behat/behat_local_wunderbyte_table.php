@@ -54,6 +54,7 @@ class behat_local_wunderbyte_table extends behat_base {
      * core/sortable_list triggers them. The event name is taken from SortableList.EVENTS,
      * so a wrong constant name in the plugin's js is caught here.
      *
+     * phpcs:ignore moodle.Files.LineLength
      * @Given /^I trigger the sortable list event "(?P<event_string>DRAGSTART|DRAG|DROP|DRAGEND)" on the first row of the wunderbyte table$/
      * @param string $event Key of SortableList.EVENTS.
      * @return void
