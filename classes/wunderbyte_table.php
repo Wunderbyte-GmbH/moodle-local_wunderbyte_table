@@ -1157,25 +1157,47 @@ class wunderbyte_table extends table_sql {
                 // Prepare the column string with COALESCE.
                 $concatparts[] = "COALESCE(" . $valuestring . ", ' ')";
 
-                // If the column is a customfield whose wbt_field_controller resolves the stored
-                // values to display values (e.g. select labels or dynamicformat data), the resolved
-                // values are searchable as well. Columns without a matching customfield or with an
-                // identity resolution (e.g. text fields) return an empty mapping and are skipped.
-                $mapping = wbt_field_controller_info::get_resolved_value_mapping($value);
-                if (!empty($mapping)) {
-                    $whens = '';
-                    foreach ($mapping as $storedvalue => $resolvedvalue) {
-                        $storedparam = $this->set_params((string)$storedvalue);
-                        $resolvedparam = $this->set_params((string)$resolvedvalue);
-                        $whens .= "WHEN $valuestring = :$storedparam THEN :$resolvedparam ";
-                    }
-                    $concatparts[] = "COALESCE(CASE $whens ELSE NULL END, ' ')";
+                // The display values of customfields (e.g. select labels) are searchable as well.
+                $resolvedvalue = $this->get_sql_resolved_value($value);
+                if ($resolvedvalue !== null) {
+                    $concatparts[] = "COALESCE($resolvedvalue, ' ')";
                 }
             }
 
             return  $DB->sql_concat_join("' '", $concatparts) . " as wbfulltextsearch ";
         }
         return '';
+    }
+
+    /**
+     * Returns an SQL expression with the display values of a customfield column.
+     *
+     * Some customfields store something else than users see: a select field stores the index of the
+     * option, a dynamicformat field the key of the data returned by its SQL. If the wbt_field_controller
+     * of the column resolves the stored values to other display values, the expression translates every
+     * stored value into its display value and gives NULL for values without a translation.
+     * The params of the expression are added to the table.
+     *
+     * @param string $column name of the column
+     * @return string|null the SQL expression, or null for columns without a matching customfield
+     *                     or with an identity resolution (e.g. text fields)
+     */
+    private function get_sql_resolved_value(string $column): ?string {
+        global $DB;
+
+        $mapping = wbt_field_controller_info::get_resolved_value_mapping($column);
+        if (empty($mapping)) {
+            return null;
+        }
+
+        $valuestring = $DB->sql_cast_to_char($column);
+        $whens = '';
+        foreach ($mapping as $storedvalue => $resolvedvalue) {
+            $storedparam = $this->set_params((string)$storedvalue);
+            $resolvedparam = $this->set_params((string)$resolvedvalue);
+            $whens .= "WHEN $valuestring = :$storedparam THEN :$resolvedparam ";
+        }
+        return "CASE $whens ELSE NULL END";
     }
 
     /**
