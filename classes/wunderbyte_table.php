@@ -62,6 +62,11 @@ class wunderbyte_table extends table_sql {
      */
     public const SORTORDER_DESC = 3;
 
+    /**
+     * Name of the column with the priority of the search results, see define_priority_columns().
+     */
+    private const SEARCH_PRIORITY_COLUMN = 'wbsearchpriority';
+
     // This variable overrides the one in table_sql. We also need the filter field.
     /**
      * @var object sql for querying db. Has fields 'fields', 'from', 'where', 'filter', 'params'.
@@ -300,6 +305,20 @@ class wunderbyte_table extends table_sql {
      * @var array
      */
     public $fulltextsearchcolumns = [];
+
+    /**
+     * Columns that decide the order of the results of the fulltext search, see define_priority_columns().
+     *
+     * @var array
+     */
+    public $prioritycolumns = [];
+
+    /**
+     * True when apply_searchtext() added the priority of the search results to the sql.
+     *
+     * @var bool
+     */
+    protected $searchpriorityapplied = false;
 
     /**
      * tabellib saves the string in the moodle_url class, which we can't encode, so we have to translate it.
@@ -1126,6 +1145,30 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * Define the columns that decide the order of the results of the fulltext search.
+     *
+     * While a user searches, the results are shown in groups, one after the other:
+     * first the rows whose first priority column equals the search text, then the rows whose first
+     * priority column contains every word of the search text, then the same for the next column,
+     * and at the end all other results. Inside a group, the normal sorting of the table applies.
+     * The comparison ignores the case. Customfields like select fields compare the value users see
+     * (e.g. the label of the option), not the stored one.
+     *
+     * The priority only changes the order, it does not search the columns: a row is only found if the
+     * search text is in one of the fulltext search columns. So the priority columns should be fulltext
+     * search columns as well.
+     *
+     * The column names end up unescaped in the sql, so they must never come from user input
+     * without a check.
+     *
+     * @param array $columns column names, the most important first
+     * @return void
+     */
+    public function define_priority_columns(array $columns) {
+        $this->prioritycolumns = array_values(array_unique($columns));
+    }
+
+    /**
      * Define the columns for the sorting.
      * @param array $sortablecolumns
      *
@@ -1198,6 +1241,66 @@ class wunderbyte_table extends table_sql {
             $whens .= "WHEN $valuestring = :$storedparam THEN :$resolvedparam ";
         }
         return "CASE $whens ELSE NULL END";
+    }
+
+    /**
+     * Returns the selects for the priority of the search results, see define_priority_columns().
+     *
+     * The first select gives the value of every priority column, the second one the priority, which
+     * compares these values. They are two selects, because the value of a customfield like a select
+     * field is a long expression with params, and Moodle does not allow to use a named param twice.
+     *
+     * Every priority column gives two groups: the column equals the search text, and the column
+     * contains every word of the search text. The groups are numbered in this order (1, 2, 3, ...),
+     * all other results get the next number.
+     *
+     * @param string $searchtext
+     * @return array [values select, priority select "CASE ... END AS wbsearchpriority"],
+     *               both empty strings without priority
+     */
+    private function setup_searchpriority(string $searchtext): array {
+        global $DB;
+
+        // The words are split like in apply_searchtext(), but without empty words (several spaces).
+        $words = array_values(array_filter(
+            explode(' ', trim($searchtext)),
+            fn($word) => $word !== ''
+        ));
+        if (empty($this->prioritycolumns) || empty($words)) {
+            return ['', ''];
+        }
+        $wholetext = implode(' ', $words);
+
+        $values = [];
+        $whens = '';
+        $priority = 0;
+        foreach (array_values($this->prioritycolumns) as $index => $column) {
+            $value = $DB->sql_cast_to_char($column);
+            // Customfields like select fields compare the value users see, e.g. the label of the option.
+            $resolvedvalue = $this->get_sql_resolved_value($column);
+            if ($resolvedvalue !== null) {
+                $value = "COALESCE($resolvedvalue, $value)";
+            }
+            $valuecolumn = self::SEARCH_PRIORITY_COLUMN . 'value' . ($index + 1);
+            $values[] = "$value AS $valuecolumn";
+
+            $wholeparam = $this->set_params($DB->sql_like_escape($wholetext));
+            $equals = $DB->sql_like($valuecolumn, ":$wholeparam", false);
+
+            $containswords = [];
+            foreach ($words as $word) {
+                $wordparam = $this->set_params('%' . $DB->sql_like_escape($word) . '%');
+                $containswords[] = $DB->sql_like($valuecolumn, ":$wordparam", false);
+            }
+
+            $whens .= "WHEN $equals THEN " . ++$priority . ' ';
+            $whens .= 'WHEN ' . implode(' AND ', $containswords) . ' THEN ' . ++$priority . ' ';
+        }
+
+        return [
+            implode(', ', $values),
+            "CASE $whens ELSE " . ++$priority . ' END AS ' . self::SEARCH_PRIORITY_COLUMN,
+        ];
     }
 
     /**
@@ -1894,6 +1997,15 @@ class wunderbyte_table extends table_sql {
         $this->searchtext = $searchtext;
         $newselect = $this->setup_fulltextsearch();
 
+        // With priority columns, the values to compare are selected here as well, see setup_searchpriority().
+        $priorityselect = '';
+        if ($newselect !== '') {
+            [$valuesselect, $priorityselect] = $this->setup_searchpriority($searchtext);
+            if ($valuesselect !== '') {
+                $newselect .= ", $valuesselect";
+            }
+        }
+
         // Add the fields/Select to the FROM part.
         $from = " ( SELECT " . $this->sql->fields . " , $newselect FROM " . $this->sql->from;
 
@@ -1902,7 +2014,14 @@ class wunderbyte_table extends table_sql {
         $this->sql->fields = $fields;
 
         // And close it in from..
-        $from .= " ) fulltextsearchcontainer ";
+        if ($priorityselect === '') {
+            $from .= " ) fulltextsearchcontainer ";
+        } else {
+            // The priority compares the values selected above, so it needs a select of its own.
+            // It is a column of the container, so get_sql_sort() can order by it.
+            $from = " ( SELECT wbsearchvalues.*, $priorityselect FROM $from ) wbsearchvalues ) fulltextsearchcontainer ";
+            $this->searchpriorityapplied = true;
+        }
 
         $filter = " AND ( ";
 
@@ -2296,6 +2415,12 @@ class wunderbyte_table extends table_sql {
      */
     public function get_sql_sort() {
         $sort = parent::get_sql_sort();
+
+        // While searching, the priority of the results comes first, see define_priority_columns().
+        if ($this->searchpriorityapplied) {
+            $prioritysort = self::SEARCH_PRIORITY_COLUMN . ' ASC';
+            $sort = empty($sort) ? $prioritysort : "$prioritysort, $sort";
+        }
 
         if (empty($this->sorttiebreaker)) {
             return $sort;
