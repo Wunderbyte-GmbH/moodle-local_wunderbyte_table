@@ -458,6 +458,25 @@ The fulltext search is triggerd when more than 3 characters are typed into the s
 If you want to look for values in a specific column, use columnname:searchterm. This can be applied for numerous queries and combined with regular fulltext search. Combinations are seperated via whitespace and/or comma. If you want to use values containing whitespaces, use double (or single) quotes ie. "Localized Column":"value including whitespace". Searchterms will be used like wildcards, while quoted values and numbers trigger exact search (no wildcard).
 If the "Enter" key is pressed, search will be toggled immediately, no matter how many characters are set.
 
+### Priority of the search results
+
+With priority columns, the results of the fulltext search are shown in groups, one after the other:
+
+```php
+$table->define_fulltextsearchcolumns(['titleprefix', 'text', 'description']);
+$table->define_priority_columns(['titleprefix', 'text']);
+```
+
+1. `titleprefix` equals the search text.
+2. `titleprefix` contains every word of the search text (in any order).
+3. `text` equals the search text.
+4. `text` contains every word of the search text.
+5. All other results.
+
+Inside a group, the normal sorting of the table applies (also a sorting chosen by the user). The comparison ignores the case. Customfields like select fields compare the value users see (e.g. the label of the option), not the stored one. Without a search text, the order does not change.
+
+The priority only changes the order: a row is only found if the search text is in one of the fulltext search columns. So the priority columns should be fulltext search columns as well. The column names end up unescaped in the sql, so they must never come from user input without a check.
+
 ## Reordering
 
 WB Table has implemented the javascript and most of the php to support reordering out of the box. To turn this on, just use this command:
