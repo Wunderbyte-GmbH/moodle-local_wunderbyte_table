@@ -1,3 +1,8 @@
+## Version 3.3.6 (2026111600)
+* New feature: Priority of the search results with the new method `define_priority_columns()`: while the fulltext search is used, rows whose priority column equals the search text or contains every word of it come first, column by column, then all other results. Without priority columns the order of the results is unchanged. See README.md ("Priority of the search results").
+* Improvement: The translation of stored customfield values into display values for the fulltext search is now the method `get_sql_resolved_value()`, so the search and the new result priority share one implementation. No change in behaviour.
+* Test: New PHPUnit test `searchpriority_test` for the priority of the search results.
+
 ## Version 3.3.5 (2026110200)
 * Bugfix: The automatic page reload after a purged table cache (errorcode tablecacheexpired) no longer fires while a Bootstrap modal or an open collapsible inside a table container is shown - it waits until the overlay is closed. Before, a table reload failing behind an open overlay reloaded the whole page at once, which tore down e.g. the pre booking pages of mod_booking right after they opened (the backdrop went dark and the list came back). (Wunderbyte-GmbH/moodle-mod_booking#1656)
 * Bugfix: Reduced jQuery dependencies.
@@ -9,11 +14,11 @@
 ## Version 3.3.3 (2026090100)
 * Bugfix: The deterministic sort tiebreaker broke tables whose select list exposes no "id" column (dml_read_exception, the table was not rendered at all) or several "id" columns (ambiguous ORDER BY). The tiebreaker is now derived from the select list as a qualified column and skipped entirely when the column is not exposed. (#155)
 * Bugfix: The refactor of the group-by handling caused ordering issues. (#155)
-* Test: The scoped customfield lookup test uses the core_course/course scope instead of mod_booking/booking - the lookup under test is component-agnostic, and the fixture generator needs an installed customfield handler, which mod_booking cannot provide on a standalone CI run. (Wunderbyte-GmbH/Wunderbyte-GmbH#2210)
+* Test: The scoped customfield lookup test uses the core_course/course scope instead of mod_booking/booking - the lookup under test is component-agnostic, and the fixture generator needs an installed customfield handler, which mod_booking cannot provide on a standalone CI run.
 
 ## Version 3.3.2 (2026081801)
-* Improvement: The filter build resolves the customfield field controller of a column once per column instead of once per filter VALUE - for filter columns without a matching customfield (e.g. a teachers filter with a json sort attribute) every single value fired its own DB lookup, 224 identical queries for 224 values during one cold filter build. (Wunderbyte-GmbH/Wunderbyte-GmbH#2211)
-* Improvement: Resolving the customfield field controllers of one component/area scope (e.g. all booking customfield columns and filters of a table) now costs one single bulk query per request instead of two queries per shortname - the per-shortname lookup no longer re-reads the row it already holds by id, and the first scoped lookup loads all fields of the scope at once. (Wunderbyte-GmbH/Wunderbyte-GmbH#2210)
+* Improvement: The filter build resolves the customfield field controller of a column once per column instead of once per filter VALUE - for filter columns without a matching customfield (e.g. a teachers filter with a json sort attribute) every single value fired its own DB lookup, 224 identical queries for 224 values during one cold filter build.
+* Improvement: Resolving the customfield field controllers of one component/area scope (e.g. all booking customfield columns and filters of a table) now costs one single bulk query per request instead of two queries per shortname - the per-shortname lookup no longer re-reads the row it already holds by id, and the first scoped lookup loads all fields of the scope at once.
 * Bugfix: Guard against tables without filter settings (null categories) when reducing filters for specific columns.
 
 ## Version 3.3.2 (2026081800)
