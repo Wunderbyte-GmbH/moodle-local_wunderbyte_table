@@ -1,3 +1,5 @@
+* Test: The new PHPUnit test upgrade_savepoints_test checks the version numbers in db/upgrade.php: every step ends with the savepoint of its own number and the numbers only go up, the highest step is not above the plugin version, and steps that are not part of the last release (the git tag with the highest plugin version) have a number above it. The last check needs the git tags and is skipped without them.
+
 ## Version 3.3.6 (2026111600)
 * New feature: Priority of the search results with the new method `define_priority_columns()`: while the fulltext search is used, rows whose priority column equals the search text or contains every word of it come first, column by column, then all other results. Without priority columns the order of the results is unchanged. See README.md ("Priority of the search results").
 * Improvement: The translation of stored customfield values into display values for the fulltext search is now the method `get_sql_resolved_value()`, so the search and the new result priority share one implementation. No change in behaviour.
