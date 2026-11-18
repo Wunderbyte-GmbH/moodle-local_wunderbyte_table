@@ -189,6 +189,21 @@
     top: 40%;
 }
 
+/* Only the table itself scrolls horizontally. Action buttons, pagination and the row count
+   select sit outside this box, so they stay in place while the table is scrolled. */
+.wunderbyte-table-table .wunderbyte-table-scrollbox {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* The outer wrapper must not be the scroll container (Bootstrap .table-responsive makes it one),
+   otherwise the action buttons scroll away with the table. As a grid item it has to be allowed
+   to shrink below the table width, so the scroll box above takes over. */
+.wunderbyteTableClass.table-responsive:has(> .wunderbyte-table-table > .wunderbyte-table-scrollbox) {
+    min-width: 0;
+    overflow: visible;
+}
+
 .wunderbyte-table-table .scroll-y {
     height: 600px;
     border: 1px solid #dee2e6;
