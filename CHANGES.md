@@ -1,3 +1,8 @@
+## Version 3.3.7 (2026112000)
+* Improvement: Wide tables: only the table itself scrolls horizontally now. Before, the whole table container scrolled, so the action buttons, the pagination and the selector for the number of rows moved out of view together with the columns. The table sits in a scroll box of its own (`wunderbyte-table-scrollbox`), everything around it stays in place.
+* Improvement: The info popover next to the search field (the list of columns that are searched) opens below the icon, or above it when there is no room, instead of to the right or left. At the side it was cut off or covered the table on narrow screens.
+* Bugfix: Hierarchical filter: long category names and option labels ran out of the filter menu and pushed the caret out of view, because the category button could neither wrap nor shrink. Labels of all list filters (standard, hierarchy, tree) now wrap inside the menu and break only inside words that do not fit on a line of their own, instead of breaking at any character.
+* Bugfix: Browsers filled the search field of a table with a saved username, which filtered the table without the user having typed anything. The search field now has `autocomplete="off"`.
 * Test: The new PHPUnit test upgrade_savepoints_test checks the version numbers in db/upgrade.php: every step ends with the savepoint of its own number and the numbers only go up, the highest step is not above the plugin version, and steps that are not part of the last release (the git tag with the highest plugin version) have a number above it. The last check needs the git tags and is skipped without them.
 
 ## Version 3.3.6 (2026111600)
