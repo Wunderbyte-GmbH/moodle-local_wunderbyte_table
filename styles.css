@@ -698,7 +698,6 @@ ul.wunderbyterFilterList.wbt-treechildren {
 .wunderbyteTableFilter .dropdown-item .form-check-label {
     color: inherit;
     white-space: normal;
-    word-break: break-all;
 }
 
 /* The hover/focus colours of an option live in the accessibility section at the end of this file,
@@ -1160,6 +1159,42 @@ ul.wunderbyterFilterList.wbt-treechildren {
     padding-left: 0;
     margin-bottom: 0;
     list-style: none;
+}
+
+/* Long labels have to stay inside the filter menu, whose width is given by the filter column.
+   The category button of the hierarchical filter is a ".dropdown-item" (white-space: nowrap) with
+   "width: 100%" next to its checkbox in a flex row: without "min-width: 0" it cannot shrink below
+   its text and without wrapping it pushes the caret and the text out of the menu. */
+.wunderbyteTableFilter .hierarchycategory-checkbox {
+    flex: 0 0 auto;
+}
+
+.wunderbyteTableFilter .hierarchybutton {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal;
+    text-align: start;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    padding-left: 0.5rem;
+    /* Room for the caret, which is positioned absolutely at the right edge. */
+    padding-right: 1.5rem;
+}
+
+/* The options of a category sit in a Bootstrap card: its default padding costs too much of the
+   narrow menu. */
+.wunderbyteTableFilter .wbt-hierarchy-category .card-body {
+    padding: 0.5rem;
+}
+
+/* Option labels of every list filter (standard, hierarchy, tree): wrap inside the row and break
+   only where a word does not fit on a line of its own. As a block the label keeps the drawn
+   checkbox on its first line when the text wraps. */
+.wunderbyteTableFilter .wunderbyterFilterList .form-check-label {
+    display: block;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    hyphens: auto;
 }
 
 /* Toggle filter: give the switch a colour with enough contrast in both states and a focus ring of
