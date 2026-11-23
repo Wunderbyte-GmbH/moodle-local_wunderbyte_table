@@ -402,6 +402,13 @@ class wunderbyte_table extends table_sql {
     public $showrowcountselect = false;
 
     /**
+     * Page sizes offered by the rows-per-page select. If empty, the default list is used.
+     *
+     * @var int[]
+     */
+    public $rowcountselectoptions = [];
+
+    /**
      * Inactive filter display on load.
      *
      * @var bool
