@@ -269,6 +269,13 @@ class table implements renderable, templatable {
     public $showrowcountselect = false;
 
     /**
+     * Page sizes offered by the rows-per-page select. If empty, the default list is used.
+     *
+     * @var int[]
+     */
+    private $rowcountselectoptions = [];
+
+    /**
      * Display Actionbuttons, Pagination and Rowcount on top of table.
      *
      * @var bool
@@ -394,6 +401,7 @@ class table implements renderable, templatable {
         $this->actionbuttons = $table->actionbuttons;
 
         $this->showrowcountselect = $table->showrowcountselect;
+        $this->rowcountselectoptions = $table->rowcountselectoptions ?? [];
 
         $this->placebuttonandpageelementsontop = $table->placebuttonandpageelementsontop;
 
@@ -653,6 +661,16 @@ class table implements renderable, templatable {
             return [];
         }
         $options = [];
+        if (!empty($this->rowcountselectoptions)) {
+            foreach ($this->rowcountselectoptions as $pagenumber) {
+                $options[] = [
+                    'label' => get_string('pagelabel', 'local_wunderbyte_table', $pagenumber),
+                    'value' => $pagenumber,
+                    'selected' => $pagenumber == $this->pagesize ? 'selected' : '',
+                ];
+            }
+            return ['options' => $options];
+        }
         $counter = 0;
         while ($counter <= 19) {
             if ($counter == 0) {
