@@ -79,6 +79,11 @@
         width: 1px;
     }
 
+    /* The header is not visible here, so its sort buttons must not take the keyboard focus. */
+    .wunderbyte-table-table table thead .wb-sort-button {
+        visibility: hidden;
+    }
+
     .wunderbyte-table-table table tr {
         border: 1px solid #ddd;
         display: block;
@@ -148,14 +153,89 @@
     word-break: break-word;
 }
 
+/* The whole header cell of a sortable column is the interactive area. */
 .wunderbyte-table-table table th[data-sortable] {
     position: relative;
+    cursor: pointer;
+}
+
+.wunderbyte-table-table table th[data-sortable]:hover,
+.wunderbyte-table-table table th[data-sortable]:has(.wb-sort-button:focus-visible) {
+    background-color: var(--bs-secondary-bg, #e9ecef);
+    /* Muted header colours do not have enough contrast on the highlighted background. */
+    color: var(--bs-body-color, #1d2125);
+}
+
+.wunderbyte-table-table table th[data-sortable]:has(.wb-sort-button:focus-visible) {
+    outline: 2px solid var(--bs-primary, #0f6cbf);
+    outline-offset: -2px;
+}
+
+/* The focus ring is drawn on the cell, where the browser supports it. */
+@supports selector(:has(*)) {
+    .wunderbyte-table-table th[data-sortable] .wb-sort-button:focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+}
+
+.wunderbyte-table-table th[data-sortable] .wb-sort-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    cursor: pointer;
+}
+
+/* The sort icon stands behind the label. Both arrows share one box, the active one is highlighted. */
+.wunderbyte-table-table th[data-sortable] .wb-sort-icon {
+    position: relative;
+    flex: 0 0 auto;
+    width: 0.75em;
+    height: 1em;
+    font-size: 16px;
+    /* Independent of the header text colour, so that the inactive arrow keeps a contrast of 3:1. */
+    color: var(--bs-body-color, #1d2125);
+}
+
+.wunderbyte-table-table th[data-sortable] .wb-sort-icon::before,
+.wunderbyte-table-table th[data-sortable] .wb-sort-icon::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font: var(--fa-font-solid);
+    font-size: 16px;
+    font-family: 'FontAwesome', 'Font Awesome 6 Free';
+    line-height: 1;
+    opacity: 0.6;
+}
+
+.wunderbyte-table-table th[data-sortable] .wb-sort-icon::before {
+    content: "\f0de";
+}
+
+.wunderbyte-table-table th[data-sortable] .wb-sort-icon::after {
+    content: "\f0dd";
+}
+
+.wunderbyte-table-table th[data-sortable].asc .wb-sort-icon::before,
+.wunderbyte-table-table th[data-sortable].desc .wb-sort-icon::after {
+    opacity: 1;
+}
+
+/* Header cells of templates which do not use the twtable_list_headercell partial keep the arrows before the label. */
+.wunderbyte-table-table table th[data-sortable]:not(:has(.wb-sort-button)) {
     margin-right: 3px;
     padding-left: 18px;
 }
 
-.wunderbyte-table-table table th[data-sortable]::before,
-.wunderbyte-table-table table th[data-sortable]::after {
+.wunderbyte-table-table table th[data-sortable]:not(:has(.wb-sort-button))::before,
+.wunderbyte-table-table table th[data-sortable]:not(:has(.wb-sort-button))::after {
     position: absolute;
     display: block;
     opacity: 0.125;
@@ -164,15 +244,15 @@
     font-size: 0.9em;
 }
 
-.wunderbyte-table-table th[data-sortable].desc::after {
+.wunderbyte-table-table th[data-sortable].desc:not(:has(.wb-sort-button))::after {
     opacity: 1;
 }
 
-.wunderbyte-table-table th[data-sortable].asc::before {
+.wunderbyte-table-table th[data-sortable].asc:not(:has(.wb-sort-button))::before {
     opacity: 1;
 }
 
-.wunderbyte-table-table th[data-sortable]::before {
+.wunderbyte-table-table th[data-sortable]:not(:has(.wb-sort-button))::before {
     content: "\f0de";
     font: var(--fa-font-solid);
     font-size: 14px;
@@ -181,7 +261,7 @@
     right: 0;
 }
 
-.wunderbyte-table-table th[data-sortable]::after {
+.wunderbyte-table-table th[data-sortable]:not(:has(.wb-sort-button))::after {
     content: "\f0dd";
     font: var(--fa-font-solid);
     font-size: 14px;

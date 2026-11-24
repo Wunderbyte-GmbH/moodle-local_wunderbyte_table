@@ -29,7 +29,11 @@ const SELECTOR = {
     WBCONTAINER: ".wunderbyte_table_container_",
     CHECKBOXES: 'input.wb-checkbox',
     TABLEHEADERCHECKBOX: 'input.tableheadercheckbox',
+    SORTBUTTON: '.wb-sort-button',
 };
+
+// The column header which had the focus when sorting was triggered.
+let pendingFocus = null;
 
 const SORT_ASC = 4;
 const SORT_DESC = 3;
@@ -116,12 +120,49 @@ export function initializeSortColumns(listContainer, idstring, encodedtable) {
                     break;
                 default:
                     if (element.dataset.sortable) {
+                        // The table is rendered anew after sorting, so we remember the focused header.
+                        if (element.contains(document.activeElement)) {
+                            pendingFocus = {idstring, columnname, element};
+                        }
                         callSortAjax(columnname, idstring, encodedtable);
                     }
             }
         }
         );
     });
+
+    restoreHeaderFocus(container, idstring);
+}
+
+/**
+ * After sorting via a column header, the header is replaced by a newly rendered one.
+ * We give the focus back to the sort button of the same column.
+ * @param {HTMLElement} container
+ * @param {string} idstring
+ */
+function restoreHeaderFocus(container, idstring) {
+
+    if (!pendingFocus || pendingFocus.idstring !== idstring) {
+        return;
+    }
+
+    const header = container.querySelector(
+        SELECTOR.TABLECOLUMN + '[data-columnname="' + pendingFocus.columnname + '"]'
+    );
+
+    // As long as the old header is still there, the table has not been rendered anew.
+    if (!header || header === pendingFocus.element) {
+        return;
+    }
+
+    const button = header.querySelector(SELECTOR.SORTBUTTON);
+    const active = document.activeElement;
+
+    // We only take the focus if it got lost with the old header, not if the user moved on.
+    if (button && (!active || active === document.body || !active.isConnected)) {
+        button.focus();
+    }
+    pendingFocus = null;
 }
 
 /**
