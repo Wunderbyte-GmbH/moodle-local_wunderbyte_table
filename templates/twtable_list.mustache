@@ -104,8 +104,11 @@
                                             data-columnname="{{key}}"
                                             {{#sortable}}
                                             data-sortable="{{sortable}}"
-                                            {{/sortable}}>
-                                                {{{localized}}}
+                                            {{/sortable}}
+                                            {{#ariasort}}
+                                            aria-sort="{{ariasort}}"
+                                            {{/ariasort}}>
+                                                {{> local_wunderbyte_table/twtable_list_headercell }}
                                             </th>
                                     {{/headers}}
                                 {{/header}}
