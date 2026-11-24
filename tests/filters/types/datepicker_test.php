@@ -173,4 +173,38 @@ final class datepicker_test extends TestCase {
         }
         datepicker::render_mandatory_fields($mformmock, $data);
     }
+
+    /**
+     * Adding a datepicker switches the filter panel on, like every other filter type: the table
+     * creates the id entry of the filter definition unchecked, which hides the whole filter.
+     * A table that only has datepicker filters did not show them.
+     *
+     * @covers \local_wunderbyte_table\filters\types\datepickerbase::add_filter
+     */
+    public function test_add_filter_shows_the_filter_panel(): void {
+        // The filter definition of a table without filters.
+        $filter = [
+            'id' => [
+                'localizedname' => 'ID',
+                'id_wb_checked' => 0,
+            ],
+        ];
+
+        $datepicker = new datepicker('timecreated', 'Time created', 'timecreated', 'Time created');
+        $datepicker->add_options('in between', '<', 'Apply filter', 'now - 1 month', 'now', ['within']);
+        $datepicker->add_filter($filter);
+
+        $this->assertSame(1, $filter['id']['id_wb_checked']);
+        $this->assertSame(1, $filter['timecreated']['timecreated_wb_checked']);
+        // Both ends of the period apply to the same column.
+        $options = $filter['timecreated']['datepicker']['Time created'];
+        $this->assertSame('timecreated', $options['columntimestart']);
+        $this->assertSame('timecreated', $options['columntimeend']);
+        $this->assertSame(['within'], $options['possibleoperations']);
+
+        // Without any definition, the id entry is created checked, as before.
+        $empty = [];
+        $datepicker->add_filter($empty);
+        $this->assertSame(1, $empty['id']['id_wb_checked']);
+    }
 }

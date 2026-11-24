@@ -79,6 +79,11 @@ abstract class datepickerbase extends base {
                 'localizedname' => get_string('id', 'local_wunderbyte_table'),
                 'id_wb_checked' => 1,
             ];
+        } else {
+            // The table creates the id column unchecked, which hides the whole filter. Adding a filter
+            // has to show it, like for all other filter types (see base::add_filter()). Otherwise a
+            // table that only has datepicker filters would never show them.
+            $filter['id']['id_wb_checked'] = 1;
         }
 
         if (!isset($filter[$this->columnidentifier])) {
