@@ -501,6 +501,23 @@ If a filter is set, by default the filter applies also to the download. If you w
 
     $table->applyfilterondownload = false;
 
+### When the file is sent
+
+A download script requests the download and prints the table:
+
+    $table->is_downloading($download, $filename, $sheetname);
+    $table->printtable(20, true);
+
+`is_downloading()` only prepares the export. The file is announced to the browser (headers,
+start of the document) once all rows are queried and formatted. If anything fails before that
+(a database error, an exception in one of your `col_*` methods), the user gets the regular
+Moodle error page instead of an empty or broken file, and the error is written to the PHP error log.
+A download without rows delivers a valid file with the header row.
+
+So your download script can still change the table between the two calls (e.g. define other
+columns for the download), and your `col_*` methods can throw exceptions safely.
+Do not print anything yourself in a download script.
+
 ## Allow users to add their own filters
 
 You can allow users with the capabiltiy 'local/wunderbyte_table:canedittable'

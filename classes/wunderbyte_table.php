@@ -38,6 +38,7 @@ use Exception;
 use local_wunderbyte_table\output\lazytable;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
+use table_dataformat_export_format;
 use table_sql;
 use moodle_url;
 use stdClass;
@@ -796,6 +797,8 @@ class wunderbyte_table extends table_sql {
     public function finish_output($closeexportclassdoc = true, $encodedtable = '') {
 
         if ($this->exportclass !== null) {
+            // Normally started by build_table(). This covers callers which add their rows themselves.
+            $this->start_download_document();
             $this->exportclass->finish_table();
             if ($closeexportclassdoc) {
                 $this->exportclass->finish_document();
@@ -1036,20 +1039,71 @@ class wunderbyte_table extends table_sql {
 
     /**
      * This is to override original function, but we still format rows.
+     *
+     * For a download, all rows are formatted before the file is announced to the browser
+     * (see start_download_document()). Only then they are handed to the export class.
      * @return void
      */
     public function build_table() {
         $this->formatedrows = [];
         foreach ($this->rawdata as $key => $rawrow) {
-            $formattedrow = $this->format_row($rawrow);
-            $this->formatedrows[$key] = $formattedrow;
+            $this->formatedrows[$key] = $this->format_row($rawrow);
+        }
 
-            if ($this->is_downloading()) {
-                $this->add_data_keyed(
-                    $formattedrow,
-                    $this->get_row_class($rawrow)
-                );
-            }
+        if (!$this->is_downloading()) {
+            return;
+        }
+
+        $this->start_download_document();
+        foreach ($this->formatedrows as $key => $formattedrow) {
+            $this->add_data_keyed(
+                $formattedrow,
+                $this->get_row_class($this->rawdata[$key])
+            );
+        }
+    }
+
+    /**
+     * Get, and optionally set, the export class.
+     *
+     * The core table announces the file to the browser (Content-Disposition: attachment) as soon
+     * as the download is requested with is_downloading(), long before the rows are queried and
+     * formatted. Whatever fails after that (database error, exception in a column, PHP running
+     * out of memory) ends up as the announced file: empty, invalid or holding an error page.
+     * So we only create the export class here. The document is started by
+     * start_download_document(), once the rows are ready.
+     *
+     * @param \table_dataformat_export_format|null $exportclass (optional) if passed, set the table to use this export class.
+     * @return \table_dataformat_export_format|null the export class in use (after any set).
+     */
+    public function export_class_instance($exportclass = null) {
+        if (is_null($exportclass) && is_null($this->exportclass) && !empty($this->download)) {
+            $this->exportclass = new table_dataformat_export_format($this, $this->download);
+            return $this->exportclass;
+        }
+        return parent::export_class_instance($exportclass);
+    }
+
+    /**
+     * Starts the document of a download: sends the headers of the file to the browser and
+     * writes the header row. Does nothing for a displayed table or once the document is started.
+     *
+     * Call this as late as possible, i.e. when all rows are queried and formatted. From here on,
+     * an error can no longer be shown as an error page, because the browser saves the response.
+     *
+     * @return void
+     */
+    protected function start_download_document(): void {
+        if ($this->exportclass === null) {
+            return;
+        }
+        if (!$this->exportclass->document_started()) {
+            $this->exportclass->start_document($this->filename, $this->sheettitle);
+        }
+        // Without rows, nobody else writes the header row: the file would be empty (CSV)
+        // or invalid (spreadsheet formats).
+        if (!$this->started_output) {
+            $this->start_output();
         }
     }
 
@@ -1473,6 +1527,14 @@ class wunderbyte_table extends table_sql {
             try {
                 $this->query_db($pagesize, $useinitialsbar);
             } catch (Exception $e) {
+                // A displayed table shows the error in place of its rows. A download has no place for
+                // a message: continuing with no rows would deliver a file without rows that looks like
+                // a successful export. So we let the exception through. The file is not announced to
+                // the browser yet (see export_class_instance()), so the user gets the regular Moodle
+                // error page and the error is written to the PHP error log.
+                if ($this->is_downloading()) {
+                    throw $e;
+                }
                 if ($CFG->debug > 0) {
                     $this->errormessage .= $e->getMessage();
                 } else {
