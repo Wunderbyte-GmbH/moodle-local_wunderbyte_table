@@ -514,6 +514,19 @@ start of the document) once all rows are queried and formatted. If anything fail
 Moodle error page instead of an empty or broken file, and the error is written to the PHP error log.
 A download without rows delivers a valid file with the header row.
 
+If the database cannot read (or count) the rows of the table, the error is thrown as
+`local_wunderbyte_table\local\exception\download_query_exception`, a `dml_read_exception` with a
+name of its own. The query of the table is the only one that reads all rows at once, so it is the
+only one that can fail because of the amount of data. Read errors of queries your `col_*` methods run
+for a row keep their type. A download script can catch the exception to react to tables that are too
+big, e.g. by asking the user to narrow the table down:
+
+    try {
+        $table->printtable(20, true);
+    } catch (download_query_exception $e) {
+        // Nothing has been sent yet: redirect, or show your own message.
+    }
+
 So your download script can still change the table between the two calls (e.g. define other
 columns for the download), and your `col_*` methods can throw exceptions safely.
 Do not print anything yourself in a download script.

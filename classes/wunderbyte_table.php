@@ -24,6 +24,7 @@
 
 namespace local_wunderbyte_table;
 use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
+use local_wunderbyte_table\local\exception\download_query_exception;
 use local_wunderbyte_table\local\performance\performance;
 use local_wunderbyte_table\local\sortables\sortable_info;
 use mod_booking\singleton_service;
@@ -34,6 +35,7 @@ require_once("$CFG->libdir/tablelib.php");
 
 use cache;
 use context_system;
+use dml_read_exception;
 use Exception;
 use local_wunderbyte_table\output\lazytable;
 use local_wunderbyte_table\output\table;
@@ -1533,7 +1535,7 @@ class wunderbyte_table extends table_sql {
                 // the browser yet (see export_class_instance()), so the user gets the regular Moodle
                 // error page and the error is written to the PHP error log.
                 if ($this->is_downloading()) {
-                    throw $e;
+                    throw $this->download_exception($e);
                 }
                 if ($CFG->debug > 0) {
                     $this->errormessage .= $e->getMessage();
@@ -1562,10 +1564,30 @@ class wunderbyte_table extends table_sql {
             }
 
             if (!$paginationset) {
-                $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
+                try {
+                    $this->totalrecords = $DB->count_records_sql($totalcountsql, $this->sql->params);
+                } catch (Exception $e) {
+                    // The count was never caught: a displayed table keeps failing with the error page.
+                    throw $this->is_downloading() ? $this->download_exception($e) : $e;
+                }
                 $this->set_pagination_to_cache($cachekey);
             }
         }
+    }
+
+    /**
+     * Gives a read error of the query of a download a name of its own (download_query_exception),
+     * so the script of the download can tell it apart from the read errors of other queries.
+     * Every other exception is returned unchanged.
+     *
+     * @param Exception $exception thrown while the rows were queried or counted
+     * @return Exception
+     */
+    private function download_exception(Exception $exception): Exception {
+        if ($exception instanceof dml_read_exception && !($exception instanceof download_query_exception)) {
+            return new download_query_exception($exception);
+        }
+        return $exception;
     }
 
     /**

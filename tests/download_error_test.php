@@ -28,7 +28,8 @@ namespace local_wunderbyte_table;
 use advanced_testcase;
 use cache_helper;
 use coding_exception;
-use dml_exception;
+use dml_read_exception;
+use local_wunderbyte_table\local\exception\download_query_exception;
 use moodle_url;
 
 /**
@@ -162,7 +163,10 @@ final class download_error_test extends advanced_testcase {
         $table = $this->define_table(new demo_table('downloadqueryerror'), 'id, wbtable_missing_column');
         [$output, $exception] = $this->run_download($table);
 
-        $this->assertInstanceOf(dml_exception::class, $exception, 'The database error was swallowed.');
+        // The read error of the query of the table has a name of its own and keeps the original error.
+        $this->assertInstanceOf(download_query_exception::class, $exception, 'The database error was swallowed.');
+        $this->assertStringContainsString('wbtable_missing_column', $exception->original->error);
+        $this->assertStringContainsString('wbtable_missing_column', $exception->debuginfo);
         $this->assertSame('', $output);
     }
 
@@ -187,7 +191,34 @@ final class download_error_test extends advanced_testcase {
         };
         [$output, $exception] = $this->run_download($this->define_table($table, '*', '{wbtable_does_not_exist}'));
 
-        $this->assertInstanceOf(dml_exception::class, $exception);
+        $this->assertInstanceOf(download_query_exception::class, $exception);
+        $this->assertSame('', $output);
+    }
+
+    /**
+     * A read error of a query a column runs for a row is not the query of the table:
+     * it keeps its type, so nobody mistakes it for a problem with the amount of data.
+     */
+    public function test_read_error_of_a_column_keeps_its_type(): void {
+        $this->setAdminUser();
+        $this->getDataGenerator()->create_course(['fullname' => 'Some course']);
+
+        $table = new class ('downloadcolumnquery') extends demo_table {
+            /**
+             * Runs a failing query for the row.
+             *
+             * @param \stdClass $values
+             * @return string
+             */
+            public function col_fullname($values) {
+                global $DB;
+                return (string)$DB->count_records_sql('SELECT COUNT(*) FROM {wbtable_does_not_exist}');
+            }
+        };
+        [$output, $exception] = $this->run_download($this->define_table($table));
+
+        $this->assertInstanceOf(dml_read_exception::class, $exception);
+        $this->assertNotInstanceOf(download_query_exception::class, $exception);
         $this->assertSame('', $output);
     }
 
