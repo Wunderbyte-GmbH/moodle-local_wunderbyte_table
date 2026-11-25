@@ -24,6 +24,7 @@
  */
 
 namespace local_wunderbyte_table\event;
+
 use local_wunderbyte_table\event\wbtable_event_base;
 
 /**

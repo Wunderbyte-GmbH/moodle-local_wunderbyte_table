@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace local_wunderbyte_table\filters\types;
+
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
 use local_wunderbyte_table\filter;

@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+
 use advanced_testcase;
 use context_course;
 use context_system;

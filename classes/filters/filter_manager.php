@@ -21,6 +21,7 @@
  * @copyright 2024 Wunderbyte Gmbh <info@wunderbyte.at>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace local_wunderbyte_table\filters;
 
 defined('MOODLE_INTERNAL') || die();

@@ -523,7 +523,8 @@ class table implements renderable, templatable {
 
                 $this->table['header']['headers'][] = $item;
             }
-        } else { // We also need this in case there are no headers to apply sorting correctly.
+        } else {
+            // We also need this in case there are no headers to apply sorting correctly.
             foreach ($table->columns as $column => $key) {
                 if (in_array($column, array_keys($sortcolumns)) && !empty($this->sort)) {
                     switch ($sortcolumns[$column]) {

@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table;
+
 use local_wunderbyte_table\local\customfield\wbt_field_controller_info;
 use local_wunderbyte_table\local\exception\download_query_exception;
 use local_wunderbyte_table\local\performance\performance;

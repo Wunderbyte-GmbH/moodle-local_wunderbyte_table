@@ -23,7 +23,9 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+
 use local_wunderbyte_table\filters\base;
+
 /**
  * Wunderbyte table class is an extension of table_sql.
  */

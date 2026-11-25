@@ -184,7 +184,8 @@ abstract class datepickerbase extends base {
                     'timereadable' => $defaulttimestamp === 'now' ? 'now' : date('H:i', $defaulttimestamp),
                     'checkboxlabel' => $datepickerarray['datepicker'][$labelkey]['checkboxlabel'],
                 ];
-            } else { // Inbetween Filter applied.
+            } else {
+                // Inbetween Filter applied.
                 // Prepare the array for output.
                 if (empty($datepickerarray['datepicker'][$labelkey]['possibleoperations'])) {
                     $datepickerarray['datepicker'][$labelkey]['possibleoperations'] = self::get_operatoroptions();

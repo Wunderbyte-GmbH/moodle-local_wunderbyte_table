@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+
 use local_wunderbyte_table\filters\base;
 use local_wunderbyte_table\wunderbyte_table;
 

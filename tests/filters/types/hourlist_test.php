@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table\filters\types;
+
 use MoodleQuickForm;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;

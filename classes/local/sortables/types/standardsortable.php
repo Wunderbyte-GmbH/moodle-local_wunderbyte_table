@@ -23,6 +23,7 @@
  */
 
 namespace local_wunderbyte_table\local\sortables\types;
+
 use stdClass;
 use local_wunderbyte_table\local\sortables\base;
 use local_wunderbyte_table\wunderbyte_table;

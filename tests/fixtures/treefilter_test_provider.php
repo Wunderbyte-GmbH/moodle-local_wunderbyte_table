@@ -28,7 +28,6 @@ use local_wunderbyte_table\wunderbyte_table;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class treefilter_test_provider implements tree_provider {
-
     /**
      * Fixed present counts: two options on Room(4), one on BuildingB(5).
      *
