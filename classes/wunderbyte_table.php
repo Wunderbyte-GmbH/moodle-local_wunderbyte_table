@@ -2247,8 +2247,29 @@ class wunderbyte_table extends table_sql {
             }
         }
 
+        // The cached table is shared by all users who see a table with the same sql, but
+        // plugins add the action buttons depending on the capabilities of the current user.
+        // So we remember the buttons of this user next to the shared table, on every render.
+        // Ajax reloads fetch them again in instantiate_from_tablecache_hash.
+        cache::make('local_wunderbyte_table', 'encodedtables')->set(
+            self::actionbuttons_cachekey($this->tablecachehash),
+            $this->actionbuttons
+        );
+
         // We need to urlencode everything to make it proof.
         return $this->tablecachehash;
+    }
+
+    /**
+     * Key under which the action buttons of the current user are cached for a table.
+     *
+     * @param string $tablecachehash
+     * @return string
+     */
+    private static function actionbuttons_cachekey(string $tablecachehash): string {
+        global $USER;
+
+        return $tablecachehash . '_actionbuttons_' . (int)($USER->id ?? 0);
     }
 
     /**
@@ -2416,6 +2437,15 @@ class wunderbyte_table extends table_sql {
 
         $cache = cache::make('local_wunderbyte_table', 'encodedtables');
         $class = $cache->get($tablecachehash);
+
+        // The cached table carries the action buttons of the user who cached it first.
+        // Replace them with those the current user saw on the last render of this table.
+        if ($class instanceof self) {
+            $actionbuttons = $cache->get(self::actionbuttons_cachekey($tablecachehash));
+            if (is_array($actionbuttons)) {
+                $class->actionbuttons = $actionbuttons;
+            }
+        }
 
         return $class;
     }
