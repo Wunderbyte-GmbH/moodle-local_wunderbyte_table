@@ -61,6 +61,9 @@ class wunderbyte_table extends table_sql {
     /** @var string The capability every logged in user has. Tables without declaration use it. */
     public const DEFAULTCAPABILITY = 'local/wunderbyte_table:canaccess';
 
+    /** @var int The highest number of rows per page a user can choose. */
+    public const MAXPAGESIZE = 1000;
+
     /**
      * Provide const for sortorder ASC.
      */
@@ -277,6 +280,13 @@ class wunderbyte_table extends table_sql {
      * @var bool requirelogin
      */
     public $requirelogin = true;
+
+    /**
+     * The template the table was defined with. The template property itself holds the choice of the
+     * current user while a request is processed.
+     * @var string|null definedtemplate
+     */
+    public $definedtemplate = null;
 
     /**
      * Whether the code that builds the table declared who may access it, see the declare_access_* methods.
@@ -768,6 +778,9 @@ class wunderbyte_table extends table_sql {
 
         $encodedtable = $this->return_encoded_table();
 
+        // The definition above is cached for everybody. From here on the choices of the current user apply.
+        $this->apply_template_of_current_user();
+
         tablesettings::apply_setting($this);
 
         if (!$this->columns) {
@@ -805,7 +818,7 @@ class wunderbyte_table extends table_sql {
             $this->headers = $headers;
         }
 
-        $this->pagesize = $pagesize;
+        $this->pagesize = $this->return_pagesize_for_current_user((int)$pagesize);
         $this->setup();
 
         // First we query without the filter.
@@ -2201,16 +2214,8 @@ class wunderbyte_table extends table_sql {
 
         global $CFG;
 
-        // If a user preference for the table template is set, we use it.
-        $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
-        if (
-            !empty($this->switchtemplates['templates'])
-            && !empty($chosentemplate)
-            && self::template_exists($chosentemplate)
-        ) {
-            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
-            $this->tabletemplate = $chosentemplate;
-        }
+        // If the user chose one of the templates the table offers, we use it.
+        [$this->tabletemplate] = $this->return_template_for_current_user();
 
         if (!empty($this->tabletemplate)) {
             [$component, $template] = explode("/", $this->tabletemplate);
@@ -2541,6 +2546,104 @@ class wunderbyte_table extends table_sql {
     }
 
     /**
+     * Whether the table offers this template (with this view parameter) in its switcher.
+     *
+     * @param string $template
+     * @param int|null $viewparam null accepts every view parameter of the template
+     * @return bool
+     */
+    public function is_offered_template(string $template, ?int $viewparam = null): bool {
+        foreach ($this->switchtemplates['templates'] ?? [] as $offered) {
+            if (
+                ($offered['template'] ?? '') === $template
+                && ($viewparam === null || (int)($offered['viewparam'] ?? 0) === $viewparam)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * The template the current user gets: the one this user chose, if the table offers it,
+     * otherwise the template the table was defined with.
+     *
+     * @return array [template, viewparam]
+     */
+    public function return_template_for_current_user(): array {
+        if ($this->definedtemplate === null) {
+            $this->definedtemplate = $this->tabletemplate;
+        }
+
+        if (!empty($this->switchtemplates['templates'])) {
+            $chosentemplate = get_user_preferences('wbtable_chosen_template_' . $this->uniqueid);
+            $chosenviewparam = get_user_preferences('wbtable_chosen_template_viewparam_' . $this->uniqueid);
+            $chosenviewparam = is_numeric($chosenviewparam) ? (int)$chosenviewparam : null;
+            if (
+                !empty($chosentemplate)
+                && $this->is_offered_template($chosentemplate, $chosenviewparam)
+                && self::template_exists($chosentemplate)
+            ) {
+                return [$chosentemplate, $chosenviewparam ?? 0];
+            }
+        }
+
+        // No valid choice: the template of the definition, with its view parameter if the switcher knows it.
+        foreach ($this->switchtemplates['templates'] ?? [] as $offered) {
+            if (($offered['template'] ?? '') === $this->definedtemplate) {
+                return [$this->definedtemplate, (int)($offered['viewparam'] ?? 0)];
+            }
+        }
+        return [$this->definedtemplate, 0];
+    }
+
+    /**
+     * Apply the template of the current user to this instance. Runs on every request after the
+     * shared definition was cached or loaded from the cache, never changes the cached definition.
+     *
+     * @return void
+     */
+    private function apply_template_of_current_user(): void {
+        if ($this->is_downloading()) {
+            return;
+        }
+        [$template, $viewparam] = $this->return_template_for_current_user();
+        $this->tabletemplate = $template;
+        $this->apply_template_layout($template, $viewparam);
+    }
+
+    /**
+     * Hook for tables that arrange their columns differently for each template (subcolumns, card
+     * areas...). It is called on every request with the template of the current user, so the
+     * arrangement never has to be stored in the shared table definition.
+     *
+     * @param string $template
+     * @param int $viewparam
+     * @return void
+     */
+    public function apply_template_layout(string $template, int $viewparam): void {
+        // Nothing to do for tables that use the same arrangement for all their templates.
+    }
+
+    /**
+     * The number of rows per page the current user gets: the number this user chose in the row
+     * count selector, otherwise the number the page asked for.
+     *
+     * @param int $pagesize number of rows the page asked for
+     * @return int
+     */
+    public function return_pagesize_for_current_user(int $pagesize): int {
+        if ($this->is_downloading() || !empty($this->infinitescroll)) {
+            return $pagesize;
+        }
+        $chosen = (int)get_user_preferences('wbtable_pagesize_' . $this->uniqueid, 0);
+        if ($chosen >= 1 && $chosen <= self::MAXPAGESIZE) {
+            return $chosen;
+        }
+        return $pagesize;
+    }
+
+    /**
      * Whether an action is available to visitors who are not logged in.
      * Only relevant for tables that do not require login.
      *
@@ -2561,11 +2664,16 @@ class wunderbyte_table extends table_sql {
     public function action_rownumberperpage(int $id, string $data): array {
 
         $jsonobject = json_decode($data);
-        $this->pagesize = $jsonobject->numberofrowsselect;
+        $pagesize = (int)($jsonobject->numberofrowsselect ?? 0);
+        if ($pagesize < 1 || $pagesize > self::MAXPAGESIZE) {
+            return [
+                'success' => 0,
+                'message' => get_string('invalidparameter', 'debug'),
+            ];
+        }
 
-        // Overwrite cached table object.
-        $cache = cache::make('local_wunderbyte_table', 'encodedtables');
-        $cache->set($this->tablecachehash, $this);
+        // The choice is personal. The table definition in the cache is shared and stays as it is.
+        set_user_preference('wbtable_pagesize_' . $this->uniqueid, $pagesize);
 
         return [
             'success' => 1,
@@ -2599,22 +2707,20 @@ class wunderbyte_table extends table_sql {
     public function action_switchtemplates(int $id, string $data): array {
         global $CFG, $USER;
         $jsonobject = json_decode($data);
-        [$template, $viewparam] = explode(" ", $jsonobject->selectedValue);
-        if (empty($template) || !self::template_exists($template)) {
+        [$template, $viewparam] = array_pad(explode(" ", (string)($jsonobject->selectedValue ?? '')), 2, 0);
+        $viewparam = (int)$viewparam;
+        // Only the templates this table offers in its switcher can be chosen.
+        if (empty($template) || !$this->is_offered_template($template, $viewparam) || !self::template_exists($template)) {
             return [
                 'success' => 0,
                 'message' => 'Template could not be found!',
             ];
         }
+        // The choice is personal. The table definition in the cache is shared and stays as it is.
         set_user_preference('wbtable_chosen_template_' . $this->uniqueid, $template);
-        set_user_preference('wbtable_chosen_template_viewparam_' . $this->uniqueid, (int) $viewparam);
+        set_user_preference('wbtable_chosen_template_viewparam_' . $this->uniqueid, $viewparam);
 
-        $this->tabletemplate = $template;
-
-        // When template is changed, we needd to re-cache the table.
-        $cache = cache::make('local_wunderbyte_table', 'encodedtables');
-        $cache->delete($this->tablecachehash);
-        $tablecachehash = $this->return_encoded_table(true);
+        $tablecachehash = $this->tablecachehash;
 
         // Trigger event, so we can react to it from other plugins.
         $event = template_switched::create([
