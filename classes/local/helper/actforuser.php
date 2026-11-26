@@ -26,16 +26,31 @@ namespace local_wunderbyte_table\local\helper;
  */
 class actforuser {
     /**
+     * Number of times in this request the id of another user was taken from the URL for a caller
+     * that did not name the capabilities for acting for others. Such callers have to be changed.
+     * @var int
+     */
+    public static int $unverifiedforeignids = 0;
+
+    /**
      * This function checks the given $args to see whether a user ID is provided
      * either through the 'foruserid' argument or via an optional URL parameter
      * whose name is defined by the 'urlparamforuserid' argument. Otherwise,
      * it returns $defaultvalue.
      *
+     * The id of another user from the URL comes from the visitor of the page. Callers name the
+     * capabilities that allow acting for others in $capabilities: a list of capability names
+     * (checked in the system context) and/or capability => context pairs. The id is then only
+     * returned when the current user holds one of them; with an empty list it is never returned.
+     * Callers that pass null are not checked here and have to do the check themselves; this
+     * mode exists for existing callers only and will be removed.
+     *
      * @param array $args Arguments passed to the shortcode.
      * @param int $defaultvalue The default value when no user ID is found.
+     * @param array|null $capabilities Capabilities that allow acting for another user, null for no check.
      * @return int The user ID.
      */
-    public static function get_foruserid(array $args, int $defaultvalue = 0) {
+    public static function get_foruserid(array $args, int $defaultvalue = 0, ?array $capabilities = null) {
         // Step 1: Check if the foruserid argument is set.
         // This step succeeds only when a valid integer is provided via the foruserid argument.
         $userid = self::get_userid_from_foruserid_arg($args);
@@ -45,6 +60,9 @@ class actforuser {
         // matches the value passed through the urlparamforuserid argument.
         if ($userid === 0) {
             $userid = self::get_userid_from_urlparamforuserid($args);
+            if ($userid !== 0 && !self::may_use_userid_from_url($userid, $capabilities)) {
+                $userid = 0;
+            }
         }
 
         // Step 3: If $userid is still 0, return the $defaultvalue.
@@ -53,6 +71,67 @@ class actforuser {
         }
 
         return $userid;
+    }
+
+    /**
+     * Decides whether a user id that was taken from the URL may be used.
+     *
+     * @param int $userid
+     * @param array|null $capabilities see get_foruserid()
+     * @return bool
+     */
+    private static function may_use_userid_from_url(int $userid, ?array $capabilities): bool {
+        global $USER;
+
+        // Acting for oneself needs no permission.
+        if ($userid === (int)($USER->id ?? 0)) {
+            return true;
+        }
+
+        if ($capabilities === null) {
+            // The caller did not say who may act for others. For now the id is passed on as before.
+            self::$unverifiedforeignids++;
+            self::notify_about_unverified_userid();
+            return true;
+        }
+
+        foreach ($capabilities as $key => $value) {
+            if ($value instanceof \context) {
+                $capability = (string)$key;
+                $context = $value;
+            } else {
+                $capability = (string)$value;
+                $context = \context_system::instance();
+            }
+            if (has_capability($capability, $context)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Tell developers about callers that take the id of another user from the URL without naming
+     * the capabilities for it.
+     *
+     * @return void
+     */
+    private static function notify_about_unverified_userid(): void {
+        // Only on regular page requests: debugging output would break ajax answers and automated tests.
+        if (
+            (defined('PHPUNIT_TEST') && PHPUNIT_TEST)
+            || defined('BEHAT_SITE_RUNNING')
+            || (defined('AJAX_SCRIPT') && AJAX_SCRIPT)
+            || (defined('WS_SERVER') && WS_SERVER)
+            || (defined('CLI_SCRIPT') && CLI_SCRIPT)
+        ) {
+            return;
+        }
+        debugging(
+            'actforuser::get_foruserid() returned the id of another user from the URL without a capability check. '
+            . 'Pass the capabilities that allow acting for others as third argument.',
+            DEBUG_DEVELOPER
+        );
     }
 
     /**
