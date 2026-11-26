@@ -35,12 +35,14 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/tablelib.php");
 
 use cache;
+use context;
 use context_system;
 use dml_read_exception;
 use Exception;
 use local_wunderbyte_table\output\lazytable;
 use local_wunderbyte_table\output\table;
 use moodle_exception;
+use required_capability_exception;
 use table_dataformat_export_format;
 use table_sql;
 use moodle_url;
@@ -56,6 +58,9 @@ use local_wunderbyte_table\local\settings\tablesettings;
  * Wunderbyte table class is an extension of table_sql.
  */
 class wunderbyte_table extends table_sql {
+    /** @var string The capability every logged in user has. Tables without declaration use it. */
+    public const DEFAULTCAPABILITY = 'local/wunderbyte_table:canaccess';
+
     /**
      * Provide const for sortorder ASC.
      */
@@ -274,6 +279,26 @@ class wunderbyte_table extends table_sql {
     public $requirelogin = true;
 
     /**
+     * Whether the code that builds the table declared who may access it, see the declare_access_* methods.
+     * @var bool accessdeclared
+     */
+    public $accessdeclared = false;
+
+    /**
+     * Optional additional access check: [classname, methodname] of a public static method, which
+     * receives the table and the declared arguments and returns a bool. The table is cached, so
+     * closures and object methods are not supported.
+     * @var array|null accesscallback
+     */
+    public $accesscallback = null;
+
+    /**
+     * Arguments handed to the access callback. Scalars only, they are cached with the table.
+     * @var array accesscallbackargs
+     */
+    public $accesscallbackargs = [];
+
+    /**
      * Names of the actions (without the prefix action_) that visitors who are not logged in may
      * execute on a table that does not require login. They only change how the table is displayed.
      * @var array publicactions
@@ -284,7 +309,7 @@ class wunderbyte_table extends table_sql {
      * Require capability is a security feature which defaults to the standard capability.
      * @var string requirecapability
      */
-    public $requirecapability = 'local/wunderbyte_table:canaccess';
+    public $requirecapability = self::DEFAULTCAPABILITY;
 
     /**
      * @var array array of supplementary column information. Can be used like below.
@@ -2233,7 +2258,15 @@ class wunderbyte_table extends table_sql {
 
             // We need to make sure that the correct instance with the correct capabilities are cached.
             // Therefore, we add the capability to the hash.
-            $this->tablecachehash = md5($this->idstring . $this->requirecapability ?? '' . $this->requirelogin ?? '');
+            // The access rule is part of the hash as well: tables with the same sql but another audience
+            // must never share a cache entry.
+            $this->tablecachehash = md5(
+                $this->idstring
+                . ($this->requirecapability ?? '')
+                . (int)$this->requirelogin
+                . json_encode([$this->accesscallback ?? null, $this->accesscallbackargs ?? []])
+            );
+            $this->notify_about_missing_access_declaration();
 
             // We just fetch the pagesize, no need to get all the table here.
             // But only if the table itself is still cached - otherwise (e.g. after a partial
@@ -2350,6 +2383,161 @@ class wunderbyte_table extends table_sql {
 
         return $OUTPUT->render_from_template('local_wunderbyte_table/col_sortableitem', $data);
         ;
+    }
+
+    /**
+     * Declare that the table is public: it can be loaded without login.
+     *
+     * @return void
+     */
+    public function declare_public_access(): void {
+        $this->requirelogin = false;
+        $this->accesscallback = null;
+        $this->accesscallbackargs = [];
+        $this->accessdeclared = true;
+    }
+
+    /**
+     * Declare that every logged in user may load the table.
+     *
+     * @param context|null $context context the login is validated in, defaults to the context of the table
+     * @return void
+     */
+    public function declare_access_for_logged_in_users(?context $context = null): void {
+        $this->declare_access_by_capability(self::DEFAULTCAPABILITY, $context ?? $this->get_context());
+    }
+
+    /**
+     * Declare the capability a user needs to load the table and to execute its actions.
+     *
+     * @param string $capability
+     * @param context $context context the capability is checked in
+     * @return void
+     */
+    public function declare_access_by_capability(string $capability, context $context): void {
+        $this->requirelogin = true;
+        $this->requirecapability = $capability;
+        $this->context = $context;
+        $this->accesscallback = null;
+        $this->accesscallbackargs = [];
+        $this->accessdeclared = true;
+    }
+
+    /**
+     * Declare an own access check for tables whose audience does not follow from a capability
+     * (own data, team members, teachers of a single item...).
+     *
+     * The callback is a public static method: function(wunderbyte_table $table, array $args): bool.
+     * It is called for the current user on every request that loads the table from the cache.
+     * Logged in users only; the capability of the table is checked in addition.
+     *
+     * @param array $callback [classname, methodname]
+     * @param array $args scalar arguments for the callback
+     * @param context|null $context context the login is validated in, defaults to the context of the table
+     * @param string $capability capability checked in addition, defaults to the one every logged in user has
+     * @return void
+     */
+    public function declare_access_by_callback(
+        array $callback,
+        array $args = [],
+        ?context $context = null,
+        string $capability = self::DEFAULTCAPABILITY
+    ): void {
+        if (
+            count($callback) !== 2
+            || !is_string($callback[0])
+            || !is_string($callback[1])
+            || !is_callable($callback)
+        ) {
+            throw new coding_exception('The access callback has to be [classname, methodname] of a public static method.');
+        }
+        foreach ($args as $arg) {
+            if (!is_scalar($arg) && $arg !== null) {
+                throw new coding_exception('The arguments of the access callback have to be scalar values.');
+            }
+        }
+        $this->declare_access_by_capability($capability, $context ?? $this->get_context());
+        $this->accesscallback = array_values($callback);
+        $this->accesscallbackargs = $args;
+    }
+
+    /**
+     * Whether the code that builds the table stated who may access it. Tables that switch off the
+     * login requirement or set an own capability directly count as declared as well.
+     *
+     * @return bool
+     */
+    public function has_access_declaration(): bool {
+        return !empty($this->accessdeclared)
+            || !$this->requirelogin
+            || $this->requirecapability !== self::DEFAULTCAPABILITY;
+    }
+
+    /**
+     * Whether the current user may load the table and execute its actions.
+     * The login itself is validated by the caller (webservice or script).
+     *
+     * @return bool
+     */
+    public function user_has_access(): bool {
+        if (!$this->requirelogin) {
+            return true;
+        }
+        if (!has_capability($this->requirecapability, $this->get_context())) {
+            return false;
+        }
+        if (!empty($this->accesscallback)) {
+            if (!is_callable($this->accesscallback)) {
+                // The declared check is not available (any more): nobody gets access.
+                return false;
+            }
+            return (bool)call_user_func($this->accesscallback, $this, $this->accesscallbackargs ?? []);
+        }
+        return true;
+    }
+
+    /**
+     * Throw an exception if the current user may not load the table.
+     * The login itself is validated by the caller (webservice or script).
+     *
+     * @return void
+     */
+    public function require_access(): void {
+        if (!$this->user_has_access()) {
+            throw new required_capability_exception(
+                $this->get_context(),
+                $this->requirecapability,
+                'nopermissions',
+                ''
+            );
+        }
+    }
+
+    /**
+     * Tell developers about tables without an access declaration. Such tables keep working with
+     * the default (every logged in user), but the code that builds them should state the audience.
+     *
+     * @return void
+     */
+    private function notify_about_missing_access_declaration(): void {
+        if ($this->has_access_declaration()) {
+            return;
+        }
+        // Only on regular page requests: debugging output would break ajax answers and automated tests.
+        if (
+            (defined('PHPUNIT_TEST') && PHPUNIT_TEST)
+            || defined('BEHAT_SITE_RUNNING')
+            || (defined('AJAX_SCRIPT') && AJAX_SCRIPT)
+            || (defined('WS_SERVER') && WS_SERVER)
+            || (defined('CLI_SCRIPT') && CLI_SCRIPT)
+        ) {
+            return;
+        }
+        debugging(
+            "The table '{$this->uniqueid}' (" . static::class . ") has no access declaration. Call one of the "
+            . "declare_access_* methods of the table to state who may load it.",
+            DEBUG_DEVELOPER
+        );
     }
 
     /**
@@ -2533,8 +2721,8 @@ class wunderbyte_table extends table_sql {
 
         $sql = $this->get_sql_for_cachekey($forfilter, $useinitialsbar);
 
-        // Now that we have the string, we hash it with a very fast method.
-        $cachekey = crc32($sql) . '_sqlquery';
+        // Two different queries must never share a key, so the hash has to be collision resistant.
+        $cachekey = hash('sha256', $sql) . '_sqlquery';
 
         return $cachekey;
     }

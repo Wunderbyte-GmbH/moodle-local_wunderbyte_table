@@ -130,7 +130,7 @@ class load_data extends external_api {
         if ($table->requirelogin) {
             try {
                 self::validate_context($context);
-                require_capability($table->requirecapability, $context);
+                $table->require_access();
             } catch (Exception $e) {
                 // We expect the values to be json-parsable.
                 $emptyclass = new stdClass();

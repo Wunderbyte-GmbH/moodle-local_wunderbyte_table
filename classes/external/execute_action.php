@@ -105,7 +105,7 @@ class execute_action extends external_api {
         // But this can be turned off for given tables.
         if ($table->requirelogin) {
             self::validate_context($context);
-            require_capability($table->requirecapability, $context);
+            $table->require_access();
         } else {
             // We allow for this webservice to be executed without login, if specifically set so.
             // Therefore, we need to use Page->set_context().

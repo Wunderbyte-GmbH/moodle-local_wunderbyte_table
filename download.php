@@ -46,7 +46,7 @@ $context = $table->get_context();
 $PAGE->set_context($context);
 $PAGE->set_url('/download.php');
 
-require_capability($table->requirecapability, $context);
+$table->require_access();
 
 $table->is_downloading($download, 'download', 'download');
 
