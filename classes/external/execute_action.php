@@ -98,25 +98,26 @@ class execute_action extends external_api {
             throw new \moodle_exception('tablecacheexpired', 'local_wunderbyte_table');
         }
 
-        $context = context_system::instance();
+        // Actions are authorised like the data of the table: in the context the table was built for.
+        $context = $table->get_context() ?? context_system::instance();
 
         // Normally, this webservice is only allowed for logged in users with some capabilites.
         // But this can be turned off for given tables.
         if ($table->requirelogin) {
-            try {
-                self::validate_context($context);
-                require_capability($table->requirecapability, $context);
-            } catch (Exception $e) {
-                return [
-                    'template' => '',
-                    'content' => '',
-                    'filterjson' => '',
-                ];
-            }
+            self::validate_context($context);
+            require_capability($table->requirecapability, $context);
         } else {
             // We allow for this webservice to be executed without login, if specifically set so.
             // Therefore, we need to use Page->set_context().
             $PAGE->set_context($context);
+
+            // Visitors who are not logged in can only use the actions the table declares as public.
+            if ((!isloggedin() || isguestuser()) && !$table->is_public_action($params['methodname'])) {
+                return [
+                    'success' => 0,
+                    'message' => get_string('loggedinnot'),
+                ];
+            }
         }
 
         $event = action_executed::create([

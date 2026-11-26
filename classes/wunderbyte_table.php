@@ -274,6 +274,13 @@ class wunderbyte_table extends table_sql {
     public $requirelogin = true;
 
     /**
+     * Names of the actions (without the prefix action_) that visitors who are not logged in may
+     * execute on a table that does not require login. They only change how the table is displayed.
+     * @var array publicactions
+     */
+    public $publicactions = ['rownumberperpage', 'switchtemplates'];
+
+    /**
      * Require capability is a security feature which defaults to the standard capability.
      * @var string requirecapability
      */
@@ -2343,6 +2350,18 @@ class wunderbyte_table extends table_sql {
 
         return $OUTPUT->render_from_template('local_wunderbyte_table/col_sortableitem', $data);
         ;
+    }
+
+    /**
+     * Whether an action is available to visitors who are not logged in.
+     * Only relevant for tables that do not require login.
+     *
+     * @param string $methodname name of the action without the prefix action_
+     * @return bool
+     */
+    public function is_public_action(string $methodname): bool {
+        // Method names are case insensitive in PHP, so the comparison has to be as well.
+        return in_array(strtolower($methodname), array_map('strtolower', $this->publicactions ?? []), true);
     }
 
     /**
