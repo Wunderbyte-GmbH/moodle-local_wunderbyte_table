@@ -68,14 +68,18 @@ class get_filter_column_data extends external_api {
         string $filtercolumn,
         string $encodedtable
     ) {
-        global $PAGE;
-        $PAGE->set_context(\context_system::instance());
-
         $params = [
             'filtercolumn' => $filtercolumn,
             'encodedtable' => $encodedtable,
         ];
         $params = self::validate_parameters(self::execute_parameters(), $params);
+
+        // These fields belong to the filter editor, which is restricted to users who may edit tables.
+        // The service can be called directly, so it has to enforce this itself.
+        $context = \context_system::instance();
+        self::validate_context($context);
+        require_capability('local/wunderbyte_table:canedittable', $context);
+
         $columnmanager = new column_manager($params, $params['encodedtable']);
         $filteredcolumnforms = $columnmanager->get_filtered_column_form();
         return $filteredcolumnforms;

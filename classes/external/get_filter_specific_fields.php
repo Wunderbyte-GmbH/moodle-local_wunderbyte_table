@@ -65,11 +65,17 @@ class get_filter_specific_fields extends external_api {
     public static function execute(
         string $filtertype
     ) {
-        global $PAGE;
-        $PAGE->set_context(\context_system::instance());
         $params = [
             'filterspecifictype' => $filtertype,
         ];
+        $params = self::validate_parameters(self::execute_parameters(), $params);
+
+        // These fields belong to the filter editor, which is restricted to users who may edit tables.
+        // The service can be called directly, so it has to enforce this itself.
+        $context = \context_system::instance();
+        self::validate_context($context);
+        require_capability('local/wunderbyte_table:canedittable', $context);
+
         $classname = 'local_wunderbyte_table\filters\types\datepicker';
         $filtermanager = new filter_manager();
         $mandatoryfields = $filtermanager->get_mandatory_filter_fields(
