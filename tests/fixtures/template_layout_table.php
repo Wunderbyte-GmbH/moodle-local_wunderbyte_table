@@ -50,5 +50,7 @@ class template_layout_table extends demo_table {
     public function apply_template_layout(string $template, int $viewparam): void {
         $this->subcolumns = [];
         $this->add_subcolumns($template === self::CARDS ? 'cardbody' : 'leftside', ['fullname'], false);
+        // Several views can share a template, the view parameter tells them apart.
+        $this->set_template_data('appliedviewparam', 'view' . $viewparam);
     }
 }

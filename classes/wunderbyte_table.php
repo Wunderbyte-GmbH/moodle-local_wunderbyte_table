@@ -289,6 +289,12 @@ class wunderbyte_table extends table_sql {
     public $definedtemplate = null;
 
     /**
+     * The view (template and view parameter) the definition marked as selected in its template switcher.
+     * @var array|null definedswitchtemplate
+     */
+    public $definedswitchtemplate = null;
+
+    /**
      * Whether the code that builds the table declared who may access it, see the declare_access_* methods.
      * @var bool accessdeclared
      */
@@ -2588,12 +2594,17 @@ class wunderbyte_table extends table_sql {
             }
         }
 
-        // No valid choice: the template of the definition, with its view parameter if the switcher knows it.
-        foreach ($this->switchtemplates['templates'] ?? [] as $offered) {
-            if (($offered['template'] ?? '') === $this->definedtemplate) {
-                return [$this->definedtemplate, (int)($offered['viewparam'] ?? 0)];
-            }
+        // No valid choice: the view the definition marked as selected in its switcher...
+        if (
+            !empty($this->definedswitchtemplate['template'])
+            && $this->is_offered_template(
+                $this->definedswitchtemplate['template'],
+                (int)$this->definedswitchtemplate['viewparam']
+            )
+        ) {
+            return [$this->definedswitchtemplate['template'], (int)$this->definedswitchtemplate['viewparam']];
         }
+        // ... or simply the template of the definition.
         return [$this->definedtemplate, 0];
     }
 
@@ -3134,6 +3145,9 @@ class wunderbyte_table extends table_sql {
         ];
         if ($selected) {
             $template['selected'] = true;
+            // Remember the view of the definition. The selected flags themselves are set for the
+            // current user when the table is rendered, so they cannot tell it later.
+            $this->definedswitchtemplate = ['template' => $template['template'], 'viewparam' => $viewparam];
             // Make sure only one template is selected.
             if (!empty($this->switchtemplates['templates'])) {
                 foreach ($this->switchtemplates['templates'] as &$existingtemplate) {

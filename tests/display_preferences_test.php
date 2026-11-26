@@ -153,6 +153,48 @@ final class display_preferences_test extends advanced_testcase {
     }
 
     /**
+     * Several views can use the same template. A user without a choice gets the view the table
+     * marks as selected, a user who chose another view of the same template gets that one.
+     */
+    public function test_views_of_the_same_template_are_kept_apart(): void {
+        $usera = $this->getDataGenerator()->create_user();
+        $userb = $this->getDataGenerator()->create_user();
+
+        $table = $this->build_table();
+        // Two more views of the list template, the second one is the view of the definition.
+        $table->add_template_to_switcher(template_layout_table::LIST, 'List with image', true, 2);
+        $table->add_template_to_switcher(template_layout_table::LIST, 'List with image on the right', false, 3);
+        $hash = $table->return_encoded_table();
+
+        $this->setUser($userb);
+        $this->assertSame('view2', $this->load_content($hash)['appliedviewparam']);
+
+        $this->setUser($usera);
+        $result = execute_action::execute(
+            'switchtemplates',
+            $hash,
+            0,
+            json_encode(['selectedValue' => template_layout_table::LIST . ' 3'])
+        );
+        $this->assertSame(1, $result['success']);
+        $this->assertSame('view3', $this->load_content($hash)['appliedviewparam']);
+
+        $this->setUser($userb);
+        $this->assertSame('view2', $this->load_content($hash)['appliedviewparam']);
+    }
+
+    /**
+     * Load the table through the data webservice and return everything the template gets.
+     *
+     * @param string $hash
+     * @return array
+     */
+    private function load_content(string $hash): array {
+        $result = load_data::execute($hash, 0, '', '', '', 0, 0, '', '');
+        return json_decode($result['content'], true);
+    }
+
+    /**
      * Only the templates the table offers in its switcher can be chosen.
      */
     public function test_template_that_is_not_offered_is_rejected(): void {
