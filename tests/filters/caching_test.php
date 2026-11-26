@@ -51,11 +51,16 @@ final class caching_test extends advanced_testcase {
      * @dataProvider data_provider
      *
      * @param bool $bypasscache
+     * @param bool $hidebypassfilters value of the setting hideallfiltershavingbypasscache
+     * @param bool $expectapplied whether the filter is expected to be applied to the query
      * @return void
      */
-    public function test_bypasscache_value_of_table(bool $bypasscache): void {
+    public function test_bypasscache_value_of_table(bool $bypasscache, bool $hidebypassfilters, bool $expectapplied): void {
         // Reset the test environment.
         $this->resetAfterTest(true);
+
+        // The setting decides whether filters that bypass the cache may be applied at all.
+        set_config('hideallfiltershavingbypasscache', (int)$hidebypassfilters, 'local_wunderbyte_table');
 
         // Create two course categories.
         $category1 = $this->getDataGenerator()->create_category(['name' => 'My Category 1']);
@@ -139,14 +144,15 @@ final class caching_test extends advanced_testcase {
         $table->cardsort = true;
         $table->outhtml(10000, true);
 
-        if ($bypasscache) {
-            // When we have a filter which bypasses the cache so the expected value
-            // for the bypasscache should be true in the table instance.
-            $this->assertTrue($table->bypasscache);
+        // The table only bypasses the cache when a bypassing filter was really applied.
+        $this->assertSame($bypasscache && $expectapplied, $table->bypasscache);
+
+        // A filter that is switched off by the setting must not reach the query at all,
+        // no matter that it was requested via the URL.
+        if ($expectapplied) {
+            $this->assertNotEmpty($table->sql->filter);
         } else {
-            // When we have a filter which DOES bypasses the cache so the expected value
-            // for the bypasscache should be false in the table instance.
-            $this->assertFalse($table->bypasscache);
+            $this->assertEmpty($table->sql->filter);
         }
     }
 
@@ -159,9 +165,23 @@ final class caching_test extends advanced_testcase {
         return [
             'filter with bypasscache = false' => [
                 'bypasscache' => false,
+                'hidebypassfilters' => false,
+                'expectapplied' => true,
             ],
             'filter with bypasscache = true' => [
                 'bypasscache' => true,
+                'hidebypassfilters' => false,
+                'expectapplied' => true,
+            ],
+            'cached filter is still applied when bypassing filters are hidden' => [
+                'bypasscache' => false,
+                'hidebypassfilters' => true,
+                'expectapplied' => true,
+            ],
+            'bypassing filter is not applied when bypassing filters are hidden' => [
+                'bypasscache' => true,
+                'hidebypassfilters' => true,
+                'expectapplied' => false,
             ],
         ];
     }

@@ -1938,18 +1938,15 @@ class wunderbyte_table extends table_sql {
         }
 
         // Get 'hide filters that cause the cache to be bypassed' option and check if it is enabled.
-        $hideallfiltershavingbypasscache = get_config('loca_wunderbyte_table', 'hideallfiltershavingbypasscache');
+        $hideallfiltershavingbypasscache = get_config('local_wunderbyte_table', 'hideallfiltershavingbypasscache');
 
         foreach ($filterobject as $categorykey => $categoryvalue) {
             if (!empty($categoryvalue)) {
-                // For the first filter in a category we append AND.
-                $filter .= " AND ( ";
-                $categorycounter = 1;
-
                 $filtersetting = $filtersettings[$categorykey] ?? [];
                 // For filters treating two columns (i.e. datepickers), this will return empty.
                 $classname = $filtersetting['wbfilterclass'] ?? "";
 
+                $class = null;
                 if (!empty($classname)) {
                     if (isset($this->filters[$categorykey])) {
                         $class = $this->filters[$categorykey];
@@ -1959,10 +1956,17 @@ class wunderbyte_table extends table_sql {
 
                     // Check if the option 'hide filters that cause the cache to be bypassed' is enabled.
                     // If yes, we don't apply the filters that their $bypasscache property is equal to true.
+                    // This has to be decided before anything is added to the query for this category.
                     if ($hideallfiltershavingbypasscache && $class->if_bypass_cache()) {
                         continue;
                     }
+                }
 
+                // For the first filter in a category we append AND.
+                $filter .= " AND ( ";
+                $categorycounter = 1;
+
+                if ($class !== null) {
                     // If no, check if this filter wants the cache to be byüpassed.
                     if ($class->if_bypass_cache()) {
                         $this->bypasscache = true;
